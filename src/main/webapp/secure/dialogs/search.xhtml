@@ -1,0 +1,67 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui">
+<ui:composition>
+	<!-- *********************          Search Dialog          ********************* -->
+	<h:form id="searchForm">
+		<p:dialog id="searchByNameDlg" header="Поиск клиента" widgetVar="searchByNameDlg" resizable="false" closable="true" modal="true" showEffect="fade" hideEffect="explode" closeOnEscape="true">
+			<h:panelGrid columns="2" id="pGridSearchByName">
+				<p:outputLabel for="surname" value="Фамилия:" />
+				<p:inputText value="#{clientsearch.surname}" id="surname" required="false" label="surname" />
+				<p:outputLabel for="firstname" value="Имя:" />
+				<p:inputText value="#{clientsearch.firstname}" id="firstname" required="false" label="firstname" />
+				<p:outputLabel for="middlename" value="Отчество:" />
+				<p:inputText value="#{clientsearch.middlename}" id="middlename" required="false" label="middlename" />
+				<p:outputLabel for="date" value="Дата рождения:" />
+				<p:inputMask value="#{clientsearch.date}" id="date" required="false" label="date" mask="99.99.9999" />
+				<center>
+					<p:commandButton id="submitSearchByName" value="Поиск" update="displayFoundByName searchByNameDlg" oncomplete="openSearchResult();" actionListener="#{clientsearch.findClients}" ajax="true" />
+				</center>
+			</h:panelGrid>
+		</p:dialog>
+		<!-- *********************          Search Dialog          ********************* -->
+
+
+		<!-- *********************          SearchById Dialog          ********************* -->
+		<p:dialog id="searchByIdDlg" header="Поиск клиента по ID" widgetVar="searchByIdDlg" resizable="false" closable="true" modal="true" showEffect="fade" hideEffect="explode" closeOnEscape="true">
+			<h:panelGrid columns="2">
+				<p:outputLabel for="_id" value="ID:" />
+				<p:inputText value="#{clientsearch.id}" id="_id" required="true" label="_id" />
+				<center>
+					<p:commandButton id="submitSearchById" value="Поиск" update="displayFoundByName searchByIdDlg" oncomplete="openSearchResult();" actionListener="#{clientsearch.findClients}" ajax="true" />
+				</center>
+			</h:panelGrid>
+		</p:dialog>
+
+		<!-- *********************          SearchById Dialog          ********************* -->
+
+		<!-- *********************          Search Details Dialog          ********************* -->
+		<p:dialog id="displayFoundByName" header="Список найденных клиентов" widgetVar="displayFoundByName" resizable="false" closable="true" modal="true" showEffect="fade" hideEffect="explode" closeOnEscape="true">
+			<p:dataTable var="client" value="#{clientsearch.foundList}" paginator="true" rows="15"
+				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15">
+				<p:column headerText="ID">
+					<h:outputText value="#{client.id}" />
+				</p:column>
+				<p:column headerText="Фамилия">
+					<h:outputText value="#{client.surname}" />
+				</p:column>
+				<p:column headerText="Имя">
+					<h:outputText value="#{client.firstname}" />
+				</p:column>
+				<p:column headerText="Отчество">
+					<h:outputText value="#{client.middlename}" />
+				</p:column>
+				<p:column headerText="Дата рождения">
+					<h:outputText value="#{clientsearch.formattedDate(client.date)}" />
+					<!-- here are no errors! -->
+				</p:column>
+				<p:column style="width:4%">
+					<p:commandButton action="#{clientform.reloadAll(client.id)}" id="selectButton" icon="ui-icon-search" oncomplete="displayFoundByName.hide()" title="Открыть клиента" ajax="true"
+						update=":base_form :add_services" />
+				</p:column>
+			</p:dataTable>
+		</p:dialog>
+		<!-- *********************          Search Details Dialog          ********************* -->
+	</h:form>
+</ui:composition>
+</html>

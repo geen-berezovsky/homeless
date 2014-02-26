@@ -1,0 +1,58 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<title>Добро пожаловать!</title>
+
+</h:head>
+<h:body onload="dlg.show()">
+
+	<h:form id="form">
+		<p:growl id="growl" showDetail="true" life="3000" />
+
+		<p:dialog id="loginDialog" header="Введите ваше имя и пароль"
+			widgetVar="dlg" resizable="false" closable="false">
+
+			<h:panelGrid columns="2" cellpadding="5">
+
+        		<h:outputLabel value="Имя:" for="username" />  
+            	<p:autoComplete id="username" dropdown="true" value="#{user.name}"
+                    completeMethod="#{user.getAllUserNames}" required="true" /> 
+
+				<p:outputLabel for="password" value="Пароль:" />
+				<p:password value="#{user.password}" id="password" label="password">
+				</p:password>
+
+
+			</h:panelGrid>
+			<f:facet name="footer">
+				<center>
+					<p:commandButton id="loginButton" value="Вход" update="growl"
+						actionListener="#{user.login}"
+						oncomplete="handleLoginRequest(xhr, status, args)" ajax="true" />
+				</center>
+			</f:facet>
+
+		</p:dialog>
+
+	</h:form>
+	<script type="text/javascript">
+		function handleLoginRequest(xhr, status, args) {
+			if (args.validationFailed || !args.loggedIn) {
+				dlg.jq.effect("shake", {
+					times : 5
+				}, 100);
+			} else {
+				dlg.hide();
+				window.location.href = "secure/main.xhtml";
+			}
+		}
+	</script>
+</h:body>
+
+</html>

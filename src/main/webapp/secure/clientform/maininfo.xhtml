@@ -1,0 +1,122 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui">
+<ui:composition>
+
+	<p:fieldset legend="#{clientform.surname} #{clientform.firstname} #{clientform.middlename} (ID = #{clientform.id})">
+		<p:panelGrid id="base_form_panel_grid">
+			<p:row>
+				<p:column style="text-align: center;min-width: 100px; ">
+					<p:graphicImage value="#{clientform.clientFormAvatar}" cache="false" />
+					<br />
+					<br />
+					<p:button value="Сфотографировать" title="Сфотографировать клиента на веб камеру" icon="ui-icon-aquire" style="width:178px;" />
+					<p:button value="Загрузить фото" title="Загрузить фотографию с диска" icon="ui-icon-open" style="width:178px;" />
+					<p:button value="Удалить фото" title="Удалить фотографию клиента" icon="ui-icon-delete" style="width:178px;" />
+				</p:column>
+				<p:column>
+					<p:panelGrid columns="2">
+						<p:row>
+							<p:column>
+								<p:outputLabel value="Фамилия:" />
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column>
+								<p:message display="tooltip" for="cedit_surname"/>
+								<p:inputText value="#{clientform.surname}" id="cedit_surname" validator="#{clientform.validateTextOnly}"/>
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column>
+								<p:outputLabel value="Имя:" />
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column>
+									<p:message display="tooltip" for="cedit_firstname" />
+								<p:inputText value="#{clientform.firstname}" id="cedit_firstname" validator="#{clientform.validateTextOnly}" />
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column>
+								<p:outputLabel value="Отчество:" />
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column>
+								<p:message display="tooltip" for="cedit_middlename"/>
+								<p:inputText value="#{clientform.middlename}" id="cedit_middlename" validator="#{clientform.validateTextOnly}"/>
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column>
+								<p:outputLabel value="Дата рождения:" />
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column>
+								<p:message display="tooltip" for="cedit_bdate"/>
+								<p:inputText value="#{clientform.formattedDate}" id="cedit_bdate" mask="99.99.9999" validator="#{clientform.validateBirthDateFormat}" />
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column>
+								<p:outputLabel value="Пол:" />
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column>
+								<p:selectOneMenu id="selectGender" value="#{clientform.clientFormGender}">
+									<f:selectItem itemLabel="Мужской" itemValue="true" />
+									<f:selectItem itemLabel="Женский" itemValue="false" />
+								</p:selectOneMenu>
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column>
+								<p:outputLabel value="Бездомный с момента:" />
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column>
+								<p:selectOneMenu id="selectMonth" value="#{clientform.selectedMonth}">
+									<f:selectItem itemLabel="Январь" itemValue="0" />
+									<f:selectItem itemLabel="Февраль" itemValue="1" />
+									<f:selectItem itemLabel="Март" itemValue="2" />
+									<f:selectItem itemLabel="Апрель" itemValue="3" />
+									<f:selectItem itemLabel="Май" itemValue="4" />
+									<f:selectItem itemLabel="Июнь" itemValue="5" />
+									<f:selectItem itemLabel="Июль" itemValue="6" />
+									<f:selectItem itemLabel="Август" itemValue="7" />
+									<f:selectItem itemLabel="Сентябрь" itemValue="8" />
+									<f:selectItem itemLabel="Октябрь" itemValue="9" />
+									<f:selectItem itemLabel="Ноябрь" itemValue="10" />
+									<f:selectItem itemLabel="Декабрь" itemValue="11" />
+								</p:selectOneMenu>
+								<p:message display="tooltip" for="selectedYear"/>
+								<p:inputText value="#{clientform.selectedYear}" mask="9999" id="selectedYear" size="4" validator="#{clientform.validateHomelessYear}"/>
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column>
+								<p:outputLabel value="Место рождения:" />
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column>
+								<p:inputText value="#{clientform.whereWasBorn}" id="cedit_born_place">
+								</p:inputText>
+							</p:column>
+						</p:row>
+					</p:panelGrid>
+
+				</p:column>
+
+			</p:row>
+		</p:panelGrid>
+
+	</p:fieldset>
+
+</ui:composition>
+</html>

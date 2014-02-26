@@ -1,0 +1,79 @@
+@CHARSET "UTF-8";
+
+#client_main_panel {
+	width: 100%;
+	min-width:600px;
+}
+
+#client_edit_window {
+	width: 100%;
+	display:inline;
+}
+
+#base_form_div {
+	float: left;
+	width: 50%;
+	display:inline;
+}
+
+#services_div {
+	float: left;
+	width: 50%;
+	display:inline;
+}
+
+#optional_info_div {
+	width: 100%;
+	display:inline;
+}
+
+#personal_info_div {
+	float: left;
+	width: 25%;
+	min-height:400px;
+	display:inline;
+}
+
+#homeless_reasons_div {
+	float: left;
+	width: 25%;
+	min-height:400px;
+	display:inline;
+}
+
+#existence_sources_div {
+	float: left;
+	width: 25%;
+	min-height:400px;
+	display:inline;
+}
+
+#chronical_distasters_div {
+	float: left;
+	width: 25%;
+	min-height:400px;
+	display:inline;
+}
+
+.ui-widget .ui-icon-aquire {
+    background-image: url('../../images/aquireImage.png');
+    background-position: center center !important;
+    width: 16px;
+    height: 16px;
+}
+
+.ui-widget .ui-icon-open {
+    background-image: url('../../images/openImage.png');
+    background-position: center center !important;
+    width: 16px;
+    height: 16px;
+}
+
+.ui-widget .ui-icon-delete {
+    background-image: url('../../images/deleteImage.png');
+    background-position: center center !important;
+    width: 16px;
+    height: 16px;
+}
+
+

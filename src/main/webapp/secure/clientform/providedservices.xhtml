@@ -1,0 +1,36 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui">
+<ui:composition>
+	<!-- Include operations with datatables -->
+	<p:contextMenu for="recievedservice">
+		<p:menuitem value="Delete" update=":base_form:recievedservice" icon="ui-icon-close" actionListener="#{services.deleteService}" action="#{clientform.reloadAll()}" ajax="true" />
+	</p:contextMenu>
+
+	<p:dataTable id="recievedservice" var="recievedservice" value="#{clientform.servicesList}" paginator="true" rows="10"
+		paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="10,15,20"
+		rowKey="#{recievedservice.id}" selection="#{services.selectedService}" selectionMode="single">
+
+		<p:column headerText="id" style="display:none;">
+			<h:outputText value="#{recievedservice.id}" />
+		</p:column>
+
+		<p:column headerText="Дата">
+			<h:outputText value="#{services.formattedDate(recievedservice.date)}" />
+		</p:column>
+
+		<p:column headerText="Наименование">
+			<h:outputText value="#{recievedservice.serviceType}" />
+		</p:column>
+		<p:column headerText="Работник">
+			<h:outputText value="#{recievedservice.worker}" />
+		</p:column>
+	</p:dataTable>
+	<p:panel>
+		<center>
+			<p:commandButton value="Добавить услугу" onclick="addServiceWv.show();" icon="ui-icon-circle-plus" type="button" />
+		</center>
+	</p:panel>
+
+</ui:composition>
+</html>

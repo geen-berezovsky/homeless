@@ -1,0 +1,31 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui">
+<ui:composition>
+	<h:form id="add_services">
+		<p:messages />
+		<p:dialog id="addService" header="Добавить оказанные услуги" widgetVar="addServiceWv" resizable="false" closable="true" modal="true" showEffect="fade" hideEffect="explode" dynamic="true" closeOnEscape="true">
+			<h:panelGrid columns="2">
+				<p:outputLabel value="Клиент:" />
+				<p:outputLabel value="#{clientform.client.surname} #{clientform.client.firstname} #{clientform.client.middlename}" />
+
+				<p:outputLabel value="Дата:" />
+				<p:calendar value="#{services.date}" id="popupButtonCal" showOn="button" pattern="dd.MM.yyyy" />
+			</h:panelGrid>
+
+			<p:separator />
+			<p:selectManyCheckbox id="as_services" value="#{services.selectedItems}" layout="pageDirection">
+				<f:selectItems value="#{services.getAvailableServices()}" var="serviceTypes" itemValue="#{serviceTypes}" />
+			</p:selectManyCheckbox>
+			<p:separator />
+			<p:panel>
+				<center>
+					<p:commandButton value="Добавить отмеченное" id="addNewServices" actionListener="#{services.addSelectedServices(clientform)}" ajax="true" oncomplete="addServiceWv.hide()"
+						update=":base_form addService @this" />
+				</center>
+			</p:panel>
+		</p:dialog>
+	</h:form>
+
+</ui:composition>
+</html>
