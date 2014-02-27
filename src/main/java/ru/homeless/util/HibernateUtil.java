@@ -4,6 +4,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.cfg.ImprovedNamingStrategy;
 import org.hibernate.service.ServiceRegistryBuilder;
 
 public class HibernateUtil {
@@ -14,6 +15,8 @@ public class HibernateUtil {
 		if (sessionFactory == null) {
 			try {
 				Configuration configuration = new Configuration();
+				// Name tables with lowercase_underscore_separated
+				//configuration.setNamingStrategy(new ImprovedNamingStrategy());
 				configuration.configure();
 				ServiceRegistryBuilder serviceRegistryBuilder = new ServiceRegistryBuilder().applySettings(configuration.getProperties());
 				sessionFactory = configuration.buildSessionFactory(serviceRegistryBuilder.buildServiceRegistry());

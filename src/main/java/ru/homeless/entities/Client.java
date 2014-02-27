@@ -16,6 +16,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
@@ -24,16 +25,13 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
-
 @Entity
 @Table(name = "Client")
 public class Client implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private int id;
-	
+
 	private String surname;
 	private String middlename;
 	private String firstname;
@@ -50,10 +48,9 @@ public class Client implements Serializable {
 	private Date homelessdate;
 	private Set<Breadwinner> breadwinners;
 	private Set<Reasonofhomeless> reasonofhomeless;
-	
+
 	private Set<RecievedService> recievedservices;
 
-	
 	private String uniqDisease;
 	private String uniqBreadwinner;
 	private String uniqReason;
@@ -61,9 +58,9 @@ public class Client implements Serializable {
 	private String photoCheckSum;
 
 	public Client() {
-		
+
 	}
-	
+
 	@Lob
 	private String contacts;
 
@@ -78,7 +75,6 @@ public class Client implements Serializable {
 
 	@Temporal(TemporalType.DATE)
 	private Date date;
-
 
 	public Client(String surname, String firstname, String middlename, boolean gender, Blob avatar, Date date, String photoName, String photoChecksum) {
 		setSurname(surname);
@@ -161,7 +157,11 @@ public class Client implements Serializable {
 		this.id = id;
 	}
 
-	@ManyToMany(mappedBy = "clients", fetch = FetchType.EAGER, targetEntity = ChronicDisease.class, cascade = CascadeType.ALL)
+	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL ,targetEntity = ChronicDisease.class)
+	@JoinTable(name = "link_chronicdisease_client", 
+		joinColumns = @JoinColumn(name = "clients_id", nullable = false, updatable = false), 
+		inverseJoinColumns = @JoinColumn(name = "diseases_id", nullable = false, updatable = false) 
+	)
 	public Set<ChronicDisease> getDiseases() {
 		return diseases;
 	}
@@ -170,7 +170,7 @@ public class Client implements Serializable {
 		this.diseases = diseases;
 	}
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.EAGER, targetEntity = NightStay.class, cascade = CascadeType.ALL)
 	@JoinColumn(name = "nightStay")
 	public NightStay getNightstay() {
 		return nightStay;
@@ -180,7 +180,7 @@ public class Client implements Serializable {
 		this.nightStay = nightStay;
 	}
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.EAGER, targetEntity = Education.class, cascade = CascadeType.ALL)
 	@JoinColumn(name = "education")
 	public Education getEducation() {
 		return education;
@@ -198,7 +198,11 @@ public class Client implements Serializable {
 		this.homelessdate = homelessdate;
 	}
 
-	@ManyToMany(mappedBy = "clients", fetch = FetchType.EAGER, targetEntity = Breadwinner.class, cascade = CascadeType.ALL)
+	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL ,targetEntity = Breadwinner.class)
+	@JoinTable(name = "link_breadwinner_client", 
+		joinColumns = @JoinColumn(name = "clients_id", nullable = false, updatable = false), 
+		inverseJoinColumns = @JoinColumn(name = "breadwinners_id", nullable = false, updatable = false) 
+	)
 	public Set<Breadwinner> getBreadwinners() {
 		return breadwinners;
 	}
@@ -207,7 +211,11 @@ public class Client implements Serializable {
 		this.breadwinners = breadwinners;
 	}
 
-	@ManyToMany(mappedBy = "clients", fetch = FetchType.EAGER, targetEntity = Reasonofhomeless.class, cascade = CascadeType.ALL)
+	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL ,targetEntity = Reasonofhomeless.class)
+	@JoinTable(name = "link_reasonofhomeless_client", 
+		joinColumns = @JoinColumn(name = "clients_id", nullable = false, updatable = false), 
+		inverseJoinColumns = @JoinColumn(name = "reasonofhomeless_id", nullable = false, updatable = false) 
+	)
 	public Set<Reasonofhomeless> getReasonofhomeless() {
 		return reasonofhomeless;
 	}
@@ -240,7 +248,7 @@ public class Client implements Serializable {
 		this.dependents = dependents;
 	}
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.EAGER, targetEntity = FamilyCommunication.class, cascade = CascadeType.ALL)
 	@JoinColumn(name = "familycommunication")
 	public FamilyCommunication getFcom() {
 		return fcom;
@@ -343,7 +351,7 @@ public class Client implements Serializable {
 	}
 
 	@OneToMany(fetch = FetchType.EAGER, targetEntity = RecievedService.class, cascade = CascadeType.ALL, orphanRemoval = true)
-	@JoinColumn (name = "client")
+	@JoinColumn(name = "client")
 	public Set<RecievedService> getRecievedservices() {
 		return recievedservices;
 	}

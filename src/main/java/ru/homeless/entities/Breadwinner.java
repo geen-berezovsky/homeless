@@ -6,7 +6,9 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinTable;
@@ -22,7 +24,7 @@ public class Breadwinner implements ICheckBoxAction, Serializable {
 	private static final long serialVersionUID = 1L;
 	private int id;
 	private String caption;
-	private Set<Client> clients;
+	//private Set<Client> clients;
 	private int audience;
 	
 	public Breadwinner() {
@@ -32,7 +34,7 @@ public class Breadwinner implements ICheckBoxAction, Serializable {
 	public Breadwinner(String caption, int audience) {
 		setCaption(caption);
 		setAudience(audience);
-		clients = new HashSet<Client>();
+		//clients = new HashSet<Client>();
 	}
 
 	@Id
@@ -53,8 +55,8 @@ public class Breadwinner implements ICheckBoxAction, Serializable {
 		this.caption = caption;
 	}
 
-	@ManyToMany
-	@JoinTable(name="link_breadwinner_client")
+	/*
+	@ManyToMany(fetch = FetchType.EAGER, mappedBy = "breadwinners")
 	public Set<Client> getClients() {
 		return clients;
 	}
@@ -66,6 +68,7 @@ public class Breadwinner implements ICheckBoxAction, Serializable {
 	public void addClient(Client client) {
 		clients.add(client);
 	}
+	*/
 
 	public int getAudience() {
 		return audience;

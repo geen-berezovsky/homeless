@@ -5,13 +5,13 @@
 
 	<h:panelGrid columns="2" cellpadding="5">
 		<h:outputText value="Семейное положение:" />
-		<p:selectOneMenu id="martialId" value="#{clientform.client.martialStatus}">
+		<p:selectOneMenu id="martialId" value="#{clientform.martialStatus}">
 			<f:selectItem itemLabel="Нет ответа" itemValue="0" />
 			<f:selectItem itemLabel="Состоит в браке" itemValue="1" />
 			<f:selectItem itemLabel="Не состоит в браке" itemValue="2" />
 		</p:selectOneMenu>
 		<h:outputText value="Наличие иждивенцев:" />
-		<p:selectOneMenu id="dependentsId" value="#{clientform.client.dependents}">
+		<p:selectOneMenu id="dependentsId" value="#{clientform.dependents}">
 			<f:selectItem itemLabel="Нет ответа" itemValue="0" />
 			<f:selectItem itemLabel="Да" itemValue="1" />
 			<f:selectItem itemLabel="Нет" itemValue="2" />
@@ -23,24 +23,24 @@
 			<f:selectItem itemLabel="Нет" itemValue="2" />
 		</p:selectOneMenu>
 		<h:outputText value="Вид профессии:" />
-		<p:inputText name="professionDetails" id="professionDetailsId" value="#{clientform.client.profession}" />
+		<p:inputText name="professionDetails" id="professionDetailsId" value="#{clientform.profession}" />
 		<h:outputText value="Образование:" />
-		<p:selectOneMenu id="educationId" value="#{clientform.client.education.caption}">
-			<f:selectItems value="#{clientform.getEducationTypes()}" var="education" itemValue="#{education}" />
+		<p:selectOneMenu id="educationId" value="#{clientform.education.caption}">
+			<f:selectItems value="#{clientform.educationTypes}" var="education" itemValue="#{education}" />
 		</p:selectOneMenu>
 		<h:outputText value="Прожив. в жил. помещении:" />
-		<p:selectOneMenu id="liveInFlatId" value="#{clientform.client.liveInFlat}">
+		<p:selectOneMenu id="liveInFlatId" value="#{clientform.liveInFlat}">
 			<f:selectItem itemLabel="Нет ответа" itemValue="0" />
 			<f:selectItem itemLabel="Да" itemValue="1" />
 			<f:selectItem itemLabel="Нет" itemValue="2" />
 		</p:selectOneMenu>
 		<h:outputText value="Где ночевали:" />
-		<p:selectOneMenu id="nightStayId" value="#{clientform.client.nightstay.caption}">
-			<f:selectItems value="#{clientform.getNightStayTypes()}" var="nightStay" itemValue="#{nightStay}" />
+		<p:selectOneMenu id="nightStayId" value="#{clientform.nightStay.caption}">
+			<f:selectItems value="#{clientform.nightStayTypes}" var="nightStay" itemValue="#{nightStay}" />
 		</p:selectOneMenu>
 		<h:outputText value="Видитесь ли с родственниками:" />
-		<p:selectOneMenu id="familyCommunicationsId" value="#{clientform.client.fcom.caption}">
-			<f:selectItems value="#{clientform.getFamilyCommunicationTypes()}" var="familyCommunication" itemValue="#{familyCommunication}" />
+		<p:selectOneMenu id="familyCommunicationsId" value="#{clientform.fcom.caption}">
+			<f:selectItems value="#{clientform.familyCommunicationTypes}" var="familyCommunication" itemValue="#{familyCommunication}" />
 		</p:selectOneMenu>
 
 

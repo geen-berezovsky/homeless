@@ -10,8 +10,10 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -62,21 +64,17 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
 	private int selectedMonth;
 	private int selectedYear;
 	private String formattedDate;
-	private String clientFormGender;
 	
 	//chronical disasters 'another' feature 
 	private boolean anotherChronicalDisasterChecked = false;
-	private String anotherChronicsValue = ""; //fake	
 	private String anotherChronicsStyle = "";
 	
 	//breadwinner 'another' feature
 	private boolean anotherBreadwinnerChecked = false;
-	private String anotherBreadwinnerValue = ""; //fake
 	private String anotherBreadwinnerStyle = ""; //fake
 
 	//homeless reasons 'another' feature
 	private boolean anotherHomelessReasonChecked = false;
-	private String anotherHomelessReasonValue = ""; //fake
 	private String anotherHomelessReasonStyle = ""; //fake
 	
 	private int hasProfession = 0;
@@ -85,7 +83,10 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
 	private List<String> chronicDiseaseTypes = null;
 	private List<String> clientBreadwinners;
 
-
+	private List<String> educationTypes;
+	private List<String> nightStayTypes;
+	private List<String> familyCommunicationTypes;
+	private List<String> breadwinnerTypes;
 
 	public ClientFormBean() {
 	}
@@ -102,7 +103,6 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
 		if (client !=null && client.getUniqDisease()!=null && !client.getUniqDisease().trim().equals("")) {
 			setAnotherChronicalDisasterChecked(true); //toggle checbox "Another" for chronical disasters 
 			toggleAnotherChronicsStyle(true); //show input "Another" for chronical disasters
-			anotherChronicsValue = client.getUniqDisease();
 		} else {
 			setAnotherChronicalDisasterChecked(false); //toggle checbox "Another" for chronical disasters
 			toggleAnotherChronicsStyle(false); //hide input "Another" for chronical disasters
@@ -112,7 +112,6 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
 		if (client !=null && client.getUniqBreadwinner()!=null && !client.getUniqBreadwinner().trim().equals("")) {
 			setAnotherBreadwinnerChecked(true); //toggle checbox "Another" for breadwinners
 			toggleAnotherBreadwinnerStyle(true); //show input "Another" for breadwinners
-			anotherBreadwinnerValue = client.getUniqBreadwinner();
 
 		} else {
 			setAnotherBreadwinnerChecked(false); //toggle checbox "Another" for breadwinners
@@ -123,7 +122,6 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
 		if (client !=null && client.getUniqReason()!=null && !client.getUniqReason().trim().equals("")) {
 			setAnotherHomelessReasonChecked(true); //toggle checbox "Another" for homeless reasons
 			toggleAnotherHomelessReasonStyle(true); //show input "Another" for homeless reasons
-			anotherHomelessReasonValue = client.getUniqReason();
 		} else {
 			setAnotherHomelessReasonChecked(false); //toggle checbox "Another" for homeless reasons
 			toggleAnotherHomelessReasonStyle(false); //hide input "Another" for homeless reasons
@@ -228,6 +226,7 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
 	/*
 	 * Get all Breadwinners from the database
 	 */
+	
 	public List<String> getBreadwinnerTypes() {
 		BreadwinnerDAO bDAO = new BreadwinnerDAO();
 		List<String> l = new ArrayList<String>();
@@ -347,7 +346,7 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
 			anotherChronicsStyle = "display:block;";
 		} else {
 			anotherChronicsStyle = "display:none;";
-			anotherChronicsValue = null;
+			setUniqDisease(null);
 		}
 	}
 	public void selectedChronicsItemsChanged(ValueChangeEvent event) {
@@ -372,22 +371,6 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
 		this.anotherChronicsStyle = anotherChronicsStyle;
 	}
 
-	public String getAnotherChronicsValue() {
-		if (client != null) {
-			if (client.getUniqDisease()!=null) {
-				return client.getUniqDisease();
-			} else {
-				return "";	
-			}
-		} else {
-			return "";
-		}
-	}
-
-	public void setAnotherChronicsValue(String anotherChronicsValue) {
-		this.anotherChronicsValue = anotherChronicsValue;
-		client.setUniqDisease(anotherChronicsValue);
-	}
 	public boolean isAnotherChronicalDisasterChecked() {
 		return anotherChronicalDisasterChecked;
 	}
@@ -404,7 +387,7 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
 			anotherBreadwinnerStyle = "display:block;";
 		} else {
 			anotherBreadwinnerStyle = "display:none;";
-			anotherBreadwinnerValue = null;
+			setUniqBreadwinner(null);
 		}
 	}
 	public void selectedBreadwinnersItemsChanged(ValueChangeEvent event) {
@@ -413,23 +396,6 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
 		rc.update("chronical_distasters_form:anotherBreadwinners");		
 	}
 	
-	public String getAnotherBreadwinnerValue() {
-		if (client != null) {
-			if (client.getUniqBreadwinner()!=null) {
-				return client.getUniqBreadwinner();
-			} else {
-				return "";	
-			}
-		} else {
-			return "";
-		}
-	}
-
-	public void setAnotherBreadwinnerValue(String anotherBreadwinnerValue) {
-		this.anotherBreadwinnerValue = anotherBreadwinnerValue;
-		client.setUniqBreadwinner(anotherBreadwinnerValue);
-	}
-
 	public String getAnotherBreadwinnerStyle() {
 		return anotherBreadwinnerStyle;
 	}
@@ -454,7 +420,7 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
 			anotherHomelessReasonStyle = "display:block;";
 		} else {
 			anotherHomelessReasonStyle = "display:none;";
-			anotherHomelessReasonValue = null;
+			setUniqReason(null);
 		}
 	}
 	public void selectedHomelessReasonItemsChanged(ValueChangeEvent event) {
@@ -470,22 +436,6 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
 
 	public void setAnotherHomelessReasonChecked(boolean anotherHomelessReasonChecked) {
 		this.anotherHomelessReasonChecked = anotherHomelessReasonChecked;
-	}
-
-	public String getAnotherHomelessReasonValue() {
-		if (client != null) {
-			if (client.getUniqReason()!=null) {
-				return client.getUniqReason();
-			} else {
-				return "";	
-			}
-		} else {
-			return "";
-		}
-	}
-
-	public void setAnotherHomelessReasonValue(String anotherHomelessReasonValue) {
-		this.anotherHomelessReasonValue = anotherHomelessReasonValue;
 	}
 
 	public String getAnotherHomelessReasonStyle() {
@@ -515,8 +465,11 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
 
 	public void saveClientForm(ClientFormBean cfb) {
 		FacesMessage msg = null;
-		
-		copyClientDataToClient(client);
+
+		//update "homeless till the moment" (don't move it after client data copying!)
+		updateHomelessDate(selectedMonth);
+
+		client = copyClientDataToClient(client);
 		
 		//Update Surname, FirstName and MiddleName for starting with uppercase letter
 		String fl = client.getSurname().toUpperCase().substring(0,1);
@@ -528,6 +481,39 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
 		fl = client.getMiddlename().toUpperCase().substring(0,1);
 		ll = client.getMiddlename().toLowerCase().substring(1,client.getMiddlename().length());
 		client.setMiddlename(fl+ll);
+		
+
+		//update homeless reasons, breadwinners, chronical disasters
+		Set<Breadwinner> sb = new HashSet<Breadwinner>();
+		for (Breadwinner b : new BreadwinnerDAO().getAllBreadwinnerTypes()) {
+			for (String cb : clientBreadwinners) {
+				if (b.getCaption().equals(cb)) {
+					sb.add(b);
+				}
+			}
+		}
+		client.setBreadwinners(sb);
+
+		Set<Reasonofhomeless> sr = new HashSet<Reasonofhomeless>();
+		for (Reasonofhomeless b : new ReasonOfHomelessDAO().getAllReasonofhomelessTypes()) {
+			for (String cb : clientReasonsofhomeless) {
+				if (b.getCaption().equals(cb)) {
+					sr.add(b);
+				}
+			}
+		}
+		client.setReasonofhomeless(sr);
+		
+		Set<ChronicDisease> chd = new HashSet<ChronicDisease>();
+		for (ChronicDisease b : new ChronicDiseaseDAO().getAllChronicDiseaseTypes()) {
+			for (String cb : clientChronicDisease) {
+				if (b.getCaption().equals(cb)) {
+					chd.add(b);
+				}
+			}
+		}
+		client.setDiseases(chd);
+		
 
 		
 		ClientDAO cd = new ClientDAO();
@@ -628,7 +614,6 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
 		}
 		Calendar c = GregorianCalendar.getInstance();
 		c.set(year, month, 1, 0, 0, 0);
-
 		// setting updated value to the client
 		setHomelessdate(c.getTime());
 	}	
@@ -643,22 +628,6 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
 
 	public void setFormattedDate(String formattedDate) {
 		this.formattedDate = formattedDate;
-	}
-
-	public String getClientFormGender() {
-		if (client != null) {
-			if (client.isGender()) {
-				return "Мужской";	
-			} else {
-				return "Женский";				
-			}
-		} else {
-			return "Unknkown";
-		}
-	}
-
-	public void setClientFormGender(String gender) {
-		this.clientFormGender = gender;
 	}
 
 	public int getHasProfession() {
@@ -691,6 +660,22 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
 
 	public void setClientBreadwinners(List<String> clientBreadwinners) {
 		this.clientBreadwinners = clientBreadwinners;
+	}
+
+	public void setEducationTypes(List<String> educationTypes) {
+		this.educationTypes = educationTypes;
+	}
+
+	public void setNightStayTypes(List<String> nightStayTypes) {
+		this.nightStayTypes = nightStayTypes;
+	}
+
+	public void setFamilyCommunicationTypes(List<String> familyCommunicationTypes) {
+		this.familyCommunicationTypes = familyCommunicationTypes;
+	}
+
+	public void setBreadwinnerTypes(List<String> breadwinnerTypes) {
+		this.breadwinnerTypes = breadwinnerTypes;
 	}
 
 

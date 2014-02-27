@@ -14,6 +14,7 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
 
+import ru.homeless.entities.Breadwinner;
 import ru.homeless.entities.Client;
 import ru.homeless.util.HibernateUtil;
 
@@ -80,7 +81,6 @@ public class ClientDAO {
 			tx = session.beginTransaction();
 			session.update(client);
 			tx.commit();
-			//session.flush();
 			if (tx.wasCommitted()) {
 				log.info("Client "+client.getId()+" has been successfully updated");
 				map.put(true, "Клиент "+client.getId()+" успешно обновлен");

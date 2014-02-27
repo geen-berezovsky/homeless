@@ -91,7 +91,7 @@ public class ClientDataBean implements Serializable {
 		setAvatar(c.getAvatar());
 		setDate(c.getDate());
 	}
-	protected void copyClientDataToClient(Client c) {
+	protected Client copyClientDataToClient(Client c) {
 		c.setId(getId());
 		c.setSurname(getSurname());
 		c.setMiddlename(getMiddlename());
@@ -120,6 +120,7 @@ public class ClientDataBean implements Serializable {
 		c.setWhereWasBorn(getWhereWasBorn());
 		c.setAvatar(getAvatar());
 		c.setDate(getDate());
+		return c;
 	}
 	
 	public String toString() {
