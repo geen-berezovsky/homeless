@@ -57,7 +57,7 @@
 				</p:column>
 				<p:column style="width:4%">
 					<p:commandButton action="#{clientform.reloadAll(client.id)}" id="selectButton" icon="ui-icon-search" oncomplete="displayFoundByName.hide()" title="Открыть клиента" ajax="true"
-						update=":base_form :add_services" />
+						update=":m_tabview:base_form :add_services" />
 				</p:column>
 			</p:dataTable>
 		</p:dialog>

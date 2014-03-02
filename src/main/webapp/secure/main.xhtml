@@ -1,10 +1,6 @@
 <?xml version = "1.0" encoding = "UTF-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:p="http://primefaces.org/ui">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui">
 
 <h:head>
 	<title>Добро пожаловать, #{user.name}!</title>
@@ -22,60 +18,65 @@
 <h:body>
 	<ui:include src="clientform/mainmenu.xhtml" />
 
-	<!-- *** Basic Client Form *** -->
-	<h:form id="base_form">
-		<p:panel id="base_cliet_edit_panel">
-			<div id="client_main_panel">
-				<div id="client_edit_window">
-					<p:fieldset>
-						<div id="base_form_div">
-							<ui:include src="clientform/maininfo.xhtml" />
-						</div>
-						<div id="services_div">
-							<p:fieldset legend="Оказанные услуги">
-								<ui:include src="clientform/providedservices.xhtml" />
-							</p:fieldset>
-						</div>
-						<div id="optional_info_div">
+	<p:tabView effect="fade" effectDuration="normal" id="m_tabview">
+		<p:tab title="Базовая информация">
+			<!-- *** Basic Client Form *** -->
+			<h:form id="base_form">
+				<p:panel id="base_cliet_edit_panel">
+					<div id="client_main_panel">
+						<div id="client_edit_window">
 							<p:fieldset>
-								<div id="personal_info_div">
-									<p:fieldset legend="Персональная информация">
-										<ui:include src="clientform/personalinfo.xhtml" />
+								<div id="base_form_div">
+									<ui:include src="clientform/maininfo.xhtml" />
+								</div>
+								<div id="services_div">
+									<p:fieldset legend="Оказанные услуги">
+										<ui:include src="clientform/providedservices.xhtml" />
 									</p:fieldset>
 								</div>
-								<div id="homeless_reasons_div">
-									<p:fieldset legend="Причины бездомности">
-										<ui:include src="clientform/homelessreasons.xhtml" />
+								<div id="optional_info_div">
+									<p:fieldset>
+										<div id="personal_info_div">
+											<p:fieldset legend="Персональная информация">
+												<ui:include src="clientform/personalinfo.xhtml" />
+											</p:fieldset>
+										</div>
+										<div id="homeless_reasons_div">
+											<p:fieldset legend="Причины бездомности">
+												<ui:include src="clientform/homelessreasons.xhtml" />
+											</p:fieldset>
+										</div>
+										<div id="existence_sources_div">
+											<p:fieldset legend="Источники существования">
+												<ui:include src="clientform/breadwinner.xhtml" />
+											</p:fieldset>
+										</div>
+										<div id="chronical_distasters_div">
+											<p:fieldset legend="Хронические заболевания">
+												<ui:include src="clientform/chronicaldisasters.xhtml" />
+											</p:fieldset>
+										</div>
 									</p:fieldset>
 								</div>
-								<div id="existence_sources_div">
-									<p:fieldset legend="Источники существования">
-										<ui:include src="clientform/breadwinner.xhtml" />
-									</p:fieldset>
-								</div>
-								<div id="chronical_distasters_div">
-									<p:fieldset legend="Хронические заболевания">
-										<ui:include src="clientform/chronicaldisasters.xhtml" />
-									</p:fieldset>
-								</div>
+
+								<!-- optional info -->
 							</p:fieldset>
+							<p:growl id="growl" showDetail="true" life="3000" />
+							<center>
+								<p:commandButton value="Сохранить" actionListener="#{clientform.saveClientForm(clientform)}" id="saveClientForm" update="@this :m_tabview:base_form base_form_panel_grid growl" icon="ui-icon-check" />
+							</center>
 						</div>
+						<!-- client edit window -->
+					</div>
+				</p:panel>
 
-						<!-- optional info -->
-					</p:fieldset>
-					<p:growl id="growl" showDetail="true" life="3000" />
-					<center>
-						<p:commandButton value="Сохранить"
-							actionListener="#{clientform.saveClientForm(clientform)}" id="saveClientForm"
-							update="@this :base_form base_form_panel_grid growl" icon="ui-icon-check" />
-					</center>
-				</div>
-				<!-- client edit window -->
-			</div>
-		</p:panel>
+			</h:form>
+			<!-- *** End Of Basic Client Form *** -->
 
-	</h:form>
-	<!-- *** End Of Basic Client Form *** -->
+		</p:tab>
+		<p:tab title="Документы">
+		</p:tab>
+	</p:tabView>
 
 	<!-- Include Dialogs -->
 	<ui:include src="dialogs/search.xhtml" />

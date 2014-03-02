@@ -21,7 +21,7 @@
 			<p:panel>
 				<center>
 					<p:commandButton value="Добавить отмеченное" id="addNewServices" actionListener="#{services.addSelectedServices(clientform)}" ajax="true" oncomplete="addServiceWv.hide()"
-						update=":base_form addService @this" />
+						update=":m_tabview:base_form addService @this" />
 				</center>
 			</p:panel>
 		</p:dialog>
