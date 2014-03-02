@@ -12,12 +12,16 @@
 			searchByIdDlg.hide();
 			displayFoundByName.show()
 		}
+		
+		function reload() {
+			location.reload();
+		}
 	</script>
 
 </h:head>
 <h:body>
 	<ui:include src="clientform/mainmenu.xhtml" />
-
+<p:panel id="base_panel" widgetVar="base_panelWv" style="#{clientform.mainPanelVisibility}">
 	<p:tabView effect="fade" effectDuration="normal" id="m_tabview">
 		<p:tab title="Базовая информация">
 			<!-- *** Basic Client Form *** -->
@@ -77,7 +81,7 @@
 		<p:tab title="Документы">
 		</p:tab>
 	</p:tabView>
-
+</p:panel>
 	<!-- Include Dialogs -->
 	<ui:include src="dialogs/search.xhtml" />
 	<ui:include src="dialogs/addservices.xhtml" />

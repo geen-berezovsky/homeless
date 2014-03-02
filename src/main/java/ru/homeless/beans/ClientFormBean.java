@@ -64,6 +64,7 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
 	private int selectedMonth;
 	private int selectedYear;
 	private String formattedDate;
+	private String mainPanelVisibility;
 	
 	//chronical disasters 'another' feature 
 	private boolean anotherChronicalDisasterChecked = false;
@@ -89,10 +90,16 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
 	private List<String> breadwinnerTypes;
 
 	public ClientFormBean() {
+		this.mainPanelVisibility = "display: none;"; 
 	}
 
 	public void reloadAll(int id) throws SQLException {
 		this.cid = id;
+		this.mainPanelVisibility = "display: block;";
+		RequestContext rc = RequestContext.getCurrentInstance();
+		rc.execute("reload();");
+		
+
 		reloadAll();
 	}
 
@@ -676,6 +683,14 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
 
 	public void setBreadwinnerTypes(List<String> breadwinnerTypes) {
 		this.breadwinnerTypes = breadwinnerTypes;
+	}
+
+	public String getMainPanelVisibility() {
+		return mainPanelVisibility;
+	}
+
+	public void setMainPanelVisibility(String mainPanelVisibility) {
+		this.mainPanelVisibility = mainPanelVisibility;
 	}
 
 
