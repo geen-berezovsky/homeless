@@ -1,0 +1,134 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui">
+<ui:composition>
+	<h:form id="add_document">
+		<p:messages />
+		<p:dialog id="addDocument" header="Добавить документ" widgetVar="addDocumentWv" resizable="false" closable="true" modal="true" showEffect="fade" hideEffect="explode" dynamic="true"
+			closeOnEscape="true" onShow="#{clientdocuments.newSelectedDocument()}">
+			<h:panelGrid columns="2">
+
+				<p:row>
+					<p:column>
+						<p:outputLabel value="Тип документа:" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column>
+						<p:selectOneMenu id="docTypeId" value="#{clientdocuments.selectedDocument.id}">
+							<f:selectItems value="#{clientdocuments.docTypes}" var="docType" itemValue="#{docType}" />
+						</p:selectOneMenu>
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column>
+						<p:outputLabel value="Серия:" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column>
+						<p:message display="tooltip" for="ad_prefix" />
+						<p:inputText value="#{clientdocuments.selectedDocument.docPrefix}" id="ad_prefix" validator="#{clientdocuments.validatePrefix}" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column>
+						<p:outputLabel value="Номер:" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column>
+						<p:message display="tooltip" for="ad_number" />
+						<p:inputText value="#{clientdocuments.selectedDocument.docNum}" id="ad_number" validator="#{clientdocuments.validateNumber}" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column>
+						<p:outputLabel value="Дата выдачи:" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column>
+						<p:message display="tooltip" for="ad_date" />
+						<p:calendar value="#{clientdocuments.selectedDocument.date}" id="ad_date" showOn="button" pattern="dd.MM.yyyy" validator="#{clientdocuments.validateDate}"/>
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column>
+						<p:outputLabel value="Кем выдан:" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column>
+						<p:message display="tooltip" for="ad_who" />
+						<p:inputText value="#{clientdocuments.selectedDocument.whereAndWhom}" id="ad_who" validator="#{clientdocuments.validateWho}" />
+					</p:column>
+				</p:row>
+				
+				<p:row>
+					<p:column>
+						<p:outputLabel value="Регистрация:" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column>
+						<p:selectOneMenu id="docRegistrationId" value="#{clientdocuments.selectedDocument.registration}">
+							<f:selectItem itemLabel="Нет ответа" itemValue="0" />
+							<f:selectItem itemLabel="Нет" itemValue="1" />
+							<f:selectItem itemLabel="Да" itemValue="2" />
+						</p:selectOneMenu>
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column>
+						<p:outputLabel value="Регистрация (город):" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column>
+						<p:message display="tooltip" for="ad_city" />
+						<p:inputText value="#{clientdocuments.selectedDocument.city}" id="ad_city" validator="#{clientdocuments.validateCity}" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column>
+						<p:outputLabel value="Регистрация (адрес):" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column>
+						<p:message display="tooltip" for="ad_address" />
+						<p:inputText value="#{clientdocuments.selectedDocument.address}" id="ad_address" validator="#{clientdocuments.validateAddress}" />
+					</p:column>
+				</p:row>
+				
+
+				<p:separator />
+				<center>
+					<p:commandButton value="Добавить документ" id="addNewDocumentB" actionListener="#{clientdocuments.addSelectedDocument}" ajax="true" oncomplete="addDocumentWv.hide()"
+						update="@this" />
+				</center>
+
+
+
+
+
+
+			</h:panelGrid>
+			<!--
+			<p:separator />
+			<p:selectManyCheckbox id="as_services" value="#{services.selectedItems}" layout="pageDirection">
+				<f:selectItems value="#{services.getAvailableServices()}" var="serviceTypes" itemValue="#{serviceTypes}" />
+			</p:selectManyCheckbox>
+
+			-->
+			<!-- 
+			<p:panel>
+				 
+			</p:panel>
+			 -->
+		</p:dialog>
+	</h:form>
+
+</ui:composition>
+</html>

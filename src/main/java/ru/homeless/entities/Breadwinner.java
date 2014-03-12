@@ -24,7 +24,6 @@ public class Breadwinner implements ICheckBoxAction, Serializable {
 	private static final long serialVersionUID = 1L;
 	private int id;
 	private String caption;
-	//private Set<Client> clients;
 	private int audience;
 	
 	public Breadwinner() {
@@ -34,7 +33,6 @@ public class Breadwinner implements ICheckBoxAction, Serializable {
 	public Breadwinner(String caption, int audience) {
 		setCaption(caption);
 		setAudience(audience);
-		//clients = new HashSet<Client>();
 	}
 
 	@Id
@@ -54,21 +52,6 @@ public class Breadwinner implements ICheckBoxAction, Serializable {
 	public void setCaption(String caption) {
 		this.caption = caption;
 	}
-
-	/*
-	@ManyToMany(fetch = FetchType.EAGER, mappedBy = "breadwinners")
-	public Set<Client> getClients() {
-		return clients;
-	}
-
-	public void setClients(Set<Client> clients) {
-		this.clients = clients;
-	}
-	
-	public void addClient(Client client) {
-		clients.add(client);
-	}
-	*/
 
 	public int getAudience() {
 		return audience;

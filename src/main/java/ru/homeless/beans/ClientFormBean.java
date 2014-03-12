@@ -25,9 +25,11 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.event.ValueChangeEvent;
 import javax.faces.validator.ValidatorException;
+import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
+import org.primefaces.event.TabChangeEvent;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 
@@ -57,13 +59,10 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private int cid;
 
-	private StreamedContent clientFormAvatar; //fake
+
 	private Client client;
 	private List<RecievedService> servicesList;
 	private List<String> clientChronicDisease; //fake
-	private int selectedMonth;
-	private int selectedYear;
-	private String formattedDate;
 	private String mainPanelVisibility;
 	
 	//chronical disasters 'another' feature 
@@ -134,6 +133,11 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
 			toggleAnotherHomelessReasonStyle(false); //hide input "Another" for homeless reasons
 		}
 		
+		//set actual client id to session for using in another applications
+		HttpSession session = Util.getSession();
+		session.setAttribute("cid", cid);
+
+		
 		log.info("Successfully loaded data for client id=" + this.cid + ", " + client.getSurname() + " " + client.getFirstname() + " " + client.getMiddlename());
 	}
 
@@ -143,7 +147,8 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
 		//copy data to externalized class data
 		log.info("Client ID = "+client.getId()+" has been selected for usage");
 		copyClientToClientData(client);
-		setAvatar(getClientFormAvatar());
+		//setClientFormAvatar(clientFormAvatar);
+		//setAvatar(getClientFormAvatar());
 		updateHomelessDate();
 	}
 
@@ -155,24 +160,6 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
 	public void reloadClientReceivedServices() {
 		servicesList = new ArrayList<RecievedService>(client.getRecievedservices());
 		Collections.sort(servicesList, new RecievedServiceSortingComparator());
-	}
-
-	public StreamedContent getClientFormAvatar() {
-		if (client != null && client.getAvatar() != null) {
-			InputStream imageInByteArray = null;
-			try {
-				imageInByteArray = client.getAvatar().getBinaryStream();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-			return new DefaultStreamedContent(imageInByteArray, "image/png");
-		} else {
-			return null;
-		}
-	}
-
-	public void setAvatar(StreamedContent avatar) {
-		this.clientFormAvatar = avatar;
 	}
 
 	public Client getClient() {
@@ -454,22 +441,6 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
 	}
 	// ****************** Working with dynamic change of "Другие" for Homeless Reasons section *******
 	
-	public int getSelectedMonth() {
-		return selectedMonth;
-	}
-
-	public void setSelectedMonth(int selectedMonth) {
-		this.selectedMonth = selectedMonth;
-	}
-
-	public int getSelectedYear() {
-		return selectedYear;
-	}
-
-	public void setSelectedYear(int selectedYear) {
-		this.selectedYear = selectedYear;
-	}
-
 	public void saveClientForm(ClientFormBean cfb) {
 		FacesMessage msg = null;
 
@@ -625,18 +596,6 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
 		setHomelessdate(c.getTime());
 	}	
 	
-	public String getFormattedDate() {
-		if (client != null) {
-			return Util.formatDate(client.getDate());
-		} else {
-			return "";
-		}
-	}
-
-	public void setFormattedDate(String formattedDate) {
-		this.formattedDate = formattedDate;
-	}
-
 	public int getHasProfession() {
 		if (client == null || client.getProfession() == null || client.getProfession().trim().equals("")) {
 			return 0; // Нет ответа
@@ -649,6 +608,12 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
 		}
 	}
 
+	public void tabChangeListener(TabChangeEvent event) {
+		FacesContext context = FacesContext.getCurrentInstance();
+		ClientDocumentsBean cdb = context.getApplication().evaluateExpressionGet(context, "#{clientdocuments}", ClientDocumentsBean.class);
+		cdb.reload();
+	}
+	
 	public void setHasProfession(int hasProfession) {
 		this.hasProfession = hasProfession;
 	}

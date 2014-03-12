@@ -26,6 +26,8 @@
   <mapping class="ru.homeless.entities.Worker"/>
   <mapping class="ru.homeless.entities.RecievedService"/>
   <mapping class="ru.homeless.entities.ServicesType"/>
+  <mapping class="ru.homeless.entities.Document"/>
+  <mapping class="ru.homeless.entities.DocType"/>
       
       <!--
       
@@ -36,8 +38,6 @@
       
 <!--   
 
-  <mapping class="ru.homeless.entities.Document"/>
-  <mapping class="ru.homeless.entities.DocType"/>
 
   <mapping class="ru.homeless.entities.ServContract"/>
   <mapping class="ru.homeless.entities.ContractPoints"/>

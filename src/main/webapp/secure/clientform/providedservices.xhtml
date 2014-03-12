@@ -4,7 +4,7 @@
 <ui:composition>
 	<!-- Include operations with datatables -->
 	<p:contextMenu for="recievedservice">
-		<p:menuitem value="Delete" update="recievedservice" icon="ui-icon-close" actionListener="#{services.deleteService}" action="#{clientform.reloadAll()}" ajax="true" />
+		<p:menuitem value="Удалить" update="recievedservice" icon="ui-icon-close" actionListener="#{services.deleteService}" action="#{clientform.reloadAll()}" ajax="true" />
 	</p:contextMenu>
 
 	<p:dataTable id="recievedservice" var="recievedservice" value="#{clientform.servicesList}" paginator="true" rows="10"

@@ -1,23 +1,17 @@
 <?xml version = "1.0" encoding = "UTF-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:p="http://primefaces.org/ui">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui">
 <ui:composition>
 	<h:form id="megaMenu">
 		<p:megaMenu>
 			<p:submenu label="Клиенты">
 				<p:column>
 					<p:submenu>
-						<p:menuitem value="Найти клиента"
-							onclick="searchByNameDlg.show();"></p:menuitem>
-						<p:menuitem value="Найти клиента по рег. номеру"
-							onclick="searchByIdDlg.show()"></p:menuitem>
-						<p:menuitem value="Мои клиенты" url="#"></p:menuitem>
+						<p:menuitem value="Найти клиента" onclick="searchByNameDlg.show();"></p:menuitem>
+						<p:menuitem value="Найти клиента по рег. номеру" onclick="searchByIdDlg.show()"></p:menuitem>
+						<p:menuitem value="Мои клиенты" onclick="cameraServiceWv.show();"></p:menuitem>
 						<p:menuitem value="Оказанные мной услуги" url="#"></p:menuitem>
-						<p:menuitem value="Добавить клиента" url="#"></p:menuitem>
+						<p:menuitem value="Добавить клиента" onclick="addClientWv.show();"></p:menuitem>
 					</p:submenu>
 				</p:column>
 			</p:submenu>
@@ -38,8 +32,7 @@
 			</p:submenu>
 			<p:submenu label="Просроченные прививки и ФЛГ"></p:submenu>
 			<p:submenu label="Справка"></p:submenu>
-			<p:menuitem value="Выход" actionListener="#{user.logout}"
-				ajax="false" />
+			<p:menuitem value="Выход" actionListener="#{user.logout}" ajax="false" />
 		</p:megaMenu>
 	</h:form>
 </ui:composition>

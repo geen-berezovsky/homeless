@@ -50,6 +50,7 @@ public class Client implements Serializable {
 	private Set<Reasonofhomeless> reasonofhomeless;
 
 	private Set<RecievedService> recievedservices;
+	
 
 	private String uniqDisease;
 	private String uniqBreadwinner;
@@ -359,5 +360,6 @@ public class Client implements Serializable {
 	public void setRecievedservices(Set<RecievedService> recievedservices) {
 		this.recievedservices = recievedservices;
 	}
+
 
 }

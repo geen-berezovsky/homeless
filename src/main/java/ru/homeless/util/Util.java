@@ -2,12 +2,16 @@ package ru.homeless.util;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.ResourceBundle;
 
 import javax.faces.context.FacesContext;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 public class Util {
+	
+	public static ResourceBundle bundle = ResourceBundle.getBundle("config", FacesContext.getCurrentInstance().getViewRoot().getLocale());
 	
 	public static HttpSession getSession() {
 		return (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
@@ -15,6 +19,11 @@ public class Util {
 
 	public static HttpServletRequest getRequest() {
 		return (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+	}
+	
+	public static String getContextRealPath() {
+		ServletContext servletContext = (ServletContext) FacesContext.getCurrentInstance().getExternalContext().getContext();
+		return servletContext.getRealPath("");
 	}
 
 	public static String getUserName() {
@@ -34,6 +43,13 @@ public class Util {
 		SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy");
 		return formatter.format(query);
 	}
+
+	public static String getImagesStorageLocation() {
+        return bundle.getString("imagesStorageLocation");
+	}
 	
+	public static String getTempImagesStorageLocation() {
+        return bundle.getString("imagesTempStorageLocation");
+	}
 	
 }

@@ -1,15 +1,28 @@
 package ru.homeless.beans;
 
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.Stroke;
+import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.sql.Blob;
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.Set;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import javax.persistence.Lob;
+import javax.imageio.ImageIO;
 
 import org.apache.log4j.Logger;
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
 
 import ru.homeless.entities.Breadwinner;
 import ru.homeless.entities.ChronicDisease;
@@ -18,6 +31,7 @@ import ru.homeless.entities.Education;
 import ru.homeless.entities.FamilyCommunication;
 import ru.homeless.entities.NightStay;
 import ru.homeless.entities.Reasonofhomeless;
+import ru.homeless.util.Util;
 
 /*
  * This is class only for externalizing properties of selected client and persisting them to the database after
@@ -57,10 +71,18 @@ public class ClientDataBean implements Serializable {
 	private Blob avatar;
 	private Date date;
 
+	//custom
+	private StreamedContent clientFormAvatar; //fake
+	private String formattedDate;
+	protected int selectedMonth;
+	private int selectedYear;
+
+	
 	public ClientDataBean() {
 		
 	}
 
+	
 	protected void copyClientToClientData(Client c) {
 		setId(c.getId());
 		setSurname(c.getSurname());
@@ -353,5 +375,75 @@ public class ClientDataBean implements Serializable {
 	public void setDate(Date date) {
 		this.date = date;
 	}
+
+	public StreamedContent getClientFormAvatar() {
+		InputStream imageInByteArray = null;
+		if (getAvatar() != null) {
+			try {
+				imageInByteArray = getAvatar().getBinaryStream();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		} else {
+			
+			BufferedImage bi = new BufferedImage(177, 144, BufferedImage.TYPE_INT_ARGB);
+			Graphics2D g = bi.createGraphics();
+			Stroke drawingStroke = new BasicStroke(3);
+			Rectangle2D rect = new Rectangle2D.Double(0, 0, 177, 144);
+			
+			g.setStroke(drawingStroke);
+			g.draw(rect);
+			g.setPaint(Color.LIGHT_GRAY);
+			g.fill(rect);
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			try {
+				ImageIO.write(bi, "png", baos);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			try {
+				baos.flush();
+				imageInByteArray = new ByteArrayInputStream(baos.toByteArray());
+				baos.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return new DefaultStreamedContent(imageInByteArray, "image/png");
+	}
+
 	
+	public void setClientFormAvatar(StreamedContent clientFormAvatar) {
+		this.clientFormAvatar = clientFormAvatar;
+	}
+	
+	public String getFormattedDate() {
+		if (getDate() != null) {
+			return Util.formatDate(getDate());
+		} else {
+			return "";
+		}
+	}
+
+	public void setFormattedDate(String formattedDate) {
+		this.formattedDate = formattedDate;
+	}
+
+	public int getSelectedMonth() {
+		return selectedMonth;
+	}
+
+	public void setSelectedMonth(int selectedMonth) {
+		this.selectedMonth = selectedMonth;
+	}
+
+	public int getSelectedYear() {
+		return selectedYear;
+	}
+
+	public void setSelectedYear(int selectedYear) {
+		this.selectedYear = selectedYear;
+	}
+
+
 }

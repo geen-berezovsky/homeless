@@ -23,6 +23,7 @@
 	<ui:include src="clientform/mainmenu.xhtml" />
 <p:panel id="base_panel" widgetVar="base_panelWv" style="#{clientform.mainPanelVisibility}">
 	<p:tabView effect="fade" effectDuration="normal" id="m_tabview">
+		<p:ajax event="tabChange" listener="#{clientform.tabChangeListener}" update="base_form documents_form"/>  
 		<p:tab title="Базовая информация">
 			<!-- *** Basic Client Form *** -->
 			<h:form id="base_form">
@@ -79,12 +80,68 @@
 
 		</p:tab>
 		<p:tab title="Документы">
+			<!-- *** Client Documents Form *** -->
+			<h:form id="documents_form">
+				<p:panel id="documents_main_panel">
+					<div id="client_documents_panel_div">
+					
+					<p:contextMenu for="doclistId">
+						<p:menuitem value="Удалить" update="doclistId" icon="ui-icon-close" actionListener="#{clientdocuments.deleteDocument()}" action="#{clientdocuments.reload()}" ajax="true" />
+						<p:menuitem value="Редактировать" update="doclistId" icon="ui-icon-pencil" actionListener="#{clientdocuments.editDocument()}" action="#{clientdocuments.reload()}" ajax="true" />
+					</p:contextMenu>
+					
+					
+						<p:dataTable id="doclistId" var="doclist" value="#{clientdocuments.documentsList}" paginator="true" rows="15"
+				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15"
+				rowKey="#{doclist.id}" selection="#{clientdocuments.selectedDocument}" selectionMode="single">
+
+				<p:column headerText="ID">
+					<h:outputText value="#{doclist.id}" />
+				</p:column>
+
+				<p:column headerText="Тип">
+					<h:outputText value="#{doclist.doctype}" />
+				</p:column>
+				<p:column headerText="Серия">
+					<h:outputText value="#{doclist.docPrefix}" />
+				</p:column>
+				<p:column headerText="Номер">
+					<h:outputText value="#{doclist.docNum}" />
+				</p:column>
+				<p:column headerText="Орган выдачи">
+					<h:outputText value="#{doclist.whereAndWhom}" />
+				</p:column>
+				<p:column headerText="Дата выдачи">
+					<h:outputText value="#{clientdocuments.formatDate(doclist.date)}" />
+				</p:column>
+				<p:column headerText="Регистрация">
+					<h:outputText value="#{clientdocuments.getStringRegistrationConfirmation(doclist.registration)}" />
+				</p:column>
+				<p:column headerText="Регистрация: город">
+					<h:outputText value="#{doclist.city}" />
+				</p:column>
+				<p:column headerText="Регистрация: адрес">
+					<h:outputText value="#{doclist.address}" />
+				</p:column>
+				
+			</p:dataTable>
+			<center>
+				<p:commandButton value="Добавить документ" onclick="addDocumentWv.show();" icon="ui-icon-circle-plus" type="button" />
+			</center>
+			
+					
+					</div>
+				</p:panel>
+			</h:form>
 		</p:tab>
 	</p:tabView>
 </p:panel>
 	<!-- Include Dialogs -->
 	<ui:include src="dialogs/search.xhtml" />
 	<ui:include src="dialogs/addservices.xhtml" />
+	<ui:include src="dialogs/addclient.xhtml" />
+	<ui:include src="dialogs/webcamera.xhtml" />
+	<ui:include src="dialogs/adddocument.xhtml" />
 
 
 
