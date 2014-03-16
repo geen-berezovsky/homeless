@@ -3,10 +3,14 @@ package ru.homeless.entities;
 import static javax.persistence.GenerationType.IDENTITY;
 
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -29,6 +33,18 @@ public class DocType {
 		setAddressProof(addressProof);
 		setAudience(audience);
 		setBirthProof(birthProof);
+	}
+	
+	public boolean equals(Object o) {
+		if (o == this || o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		DocType d = (DocType) o;
+		if (getId() == d.getId()) {
+			return true;
+		}
+		
+		return false;
 	}
 
 	@Id

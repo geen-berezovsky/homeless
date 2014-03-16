@@ -27,6 +27,7 @@ import org.primefaces.model.StreamedContent;
 import ru.homeless.entities.Breadwinner;
 import ru.homeless.entities.ChronicDisease;
 import ru.homeless.entities.Client;
+import ru.homeless.entities.Document;
 import ru.homeless.entities.Education;
 import ru.homeless.entities.FamilyCommunication;
 import ru.homeless.entities.NightStay;
@@ -70,7 +71,7 @@ public class ClientDataBean implements Serializable {
 	private String whereWasBorn;
 	private Blob avatar;
 	private Date date;
-
+	
 	//custom
 	private StreamedContent clientFormAvatar; //fake
 	private String formattedDate;
@@ -444,6 +445,7 @@ public class ClientDataBean implements Serializable {
 	public void setSelectedYear(int selectedYear) {
 		this.selectedYear = selectedYear;
 	}
+
 
 
 }

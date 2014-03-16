@@ -4,10 +4,9 @@
 <ui:composition>
 	<h:form id="add_document">
 		<p:messages />
-		<p:dialog id="addDocument" header="Добавить документ" widgetVar="addDocumentWv" resizable="false" closable="true" modal="true" showEffect="fade" hideEffect="explode" dynamic="true"
-			closeOnEscape="true" onShow="#{clientdocuments.newSelectedDocument()}">
-			<h:panelGrid columns="2">
-
+		<p:dialog id="addDocument" header="Добавить/Обновить документ" widgetVar="addDocumentWv" resizable="false" closable="true" modal="true" showEffect="fade" hideEffect="explode" dynamic="true"
+			closeOnEscape="true">
+			<h:panelGrid columns="2" id="add_docs_panel_grid">
 				<p:row>
 					<p:column>
 						<p:outputLabel value="Тип документа:" />
@@ -15,8 +14,8 @@
 				</p:row>
 				<p:row>
 					<p:column>
-						<p:selectOneMenu id="docTypeId" value="#{clientdocuments.selectedDocument.id}">
-							<f:selectItems value="#{clientdocuments.docTypes}" var="docType" itemValue="#{docType}" />
+						<p:selectOneMenu id="docTypeId" value="#{clientdocuments.selectedDocument.doctype}" converter="docTypeConverter" style="width: 300px;">
+							<f:selectItems value="#{clientdocuments.docTypes}" var="docType" itemLabel="#{docType.caption}" itemValue="#{docType}" />
 						</p:selectOneMenu>
 					</p:column>
 				</p:row>
@@ -50,7 +49,7 @@
 				<p:row>
 					<p:column>
 						<p:message display="tooltip" for="ad_date" />
-						<p:calendar value="#{clientdocuments.selectedDocument.date}" id="ad_date" showOn="button" pattern="dd.MM.yyyy" validator="#{clientdocuments.validateDate}"/>
+						<p:calendar value="#{clientdocuments.selectedDocument.date}" id="ad_date" showOn="button" pattern="dd.MM.yyyy" validator="#{clientdocuments.validateDate}" />
 					</p:column>
 				</p:row>
 				<p:row>
@@ -61,10 +60,10 @@
 				<p:row>
 					<p:column>
 						<p:message display="tooltip" for="ad_who" />
-						<p:inputText value="#{clientdocuments.selectedDocument.whereAndWhom}" id="ad_who" validator="#{clientdocuments.validateWho}" />
+						<p:inputText value="#{clientdocuments.selectedDocument.whereAndWhom}" id="ad_who" validator="#{clientdocuments.validateWho}" size="45" />
 					</p:column>
 				</p:row>
-				
+
 				<p:row>
 					<p:column>
 						<p:outputLabel value="Регистрация:" />
@@ -87,7 +86,7 @@
 				<p:row>
 					<p:column>
 						<p:message display="tooltip" for="ad_city" />
-						<p:inputText value="#{clientdocuments.selectedDocument.city}" id="ad_city" validator="#{clientdocuments.validateCity}" />
+						<p:inputText value="#{clientdocuments.selectedDocument.city}" id="ad_city" validator="#{clientdocuments.validateCity}" size="45" />
 					</p:column>
 				</p:row>
 				<p:row>
@@ -98,35 +97,17 @@
 				<p:row>
 					<p:column>
 						<p:message display="tooltip" for="ad_address" />
-						<p:inputText value="#{clientdocuments.selectedDocument.address}" id="ad_address" validator="#{clientdocuments.validateAddress}" />
+						<p:inputText value="#{clientdocuments.selectedDocument.address}" id="ad_address" validator="#{clientdocuments.validateAddress}" size="45" />
 					</p:column>
 				</p:row>
-				
-
-				<p:separator />
-				<center>
-					<p:commandButton value="Добавить документ" id="addNewDocumentB" actionListener="#{clientdocuments.addSelectedDocument}" ajax="true" oncomplete="addDocumentWv.hide()"
-						update="@this" />
-				</center>
-
-
-
-
-
-
 			</h:panelGrid>
-			<!--
 			<p:separator />
-			<p:selectManyCheckbox id="as_services" value="#{services.selectedItems}" layout="pageDirection">
-				<f:selectItems value="#{services.getAvailableServices()}" var="serviceTypes" itemValue="#{serviceTypes}" />
-			</p:selectManyCheckbox>
-
-			-->
-			<!-- 
 			<p:panel>
-				 
+				<p:growl id="adddocs_growl" showDetail="true" life="3000" />
+				<center>
+					<p:commandButton value="Добавить/Обновить документ" id="addNewDocumentB" actionListener="#{clientdocuments.addSelectedDocument()}" ajax="true" update="@this add_docs_panel_grid adddocs_growl :m_tabview:documents_form" icon="ui-icon-check" oncomplete="addDocumentWv.hide()" />
+				</center>
 			</p:panel>
-			 -->
 		</p:dialog>
 	</h:form>
 

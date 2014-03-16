@@ -51,7 +51,6 @@ public class Client implements Serializable {
 
 	private Set<RecievedService> recievedservices;
 	
-
 	private String uniqDisease;
 	private String uniqBreadwinner;
 	private String uniqReason;

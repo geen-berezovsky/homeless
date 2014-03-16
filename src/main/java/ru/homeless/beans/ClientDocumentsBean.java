@@ -1,68 +1,61 @@
 package ru.homeless.beans;
 
 import java.io.Serializable;
-import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.RequestScoped;
 import javax.faces.bean.SessionScoped;
+import javax.faces.bean.ViewScoped;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.validator.ValidatorException;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
 
+import ru.homeless.converters.DocTypeConverter;
 import ru.homeless.dao.ClientDocumentsDAO;
-import ru.homeless.dao.DocTypesDAO;
-import ru.homeless.dao.NightStayDAO;
 import ru.homeless.entities.DocType;
 import ru.homeless.entities.Document;
-import ru.homeless.entities.NightStay;
 import ru.homeless.util.Util;
 
-@ManagedBean (name = "clientdocuments")
+@ManagedBean(name = "clientdocuments")
 @SessionScoped
 public class ClientDocumentsBean implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	public static Logger log = Logger.getLogger(ClientDocumentsBean.class);
-	private int cid = 12783;
+	private int cid = 0;
 	private List<Document> documentsList = null;
 	private Document selectedDocument;
 	private List<DocType> docTypes;
-	
+
 	public ClientDocumentsBean() {
 	}
-	
+
 	public void reload() {
 		HttpSession session = Util.getSession();
 		String cids = session.getAttribute("cid").toString();
-		
-		if (cids != null && ! cids.trim().equals("")) {
+
+		if (cids != null && !cids.trim().equals("")) {
 			this.cid = Integer.parseInt(cids);
-			log.info("Reloading docuemnts for client "+cid);
+			log.info("Reloading documents for client " + cid);
 			documentsList = new ClientDocumentsDAO().getAllClientDocuments(cid);
 			for (Document d : documentsList) {
 				log.info(d.getId());
 			}
-			
-		}
 
+		}
+		newSelectedDocument(); // set new document
 	}
 
-	public List<String> getDocTypes() {
-		DocTypesDAO nsDAO = new DocTypesDAO();
-		List<String> l = new ArrayList<String>();
-		for (DocType ns : nsDAO.getAvailbleDocTypes()) {
-			l.add(ns.getCaption());
-		}
-		return l;
-	}
-
-	
 	public int getCid() {
 		return cid;
 	}
@@ -86,7 +79,7 @@ public class ClientDocumentsBean implements Serializable {
 			return "";
 		}
 	}
-	
+
 	public String getStringRegistrationConfirmation(int i) {
 		if (i == 0) {
 			return "Не указано";
@@ -109,39 +102,80 @@ public class ClientDocumentsBean implements Serializable {
 	public void setSelectedDocument(Document selectedDocument) {
 		this.selectedDocument = selectedDocument;
 	}
-	
+
 	public void deleteDocument() {
-		log.info("Document id="+selectedDocument.getId()+" has been deleted");
+		ClientDocumentsDAO cd = new ClientDocumentsDAO();
+		cd.deleteDocument(cd.getDocumentById(selectedDocument.getId()));
+		reload();
 	}
+
 	public void editDocument() {
-		log.info("Editing document id="+selectedDocument.getId());
-	}
-
-
-	public void setDocTypes(List<DocType> docTypes) {
-		this.docTypes = docTypes;
+		selectedDocument = new ClientDocumentsDAO().getDocumentById(selectedDocument.getId());
+		RequestContext rc = RequestContext.getCurrentInstance();
+		rc.update("add_document");	//force updating the add document form	
 	}
 
 	public void newSelectedDocument() {
 		selectedDocument = new Document();
 		log.info("Setting new document");
 	}
-	
+
 	public void addSelectedDocument() {
-		log.info("Selected data:");
-		log.info("\t"+selectedDocument.getDoctype().getCaption());
-		log.info("\t"+selectedDocument.getDocPrefix());
-		log.info("\t"+selectedDocument.getDocNum());
+
+		// some validation
+		if ((selectedDocument.getRegistration() == 0 || selectedDocument.getRegistration() == 1) && !selectedDocument.getCity().trim().equals("")) {
+			selectedDocument.setRegistration(2);
+		}
+		if ((selectedDocument.getRegistration() == 0 || selectedDocument.getRegistration() == 1) && !selectedDocument.getAddress().trim().equals("")) {
+			selectedDocument.setRegistration(2);
+		}
+
+		//finally, set the client
+		selectedDocument.setClient(cid);
+		
+		new ClientDocumentsDAO().updateDocument(selectedDocument);
+		reload(); //for updating related view
 	}
 
 	/* Validators */
-	public void validatePrefix(FacesContext ctx, UIComponent component, Object value) { }
-	public void validateNumber(FacesContext ctx, UIComponent component, Object value) { }
-	public void validateDate(FacesContext ctx, UIComponent component, Object value) { }
-	public void validateWho(FacesContext ctx, UIComponent component, Object value) { }
-	public void validateCity(FacesContext ctx, UIComponent component, Object value) { }
-	public void validateAddress(FacesContext ctx, UIComponent component, Object value) { }
+	public void validatePrefix(FacesContext ctx, UIComponent component, Object value) {
+	}
 
-	
-	
+	public void validateNumber(FacesContext ctx, UIComponent component, Object value) {
+	}
+
+	public void validateDate(FacesContext ctx, UIComponent component, Object value) {
+		try {
+			Calendar c = GregorianCalendar.getInstance();
+			c.setTime((Date) value);
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Неправильный формат даты!", "Формат должен быть ДД.ММ.ГГГГ!");
+			throw new ValidatorException(msg);
+		}
+	}
+
+	public void validateWho(FacesContext ctx, UIComponent component, Object value) {
+	}
+
+	public void validateCity(FacesContext ctx, UIComponent component, Object value) {
+	}
+
+	public void validateAddress(FacesContext ctx, UIComponent component, Object value) {
+	}
+
+	public List<DocType> getDocTypes() {
+		return docTypes;
+	}
+
+	public void setDocTypes(List<DocType> docTypes) {
+		this.docTypes = docTypes;
+	}
+
+	@PostConstruct
+	// special for converter!
+	public void init() {
+		setDocTypes(DocTypeConverter.docTypesDB);
+	}
+
 }

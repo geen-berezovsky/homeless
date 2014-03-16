@@ -1,6 +1,5 @@
 package ru.homeless.beans;
 
-import java.io.InputStream;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -17,6 +16,7 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -30,8 +30,6 @@ import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.TabChangeEvent;
-import org.primefaces.model.DefaultStreamedContent;
-import org.primefaces.model.StreamedContent;
 
 import ru.homeless.comparators.RecievedServiceSortingComparator;
 import ru.homeless.dao.BreadwinnerDAO;
@@ -659,4 +657,9 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
 	}
 
 
+	@PostConstruct
+	public void postConstructExample() {
+		log.info("Reload called!");
+	}
+	
 }
