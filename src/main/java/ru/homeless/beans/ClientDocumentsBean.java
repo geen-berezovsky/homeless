@@ -24,10 +24,11 @@ import ru.homeless.converters.DocTypeConverter;
 import ru.homeless.dao.ClientDocumentsDAO;
 import ru.homeless.entities.DocType;
 import ru.homeless.entities.Document;
+import ru.homeless.entities.Worker;
 import ru.homeless.util.Util;
 
 @ManagedBean(name = "clientdocuments")
-@SessionScoped
+@ViewScoped
 public class ClientDocumentsBean implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -46,12 +47,7 @@ public class ClientDocumentsBean implements Serializable {
 
 		if (cids != null && !cids.trim().equals("")) {
 			this.cid = Integer.parseInt(cids);
-			log.info("Reloading documents for client " + cid);
 			documentsList = new ClientDocumentsDAO().getAllClientDocuments(cid);
-			for (Document d : documentsList) {
-				log.info(d.getId());
-			}
-
 		}
 		newSelectedDocument(); // set new document
 	}
@@ -117,7 +113,6 @@ public class ClientDocumentsBean implements Serializable {
 
 	public void newSelectedDocument() {
 		selectedDocument = new Document();
-		log.info("Setting new document");
 	}
 
 	public void addSelectedDocument() {
@@ -132,6 +127,10 @@ public class ClientDocumentsBean implements Serializable {
 
 		//finally, set the client
 		selectedDocument.setClient(cid);
+		
+		//... and the worker
+		HttpSession httpsession = Util.getSession();
+		selectedDocument.setWorker((Worker) httpsession.getAttribute("worker"));
 		
 		new ClientDocumentsDAO().updateDocument(selectedDocument);
 		reload(); //for updating related view

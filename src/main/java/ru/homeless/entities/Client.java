@@ -360,5 +360,4 @@ public class Client implements Serializable {
 		this.recievedservices = recievedservices;
 	}
 
-
 }

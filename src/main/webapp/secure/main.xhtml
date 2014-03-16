@@ -12,7 +12,7 @@
 			searchByIdDlg.hide();
 			displayFoundByName.show()
 		}
-		
+
 		function reload() {
 			location.reload();
 		}
@@ -21,121 +21,264 @@
 </h:head>
 <h:body>
 	<ui:include src="clientform/mainmenu.xhtml" />
-<p:panel id="base_panel" widgetVar="base_panelWv" style="#{clientform.mainPanelVisibility}">
-	<p:tabView effect="fade" effectDuration="normal" id="m_tabview">
-		<p:ajax event="tabChange" listener="#{clientform.tabChangeListener}" update="base_form documents_form"/>  
-		<p:tab title="Базовая информация">
-			<!-- *** Basic Client Form *** -->
-			<h:form id="base_form">
-				<p:panel id="base_cliet_edit_panel">
-					<div id="client_main_panel">
-						<div id="client_edit_window">
-							<p:fieldset>
-								<div id="base_form_div">
-									<ui:include src="clientform/maininfo.xhtml" />
-								</div>
-								<div id="services_div">
-									<p:fieldset legend="Оказанные услуги">
-										<ui:include src="clientform/providedservices.xhtml" />
-									</p:fieldset>
-								</div>
-								<div id="optional_info_div">
-									<p:fieldset>
-										<div id="personal_info_div">
-											<p:fieldset legend="Персональная информация">
-												<ui:include src="clientform/personalinfo.xhtml" />
-											</p:fieldset>
-										</div>
-										<div id="homeless_reasons_div">
-											<p:fieldset legend="Причины бездомности">
-												<ui:include src="clientform/homelessreasons.xhtml" />
-											</p:fieldset>
-										</div>
-										<div id="existence_sources_div">
-											<p:fieldset legend="Источники существования">
-												<ui:include src="clientform/breadwinner.xhtml" />
-											</p:fieldset>
-										</div>
-										<div id="chronical_distasters_div">
-											<p:fieldset legend="Хронические заболевания">
-												<ui:include src="clientform/chronicaldisasters.xhtml" />
-											</p:fieldset>
-										</div>
-									</p:fieldset>
-								</div>
+	<p:panel id="base_panel" widgetVar="base_panelWv" style="#{clientform.mainPanelVisibility}">
+		<p:tabView effect="fade" effectDuration="normal" id="m_tabview">
+			<p:ajax event="tabChange" listener="#{clientform.tabChangeListener}" update="base_form documents_form contracts_form" />
+			<p:tab title="Базовая информация">
+				<!-- *** Basic Client Form *** -->
+				<h:form id="base_form">
+					<p:panel id="base_cliet_edit_panel">
+						<div id="client_main_panel">
+							<div id="client_edit_window">
+								<p:fieldset>
+									<div id="base_form_div">
+										<ui:include src="clientform/maininfo.xhtml" />
+									</div>
+									<div id="services_div">
+										<p:fieldset legend="Оказанные услуги">
+											<ui:include src="clientform/providedservices.xhtml" />
+										</p:fieldset>
+									</div>
+									<div id="optional_info_div">
+										<p:fieldset>
+											<div id="personal_info_div">
+												<p:fieldset legend="Персональная информация">
+													<ui:include src="clientform/personalinfo.xhtml" />
+												</p:fieldset>
+											</div>
+											<div id="homeless_reasons_div">
+												<p:fieldset legend="Причины бездомности">
+													<ui:include src="clientform/homelessreasons.xhtml" />
+												</p:fieldset>
+											</div>
+											<div id="existence_sources_div">
+												<p:fieldset legend="Источники существования">
+													<ui:include src="clientform/breadwinner.xhtml" />
+												</p:fieldset>
+											</div>
+											<div id="chronical_distasters_div">
+												<p:fieldset legend="Хронические заболевания">
+													<ui:include src="clientform/chronicaldisasters.xhtml" />
+												</p:fieldset>
+											</div>
+										</p:fieldset>
+									</div>
 
-								<!-- optional info -->
-							</p:fieldset>
-							<p:growl id="growl" showDetail="true" life="3000" />
-							<center>
-								<p:commandButton value="Сохранить" actionListener="#{clientform.saveClientForm(clientform)}" id="saveClientForm" update="@this :m_tabview:base_form base_form_panel_grid growl" icon="ui-icon-check" />
-							</center>
+									<!-- optional info -->
+								</p:fieldset>
+								<p:growl id="growl" showDetail="true" life="3000" />
+								<center>
+									<p:commandButton value="Сохранить" actionListener="#{clientform.saveClientForm(clientform)}" id="saveClientForm" update="@this :m_tabview:base_form base_form_panel_grid growl"
+										icon="ui-icon-check" />
+								</center>
+							</div>
+							<!-- client edit window -->
 						</div>
-						<!-- client edit window -->
-					</div>
-				</p:panel>
+					</p:panel>
 
-			</h:form>
-			<!-- *** End Of Basic Client Form *** -->
+				</h:form>
+				<!-- *** End Of Basic Client Form *** -->
 
-		</p:tab>
-		<p:tab title="Документы">
-			<!-- *** Client Documents Form *** -->
-			<h:form id="documents_form">
-				<p:panel id="documents_main_panel">
-					<div id="client_documents_panel_div">
-					
-					<p:contextMenu for="doclistId">
-						<p:menuitem value="Удалить" update="doclistId" icon="ui-icon-close" actionListener="#{clientdocuments.deleteDocument()}" action="#{clientdocuments.reload()}" ajax="true" />
-						<p:menuitem value="Редактировать" update="doclistId" icon="ui-icon-pencil" actionListener="#{clientdocuments.editDocument()}" ajax="true" oncomplete="addDocumentWv.show();"/>
-					</p:contextMenu>
-					
-					
-						<p:dataTable id="doclistId" var="doclist" value="#{clientdocuments.documentsList}" paginator="true" rows="15"
-				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15"
-				rowKey="#{doclist.id}" selection="#{clientdocuments.selectedDocument}" selectionMode="single">
+			</p:tab>
+			<p:tab title="Документы">
+				<!-- *** Client Documents Form *** -->
+				<h:form id="documents_form">
+					<p:panel id="documents_main_panel">
+						<div id="client_documents_panel_div">
 
-				<p:column headerText="ID">
-					<h:outputText value="#{doclist.id}" />
-				</p:column>
+							<p:contextMenu for="doclistId">
+								<p:menuitem value="Удалить" update="doclistId" icon="ui-icon-close" actionListener="#{clientdocuments.deleteDocument()}" action="#{clientdocuments.reload()}" ajax="true" />
+								<p:menuitem value="Редактировать" update="doclistId" icon="ui-icon-pencil" actionListener="#{clientdocuments.editDocument()}" ajax="true" oncomplete="addDocumentWv.show();" />
+							</p:contextMenu>
 
-				<p:column headerText="Тип">
-					<h:outputText value="#{doclist.doctype}" />
-				</p:column>
-				<p:column headerText="Серия">
-					<h:outputText value="#{doclist.docPrefix}" />
-				</p:column>
-				<p:column headerText="Номер">
-					<h:outputText value="#{doclist.docNum}" />
-				</p:column>
-				<p:column headerText="Орган выдачи">
-					<h:outputText value="#{doclist.whereAndWhom}" />
-				</p:column>
-				<p:column headerText="Дата выдачи">
-					<h:outputText value="#{clientdocuments.formatDate(doclist.date)}" />
-				</p:column>
-				<p:column headerText="Регистрация">
-					<h:outputText value="#{clientdocuments.getStringRegistrationConfirmation(doclist.registration)}" />
-				</p:column>
-				<p:column headerText="Регистрация: город">
-					<h:outputText value="#{doclist.city}" />
-				</p:column>
-				<p:column headerText="Регистрация: адрес">
-					<h:outputText value="#{doclist.address}" />
-				</p:column>
-				
-			</p:dataTable>
-			<center>
-				<p:commandButton value="Добавить документ" onclick="addDocumentWv.show();" icon="ui-icon-circle-plus" type="button" />
-			</center>
-			
-					
-					</div>
-				</p:panel>
-			</h:form>
-		</p:tab>
-	</p:tabView>
-</p:panel>
+
+							<p:dataTable id="doclistId" var="doclist" value="#{clientdocuments.documentsList}" paginator="true" rows="15"
+								paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15" rowKey="#{doclist.id}"
+								selection="#{clientdocuments.selectedDocument}" selectionMode="single">
+
+								<p:column headerText="ID">
+									<h:outputText value="#{doclist.id}" />
+								</p:column>
+
+								<p:column headerText="Тип">
+									<h:outputText value="#{doclist.doctype}" />
+								</p:column>
+								<p:column headerText="Серия">
+									<h:outputText value="#{doclist.docPrefix}" />
+								</p:column>
+								<p:column headerText="Номер">
+									<h:outputText value="#{doclist.docNum}" />
+								</p:column>
+								<p:column headerText="Орган выдачи">
+									<h:outputText value="#{doclist.whereAndWhom}" />
+								</p:column>
+								<p:column headerText="Дата выдачи">
+									<h:outputText value="#{clientdocuments.formatDate(doclist.date)}" />
+								</p:column>
+								<p:column headerText="Регистрация">
+									<h:outputText value="#{clientdocuments.getStringRegistrationConfirmation(doclist.registration)}" />
+								</p:column>
+								<p:column headerText="Регистрация: город">
+									<h:outputText value="#{doclist.city}" />
+								</p:column>
+								<p:column headerText="Регистрация: адрес">
+									<h:outputText value="#{doclist.address}" />
+								</p:column>
+
+							</p:dataTable>
+							<center>
+								<p:commandButton value="Добавить документ" onclick="addDocumentWv.show();" icon="ui-icon-circle-plus" type="button" />
+							</center>
+
+
+						</div>
+					</p:panel>
+				</h:form>
+			</p:tab>
+			<p:tab title="Социальное сопровождение">
+
+
+				<h:form id="contracts_form">
+					<p:panel id="contracts_main_panel">
+						<div id="client_contracts_panel_div">
+
+							<p:contextMenu for="conlistId">
+								<p:menuitem value="Удалить" update="conlistId" icon="ui-icon-close" actionListener="#{clientcontracts.deleteContract()}" action="#{clientcontracts.reload()}" ajax="true" />
+								<p:menuitem value="Редактировать" update="conlistId" icon="ui-icon-pencil" actionListener="#{clientcontracts.editContract()}" ajax="true" oncomplete="addContractWv.show();" />
+							</p:contextMenu>
+
+							<p:dataTable id="conlistId" var="conlist" value="#{clientcontracts.contractsList}" paginator="true" rows="15"
+								paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15" rowKey="#{conlist.id}"
+								selection="#{clientcontracts.selectedContract}" selectionMode="single">
+
+								<p:column headerText="ID">
+									<h:outputText value="#{conlist.id}" />
+								</p:column>
+
+								<p:column headerText="Номер">
+									<h:outputText value="#{conlist.docNum}" />
+								</p:column>
+								<p:column headerText="Дата начала">
+									<h:outputText value="#{clientcontracts.formatDate(conlist.startDate)}" />
+								</p:column>
+								<p:column headerText="Плановая дата окончания">
+									<h:outputText value="#{clientcontracts.formatDate(conlist.stopDate)}" />
+								</p:column>
+								<p:column headerText="Статус">
+									<h:outputText value="#{conlist.result}" />
+								</p:column>
+								<p:column headerText="Работник">
+									<h:outputText value="#{conlist.worker}" />
+								</p:column>
+								<p:column headerText="Комментарии">
+									<h:outputText value="#{conlist.commentResult}" />
+								</p:column>
+
+								<p:column headerText="Открыть в Word">
+									<center>
+										<p:commandButton action="#{clientform.reloadAll(client.id)}" id="selectButton" icon="ui-icon-folder-open" oncomplete="displayFoundByName.hide();" title="Открыть клиента" ajax="true"
+											update=":m_tabview:base_form :add_services" />
+									</center>
+								</p:column>
+
+							</p:dataTable>
+							<center>
+								<p:commandButton value="Добавить договор" onclick="addContractWv.show();" icon="ui-icon-circle-plus" type="button" />
+							</center>
+
+
+						</div>
+					</p:panel>
+				</h:form>
+
+				<h:form id="shelter_form">
+					<p:panel id="shelter_main_panel">
+						<div id="client_shelter_panel_div">
+
+							<p:contextMenu for="shelterlistId">
+								<p:menuitem value="Удалить" update="shelterlistId" icon="ui-icon-close" actionListener="#{clientshelter.deleteShelter()}" action="#{clientshelter.reload()}" ajax="true" />
+								<p:menuitem value="Редактировать" update="shelterlistId" icon="ui-icon-pencil" actionListener="#{clientshelter.editShelter()}" ajax="true" oncomplete="addShelterWv.show();" />
+							</p:contextMenu>
+
+							<p:dataTable id="shelterlistId" var="shelterlist" value="#{clientshelter.shelterList}" paginator="true" rows="15"
+								paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15" rowKey="#{shelterlist.id}"
+								selection="#{clientshelter.selectedShelter}" selectionMode="single">
+
+								<p:column headerText="ID">
+									<h:outputText value="#{shelterlist.id}" />
+								</p:column>
+
+								<p:column headerText="Дата заселения">
+									<h:outputText value="#{clientshelter.formatDate(shelterlist.inShelter)}" />
+								</p:column>
+								<p:column headerText="Дата выселения">
+									<h:outputText value="#{clientshelter.formatDate(shelterlist.outShelter)}" />
+								</p:column>
+								<p:column headerText="Комната">
+									<h:outputText value="#{shelterlist.roomId}" />
+								</p:column>
+								<p:column headerText="ФЛГ">
+									<h:outputText value="#{shelterlist.fluorogr}" />
+								</p:column>
+								<p:column headerText="Дифтерия">
+									<h:outputText value="#{shelterlist.dipthVac}" />
+								</p:column>
+								<p:column headerText="Гепатит">
+									<h:outputText value="#{shelterlist.hepotitsVac}" />
+								</p:column>
+								<p:column headerText="Тиф">
+									<h:outputText value="#{shelterlist.typhVac}" />
+								</p:column>
+								<p:column headerText="Статус">
+									<h:outputText value="#{shelterlist.sr}" />
+								</p:column>
+
+							</p:dataTable>
+							<center>
+								<p:commandButton value="Добавить сведения о проживании" onclick="addShelterWv.show();" icon="ui-icon-circle-plus" type="button" />
+							</center>
+
+
+						</div>
+					</p:panel>
+				</h:form>
+
+
+			</p:tab>
+			<p:tab title="Контакты">
+				<h:form id="client_contacts">
+					<p:panel id="add_contacts_panel_grid">
+						<p:editor id="contacts_editor" value="#{clientform.contacts}" />
+						<p:growl id="growl_client_contacts" showDetail="true" life="3000" />
+						<center>
+							<p:commandButton value="Сохранить" actionListener="#{clientform.saveClientForm(clientform)}" id="saveClientForm"
+								update="@this :m_tabview:client_contacts add_contacts_panel_grid growl_client_contacts" icon="ui-icon-check" />
+						</center>
+					</p:panel>
+				</h:form>
+			</p:tab>
+			<p:tab title="Примечания">
+				<h:form id="client_memo">
+					<p:panel id="add_memo_panel_grid">
+						<p:editor id="memo_editor" value="#{clientform.memo}" />
+						<p:growl id="growl_client_memo" showDetail="true" life="3000" />
+						<center>
+							<p:commandButton value="Сохранить" actionListener="#{clientform.saveClientForm(clientform)}" id="saveClientForm" update="@this :m_tabview:client_memo add_memo_panel_grid growl_client_memo"
+								icon="ui-icon-check" />
+						</center>
+					</p:panel>
+				</h:form>
+
+			</p:tab>
+			<p:tab title="Построить документ">
+			</p:tab>
+			<p:tab title="Выдать справку">
+			</p:tab>
+			<p:tab title="Удалить клиента">
+			</p:tab>
+
+		</p:tabView>
+	</p:panel>
 	<!-- Include Dialogs -->
 	<ui:include src="dialogs/search.xhtml" />
 	<ui:include src="dialogs/addservices.xhtml" />

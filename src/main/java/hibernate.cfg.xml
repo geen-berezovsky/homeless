@@ -28,6 +28,10 @@
   <mapping class="ru.homeless.entities.ServicesType"/>
   <mapping class="ru.homeless.entities.Document"/>
   <mapping class="ru.homeless.entities.DocType"/>
+  <mapping class="ru.homeless.entities.ServContract"/>
+  <mapping class="ru.homeless.entities.ContractResult"/>
+  <mapping class="ru.homeless.entities.ShelterHistory"/>
+  <mapping class="ru.homeless.entities.ShelterResult"/>
       
       <!--
       
@@ -39,13 +43,11 @@
 <!--   
 
 
-  <mapping class="ru.homeless.entities.ServContract"/>
+  
   <mapping class="ru.homeless.entities.ContractPoints"/>
   <mapping class="ru.homeless.entities.ContractControl"/>
-  <mapping class="ru.homeless.entities.ContractResult"/>
+  
   <mapping class="ru.homeless.entities.DocCliche"/>
-  <mapping class="ru.homeless.entities.ShelterHistory"/>
-  <mapping class="ru.homeless.entities.ShelterResult"/>
   <mapping class="ru.homeless.entities.GivenCertificate"/>
    -->
  </session-factory>

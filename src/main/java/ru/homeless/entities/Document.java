@@ -2,6 +2,7 @@ package ru.homeless.entities;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.CascadeType;
@@ -16,8 +17,9 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "Document")
-public class Document {
+public class Document implements Serializable {
 
+	private static final long serialVersionUID = 1L;
 	private int id;
 	private String docPrefix;
 	private String docNum;

@@ -1,35 +1,29 @@
 package ru.homeless.dao;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-
-import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
-import org.primefaces.component.log.Log;
 
-import ru.homeless.entities.Client;
-import ru.homeless.entities.Document;
-import ru.homeless.entities.RecievedService;
-import ru.homeless.entities.ServicesType;
-import ru.homeless.entities.Worker;
+import ru.homeless.entities.ServContract;
+import ru.homeless.entities.ShelterHistory;
 import ru.homeless.util.HibernateUtil;
-import ru.homeless.util.Util;
 
-public class ClientDocumentsDAO {
-	public static Logger log = Logger.getLogger(ClientDocumentsDAO.class);
+public class ClientShelterDAO {
+
+	
+	public static Logger log = Logger.getLogger(ClientShelterDAO.class);
 
 	@SuppressWarnings("unchecked")
-	public List<Document> getAllClientDocuments(int cid) {
+	public List<ShelterHistory> getAllClientShelters(int cid) {
 		Session session = null;
-		List<Document> documents = new ArrayList<Document>();
+		List<ShelterHistory> shelters = new ArrayList<ShelterHistory>();
 		session = HibernateUtil.getSession();
 		try {
-			documents = session.createCriteria(Document.class).add(Restrictions.eq("client", cid)).list();
+			shelters = session.createCriteria(ShelterHistory.class).add(Restrictions.eq("client", cid)).list();
 		} catch (Exception e) {
 			log.error(e.getMessage());
 			e.printStackTrace();
@@ -38,15 +32,15 @@ public class ClientDocumentsDAO {
 				session.close();
 			}
 		}
-		return documents;
+		return shelters;
 	}
 	
-	public Document getDocumentById(int id) {
+	public ShelterHistory getShelterById(int id) {
 		Session session = null;
-		Document doc = null;
+		ShelterHistory con = null;
 		session = HibernateUtil.getSession();
 		try {
-			doc = (Document) session.createCriteria(Document.class).add(Restrictions.eq("id", id)).list().get(0);
+			con = (ShelterHistory) session.createCriteria(ShelterHistory.class).add(Restrictions.eq("id", id)).list().get(0);
 		} catch (Exception e) {
 			log.error(e.getMessage());
 			e.printStackTrace();
@@ -55,24 +49,24 @@ public class ClientDocumentsDAO {
 				session.close();
 			}
 		}
-		return doc;
+		return con;
 	}
 
 	
-	public void updateDocument(Document selectedDocument) {
+	public void updateShelter(ShelterHistory selectedShelter) {
 		Session session = HibernateUtil.getSession();
 		Transaction tx = session.beginTransaction();
-		session.saveOrUpdate(selectedDocument);
+		session.saveOrUpdate(selectedShelter);
 		tx.commit();
 		if (session != null && session.isOpen()) {
 			session.close();
 		}
 	}
 	
-	public void deleteDocument(Document selectedDocument) {
+	public void deleteShelter(ShelterHistory selectedShelter) {
 		Session session = HibernateUtil.getSession();
 		Transaction tx = session.beginTransaction();
-		session.delete(selectedDocument);
+		session.delete(selectedShelter);
 		tx.commit();
 		if (session != null && session.isOpen()) {
 			session.close();
@@ -80,5 +74,5 @@ public class ClientDocumentsDAO {
 	}
 
 	
-
+	
 }

@@ -1,35 +1,28 @@
 package ru.homeless.dao;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-
-import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
-import org.primefaces.component.log.Log;
 
-import ru.homeless.entities.Client;
-import ru.homeless.entities.Document;
-import ru.homeless.entities.RecievedService;
-import ru.homeless.entities.ServicesType;
-import ru.homeless.entities.Worker;
+import ru.homeless.entities.ServContract;
 import ru.homeless.util.HibernateUtil;
-import ru.homeless.util.Util;
 
-public class ClientDocumentsDAO {
-	public static Logger log = Logger.getLogger(ClientDocumentsDAO.class);
+public class ClientContractsDAO {
+
+	
+	public static Logger log = Logger.getLogger(ClientContractsDAO.class);
 
 	@SuppressWarnings("unchecked")
-	public List<Document> getAllClientDocuments(int cid) {
+	public List<ServContract> getAllClientContracts(int cid) {
 		Session session = null;
-		List<Document> documents = new ArrayList<Document>();
+		List<ServContract> contracts = new ArrayList<ServContract>();
 		session = HibernateUtil.getSession();
 		try {
-			documents = session.createCriteria(Document.class).add(Restrictions.eq("client", cid)).list();
+			contracts = session.createCriteria(ServContract.class).add(Restrictions.eq("client", cid)).list();
 		} catch (Exception e) {
 			log.error(e.getMessage());
 			e.printStackTrace();
@@ -38,15 +31,15 @@ public class ClientDocumentsDAO {
 				session.close();
 			}
 		}
-		return documents;
+		return contracts;
 	}
 	
-	public Document getDocumentById(int id) {
+	public ServContract getContractById(int id) {
 		Session session = null;
-		Document doc = null;
+		ServContract con = null;
 		session = HibernateUtil.getSession();
 		try {
-			doc = (Document) session.createCriteria(Document.class).add(Restrictions.eq("id", id)).list().get(0);
+			con = (ServContract) session.createCriteria(ServContract.class).add(Restrictions.eq("id", id)).list().get(0);
 		} catch (Exception e) {
 			log.error(e.getMessage());
 			e.printStackTrace();
@@ -55,24 +48,24 @@ public class ClientDocumentsDAO {
 				session.close();
 			}
 		}
-		return doc;
+		return con;
 	}
 
 	
-	public void updateDocument(Document selectedDocument) {
+	public void updateContract(ServContract selectedContract) {
 		Session session = HibernateUtil.getSession();
 		Transaction tx = session.beginTransaction();
-		session.saveOrUpdate(selectedDocument);
+		session.saveOrUpdate(selectedContract);
 		tx.commit();
 		if (session != null && session.isOpen()) {
 			session.close();
 		}
 	}
 	
-	public void deleteDocument(Document selectedDocument) {
+	public void deleteContract(ServContract selectedContract) {
 		Session session = HibernateUtil.getSession();
 		Transaction tx = session.beginTransaction();
-		session.delete(selectedDocument);
+		session.delete(selectedContract);
 		tx.commit();
 		if (session != null && session.isOpen()) {
 			session.close();
@@ -80,5 +73,5 @@ public class ClientDocumentsDAO {
 	}
 
 	
-
+	
 }

@@ -609,7 +609,11 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
 	public void tabChangeListener(TabChangeEvent event) {
 		FacesContext context = FacesContext.getCurrentInstance();
 		ClientDocumentsBean cdb = context.getApplication().evaluateExpressionGet(context, "#{clientdocuments}", ClientDocumentsBean.class);
+		ClientContractsBean ccb = context.getApplication().evaluateExpressionGet(context, "#{clientcontracts}", ClientContractsBean.class);
+		ClientShelterBean csb = context.getApplication().evaluateExpressionGet(context, "#{clientshelter}", ClientShelterBean.class);
 		cdb.reload();
+		ccb.reload();
+		csb.reload();
 	}
 	
 	public void setHasProfession(int hasProfession) {
