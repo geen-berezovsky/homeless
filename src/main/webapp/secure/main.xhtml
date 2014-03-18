@@ -137,7 +137,6 @@
 			</p:tab>
 			<p:tab title="Социальное сопровождение">
 
-
 				<h:form id="contracts_form">
 					<p:panel id="contracts_main_panel">
 						<div id="client_contracts_panel_div">
@@ -182,10 +181,12 @@
 								</p:column>
 
 							</p:dataTable>
-							<center>
-								<p:commandButton value="Добавить договор" onclick="addContractWv.show();" icon="ui-icon-circle-plus" type="button" />
-							</center>
-
+							<p:panel>
+								<p:growl id="addcontract_button_growl" showDetail="true" life="3000" />
+								<center>
+									<p:commandButton value="Добавить договор" icon="ui-icon-circle-plus" actionListener="#{clientcontracts.showAddContractDialog}" update="@this contracts_form addcontract_button_growl"/>
+								</center>
+							</p:panel>
 
 						</div>
 					</p:panel>
@@ -234,10 +235,11 @@
 								</p:column>
 
 							</p:dataTable>
-							<center>
-								<p:commandButton value="Добавить сведения о проживании" onclick="addShelterWv.show();" icon="ui-icon-circle-plus" type="button" />
-							</center>
-
+							<p:panel>
+								<center>
+									<p:commandButton value="Добавить сведения о проживании" onclick="addShelterWv.show();" icon="ui-icon-circle-plus" type="button" />
+								</center>
+							</p:panel>
 
 						</div>
 					</p:panel>
@@ -285,6 +287,7 @@
 	<ui:include src="dialogs/addclient.xhtml" />
 	<ui:include src="dialogs/webcamera.xhtml" />
 	<ui:include src="dialogs/adddocument.xhtml" />
+	<ui:include src="dialogs/addcontract.xhtml" />
 
 
 

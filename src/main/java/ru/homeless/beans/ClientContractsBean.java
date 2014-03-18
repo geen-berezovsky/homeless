@@ -4,8 +4,11 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
+import javax.faces.validator.ValidatorException;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
@@ -13,6 +16,8 @@ import org.primefaces.context.RequestContext;
 
 import ru.homeless.dao.ClientContractsDAO;
 import ru.homeless.dao.ClientDocumentsDAO;
+import ru.homeless.dao.ClientControlResultDAO;
+import ru.homeless.entities.ContractResult;
 import ru.homeless.entities.Document;
 import ru.homeless.entities.ServContract;
 import ru.homeless.util.Util;
@@ -63,7 +68,39 @@ public class ClientContractsBean implements Serializable {
 		rc.update("add_contract");	//force updating the add contract form	
 	}
 
+	public void showAddContractDialog() {
+		RequestContext rc = RequestContext.getCurrentInstance();
+		if (isClientHasNoOpenedContracts()) {
+			rc.execute("addContractWv.show()");	
+		} else {
+			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Невозможно добавить новый договор, пока не закрыт существующий!","Пожалуйста, закройте существующий открытый договор с этим клиентом сначала.");
+			FacesContext.getCurrentInstance().addMessage(null, msg);
+		}
+		
+		
+	}
 	
+	private boolean isClientHasNoOpenedContracts() {
+		log.info("Testing available contract results (possible encoding issues): ");
+		for (ContractResult c : new ClientControlResultDAO().getAllContractResults()) {
+			if (c.getCaption().startsWith("Выполнен ")) {
+				log.info("\t"+c.getCaption());
+			}
+		}
+		List<ServContract> contracts = new ClientContractsDAO().getAllClientContracts(cid);
+		for (ServContract s : contracts) {
+			String result = s.getResult().getCaption();
+			log.info("Testing contract results for client "+cid+": ");
+			log.info("\t"+result);
+			if (! result.startsWith("Выполнен ")) {
+				log.info("\t"+"Found, at least, one uncompleted contract");
+				return false; //there is at least one unclosed contract
+			}
+		}
+		log.info("No uncompleted contracts found");
+		return true; //all contracts are completed partially or fully
+	}
+
 	public void newSelectedContract() {
 		selectedContract = new ServContract();
 	}
