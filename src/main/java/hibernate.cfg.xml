@@ -37,7 +37,7 @@
       
       	FIX:
       	1. ALTER TABLE `homeless`.`RecievedService` CHANGE COLUMN `id` `id` INT(11) NOT NULL AUTO_INCREMENT  ;
-      	 
+      	2. update Client set nightStay=1 where nightStay is null;
        -->
       
 <!--   

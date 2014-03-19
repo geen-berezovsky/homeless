@@ -580,7 +580,9 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
 		int month = 0;
 		int year = 0;
 		Calendar orig = GregorianCalendar.getInstance();
-		orig.setTime(client.getHomelessdate());
+		if (getHomelessdate()!=null) {
+			orig.setTime(getHomelessdate());
+		}
 		if (newValue < 13) { // it is monthId
 			month = newValue;
 			year = orig.get(Calendar.YEAR);
@@ -591,6 +593,7 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
 		Calendar c = GregorianCalendar.getInstance();
 		c.set(year, month, 1, 0, 0, 0);
 		// setting updated value to the client
+		log.info("Setting time = "+c.getTime()+" -> "+year+" "+month);
 		setHomelessdate(c.getTime());
 	}	
 	
@@ -611,9 +614,15 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
 		ClientDocumentsBean cdb = context.getApplication().evaluateExpressionGet(context, "#{clientdocuments}", ClientDocumentsBean.class);
 		ClientContractsBean ccb = context.getApplication().evaluateExpressionGet(context, "#{clientcontracts}", ClientContractsBean.class);
 		ClientShelterBean csb = context.getApplication().evaluateExpressionGet(context, "#{clientshelter}", ClientShelterBean.class);
+		try {
+			reloadAll();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		cdb.reload();
 		ccb.reload();
 		csb.reload();
+		log.info("Reloaded all data for the selected client");
 	}
 	
 	public void setHasProfession(int hasProfession) {

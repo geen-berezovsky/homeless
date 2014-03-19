@@ -128,7 +128,7 @@ public class Document implements Serializable {
 		this.registration = registration;
 	}
 
-	@ManyToOne(fetch = FetchType.EAGER, targetEntity = Worker.class, cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.EAGER, targetEntity = Worker.class)
 	@JoinColumn(name = "worker")
 	public Worker getWorker() {
 		return worker;
