@@ -13,6 +13,7 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
+import org.primefaces.event.SelectEvent;
 
 import ru.homeless.dao.ClientContractsDAO;
 import ru.homeless.dao.ClientDocumentsDAO;
@@ -31,6 +32,7 @@ public class ClientContractsBean implements Serializable {
 	private int cid = 0;
 	private List<ServContract> contractsList = null;
 	private ServContract selectedContract;
+	private Document selectedDocument;
 	
 	public ClientContractsBean() {
 		
@@ -53,6 +55,11 @@ public class ClientContractsBean implements Serializable {
 			contractsList = new ClientContractsDAO().getAllClientContracts(cid);
 		}
 		newSelectedContract(); // set new contact
+		RequestContext rc = RequestContext.getCurrentInstance();
+		rc.update("conlistId");
+		for (ServContract s : contractsList) {
+			log.info(s.getResult().getCaption());
+		}
 	}
 	
 	
@@ -71,7 +78,7 @@ public class ClientContractsBean implements Serializable {
 	public void showAddContractDialog() {
 		RequestContext rc = RequestContext.getCurrentInstance();
 		if (isClientHasNoOpenedContracts()) {
-			rc.execute("addContractWv.show()");	
+			rc.execute("selectDocumentWv.show()");	
 		} else {
 			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Невозможно добавить новый договор, пока не закрыт существующий!","Пожалуйста, закройте существующий открытый договор с этим клиентом сначала.");
 			FacesContext.getCurrentInstance().addMessage(null, msg);
@@ -124,5 +131,17 @@ public class ClientContractsBean implements Serializable {
 		this.selectedContract = selectedContract;
 	}
 
+	public Document getSelectedDocument() {
+		return selectedDocument;
+	}
+
+	public void setSelectedDocument(Document selectedDocument) {
+		this.selectedDocument = selectedDocument;
+	}
+	
+	public void onRowSelect(SelectEvent event) {  
+		selectedDocument = (Document) event.getObject();
+    }  
+	
 
 }

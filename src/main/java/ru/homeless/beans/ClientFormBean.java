@@ -609,20 +609,26 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
 		}
 	}
 
-	public void tabChangeListener(TabChangeEvent event) {
-		FacesContext context = FacesContext.getCurrentInstance();
-		ClientDocumentsBean cdb = context.getApplication().evaluateExpressionGet(context, "#{clientdocuments}", ClientDocumentsBean.class);
-		ClientContractsBean ccb = context.getApplication().evaluateExpressionGet(context, "#{clientcontracts}", ClientContractsBean.class);
-		ClientShelterBean csb = context.getApplication().evaluateExpressionGet(context, "#{clientshelter}", ClientShelterBean.class);
-		try {
-			reloadAll();
-		} catch (SQLException e) {
-			e.printStackTrace();
+	public void refreshTabs() {
+		if (cid!=0 && client != null) {
+			FacesContext context = FacesContext.getCurrentInstance();
+			ClientDocumentsBean cdb = context.getApplication().evaluateExpressionGet(context, "#{clientdocuments}", ClientDocumentsBean.class);
+			ClientContractsBean ccb = context.getApplication().evaluateExpressionGet(context, "#{clientcontracts}", ClientContractsBean.class);
+			ClientShelterBean csb = context.getApplication().evaluateExpressionGet(context, "#{clientshelter}", ClientShelterBean.class);
+			try {
+				reloadAll();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			cdb.reload();
+			ccb.reload();
+			csb.reload();
+			log.info("Reloaded all data for the selected client "+cid);
 		}
-		cdb.reload();
-		ccb.reload();
-		csb.reload();
-		log.info("Reloaded all data for the selected client");
+	}
+	
+	public void tabChangeListener(TabChangeEvent event) {
+		refreshTabs();
 	}
 	
 	public void setHasProfession(int hasProfession) {

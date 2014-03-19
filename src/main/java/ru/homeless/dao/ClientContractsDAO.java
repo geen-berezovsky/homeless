@@ -22,7 +22,11 @@ public class ClientContractsDAO {
 		List<ServContract> contracts = new ArrayList<ServContract>();
 		session = HibernateUtil.getSession();
 		try {
+			session.evict(contracts);
 			contracts = session.createCriteria(ServContract.class).add(Restrictions.eq("client", cid)).list();
+			for (ServContract s : contracts) {
+				log.info(s.getResult().getCaption());
+			}
 		} catch (Exception e) {
 			log.error(e.getMessage());
 			e.printStackTrace();

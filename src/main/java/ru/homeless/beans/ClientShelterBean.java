@@ -46,6 +46,8 @@ public class ClientShelterBean implements Serializable {
 			setShelterList(new ClientShelterDAO().getAllClientShelters(cid));
 		}
 		newSelectedShelter(); // set new shelter
+		RequestContext rc = RequestContext.getCurrentInstance();
+		rc.update("shelterlistId");	
 	}
 	
 	

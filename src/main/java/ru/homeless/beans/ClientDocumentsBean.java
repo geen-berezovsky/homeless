@@ -50,6 +50,8 @@ public class ClientDocumentsBean implements Serializable {
 			documentsList = new ClientDocumentsDAO().getAllClientDocuments(cid);
 		}
 		newSelectedDocument(); // set new document
+		RequestContext rc = RequestContext.getCurrentInstance();
+		rc.update("doclistId");	
 	}
 
 	public int getCid() {

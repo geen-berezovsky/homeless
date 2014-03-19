@@ -19,11 +19,11 @@
 	</script>
 
 </h:head>
-<h:body>
+<h:body onload="#{clientform.refreshTabs()}">
 	<ui:include src="clientform/mainmenu.xhtml" />
 	<p:panel id="base_panel" widgetVar="base_panelWv" style="#{clientform.mainPanelVisibility}">
 		<p:tabView effect="fade" effectDuration="normal" id="m_tabview">
-			<p:ajax event="tabChange" listener="#{clientform.tabChangeListener}" update="base_form documents_form contracts_form" />
+			<p:ajax event="tabChange" listener="#{clientform.tabChangeListener}" update="base_form documents_form contracts_form shelter_form" />
 			<p:tab title="Базовая информация">
 				<!-- *** Basic Client Form *** -->
 				<h:form id="base_form">
@@ -219,16 +219,16 @@
 									<h:outputText value="#{shelterlist.roomId}" />
 								</p:column>
 								<p:column headerText="ФЛГ">
-									<h:outputText value="#{shelterlist.fluorogr}" />
+									<h:outputText value="#{clientshelter.formatDate(shelterlist.fluorogr)}" />
 								</p:column>
 								<p:column headerText="Дифтерия">
-									<h:outputText value="#{shelterlist.dipthVac}" />
+									<h:outputText value="#{clientshelter.formatDate(shelterlist.dipthVac)}" />
 								</p:column>
 								<p:column headerText="Гепатит">
-									<h:outputText value="#{shelterlist.hepotitsVac}" />
+									<h:outputText value="#{clientshelter.formatDate(shelterlist.hepotitsVac)}" />
 								</p:column>
 								<p:column headerText="Тиф">
-									<h:outputText value="#{shelterlist.typhVac}" />
+									<h:outputText value="#{clientshelter.formatDate(shelterlist.typhVac)}" />
 								</p:column>
 								<p:column headerText="Статус">
 									<h:outputText value="#{shelterlist.sr}" />

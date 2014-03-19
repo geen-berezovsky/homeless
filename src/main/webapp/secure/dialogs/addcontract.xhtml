@@ -2,24 +2,80 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui">
 <ui:composition>
+	<h:form id="select_document">
+		<p:messages />
+		<p:dialog id="selectDocument" header="Выберите документ, на основе которого будет создан договор" widgetVar="selectDocumentWv" resizable="false" closable="true" modal="true" showEffect="fade"
+			hideEffect="explode" dynamic="true" closeOnEscape="true">
+
+			<p:dataTable id="cdoclistId" var="cdoclist" value="#{clientdocuments.documentsList}" paginator="true" rows="15"
+				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15" rowKey="#{cdoclist.id}"
+				selection="#{clientcontracts.selectedDocument}" selectionMode="single">
+
+				<p:column headerText="ID" style="width:0px;">
+					<h:outputText value="#{cdoclist.id}" />
+				</p:column>
+
+				<p:column headerText="Тип">
+					<h:outputText value="#{cdoclist.doctype}" />
+				</p:column>
+				<p:column headerText="Серия">
+					<h:outputText value="#{cdoclist.docPrefix}" />
+				</p:column>
+				<p:column headerText="Номер">
+					<h:outputText value="#{cdoclist.docNum}" />
+				</p:column>
+				<p:column headerText="Орган выдачи">
+					<h:outputText value="#{cdoclist.whereAndWhom}" />
+				</p:column>
+				<p:column headerText="Дата выдачи">
+					<h:outputText value="#{clientdocuments.formatDate(cdoclist.date)}" />
+				</p:column>
+				<p:column headerText="Регистрация">
+					<h:outputText value="#{clientdocuments.getStringRegistrationConfirmation(cdoclist.registration)}" />
+				</p:column>
+				<p:column headerText="Регистрация: город">
+					<h:outputText value="#{cdoclist.city}" />
+				</p:column>
+				<p:column headerText="Регистрация: адрес">
+					<h:outputText value="#{cdoclist.address}" />
+				</p:column>
+
+				<p:ajax event="rowSelect" listener="#{clientcontracts.onRowSelect}"   
+                    oncomplete="toggleAddContractDlg();" update=":add_contract" /> 
+			</p:dataTable>
+
+		</p:dialog>
+	</h:form>
+
+<script type="text/javascript">
+	function toggleAddContractDlg() {
+		selectDocumentWv.hide();
+		addContractWv.show();
+	}
+</script>
+
 	<h:form id="add_contract">
 		<p:messages />
-		<p:dialog id="addContract" header="Добавить договор" widgetVar="addContractWv" resizable="false" closable="true" modal="true" showEffect="fade" hideEffect="explode" dynamic="true"
-			closeOnEscape="true">
-			<!-- 
+		<p:dialog id="addContractDlg" header="Добавление нового контракта" widgetVar="addContractWv" resizable="false" closable="true" modal="true" showEffect="fade"
+			hideEffect="explode" dynamic="true" closeOnEscape="true">
 			<h:panelGrid columns="2" id="add_docs_panel_grid">
 				<p:row>
 					<p:column>
-						<p:outputLabel value="Тип документа:" />
+						<p:outputLabel value="Выбранный документ:" />
 					</p:column>
 				</p:row>
 				<p:row>
 					<p:column>
-						<p:selectOneMenu id="docTypeId" value="#{clientdocuments.selectedDocument.doctype}" converter="docTypeConverter" style="width: 300px;">
-							<f:selectItems value="#{clientdocuments.docTypes}" var="docType" itemLabel="#{docType.caption}" itemValue="#{docType}" />
-						</p:selectOneMenu>
+						<p:outputLabel value="#{clientcontracts.selectedDocument.doctype} (сер. и номер.: #{clientcontracts.selectedDocument.docPrefix} #{clientcontracts.selectedDocument.docNum}) от #{clientcontracts.formatDate(clientcontracts.selectedDocument.date)}"/>
 					</p:column>
 				</p:row>
+			</h:panelGrid>			
+		</p:dialog>
+	</h:form>
+
+
+
+	<!-- 
 				<p:row>
 					<p:column>
 						<p:outputLabel value="Серия:" />
@@ -110,8 +166,7 @@
 				</center>
 			</p:panel>
 			 -->
-		</p:dialog>
-	</h:form>
+
 
 </ui:composition>
 </html>
