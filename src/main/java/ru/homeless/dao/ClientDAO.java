@@ -79,7 +79,7 @@ public class ClientDAO {
 		HashMap<Boolean, String> map = new HashMap<Boolean, String>();
 		try {
 			tx = session.beginTransaction();
-			session.update(client);
+			session.saveOrUpdate(client);
 			tx.commit();
 			if (tx.wasCommitted()) {
 				log.info("Client "+client.getId()+" has been successfully updated");

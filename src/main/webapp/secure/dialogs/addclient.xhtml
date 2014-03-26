@@ -2,132 +2,135 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui">
 <ui:composition>
-	<h:form id="add_client">
-		<p:messages />
-		<p:dialog id="addClient" header="Добавить клиента" widgetVar="addClientWv" resizable="false" 
-		closable="true" modal="true" showEffect="fade" hideEffect="explode" dynamic="true" 
-		closeOnEscape="true">
-		
-		<p:panelGrid id="new_client_panel_grid">
-			<p:row>
-				<p:column style="text-align: center;min-width: 100px; ">
-					<p:graphicImage value="#{client.clientFormAvatar}" cache="false" />					
-					<br />
-					<br />
-					<p:button value="Сфотографировать" title="Сфотографировать клиента на веб камеру" icon="ui-icon-aquire" style="width:178px;" onclick="hide_addclient_show_cameradlg();" />
-					<p:button value="Загрузить фото" title="Загрузить фотографию с диска" icon="ui-icon-open" style="width:178px;" />
-					<p:button value="Удалить фото" title="Удалить фотографию клиента" icon="ui-icon-delete" style="width:178px;" />
-				</p:column>
-				<p:column>
-					<p:panelGrid columns="2">
-						<p:row>
-							<p:column>
-								<p:outputLabel value="Фамилия:" />
-							</p:column>
-						</p:row>
-						<p:row>
-							<p:column>
-								<p:message display="tooltip" for="new_cedit_surname"/>
-								<p:inputText value="#{newclientform.surname}" id="new_cedit_surname" validator="#{newclientform.validateTextOnly}"/>
-							</p:column>
-						</p:row>
-						<p:row>
-							<p:column>
-								<p:outputLabel value="Имя:" />
-							</p:column>
-						</p:row>
-						<p:row>
-							<p:column>
+	<p:dialog id="addClient" header="Добавить клиента" widgetVar="addClientWv" resizable="false" closable="true" modal="true" showEffect="fade" hideEffect="explode" dynamic="true" closeOnEscape="true">
+		<h:form id="add_client">
+			<p:messages />
+
+			<p:panelGrid id="new_client_panel_grid">
+				<p:row>
+					<p:column style="text-align: center;min-width: 100px; ">
+						<p:graphicImage value="#{client.clientFormAvatar}" cache="false" />
+						<h:panelGrid columns="1" cellpadding="5">
+							<p:button value="Сфотографировать" title="Сфотографировать клиента на веб камеру" icon="ui-icon-aquire" style="width:178px;" onclick="hide_addclient_show_cameradlg();" />
+							<p:button value="Загрузить фото" title="Загрузить фотографию с диска" icon="ui-icon-open" style="width:178px;" />
+							<p:button value="Удалить фото" title="Удалить фотографию клиента" icon="ui-icon-delete" style="width:178px;" />
+						</h:panelGrid>
+					</p:column>
+					<p:column>
+						<p:panelGrid columns="2">
+							<p:row>
+								<p:column>
+									<p:outputLabel value="Фамилия:" />
+								</p:column>
+							</p:row>
+							<p:row>
+								<p:column>
+									<p:message display="tooltip" for="new_cedit_surname" />
+									<p:inputText value="#{newclientform.surname}" id="new_cedit_surname" validator="#{newclientform.validateTextOnly}" />
+								</p:column>
+							</p:row>
+							<p:row>
+								<p:column>
+									<p:outputLabel value="Имя:" />
+								</p:column>
+							</p:row>
+							<p:row>
+								<p:column>
 									<p:message display="tooltip" for="new_cedit_firstname" />
-								<p:inputText value="#{newclientform.firstname}" id="new_cedit_firstname" validator="#{newclientform.validateTextOnly}" />
-							</p:column>
-						</p:row>
-						<p:row>
-							<p:column>
-								<p:outputLabel value="Отчество:" />
-							</p:column>
-						</p:row>
-						<p:row>
-							<p:column>
-								<p:message display="tooltip" for="new_cedit_middlename"/>
-								<p:inputText value="#{newclientform.middlename}" id="new_cedit_middlename" validator="#{newclientform.validateTextOnly}"/>
-							</p:column>
-						</p:row>
-						<p:row>
-							<p:column>
-								<p:outputLabel value="Дата рождения:" />
-							</p:column>
-						</p:row>
-						<p:row>
-							<p:column>
-								<p:message display="tooltip" for="new_cedit_bdate"/>
-								<p:inputText value="#{newclientform.formattedDate}" id="new_cedit_bdate" mask="99.99.9999" validator="#{newclientform.validateBirthDateFormat}" />
-							</p:column>
-						</p:row>
-						<p:row>
-							<p:column>
-								<p:outputLabel value="Пол:" />
-							</p:column>
-						</p:row>
-						<p:row>
-							<p:column>
-								<p:selectOneMenu id="newSelectGender" value="#{newclientform.gender}">
-									<f:selectItem itemLabel="Мужской" itemValue="true" />
-									<f:selectItem itemLabel="Женский" itemValue="false" />
-								</p:selectOneMenu>
-							</p:column>
-						</p:row>
-						<p:row>
-							<p:column>
-								<p:outputLabel value="Бездомный с момента:" />
-							</p:column>
-						</p:row>
-						<p:row>
-							<p:column>
-								<p:selectOneMenu id="newSelectMonth" value="#{newclientform.selectedMonth}">
-									<f:selectItem itemLabel="Январь" itemValue="0" />
-									<f:selectItem itemLabel="Февраль" itemValue="1" />
-									<f:selectItem itemLabel="Март" itemValue="2" />
-									<f:selectItem itemLabel="Апрель" itemValue="3" />
-									<f:selectItem itemLabel="Май" itemValue="4" />
-									<f:selectItem itemLabel="Июнь" itemValue="5" />
-									<f:selectItem itemLabel="Июль" itemValue="6" />
-									<f:selectItem itemLabel="Август" itemValue="7" />
-									<f:selectItem itemLabel="Сентябрь" itemValue="8" />
-									<f:selectItem itemLabel="Октябрь" itemValue="9" />
-									<f:selectItem itemLabel="Ноябрь" itemValue="10" />
-									<f:selectItem itemLabel="Декабрь" itemValue="11" />
-								</p:selectOneMenu>
-								<p:message display="tooltip" for="newSelectedYear"/>
-								<p:inputText value="#{newclientform.selectedYear}" mask="9999" id="newSelectedYear" size="4" validator="#{newclientform.validateHomelessYear}"/>
-							</p:column>
-						</p:row>
-						<p:row>
-							<p:column>
-								<p:outputLabel value="Место рождения:" />
-							</p:column>
-						</p:row>
-						<p:row>
-							<p:column>
-								<p:inputText value="#{clientform.whereWasBorn}" id="cedit_born_place">
-								</p:inputText>
-							</p:column>
-						</p:row>
-					</p:panelGrid>
+									<p:inputText value="#{newclientform.firstname}" id="new_cedit_firstname" validator="#{newclientform.validateTextOnly}" />
+								</p:column>
+							</p:row>
+							<p:row>
+								<p:column>
+									<p:outputLabel value="Отчество:" />
+								</p:column>
+							</p:row>
+							<p:row>
+								<p:column>
+									<p:message display="tooltip" for="new_cedit_middlename" />
+									<p:inputText value="#{newclientform.middlename}" id="new_cedit_middlename" validator="#{newclientform.validateTextOnly}" />
+								</p:column>
+							</p:row>
+							<p:row>
+								<p:column>
+									<p:outputLabel value="Дата рождения:" />
+								</p:column>
+							</p:row>
+							<p:row>
+								<p:column>
+									<p:message display="tooltip" for="new_cedit_bdate" />
+									<p:inputText value="#{newclientform.formattedDate}" id="new_cedit_bdate" mask="99.99.9999" validator="#{newclientform.validateBirthDateFormat}" />
+									<p:message for="new_cedit_bdate" />
+								</p:column>
+							</p:row>
+							<p:row>
+								<p:column>
+									<p:outputLabel value="Пол:" />
+								</p:column>
+							</p:row>
+							<p:row>
+								<p:column>
+									<p:selectOneMenu id="newSelectGender" value="#{newclientform.gender}">
+										<f:selectItem itemLabel="Мужской" itemValue="true" />
+										<f:selectItem itemLabel="Женский" itemValue="false" />
+									</p:selectOneMenu>
+								</p:column>
+							</p:row>
+							<p:row>
+								<p:column>
+									<p:outputLabel value="Бездомный с момента:" />
+								</p:column>
+							</p:row>
+							<p:row>
+								<p:column>
+									<p:selectOneMenu id="newSelectMonth" value="#{newclientform.selectedMonth}">
+										<f:selectItem itemLabel="Январь" itemValue="0" />
+										<f:selectItem itemLabel="Февраль" itemValue="1" />
+										<f:selectItem itemLabel="Март" itemValue="2" />
+										<f:selectItem itemLabel="Апрель" itemValue="3" />
+										<f:selectItem itemLabel="Май" itemValue="4" />
+										<f:selectItem itemLabel="Июнь" itemValue="5" />
+										<f:selectItem itemLabel="Июль" itemValue="6" />
+										<f:selectItem itemLabel="Август" itemValue="7" />
+										<f:selectItem itemLabel="Сентябрь" itemValue="8" />
+										<f:selectItem itemLabel="Октябрь" itemValue="9" />
+										<f:selectItem itemLabel="Ноябрь" itemValue="10" />
+										<f:selectItem itemLabel="Декабрь" itemValue="11" />
+									</p:selectOneMenu>
+									<p:message display="tooltip" for="newSelectedYear" />
+									<p:inputText value="#{newclientform.selectedYear}" mask="9999" id="newSelectedYear" size="4" validator="#{newclientform.validateHomelessYear}" />
+								</p:column>
+							</p:row>
+							<p:row>
+								<p:column>
+									<p:outputLabel value="Место рождения:" />
+								</p:column>
+							</p:row>
+							<p:row>
+								<p:column>
+									<p:inputText value="#{newclientform.whereWasBorn}" id="cedit_born_place" />
+								</p:column>
+							</p:row>
+						</p:panelGrid>
 
-				</p:column>
+					</p:column>
 
-			</p:row>
-		</p:panelGrid>
-		</p:dialog>
-	</h:form>
+				</p:row>
+			</p:panelGrid>
+			<p:growl id="growl" showDetail="true" life="3000" />
+			<center>
+				<p:commandButton value="Сохранить" actionListener="#{newclientform.addBasicClient()}" id="addBasicClientForm" update="@this :m_tabview:base_form new_client_panel_grid growl" icon="ui-icon-check" />
+			</center>
+		</h:form>
+	</p:dialog>
 
-<script type="text/javascript">
-	function hide_addclient_show_cameradlg() {
-		addclientWv.hide();
-		cameraServiceWv.show();
-	}
-</script>
+
+	<script type="text/javascript">
+		function hide_addclient_show_cameradlg() {
+			addclientWv.hide();
+			cameraServiceWv.show();
+		}
+	</script>
 
 </ui:composition>
 </html>

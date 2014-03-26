@@ -95,7 +95,6 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
 		this.mainPanelVisibility = "display: block;";
 		RequestContext rc = RequestContext.getCurrentInstance();
 		rc.execute("reload();");
-		
 
 		reloadAll();
 	}
@@ -150,10 +149,6 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
 		updateHomelessDate();
 	}
 
-	public void updateHomelessDate() {
-		setSelectedMonth(getHomelessMonth(client.getHomelessdate()));
-		setSelectedYear(getHomelessYear(client.getHomelessdate()));
-	}
 	
 	public void reloadClientReceivedServices() {
 		servicesList = new ArrayList<RecievedService>(client.getRecievedservices());
@@ -166,26 +161,6 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
 
 	public void setClient(Client client) {
 		this.client = client;
-	}
-
-	public int getHomelessYear(Date query) {
-		if (query != null) {
-			Calendar c = Calendar.getInstance();
-			c.setTime(query);
-			return c.get(Calendar.YEAR);
-		} else {
-			return -1;
-		}
-	}
-
-	public int getHomelessMonth(Date query) {
-		if (query != null) {
-			Calendar c = Calendar.getInstance();
-			c.setTime(query);
-			return c.get(Calendar.MONTH);
-		} else {
-			return -1;
-		}
 	}
 
 	public List<String> getEducationTypes() {
@@ -508,94 +483,9 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
 		FacesContext.getCurrentInstance().addMessage(null, msg);
 	}
 
-	public boolean isDateValid(String str) {
-		Pattern pattern = Pattern.compile("\\d{2}.\\d{2}.\\d{4}");
-		Matcher matcher = pattern.matcher(str);
-		if (matcher.matches()) {
-			try {
-				new SimpleDateFormat("dd.MM.yyyy").parse(str);
-			} catch (Exception e) {
-				return false;
-			}
-		} else {
-			return false;
-		}
-		return true;
-	}
 	
-	public boolean isYearValid(String str) {
-		Pattern pattern = Pattern.compile("\\d{4}");
-		Matcher matcher = pattern.matcher(str);
-		if (matcher.matches()) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	public boolean isTextOnlyValid(String str) {
-		Pattern pattern = Pattern.compile("[a-zA-Z-]+|[а-яА-Я-]+");
-		Matcher matcher = pattern.matcher(str);
-		if (matcher.matches()) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	public void validateTextOnly(FacesContext ctx, UIComponent component, Object value) {
-		String str = value.toString();
-		if (! isTextOnlyValid(str)) {
-			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ФИО не может содержать цифры, спецсимволы и пробелы!\nТолько русский или латинский текст, а также тире.","Пожалуйста, проверьте форму!");
-			throw new ValidatorException(msg);
-		}
-	}
 	
-	public void validateHomelessYear(FacesContext ctx, UIComponent component, Object value) {
-		String str = value.toString();
-		if (! isYearValid(str)) {
-			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Неправильно указан год в поле <Бездомный с момента>!","Используйте формат гггг");
-			throw new ValidatorException(msg);
-		} else {
-			updateHomelessDate(Integer.parseInt(str));
-		}
-	}
-	
-	public void validateBirthDateFormat(FacesContext ctx, UIComponent component, Object value) {
-		String str = value.toString();
-		if (! isDateValid(str)) {
-			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Некорректный формат даты рождения!","Используйте дд.мм.гггг");
-			throw new ValidatorException(msg);
-		} else {
-			try {
-				Date d = new SimpleDateFormat("dd.MM.yyyy").parse(str);
-				setDate(d);
-			} catch (ParseException e) {
-				e.printStackTrace();
-			}
-		}
-	}
 
-	public void updateHomelessDate(int newValue) {
-		int month = 0;
-		int year = 0;
-		Calendar orig = GregorianCalendar.getInstance();
-		if (getHomelessdate()!=null) {
-			orig.setTime(getHomelessdate());
-		}
-		if (newValue < 13) { // it is monthId
-			month = newValue;
-			year = orig.get(Calendar.YEAR);
-		} else {
-			year = newValue;
-			month = orig.get(Calendar.MONTH);
-		}
-		Calendar c = GregorianCalendar.getInstance();
-		c.set(year, month, 1, 0, 0, 0);
-		// setting updated value to the client
-		log.info("Setting time = "+c.getTime()+" -> "+year+" "+month);
-		setHomelessdate(c.getTime());
-	}	
 	
 	public int getHasProfession() {
 		if (client == null || client.getProfession() == null || client.getProfession().trim().equals("")) {

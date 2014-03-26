@@ -13,11 +13,21 @@ import java.io.InputStream;
 import java.io.Serializable;
 import java.sql.Blob;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.component.UIComponent;
+import javax.faces.context.FacesContext;
+import javax.faces.validator.ValidatorException;
 import javax.imageio.ImageIO;
 
 import org.apache.log4j.Logger;
@@ -27,7 +37,6 @@ import org.primefaces.model.StreamedContent;
 import ru.homeless.entities.Breadwinner;
 import ru.homeless.entities.ChronicDisease;
 import ru.homeless.entities.Client;
-import ru.homeless.entities.Document;
 import ru.homeless.entities.Education;
 import ru.homeless.entities.FamilyCommunication;
 import ru.homeless.entities.NightStay;
@@ -70,6 +79,7 @@ public class ClientDataBean implements Serializable {
 	private Date regDate;
 	private String whereWasBorn;
 	private Blob avatar;
+
 	private Date date;
 	
 	//custom
@@ -445,6 +455,124 @@ public class ClientDataBean implements Serializable {
 	public void setSelectedYear(int selectedYear) {
 		this.selectedYear = selectedYear;
 	}
+
+	//Shared Validators
+	public void validateTextOnly(FacesContext ctx, UIComponent component, Object value) {
+		String str = value.toString();
+		if (! isTextOnlyValid(str)) {
+			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ФИО не может содержать цифры, спецсимволы и пробелы!\nТолько русский или латинский текст, а также тире.","Пожалуйста, проверьте форму!");
+			throw new ValidatorException(msg);
+		}
+	}
+
+	public boolean isTextOnlyValid(String str) {
+		Pattern pattern = Pattern.compile("[a-zA-Z-]+|[а-яА-Я-]+");
+		Matcher matcher = pattern.matcher(str);
+		if (matcher.matches()) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public boolean isYearValid(String str) {
+		Pattern pattern = Pattern.compile("\\d{4}");
+		Matcher matcher = pattern.matcher(str);
+		if (matcher.matches()) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	
+	public void validateHomelessYear(FacesContext ctx, UIComponent component, Object value) {
+		String str = value.toString();
+		if (! isYearValid(str)) {
+			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Неправильно указан год в поле <Бездомный с момента>!","Используйте формат гггг");
+			throw new ValidatorException(msg);
+		} else {
+			updateHomelessDate(Integer.parseInt(str));
+		}
+	}
+	
+	public void updateHomelessDate(int newValue) {
+		int month = 0;
+		int year = 0;
+		Calendar orig = GregorianCalendar.getInstance();
+		if (getHomelessdate()!=null) {
+			orig.setTime(getHomelessdate());
+		}
+		if (newValue < 13) { // it is monthId
+			month = newValue;
+			year = orig.get(Calendar.YEAR);
+		} else {
+			year = newValue;
+			month = orig.get(Calendar.MONTH);
+		}
+		Calendar c = GregorianCalendar.getInstance();
+		c.set(year, month, 1, 0, 0, 0);
+		// setting updated value to the client
+		log.info("Setting time = "+c.getTime()+" -> "+year+" "+month);
+		setHomelessdate(c.getTime());
+	}	
+
+	
+	public void updateHomelessDate() {
+		setSelectedMonth(getHomelessMonth(getHomelessdate()));
+		setSelectedYear(getHomelessYear(getHomelessdate()));
+	}
+	
+	public int getHomelessYear(Date query) {
+		if (query != null) {
+			Calendar c = Calendar.getInstance();
+			c.setTime(query);
+			return c.get(Calendar.YEAR);
+		} else {
+			return -1;
+		}
+	}
+
+	public int getHomelessMonth(Date query) {
+		if (query != null) {
+			Calendar c = Calendar.getInstance();
+			c.setTime(query);
+			return c.get(Calendar.MONTH);
+		} else {
+			return -1;
+		}
+	}
+
+	public void validateBirthDateFormat(FacesContext ctx, UIComponent component, Object value) {
+		String str = value.toString();
+		if (! isDateValid(str)) {
+			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Некорректный формат даты рождения!","Используйте дд.мм.гггг");
+			throw new ValidatorException(msg);
+		} else {
+			try {
+				Date d = new SimpleDateFormat("dd.MM.yyyy").parse(str);
+				setDate(d);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	public boolean isDateValid(String str) {
+		Pattern pattern = Pattern.compile("\\d{2}.\\d{2}.\\d{4}");
+		Matcher matcher = pattern.matcher(str);
+		if (matcher.matches()) {
+			try {
+				new SimpleDateFormat("dd.MM.yyyy").parse(str);
+			} catch (Exception e) {
+				return false;
+			}
+		} else {
+			return false;
+		}
+		return true;
+	}
+
 
 
 
