@@ -25,7 +25,7 @@ public class Document implements Serializable {
 	private String docNum;
 	private String whereAndWhom;
 	private int client;
-	private Worker worker;
+	private Integer worker;
 	private DocType doctype;
 	private Date date;
 	private int registration;
@@ -128,13 +128,11 @@ public class Document implements Serializable {
 		this.registration = registration;
 	}
 
-	@ManyToOne(fetch = FetchType.EAGER, targetEntity = Worker.class)
-	@JoinColumn(name = "worker")
-	public Worker getWorker() {
+	public int getWorker() {
 		return worker;
 	}
 
-	public void setWorker(Worker worker) {
+	public void setWorker(int worker) {
 		this.worker = worker;
 	}
 	
