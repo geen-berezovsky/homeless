@@ -24,11 +24,11 @@ public class Document implements Serializable {
 	private String docPrefix;
 	private String docNum;
 	private String whereAndWhom;
-	private int client;
+	private Integer client;
 	private Integer worker;
 	private DocType doctype;
 	private Date date;
-	private int registration;
+	private Integer registration;
 	private String address;
 	private String city;
 

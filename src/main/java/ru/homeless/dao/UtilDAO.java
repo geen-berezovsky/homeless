@@ -10,6 +10,7 @@ import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 
+import ru.homeless.entities.Document;
 import ru.homeless.entities.Worker;
 import ru.homeless.util.HibernateUtil;
 import ru.homeless.util.Util;
@@ -34,5 +35,23 @@ public class UtilDAO {
 		}
 		return tlist.get(0);
 	}
+
+	@SuppressWarnings("unchecked")
+	public static <T> List<T> getAllItems(Class<T> clazz) {
+		Session session = null;
+		List<T> tlist = new ArrayList<T>();
+		session = HibernateUtil.getSession();
+		try {
+			tlist = session.createCriteria(clazz).list();
+		} catch (Exception e) {
+			log.error(e.getMessage());
+		} finally {
+			if (session != null && session.isOpen()) {
+				session.close();
+			}
+		}
+		return tlist;
+	}
+
 	
 }

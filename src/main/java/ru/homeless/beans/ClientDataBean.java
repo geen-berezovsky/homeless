@@ -458,21 +458,7 @@ public class ClientDataBean implements Serializable {
 
 	//Shared Validators
 	public void validateTextOnly(FacesContext ctx, UIComponent component, Object value) {
-		String str = value.toString();
-		if (! isTextOnlyValid(str)) {
-			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ФИО не может содержать цифры, спецсимволы и пробелы!\nТолько русский или латинский текст, а также тире.","Пожалуйста, проверьте форму!");
-			throw new ValidatorException(msg);
-		}
-	}
-
-	public boolean isTextOnlyValid(String str) {
-		Pattern pattern = Pattern.compile("[a-zA-Z-]+|[а-яА-Я-]+");
-		Matcher matcher = pattern.matcher(str);
-		if (matcher.matches()) {
-			return true;
-		} else {
-			return false;
-		}
+		Util.validateTextOnly(ctx, component, value);
 	}
 
 	public boolean isYearValid(String str) {
@@ -544,33 +530,10 @@ public class ClientDataBean implements Serializable {
 	}
 
 	public void validateBirthDateFormat(FacesContext ctx, UIComponent component, Object value) {
-		String str = value.toString();
-		if (! isDateValid(str)) {
-			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Некорректный формат даты рождения!","Используйте дд.мм.гггг");
-			throw new ValidatorException(msg);
-		} else {
-			try {
-				Date d = new SimpleDateFormat("dd.MM.yyyy").parse(str);
-				setDate(d);
-			} catch (ParseException e) {
-				e.printStackTrace();
-			}
+		Date result = Util.validateDateFormat(ctx, component, value);
+		if (result != null) {
+			setDate(result);
 		}
-	}
-
-	public boolean isDateValid(String str) {
-		Pattern pattern = Pattern.compile("\\d{2}.\\d{2}.\\d{4}");
-		Matcher matcher = pattern.matcher(str);
-		if (matcher.matches()) {
-			try {
-				new SimpleDateFormat("dd.MM.yyyy").parse(str);
-			} catch (Exception e) {
-				return false;
-			}
-		} else {
-			return false;
-		}
-		return true;
 	}
 
 
