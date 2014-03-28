@@ -9,8 +9,6 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
-import javax.faces.bean.SessionScoped;
 import javax.faces.bean.ViewScoped;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -24,7 +22,6 @@ import ru.homeless.converters.DocTypeConverter;
 import ru.homeless.dao.ClientDocumentsDAO;
 import ru.homeless.entities.DocType;
 import ru.homeless.entities.Document;
-import ru.homeless.entities.Worker;
 import ru.homeless.util.Util;
 
 @ManagedBean(name = "clientdocuments")
@@ -129,10 +126,6 @@ public class ClientDocumentsBean implements Serializable {
 
 		//finally, set the client
 		selectedDocument.setClient(cid);
-		
-		//... and the worker
-		HttpSession httpsession = Util.getSession();
-		selectedDocument.setWorker((Worker) httpsession.getAttribute("worker"));
 		
 		new ClientDocumentsDAO().updateDocument(selectedDocument);
 		reload(); //for updating related view
