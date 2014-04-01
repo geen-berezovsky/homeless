@@ -20,7 +20,7 @@ import javax.persistence.Table;
 public class Document implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private int id;
+	private Integer id;
 	private String docPrefix;
 	private String docNum;
 	private String whereAndWhom;
@@ -46,11 +46,11 @@ public class Document implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
@@ -128,11 +128,11 @@ public class Document implements Serializable {
 		this.registration = registration;
 	}
 
-	public int getWorker() {
+	public Integer getWorker() {
 		return worker;
 	}
 
-	public void setWorker(int worker) {
+	public void setWorker(Integer worker) {
 		this.worker = worker;
 	}
 	

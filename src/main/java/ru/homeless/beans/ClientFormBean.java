@@ -2,29 +2,20 @@ package ru.homeless.beans;
 
 import java.io.Serializable;
 import java.sql.SQLException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.event.ValueChangeEvent;
-import javax.faces.validator.ValidatorException;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
@@ -60,7 +51,6 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
 
 	private Client client;
 	private List<RecievedService> servicesList;
-	private List<String> clientChronicDisease; //fake
 	private String mainPanelVisibility;
 	
 	//chronical disasters 'another' feature 
@@ -77,9 +67,12 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
 	
 	private int hasProfession = 0;
 	private List<String> reasonofhomelessTypes = null;
+	
+	private List<String> clientChronicDisease = null; //fake
 	private List<String> clientReasonsofhomeless = null;
+	private List<String> clientBreadwinners = null;
+	
 	private List<String> chronicDiseaseTypes = null;
-	private List<String> clientBreadwinners;
 
 	private List<String> educationTypes;
 	private List<String> nightStayTypes;
@@ -88,6 +81,9 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
 
 	public ClientFormBean() {
 		this.mainPanelVisibility = "display: none;"; 
+		clientBreadwinners = new ArrayList<String>(); //avoid null pointer exception on save form method
+		clientReasonsofhomeless = new ArrayList<String>(); // -//-
+		clientChronicDisease = new ArrayList<String>(); // -//-
 	}
 
 	public void reloadAll(int id) throws SQLException {
@@ -416,55 +412,60 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
 	
 	public void saveClientForm(ClientFormBean cfb) {
 		FacesMessage msg = null;
-
-		//update "homeless till the moment" (don't move it after client data copying!)
-		updateHomelessDate(selectedMonth);
-
-		client = copyClientDataToClient(client);
 		
-		//Update Surname, FirstName and MiddleName for starting with uppercase letter
-		String fl = client.getSurname().toUpperCase().substring(0,1);
-		String ll = client.getSurname().toLowerCase().substring(1,client.getSurname().length());
-		client.setSurname(fl+ll);
-		fl = client.getFirstname().toUpperCase().substring(0,1);
-		ll = client.getFirstname().toLowerCase().substring(1,client.getFirstname().length());
-		client.setFirstname(fl+ll);
-		fl = client.getMiddlename().toUpperCase().substring(0,1);
-		ll = client.getMiddlename().toLowerCase().substring(1,client.getMiddlename().length());
-		client.setMiddlename(fl+ll);
-		
-
-		//update homeless reasons, breadwinners, chronical disasters
-		Set<Breadwinner> sb = new HashSet<Breadwinner>();
-		for (Breadwinner b : new BreadwinnerDAO().getAllBreadwinnerTypes()) {
-			for (String cb : clientBreadwinners) {
-				if (b.getCaption().equals(cb)) {
-					sb.add(b);
+		if (! client.getMemo().equals(getMemo()) || ! client.getContacts().equals(getContacts())) {
+			log.info("Changed data on Comments or on Contacts tab - do not save the whole client settings!");
+			client.setMemo(getMemo());
+			client.setContacts(getContacts());
+		} else {
+			//update "homeless till the moment" (don't move it after client data copying!)
+			updateHomelessDate(selectedMonth);
+			
+			client = copyClientDataToClient(client);
+			
+			//Update Surname, FirstName and MiddleName for starting with uppercase letter
+			String fl = client.getSurname().toUpperCase().substring(0,1);
+			String ll = client.getSurname().toLowerCase().substring(1,client.getSurname().length());
+			client.setSurname(fl+ll);
+			fl = client.getFirstname().toUpperCase().substring(0,1);
+			ll = client.getFirstname().toLowerCase().substring(1,client.getFirstname().length());
+			client.setFirstname(fl+ll);
+			fl = client.getMiddlename().toUpperCase().substring(0,1);
+			ll = client.getMiddlename().toLowerCase().substring(1,client.getMiddlename().length());
+			client.setMiddlename(fl+ll);
+			
+			//update homeless reasons, breadwinners, chronical disasters
+			Set<Breadwinner> sb = new HashSet<Breadwinner>();
+			for (Breadwinner b : new BreadwinnerDAO().getAllBreadwinnerTypes()) {
+				for (String cb : clientBreadwinners) {
+					if (b.getCaption().equals(cb)) {
+						sb.add(b);
+					}
 				}
 			}
-		}
-		client.setBreadwinners(sb);
+			client.setBreadwinners(sb);
 
-		Set<Reasonofhomeless> sr = new HashSet<Reasonofhomeless>();
-		for (Reasonofhomeless b : new ReasonOfHomelessDAO().getAllReasonofhomelessTypes()) {
-			for (String cb : clientReasonsofhomeless) {
-				if (b.getCaption().equals(cb)) {
-					sr.add(b);
+			Set<Reasonofhomeless> sr = new HashSet<Reasonofhomeless>();
+			for (Reasonofhomeless b : new ReasonOfHomelessDAO().getAllReasonofhomelessTypes()) {
+				for (String cb : clientReasonsofhomeless) {
+					if (b.getCaption().equals(cb)) {
+						sr.add(b);
+					}
 				}
 			}
-		}
-		client.setReasonofhomeless(sr);
-		
-		Set<ChronicDisease> chd = new HashSet<ChronicDisease>();
-		for (ChronicDisease b : new ChronicDiseaseDAO().getAllChronicDiseaseTypes()) {
-			for (String cb : clientChronicDisease) {
-				if (b.getCaption().equals(cb)) {
-					chd.add(b);
+			client.setReasonofhomeless(sr);
+			
+			Set<ChronicDisease> chd = new HashSet<ChronicDisease>();
+			for (ChronicDisease b : new ChronicDiseaseDAO().getAllChronicDiseaseTypes()) {
+				for (String cb : clientChronicDisease) {
+					if (b.getCaption().equals(cb)) {
+						chd.add(b);
+					}
 				}
 			}
+			client.setDiseases(chd);
+			
 		}
-		client.setDiseases(chd);
-		
 
 		
 		ClientDAO cd = new ClientDAO();
@@ -514,6 +515,7 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
 			ccb.reload();
 			csb.reload();
 			log.info("Reloaded all data for the selected client "+cid);
+			
 		}
 	}
 	
