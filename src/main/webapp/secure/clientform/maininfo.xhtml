@@ -8,11 +8,11 @@
 			<p:row>
 				<p:column style="text-align: center;min-width: 100px; ">
 					<p:graphicImage value="#{clientform.clientFormAvatar}" cache="false" />
-					<br />
-					<br />
-					<p:button value="Сфотографировать" title="Сфотографировать клиента на веб камеру" icon="ui-icon-aquire" style="width:178px;" />
-					<p:button value="Загрузить фото" title="Загрузить фотографию с диска" icon="ui-icon-open" style="width:178px;" />
-					<p:button value="Удалить фото" title="Удалить фотографию клиента" icon="ui-icon-delete" style="width:178px;" />
+					<h:panelGrid columns="1" cellpadding="5" styleClass="photoOperationButtons">
+						<p:commandButton value="Сфотографировать" title="Сфотографировать клиента на веб камеру" icon="ui-icon-aquire" style="width:178px;" onclick="cameraServiceWv.show();" />
+						<p:commandButton value="Загрузить фото" title="Загрузить фотографию с диска" icon="ui-icon-open" style="width:178px;" />
+						<p:commandButton value="Удалить фото" title="Удалить фотографию клиента" icon="ui-icon-delete" style="width:178px;" />
+					</h:panelGrid>
 				</p:column>
 				<p:column>
 					<p:panelGrid columns="2">
