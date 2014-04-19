@@ -6,6 +6,24 @@
 	version="3.0">
 
 	<display-name>homeless.ru</display-name>
+	
+	<context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>
+            /WEB-INF/applicationContext.xml
+        </param-value>
+    </context-param>
+
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+    <listener>
+        <listener-class>
+            org.springframework.web.context.request.RequestContextListener
+        </listener-class>
+    </listener>
+	
+	
 	<servlet>
 		<servlet-name>Faces Servlet</servlet-name>
 		<servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
@@ -45,10 +63,11 @@
 		<param-name>primefaces.THEME</param-name>
 		<param-value>aristo</param-value>
 	</context-param>
-
+<!-- 
 	<servlet>
 		<servlet-name>HibernateInitializationServlet</servlet-name>
 		<servlet-class>ru.homeless.servlets.HibernateInitializationServlet</servlet-class>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
+	 -->
 </web-app>
