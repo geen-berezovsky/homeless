@@ -14,7 +14,7 @@ import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 
 import ru.homeless.dao.ClientDAO;
-import ru.homeless.dao.UtilDAO;
+import ru.homeless.dao.GenericDAO;
 import ru.homeless.entities.Client;
 import ru.homeless.entities.Education;
 import ru.homeless.entities.FamilyCommunication;
@@ -53,10 +53,11 @@ public class NewClientFormBean extends ClientDataBean implements Serializable {
 		 * INITIALIZING RELEATED ENTITIES FOR AVOIDING NULL POINTER EXCEPTIONS ON VIEW SIDE
 		 */
 		
-		
-		c.setNightstay(UtilDAO.getElementByCaption(NightStay.class, "Нет ответа"));
-		c.setEducation(UtilDAO.getElementByCaption(Education.class, "Нет ответа"));
-		c.setFcom(UtilDAO.getElementByCaption(FamilyCommunication.class, "Нет ответа"));
+		GenericDAO gd = new GenericDAO();
+	
+		c.setNightstay(gd.getInstanceByCaption(NightStay.class, "Нет ответа"));
+		c.setEducation(gd.getInstanceByCaption(Education.class, "Нет ответа"));
+		c.setFcom(gd.getInstanceByCaption(FamilyCommunication.class, "Нет ответа"));
 
 		
 		FacesMessage msg = null;

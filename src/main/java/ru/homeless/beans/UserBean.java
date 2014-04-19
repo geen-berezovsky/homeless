@@ -3,10 +3,12 @@ package ru.homeless.beans;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
@@ -16,9 +18,9 @@ import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 
-import ru.homeless.dao.ClientDAO;
 import ru.homeless.dao.WorkerDAO;
 import ru.homeless.entities.Worker;
+import ru.homeless.services.WorkerService;
 import ru.homeless.util.Util;
 
 @ManagedBean(name = "user")
@@ -31,6 +33,10 @@ import ru.homeless.util.Util;
 public class UserBean implements Serializable {
 	private static final long serialVersionUID = 1L;
 	public static Logger log = Logger.getLogger(UserBean.class);
+	
+	@ManagedProperty(value = "#{WorkerService}")
+	private WorkerService workerService;
+	
 	/*
 	 * username = Worker.getFirstname + Worker.getSurname
 	 */
@@ -55,8 +61,8 @@ public class UserBean implements Serializable {
 
 	public List<String> getAllUserNames(String query) {
 		List<String> names = new ArrayList<String>();
-
-		for (Worker w : new WorkerDAO().getAllWorkers()) {
+		
+		for (Worker w : getWorkerService().getInstances(Worker.class)) {
 			if (query.trim().equals("")) {
 				names.add(w.getFirstname() + " " + w.getSurname());
 			} else {
@@ -71,11 +77,16 @@ public class UserBean implements Serializable {
 	public void login(ActionEvent actionEvent) {
 		RequestContext context = RequestContext.getCurrentInstance();
 		FacesMessage msg = null;
-		boolean loggedIn = new WorkerDAO().login(username, password);
-
-		if (loggedIn) {
+		
+		boolean loggedIn = false;
+		
+		Worker w = getWorkerService().login(username, password);
+		if (w != null) {
+			log.info(username + " has successfully logged in at " + new Date().toString());
 			HttpSession session = Util.getSession();
 			session.setAttribute("username", username);
+			session.setAttribute("worker", w);
+			loggedIn = true;
 			msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Добро пожаловать", username);
 		} else {
 			msg = new FacesMessage(FacesMessage.SEVERITY_WARN, "Ошибка входа", "Неправильное имя или пароль");
@@ -92,6 +103,14 @@ public class UserBean implements Serializable {
 		// Перенаправим на страницу логина после выхода
 		ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
 		ec.redirect("../login.xhtml");
+	}
+
+	public WorkerService getWorkerService() {
+		return workerService;
+	}
+
+	public void setWorkerService(WorkerService workerService) {
+		this.workerService = workerService;
 	}
 
 }
