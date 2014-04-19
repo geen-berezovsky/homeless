@@ -2,38 +2,33 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui">
 <ui:composition>
-	<h:form id="megaMenu">
-		<p:megaMenu>
-			<p:submenu label="Клиенты">
-				<p:column>
-					<p:submenu>
-						<p:menuitem value="Найти клиента" onclick="searchByNameDlg.show();"></p:menuitem>
-						<p:menuitem value="Найти клиента по рег. номеру" onclick="searchByIdDlg.show()"></p:menuitem>
-						<p:menuitem value="Мои клиенты" onclick="cameraServiceWv.show();"></p:menuitem>
-						<p:menuitem value="Оказанные мной услуги" url="#"></p:menuitem>
-						<p:menuitem value="Добавить клиента" onclick="addClientWv.show();"></p:menuitem>
-					</p:submenu>
-				</p:column>
+
+	<h:form id="mainMenu">
+		<p:menubar>
+
+			<p:submenu label="Клиенты" icon="ui-icon-document">
+				<p:menuitem value="Найти клиента" onclick="searchByNameDlg.show();"></p:menuitem>
+				<p:menuitem value="Найти клиента по рег. номеру" onclick="searchByIdDlg.show()"></p:menuitem>
+				<p:menuitem value="Мои клиенты" onclick="cameraServiceWv.show();"></p:menuitem>
+				<p:menuitem value="Оказанные мной услуги" url="#"></p:menuitem>
+				<p:menuitem value="Добавить клиента" onclick="addClientWv.show();"></p:menuitem>
 			</p:submenu>
-			<p:submenu label="Настройки">
-				<p:column>
-					<p:submenu>
-						<p:menuitem value="Мои настройки" onclick="mySettingsWv.show()"></p:menuitem>
-					</p:submenu>
-				</p:column>
+
+			<p:submenu label="Настройки" icon="ui-icon-pencil">
+				<p:menuitem value="Мои настройки" icon="ui-icon-arrowreturnthick-1-w" onclick="mySettingsWv.show()"></p:menuitem>
 			</p:submenu>
+
 			<p:submenu label="Окна"></p:submenu>
 			<p:submenu label="Отчеты">
-				<p:column>
-					<p:submenu>
-						<p:menuitem value="Отчет по проживающим и проч." url="#"></p:menuitem>
-					</p:submenu>
-				</p:column>
+				<p:menuitem value="Отчет по проживающим и проч." url="#"></p:menuitem>
 			</p:submenu>
 			<p:submenu label="Просроченные прививки и ФЛГ"></p:submenu>
-			<p:submenu label="Справка"></p:submenu>
-			<p:menuitem value="Выход" actionListener="#{user.logout}" ajax="false" id="exitId"/>
-		</p:megaMenu>
+			<p:submenu label="Справка" icon="ui-icon-help"></p:submenu>
+			<p:menuitem value="Выход" actionListener="#{user.logout}" ajax="false" id="exitId" />
+
+		</p:menubar>
+
 	</h:form>
+
 </ui:composition>
 </html>

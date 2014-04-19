@@ -3,5 +3,20 @@
 .ui-widget,.ui-widget .ui-widget {
 	font-size: 90% !important;
 }
+.ui-layout-north {
+	z-index: 20 !important;
+	overflow: visible !important;;
+}
 
+.ui-layout-north .ui-layout-unit-content {
+	overflow: visible !important;
+}
 
+.ui-layout-south {
+	z-index: 0 !important;
+	min-height: 380px;
+}
+
+.companyHeaderGrid tr, .companyHeaderGrid td {
+    border: none;
+}

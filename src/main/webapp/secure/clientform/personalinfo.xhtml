@@ -3,46 +3,77 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui">
 <ui:composition>
 
-	<h:panelGrid columns="2" cellpadding="5">
-		<h:outputText value="Семейное положение:" />
-		<p:selectOneMenu id="martialId" value="#{clientform.martialStatus}">
-			<f:selectItem itemLabel="Нет ответа" itemValue="0" />
-			<f:selectItem itemLabel="Состоит в браке" itemValue="1" />
-			<f:selectItem itemLabel="Не состоит в браке" itemValue="2" />
-		</p:selectOneMenu>
-		<h:outputText value="Наличие иждивенцев:" />
-		<p:selectOneMenu id="dependentsId" value="#{clientform.dependents}">
-			<f:selectItem itemLabel="Нет ответа" itemValue="0" />
-			<f:selectItem itemLabel="Да" itemValue="1" />
-			<f:selectItem itemLabel="Нет" itemValue="2" />
-		</p:selectOneMenu>
-		<h:outputText value="Наличие профессии:" />
-		<p:selectOneMenu id="professionId" value="#{clientform.hasProfession}">
-			<f:selectItem itemLabel="Нет ответа" itemValue="0" />
-			<f:selectItem itemLabel="Да" itemValue="1" />
-			<f:selectItem itemLabel="Нет" itemValue="2" />
-		</p:selectOneMenu>
-		<h:outputText value="Вид профессии:" />
-		<p:inputText name="professionDetails" id="professionDetailsId" value="#{clientform.profession}" />
-		<h:outputText value="Образование:" />
-		<p:selectOneMenu id="educationId" value="#{clientform.education.caption}">
-			<f:selectItems value="#{clientform.educationTypes}" var="education" itemValue="#{education}" />
-		</p:selectOneMenu>
-		<h:outputText value="Прожив. в жил. помещении:" />
-		<p:selectOneMenu id="liveInFlatId" value="#{clientform.liveInFlat}">
-			<f:selectItem itemLabel="Нет ответа" itemValue="0" />
-			<f:selectItem itemLabel="Да" itemValue="1" />
-			<f:selectItem itemLabel="Нет" itemValue="2" />
-		</p:selectOneMenu>
-		<h:outputText value="Где ночевали:" />
-		<p:selectOneMenu id="nightStayId" value="#{clientform.nightStay.caption}">
-			<f:selectItems value="#{clientform.nightStayTypes}" var="nightStay" itemValue="#{nightStay}" />
-		</p:selectOneMenu>
-		<h:outputText value="Видитесь ли с родственниками:" />
-		<p:selectOneMenu id="familyCommunicationsId" value="#{clientform.fcom.caption}">
-			<f:selectItems value="#{clientform.familyCommunicationTypes}" var="familyCommunication" itemValue="#{familyCommunication}" />
-		</p:selectOneMenu>
-
+	<h:panelGrid columns="2">
+		<p:row>
+			<h:outputText value="Семейное положение:" />
+		</p:row>
+		<p:row>
+			<p:selectOneMenu id="martialId" value="#{clientform.martialStatus}" style="width:150px;">
+				<f:selectItem itemLabel="Нет ответа" itemValue="0" />
+				<f:selectItem itemLabel="Состоит в браке" itemValue="1" />
+				<f:selectItem itemLabel="Не состоит в браке" itemValue="2" />
+			</p:selectOneMenu>
+		</p:row>
+		<p:row>
+			<h:outputText value="Наличие иждивенцев:" />
+		</p:row>
+		<p:row>
+			<p:selectOneMenu id="dependentsId" value="#{clientform.dependents}" style="width:150px;">
+				<f:selectItem itemLabel="Нет ответа" itemValue="0" />
+				<f:selectItem itemLabel="Да" itemValue="1" />
+				<f:selectItem itemLabel="Нет" itemValue="2" />
+			</p:selectOneMenu>
+		</p:row>
+		<p:row>
+			<h:outputText value="Наличие профессии:" />
+		</p:row>
+		<p:row>
+			<p:selectOneMenu id="professionId" value="#{clientform.hasProfession}" style="width:150px;">
+				<f:selectItem itemLabel="Нет ответа" itemValue="0" />
+				<f:selectItem itemLabel="Да" itemValue="1" />
+				<f:selectItem itemLabel="Нет" itemValue="2" />
+			</p:selectOneMenu>
+		</p:row>
+		<p:row>
+			<h:outputText value="Вид профессии:" />
+		</p:row>
+		<p:row>
+			<p:inputText name="professionDetails" id="professionDetailsId" value="#{clientform.profession}" />
+		</p:row>
+		<p:row>
+			<h:outputText value="Образование:" />
+		</p:row>
+		<p:row>
+			<p:selectOneMenu id="educationId" value="#{clientform.education.caption}" style="width:150px;">
+				<f:selectItems value="#{clientform.educationTypes}" var="education" itemValue="#{education}"/>
+			</p:selectOneMenu>
+		</p:row>
+		<p:row>
+			<h:outputText value="Прожив. в жил. помещении:" />
+		</p:row>
+		<p:row>
+			<p:selectOneMenu id="liveInFlatId" value="#{clientform.liveInFlat}" style="width:150px;">
+				<f:selectItem itemLabel="Нет ответа" itemValue="0" />
+				<f:selectItem itemLabel="Да" itemValue="1" />
+				<f:selectItem itemLabel="Нет" itemValue="2" />
+			</p:selectOneMenu>
+		</p:row>
+		<p:row>
+			<h:outputText value="Где ночевали:" />
+		</p:row>
+		<p:row>
+			<p:selectOneMenu id="nightStayId" value="#{clientform.nightStay.caption}" style="width:150px;">
+				<f:selectItems value="#{clientform.nightStayTypes}" var="nightStay" itemValue="#{nightStay}" />
+			</p:selectOneMenu>
+		</p:row>
+		<p:row>
+			<h:outputText value="Видитесь ли с родственниками:" />
+		</p:row>
+		<p:row>
+			<p:selectOneMenu id="familyCommunicationsId" value="#{clientform.fcom.caption}" style="width:150px;">
+				<f:selectItems value="#{clientform.familyCommunicationTypes}" var="familyCommunication" itemValue="#{familyCommunication}" />
+			</p:selectOneMenu>
+		</p:row>
 
 	</h:panelGrid>
 
