@@ -5,14 +5,15 @@ import java.util.Date;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 
-import ru.homeless.dao.ClientShelterDAO;
 import ru.homeless.entities.ShelterHistory;
+import ru.homeless.services.GenericService;
 import ru.homeless.util.Util;
 
 @ManagedBean (name = "clientshelter")
@@ -24,6 +25,9 @@ public class ClientShelterBean implements Serializable {
 	private int cid = 0;
 	private List<ShelterHistory> shelterList = null;
 	private ShelterHistory selectedShelter;
+
+	@ManagedProperty(value = "#{GenericService}")
+	private GenericService genericService;
 	
 	public ClientShelterBean() {
 		
@@ -43,7 +47,7 @@ public class ClientShelterBean implements Serializable {
 
 		if (cids != null && !cids.trim().equals("")) {
 			this.cid = Integer.parseInt(cids);
-			setShelterList(new ClientShelterDAO().getAllClientShelters(cid));
+			setShelterList(getGenericService().getInstancesByClientId(ShelterHistory.class, cid));
 		}
 		newSelectedShelter(); // set new shelter
 		RequestContext rc = RequestContext.getCurrentInstance();
@@ -52,13 +56,12 @@ public class ClientShelterBean implements Serializable {
 	
 	
 	public void deleteShelter() {
-		ClientShelterDAO cd = new ClientShelterDAO();
-		cd.deleteShelter(cd.getShelterById(selectedShelter.getId()));
+		getGenericService().deleteInstance(getGenericService().getInstanceById(ShelterHistory.class, selectedShelter.getId()));
 		reload();
 	}
 
 	public void editShelter() {
-		selectedShelter = new ClientShelterDAO().getShelterById(selectedShelter.getId());
+		selectedShelter = getGenericService().getInstanceById(ShelterHistory.class, selectedShelter.getId());
 		RequestContext rc = RequestContext.getCurrentInstance();
 		rc.update("add_shelter");	//force updating the add shelter form	
 	}
@@ -89,5 +92,13 @@ public class ClientShelterBean implements Serializable {
 
 	public void setShelterList(List<ShelterHistory> shelterList) {
 		this.shelterList = shelterList;
+	}
+
+	public GenericService getGenericService() {
+		return genericService;
+	}
+
+	public void setGenericService(GenericService genericService) {
+		this.genericService = genericService;
 	}
 }

@@ -6,12 +6,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
@@ -23,13 +23,7 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.event.TabChangeEvent;
 
 import ru.homeless.comparators.RecievedServiceSortingComparator;
-import ru.homeless.dao.BreadwinnerDAO;
-import ru.homeless.dao.ChronicDiseaseDAO;
 import ru.homeless.dao.ClientDAO;
-import ru.homeless.dao.EductionDAO;
-import ru.homeless.dao.FamilyCommunicationDAO;
-import ru.homeless.dao.NightStayDAO;
-import ru.homeless.dao.ReasonOfHomelessDAO;
 import ru.homeless.entities.Breadwinner;
 import ru.homeless.entities.ChronicDisease;
 import ru.homeless.entities.Client;
@@ -38,6 +32,7 @@ import ru.homeless.entities.FamilyCommunication;
 import ru.homeless.entities.NightStay;
 import ru.homeless.entities.Reasonofhomeless;
 import ru.homeless.entities.RecievedService;
+import ru.homeless.services.GenericService;
 import ru.homeless.util.Util;
 
 @ManagedBean(name = "clientform")
@@ -48,6 +43,8 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private int cid;
 
+	@ManagedProperty(value = "#{GenericService}")
+	private GenericService genericService;
 
 	private Client client;
 	private List<RecievedService> servicesList;
@@ -136,13 +133,17 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
 
 	
 	public void reloadClientData() {
-		setClient(new ClientDAO().getClientById(getCid()));
+		setClient(getGenericService().getInstanceById(Client.class, getCid()));
 		//copy data to externalized class data
-		log.info("Client ID = "+client.getId()+" has been selected for usage");
-		copyClientToClientData(client);
-		//setClientFormAvatar(clientFormAvatar);
-		//setAvatar(getClientFormAvatar());
-		updateHomelessDate();
+		if (client != null) {
+			log.info("Client ID = "+client.getId()+" has been selected for usage");
+			copyClientToClientData(client);
+			//setClientFormAvatar(clientFormAvatar);
+			//setAvatar(getClientFormAvatar());
+			updateHomelessDate();
+		} else {
+			log.info("Oops, but this client is not found in database...");
+		}
 	}
 
 	
@@ -160,27 +161,24 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
 	}
 
 	public List<String> getEducationTypes() {
-		EductionDAO eDAO = new EductionDAO();
 		List<String> l = new ArrayList<String>();
-		for (Education e : eDAO.getAllEducationTypes()) {
+		for (Education e : getGenericService().getInstances(Education.class)) {
 			l.add(e.getCaption());
 		}
 		return l;
 	}
 
 	public List<String> getNightStayTypes() {
-		NightStayDAO nsDAO = new NightStayDAO();
 		List<String> l = new ArrayList<String>();
-		for (NightStay ns : nsDAO.getAllNightStayTypes()) {
+		for (NightStay ns : getGenericService().getInstances(NightStay.class)) {
 			l.add(ns.getCaption());
 		}
 		return l;
 	}
 
 	public List<String> getFamilyCommunicationTypes() {
-		FamilyCommunicationDAO fDAO = new FamilyCommunicationDAO();
 		List<String> l = new ArrayList<String>();
-		for (FamilyCommunication f : fDAO.getAllFamilyCommunicationTypes()) {
+		for (FamilyCommunication f : getGenericService().getInstances(FamilyCommunication.class)) {
 			l.add(f.getCaption());
 		}
 		return l;
@@ -191,9 +189,8 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
 	 */
 	
 	public List<String> getBreadwinnerTypes() {
-		BreadwinnerDAO bDAO = new BreadwinnerDAO();
 		List<String> l = new ArrayList<String>();
-		for (Breadwinner b : bDAO.getAllBreadwinnerTypes()) {
+		for (Breadwinner b : getGenericService().getInstances(Breadwinner.class)) {
 			if (! b.getCaption().equals("Другие")) {
 				l.add(b.getCaption());
 			}
@@ -223,9 +220,8 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
 	 * Get all Reasons Of Homeless from the database
 	 */
 	public List<String> getReasonofhomelessTypes() {
-		ReasonOfHomelessDAO rDAO = new ReasonOfHomelessDAO();
 		List<String> l = new ArrayList<String>();
-		for (Reasonofhomeless r : rDAO.getAllReasonofhomelessTypes()) {
+		for (Reasonofhomeless r : getGenericService().getInstances(Reasonofhomeless.class)) {
 			if (! r.getCaption().equals("Другие")) {
 				l.add(r.getCaption());
 			}
@@ -253,9 +249,8 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
 	 * Get all Chronic Diseases from the database
 	 */
 	public List<String> getChronicDiseaseTypes() {
-		ChronicDiseaseDAO rDAO = new ChronicDiseaseDAO();
 		List<String> l = new ArrayList<String>();
-		for (ChronicDisease cd : rDAO.getAllChronicDiseaseTypes()) {
+		for (ChronicDisease cd : getGenericService().getInstances(ChronicDisease.class)) {
 			if (! cd.getCaption().equals("Другие")) {
 				l.add(cd.getCaption());
 			}
@@ -413,7 +408,7 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
 	public void saveClientForm(ClientFormBean cfb) {
 		FacesMessage msg = null;
 		
-		if (! client.getMemo().equals(getMemo()) || ! client.getContacts().equals(getContacts())) {
+		if ( ((client.getMemo()!=null) && (! client.getMemo().equals(getMemo()))) || ((client.getContacts()!=null) && (! client.getContacts().equals(getContacts())))) {
 			log.info("Changed data on Comments or on Contacts tab - do not save the whole client settings!");
 			client.setMemo(getMemo());
 			client.setContacts(getContacts());
@@ -436,7 +431,7 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
 			
 			//update homeless reasons, breadwinners, chronical disasters
 			Set<Breadwinner> sb = new HashSet<Breadwinner>();
-			for (Breadwinner b : new BreadwinnerDAO().getAllBreadwinnerTypes()) {
+			for (Breadwinner b : getGenericService().getInstances(Breadwinner.class)) {
 				for (String cb : clientBreadwinners) {
 					if (b.getCaption().equals(cb)) {
 						sb.add(b);
@@ -446,7 +441,7 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
 			client.setBreadwinners(sb);
 
 			Set<Reasonofhomeless> sr = new HashSet<Reasonofhomeless>();
-			for (Reasonofhomeless b : new ReasonOfHomelessDAO().getAllReasonofhomelessTypes()) {
+			for (Reasonofhomeless b : getGenericService().getInstances(Reasonofhomeless.class)) {
 				for (String cb : clientReasonsofhomeless) {
 					if (b.getCaption().equals(cb)) {
 						sr.add(b);
@@ -456,7 +451,7 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
 			client.setReasonofhomeless(sr);
 			
 			Set<ChronicDisease> chd = new HashSet<ChronicDisease>();
-			for (ChronicDisease b : new ChronicDiseaseDAO().getAllChronicDiseaseTypes()) {
+			for (ChronicDisease b : getGenericService().getInstances(ChronicDisease.class)) {
 				for (String cb : clientChronicDisease) {
 					if (b.getCaption().equals(cb)) {
 						chd.add(b);
@@ -466,15 +461,12 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
 			client.setDiseases(chd);
 			
 		}
-
 		
-		ClientDAO cd = new ClientDAO();
-		Map<Boolean, String> res = cd.updateClientData(client);
-		if (res.get(true)!=null) {
-			msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Сохранено", res.get(true));	
-		} else {
-			msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Клиент не сохранен!", res.get(false));
-			
+		try {
+			getGenericService().updateInstance(client);
+			msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Сохранено", "");
+		} catch (Exception e) {
+			msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Клиент не сохранен!", "");
 		}
 		try {
 			cfb.reloadAll();
@@ -571,6 +563,14 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
 	@PostConstruct
 	public void postConstructExample() {
 		log.info("Reload called!");
+	}
+
+	public GenericService getGenericService() {
+		return genericService;
+	}
+
+	public void setGenericService(GenericService genericService) {
+		this.genericService = genericService;
 	}
 	
 }

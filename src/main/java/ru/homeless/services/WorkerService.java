@@ -2,7 +2,6 @@ package ru.homeless.services;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,6 +32,7 @@ public class WorkerService extends GenericService implements Serializable {
 		this.workerDAO = workerDAO;
 	}
 
+	@Transactional
 	public Worker login(String name, String password) {
 		/*
 		 * Note: name = firstname + surname

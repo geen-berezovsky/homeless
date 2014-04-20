@@ -6,21 +6,19 @@ import java.util.List;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
-import javax.faces.validator.ValidatorException;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.SelectEvent;
 
-import ru.homeless.dao.ClientContractsDAO;
-import ru.homeless.dao.ClientDocumentsDAO;
-import ru.homeless.dao.ClientControlResultDAO;
 import ru.homeless.entities.ContractResult;
 import ru.homeless.entities.Document;
 import ru.homeless.entities.ServContract;
+import ru.homeless.services.GenericService;
 import ru.homeless.util.Util;
 
 @ManagedBean (name = "clientcontracts")
@@ -33,6 +31,9 @@ public class ClientContractsBean implements Serializable {
 	private List<ServContract> contractsList = null;
 	private ServContract selectedContract;
 	private Document selectedDocument;
+	
+	@ManagedProperty(value = "#{GenericService}")
+	private GenericService genericService;
 	
 	public ClientContractsBean() {
 		
@@ -52,7 +53,7 @@ public class ClientContractsBean implements Serializable {
 
 		if (cids != null && !cids.trim().equals("")) {
 			this.cid = Integer.parseInt(cids);
-			contractsList = new ClientContractsDAO().getAllClientContracts(cid);
+			contractsList = getGenericService().getInstancesByClientId(ServContract.class, cid);
 		}
 		newSelectedContract(); // set new contact
 		RequestContext rc = RequestContext.getCurrentInstance();
@@ -64,13 +65,12 @@ public class ClientContractsBean implements Serializable {
 	
 	
 	public void deleteContract() {
-		ClientContractsDAO cd = new ClientContractsDAO(); 
-		cd.deleteContract(cd.getContractById(selectedContract.getId()));
+		getGenericService().deleteInstance(getGenericService().getInstanceById(ServContract.class, selectedContract.getId()));
 		reload();
 	}
 
 	public void editContract() {
-		selectedContract = new ClientContractsDAO().getContractById(selectedContract.getId());
+		selectedContract = getGenericService().getInstanceById(ServContract.class, selectedContract.getId());
 		RequestContext rc = RequestContext.getCurrentInstance();
 		rc.update("add_contract");	//force updating the add contract form	
 	}
@@ -89,12 +89,12 @@ public class ClientContractsBean implements Serializable {
 	
 	private boolean isClientHasNoOpenedContracts() {
 		log.info("Testing available contract results (possible encoding issues): ");
-		for (ContractResult c : new ClientControlResultDAO().getAllContractResults()) {
+		for (ContractResult c : getGenericService().getInstances(ContractResult.class)) {
 			if (c.getCaption().startsWith("Выполнен ")) {
 				log.info("\t"+c.getCaption());
 			}
 		}
-		List<ServContract> contracts = new ClientContractsDAO().getAllClientContracts(cid);
+		List<ServContract> contracts = getGenericService().getInstancesByClientId(ServContract.class, cid);
 		for (ServContract s : contracts) {
 			String result = s.getResult().getCaption();
 			log.info("Testing contract results for client "+cid+": ");
@@ -141,7 +141,15 @@ public class ClientContractsBean implements Serializable {
 	
 	public void onRowSelect(SelectEvent event) {  
 		selectedDocument = (Document) event.getObject();
-    }  
+    }
+
+	public GenericService getGenericService() {
+		return genericService;
+	}
+
+	public void setGenericService(GenericService genericService) {
+		this.genericService = genericService;
+	}  
 	
 
 }

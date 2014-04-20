@@ -3,24 +3,15 @@ package ru.homeless.entities;
 import static javax.persistence.GenerationType.IDENTITY;
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.Table;
-import javax.swing.JCheckBox;
-
-import ru.homeless.interfaces.ICheckBoxAction;
 
 @Entity
 @Table(name = "Breadwinner")
-public class Breadwinner implements ICheckBoxAction, Serializable {
+public class Breadwinner implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private int id;
 	private String caption;

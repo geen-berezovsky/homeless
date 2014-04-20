@@ -1,6 +1,7 @@
 package ru.homeless.beans;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -9,6 +10,7 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -19,9 +21,9 @@ import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 
 import ru.homeless.converters.DocTypeConverter;
-import ru.homeless.dao.ClientDocumentsDAO;
 import ru.homeless.entities.DocType;
 import ru.homeless.entities.Document;
+import ru.homeless.services.GenericService;
 import ru.homeless.util.Util;
 
 @ManagedBean(name = "clientdocuments")
@@ -34,6 +36,9 @@ public class ClientDocumentsBean implements Serializable {
 	private List<Document> documentsList = null;
 	private Document selectedDocument;
 	private List<DocType> docTypes;
+	
+	@ManagedProperty(value = "#{GenericService}")
+	private GenericService genericService;
 
 	public ClientDocumentsBean() {
 	}
@@ -44,7 +49,7 @@ public class ClientDocumentsBean implements Serializable {
 
 		if (cids != null && !cids.trim().equals("")) {
 			this.cid = Integer.parseInt(cids);
-			documentsList = new ClientDocumentsDAO().getAllClientDocuments(cid);
+			documentsList = getGenericService().getInstancesByClientId(Document.class, cid);
 		}
 		newSelectedDocument(); // set new document
 		RequestContext rc = RequestContext.getCurrentInstance();
@@ -99,13 +104,12 @@ public class ClientDocumentsBean implements Serializable {
 	}
 
 	public void deleteDocument() {
-		ClientDocumentsDAO cd = new ClientDocumentsDAO();
-		cd.deleteDocument(cd.getDocumentById(selectedDocument.getId()));
+		getGenericService().deleteInstance(getGenericService().getInstanceById(Document.class, selectedDocument.getId()));
 		reload();
 	}
 
 	public void editDocument() {
-		selectedDocument = new ClientDocumentsDAO().getDocumentById(selectedDocument.getId());
+		selectedDocument = getGenericService().getInstanceById(Document.class, selectedDocument.getId());
 		RequestContext rc = RequestContext.getCurrentInstance();
 		rc.update("add_document");	//force updating the add document form	
 	}
@@ -116,6 +120,8 @@ public class ClientDocumentsBean implements Serializable {
 
 	public void addSelectedDocument() {
 
+		log.info("Selected document "+selectedDocument.getDoctype().getCaption());
+		
 		// some validation
 		if ((selectedDocument.getRegistration() == 0 || selectedDocument.getRegistration() == 1) && !selectedDocument.getCity().trim().equals("")) {
 			selectedDocument.setRegistration(2);
@@ -126,8 +132,8 @@ public class ClientDocumentsBean implements Serializable {
 
 		//finally, set the client
 		selectedDocument.setClient(cid);
-		
-		new ClientDocumentsDAO().updateDocument(selectedDocument);
+
+		getGenericService().updateInstance(selectedDocument);
 		reload(); //for updating related view
 	}
 
@@ -169,7 +175,18 @@ public class ClientDocumentsBean implements Serializable {
 	@PostConstruct
 	// special for converter!
 	public void init() {
-		setDocTypes(DocTypeConverter.docTypesDB);
+		docTypes = new ArrayList<DocType>();
+		docTypes.addAll(getGenericService().getInstances(DocType.class));
+		DocTypeConverter.docTypesDB = new ArrayList<DocType>();
+		DocTypeConverter.docTypesDB.addAll(docTypes);
+	}
+
+	public GenericService getGenericService() {
+		return genericService;
+	}
+
+	public void setGenericService(GenericService genericService) {
+		this.genericService = genericService;
 	}
 
 }

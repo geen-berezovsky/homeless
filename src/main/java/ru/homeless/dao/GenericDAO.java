@@ -1,5 +1,6 @@
 package ru.homeless.dao;
 
+import java.io.Serializable;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -11,7 +12,9 @@ import org.springframework.stereotype.Repository;
 import ru.homeless.services.IGenericService;
 
 @Repository
-public class GenericDAO implements IGenericService {
+public class GenericDAO implements IGenericService, Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	public static Logger log = Logger.getLogger(GenericDAO.class);
 
@@ -27,7 +30,7 @@ public class GenericDAO implements IGenericService {
 	}
 
 	public <T> void addInstance(T instance) {
-		getSessionFactory().getCurrentSession().save(instance);
+		getSessionFactory().getCurrentSession().saveOrUpdate(instance);
 	}
 
 	public <T> void deleteInstance(T instance) {
@@ -35,7 +38,7 @@ public class GenericDAO implements IGenericService {
 	}
 
 	public <T> void updateInstance(T instance) {
-		getSessionFactory().getCurrentSession().update(instance);
+		getSessionFactory().getCurrentSession().saveOrUpdate(instance);
 	}
 
 	public <T> T getInstanceById(Class<T> clazz, int id) {
@@ -61,6 +64,12 @@ public class GenericDAO implements IGenericService {
 		} else {
 			return null;
 		}
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T> List<T>getInstancesByClientId(Class<T> clazz, int id) {
+		return getSessionFactory().getCurrentSession().createCriteria(clazz).add(Restrictions.eq("client", id)).list();
 	}
 
 }

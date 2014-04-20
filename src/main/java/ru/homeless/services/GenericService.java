@@ -1,5 +1,6 @@
 package ru.homeless.services;
 
+import java.io.Serializable;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,8 +11,9 @@ import ru.homeless.dao.GenericDAO;
 
 @Service("GenericService")
 @Transactional(readOnly = false)
-public class GenericService implements IGenericService {
+public class GenericService implements IGenericService, Serializable {
 
+	private static final long serialVersionUID = 1L;
 	@Autowired
 	private GenericDAO genericDAO;
 
@@ -57,6 +59,12 @@ public class GenericService implements IGenericService {
 	@Transactional
 	public <T> T getInstanceByCaption(Class<T> clazz, String caption) {
 		return getGenericDAO().getInstanceByCaption(clazz, caption);
+	}
+
+	@Override
+	@Transactional
+	public <T> List<T> getInstancesByClientId(Class<T> clazz, int id) {
+		return getGenericDAO().getInstancesByClientId(clazz, id);
 	}
 	
 

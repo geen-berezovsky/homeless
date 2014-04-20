@@ -2,23 +2,22 @@ package ru.homeless.beans;
 
 import java.io.Serializable;
 import java.sql.SQLException;
-import java.util.Map;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
-import javax.xml.bind.ValidationException;
 
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 
-import ru.homeless.dao.ClientDAO;
 import ru.homeless.dao.GenericDAO;
 import ru.homeless.entities.Client;
 import ru.homeless.entities.Education;
 import ru.homeless.entities.FamilyCommunication;
 import ru.homeless.entities.NightStay;
+import ru.homeless.services.GenericService;
 
 @ManagedBean(name = "newclientform")
 @ViewScoped
@@ -26,6 +25,9 @@ public class NewClientFormBean extends ClientDataBean implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	public static Logger log = Logger.getLogger(NewClientFormBean.class);
+	
+	@ManagedProperty(value = "#{GenericService}")
+	private GenericService genericService;
 
 	public NewClientFormBean() {
 		setSelectedMonth(0);
@@ -42,7 +44,6 @@ public class NewClientFormBean extends ClientDataBean implements Serializable {
 		log.info("Year = " + getSelectedYear());
 		log.info("Where = " + getWhereWasBorn());
 
-		ClientDAO cd = new ClientDAO();
 		Client c = new Client(getSurname(), getFirstname(), getMiddlename(), isGender(), null, getDate(), "", "");
 		updateHomelessDate(getSelectedYear());
 		updateHomelessDate(getSelectedMonth());
@@ -64,15 +65,13 @@ public class NewClientFormBean extends ClientDataBean implements Serializable {
 		if (getSurname().trim().equals("") || getFirstname().trim().equals("") || getDate() == null) {
 			msg = new FacesMessage(FacesMessage.SEVERITY_WARN, "Ошибка добавления клиента", "Недостаточно данных!");
 		} else {
-
-			Map<Boolean, String> res = cd.updateClientData(c);
-			
-			if (res.get(true) != null) {
-				msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Сохранено", res.get(true));
-			} else {
-				msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Клиент не сохранен!", res.get(false));
-
+			try {
+				getGenericService().updateInstance(c);
+				msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Сохранено", "");
+			} catch (Exception e) {
+				msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Клиент не сохранен!", "");
 			}
+			
 			FacesContext context = FacesContext.getCurrentInstance();
 			ClientFormBean cfb = context.getApplication().evaluateExpressionGet(context, "#{clientform}", ClientFormBean.class);
 			cfb.reloadAll(c.getId());
@@ -81,6 +80,14 @@ public class NewClientFormBean extends ClientDataBean implements Serializable {
 		}
 		FacesContext.getCurrentInstance().addMessage(null, msg);
 
+	}
+
+	public GenericService getGenericService() {
+		return genericService;
+	}
+
+	public void setGenericService(GenericService genericService) {
+		this.genericService = genericService;
 	}
 
 }

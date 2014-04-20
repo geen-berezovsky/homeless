@@ -8,15 +8,17 @@ import java.util.Date;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
+import javax.servlet.http.HttpSession;
 
 import org.jboss.logging.Logger;
 
-import ru.homeless.dao.ClientDAO;
-import ru.homeless.dao.ReceivedServicesDAO;
 import ru.homeless.entities.Client;
 import ru.homeless.entities.RecievedService;
 import ru.homeless.entities.ServicesType;
+import ru.homeless.entities.Worker;
+import ru.homeless.services.GenericService;
 import ru.homeless.util.Util;
 
 
@@ -30,6 +32,10 @@ public class ReceivedServiceBean implements Serializable {
 	private List<String> selectedItems; //we can put only strings there
 	private RecievedService selectedService;
 	
+	@ManagedProperty(value = "#{GenericService}")
+	private GenericService genericService;
+
+	
 	public ReceivedServiceBean() {
 		resetForm();
 	}
@@ -40,8 +46,7 @@ public class ReceivedServiceBean implements Serializable {
 	}
 
 	public List<ServicesType> getAvailableServices() {
-		ReceivedServicesDAO rd = new ReceivedServicesDAO();
-		return rd.getAvailableServiceTypes();
+		return getGenericService().getInstances(ServicesType.class);
 	}
 
 	public List<String> getSelectedItems() {
@@ -56,7 +61,12 @@ public class ReceivedServiceBean implements Serializable {
 		for (ServicesType st : getAvailableServices()) {
 			for (String s : selectedItems) {
 				if (st.getCaption().equals(s)) {
-					new ReceivedServicesDAO().addReceivedService(new ClientDAO().getClientById(cb.getClient().getId()), st, date);
+					HttpSession httpsession = Util.getSession();
+					Worker w = (Worker) httpsession.getAttribute("worker");
+					
+					Client c = getGenericService().getInstanceById(Client.class, cb.getClient().getId());
+					c.getRecievedservices().add(new RecievedService(w,c,st,date)); //adding new received service
+					getGenericService().updateInstance(c);
 				}
 			}
 		}
@@ -70,7 +80,9 @@ public class ReceivedServiceBean implements Serializable {
 	
 	public void deleteService() {
 		log.info("Deleting selected received service: "+selectedService.getServiceType().getCaption());
-		new ReceivedServicesDAO().deleteReceivedService(selectedService);
+		Client c = selectedService.getClient();
+		c.getRecievedservices().remove(selectedService);
+		getGenericService().updateInstance(c);
 	}
 	
 	
@@ -92,6 +104,14 @@ public class ReceivedServiceBean implements Serializable {
 
 	public String formattedDate(Date query) {
 		return Util.formatDate(query);
+	}
+
+	public GenericService getGenericService() {
+		return genericService;
+	}
+
+	public void setGenericService(GenericService genericService) {
+		this.genericService = genericService;
 	}
 
 }

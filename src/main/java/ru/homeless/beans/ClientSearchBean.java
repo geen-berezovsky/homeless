@@ -1,26 +1,18 @@
 package ru.homeless.beans;
 
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
-import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
 
 import org.apache.log4j.Logger;
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.primefaces.context.RequestContext;
 
-import ru.homeless.dao.ClientDAO;
 import ru.homeless.entities.Client;
-import ru.homeless.util.HibernateUtil;
+import ru.homeless.services.ClientService;
 import ru.homeless.util.Util;
 
 @ManagedBean(name = "clientsearch")
@@ -34,6 +26,9 @@ public class ClientSearchBean implements Serializable {
 	private String firstname;
 	private String date;
 	private List<Client> foundList;
+	
+	@ManagedProperty(value = "#{ClientService}")
+	private ClientService clientService;
 
 	public ClientSearchBean() {
 		foundList = new ArrayList<Client>();
@@ -80,7 +75,7 @@ public class ClientSearchBean implements Serializable {
 	}
 
 	public void findClients() {
-		foundList = new ClientDAO().getClientsByCriteria(id, surname, firstname, middlename, date);
+		foundList = getClientService().getClientsByCriteria(id, surname, firstname, middlename, date);
 		
 		//clear form for next run
 		setId(0);
@@ -108,6 +103,14 @@ public class ClientSearchBean implements Serializable {
 
 	public void setFoundList(List<Client> foundList) {
 		this.foundList = foundList;
+	}
+
+	public ClientService getClientService() {
+		return clientService;
+	}
+
+	public void setClientService(ClientService clientService) {
+		this.clientService = clientService;
 	}
 	
 }

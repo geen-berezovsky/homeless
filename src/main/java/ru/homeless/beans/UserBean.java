@@ -18,7 +18,6 @@ import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 
-import ru.homeless.dao.WorkerDAO;
 import ru.homeless.entities.Worker;
 import ru.homeless.services.WorkerService;
 import ru.homeless.util.Util;

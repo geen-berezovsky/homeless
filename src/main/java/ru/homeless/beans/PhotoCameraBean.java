@@ -40,7 +40,7 @@ public class PhotoCameraBean implements Serializable{
     }
     
     public void usePhoto() {
-    	String photo = photos.get(photos.size()-1);
+    	//String photo = photos.get(photos.size()-1);
     	photos.clear();
     }
     
