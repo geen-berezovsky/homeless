@@ -32,15 +32,16 @@ public class DocType {
 	}
 	
 	public boolean equals(Object o) {
-		if (o == this || o == null || getClass() != o.getClass()) {
+		if (o == null) return false;
+		if (! (o instanceof DocType)) {
 			return false;
 		}
 		DocType d = (DocType) o;
 		if (getId() == d.getId()) {
 			return true;
+		} else {
+			return false;	
 		}
-		
-		return false;
 	}
 
 	@Id

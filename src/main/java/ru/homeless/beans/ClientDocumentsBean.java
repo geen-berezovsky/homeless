@@ -118,6 +118,7 @@ public class ClientDocumentsBean implements Serializable {
 		selectedDocument = new Document();
 	}
 
+	
 	public void addSelectedDocument() {
 
 		log.info("Selected document "+selectedDocument.getDoctype().getCaption());

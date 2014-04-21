@@ -118,11 +118,11 @@ public class Document implements Serializable {
 		this.city = city;
 	}
 
-	public int getRegistration() {
+	public Integer getRegistration() {
 		return registration;
 	}
 
-	public void setRegistration(int registration) {
+	public void setRegistration(Integer registration) {
 		this.registration = registration;
 	}
 
@@ -134,5 +134,18 @@ public class Document implements Serializable {
 		this.worker = worker;
 	}
 	
+	public boolean equals(Object o) {
+		if (o == null) return false;
+		if (! (o instanceof Document)) {
+			return false;
+		}
+		Document d = (Document) o;
+		if (getId() == d.getId()) {
+			return true;
+		} else {
+			return false;	
+		}
+	}
+
 	
 }

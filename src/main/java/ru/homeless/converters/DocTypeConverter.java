@@ -1,16 +1,21 @@
 package ru.homeless.converters;
 
+import java.io.Serializable;
 import java.util.List;
 
+import javax.faces.bean.ApplicationScoped;
+import javax.faces.bean.ManagedBean;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
+import javax.faces.validator.Validator;
+import javax.faces.validator.ValidatorException;
 
 import ru.homeless.entities.DocType;
 
 @FacesConverter(forClass = ru.homeless.entities.DocType.class, value = "docTypeConverter")
-public class DocTypeConverter implements Converter {
+public class DocTypeConverter implements Converter, Serializable {
 
 	private static final long serialVersionUID = 1L;
 	public static List<DocType> docTypesDB;
@@ -18,18 +23,18 @@ public class DocTypeConverter implements Converter {
 	@Override
 	public Object getAsObject(FacesContext arg0, UIComponent arg1, String submittedValue) {
 		try {
-		System.out.println("Got a number: "+submittedValue);
-		if (submittedValue.trim().equals("")) {
-			return null;
-		} else {
-			int number = Integer.parseInt(submittedValue);
-			for (DocType d : docTypesDB) {
-				if (d.getId() == number) {
-					System.out.println("Returning a "+d.getCaption());
-					return d;
+			System.out.println("Got a number: " + submittedValue);
+			if (submittedValue.trim().equals("")) {
+				return null;
+			} else {
+				int number = Integer.parseInt(submittedValue);
+				for (DocType d : docTypesDB) {
+					if (d.getId() == number) {
+						System.out.println("Returning a " + d.getCaption());
+						return d;
+					}
 				}
 			}
-		}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -41,10 +46,6 @@ public class DocTypeConverter implements Converter {
 		if (value == null || value.equals("")) {
 			return "";
 		} else {
-			System.out.println("Returning "+String.valueOf(((DocType) value).getId()) + " "+String.valueOf(((DocType) value).getCaption()));
-			//System.out.println("Total: "+docTypesDB.size());
-			//System.out.println("First: "+((DocType) docTypesDB.get(0)).getCaption());
-			//System.out.println("Last: "+((DocType) docTypesDB.get(docTypesDB.size()-1)).getCaption());
 			return String.valueOf(((DocType) value).getId());
 		}
 	}
