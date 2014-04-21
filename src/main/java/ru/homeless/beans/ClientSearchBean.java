@@ -7,16 +7,20 @@ import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
+import javax.faces.bean.RequestScoped;
 import javax.faces.bean.SessionScoped;
+import javax.faces.bean.ViewScoped;
 
 import org.apache.log4j.Logger;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 
 import ru.homeless.entities.Client;
 import ru.homeless.services.ClientService;
 import ru.homeless.util.Util;
 
 @ManagedBean(name = "clientsearch")
-@SessionScoped
+@ViewScoped
 public class ClientSearchBean implements Serializable {
 	public static Logger log = Logger.getLogger(ClientSearchBean.class);
 	private static final long serialVersionUID = 1L;

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.PostConstruct;
@@ -88,7 +89,6 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
 		this.mainPanelVisibility = "display: block;";
 		RequestContext rc = RequestContext.getCurrentInstance();
 		rc.execute("reload();");
-
 		reloadAll();
 	}
 

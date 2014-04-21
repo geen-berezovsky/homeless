@@ -22,12 +22,9 @@ public class ClientDAO extends GenericDAO implements Serializable {
 	private List<Client> clients = null;
 	@SuppressWarnings("unchecked")
 	public List<Client> getClientsByCriteria(int id, String surname, String firstname, String middlename, String _date) {
-		
+		clients = new ArrayList<Client>();		
 		if (id != 0) {
 			Client c = (Client) getSessionFactory().getCurrentSession().createCriteria(Client.class).add(Restrictions.eq("id", id)).uniqueResult();
-			if (clients == null) {
-				clients = new ArrayList<Client>();
-			}
 			clients.add(c);
 		} else {
 			if (!_date.equals("")) {
