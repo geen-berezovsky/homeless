@@ -12,7 +12,7 @@ import ru.homeless.entities.Client;
 
 @Service("ClientService")
 @Transactional(readOnly = false)
-public class ClientService extends GenericService implements Serializable {
+public class ClientService extends ClientControlService implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	@Autowired

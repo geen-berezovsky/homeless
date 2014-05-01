@@ -47,6 +47,8 @@ http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
 			  <value>ru.homeless.entities.ContractResult</value>
 			  <value>ru.homeless.entities.ShelterHistory</value>
 			  <value>ru.homeless.entities.ShelterResult</value>
+			  <value>ru.homeless.entities.ContractPoints</value>
+			  <value>ru.homeless.entities.ContractControl</value>			  
 			</list>
 		</property>
 		<property name="hibernateProperties">

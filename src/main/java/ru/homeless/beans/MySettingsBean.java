@@ -16,7 +16,7 @@ import org.apache.log4j.Logger;
 import ru.homeless.dao.WorkerDAO;
 import ru.homeless.entities.Document;
 import ru.homeless.entities.Worker;
-import ru.homeless.services.GenericService;
+import ru.homeless.services.ClientControlService;
 import ru.homeless.util.Util;
 
 @ManagedBean (name = "mysettings")
@@ -34,7 +34,7 @@ public class MySettingsBean implements Serializable {
 	private String newPassword2;
 	
 	@ManagedProperty(value = "#{GenericService}")
-	private GenericService genericService;
+	private ClientControlService genericService;
 	
 	public MySettingsBean() {
 		HttpSession session = Util.getSession();
@@ -177,11 +177,11 @@ public class MySettingsBean implements Serializable {
 		Util.validateNumFormat(ctx, component, value);
 	}
 
-	public GenericService getGenericService() {
+	public ClientControlService getGenericService() {
 		return genericService;
 	}
 
-	public void setGenericService(GenericService genericService) {
+	public void setGenericService(ClientControlService genericService) {
 		this.genericService = genericService;
 	}
 	

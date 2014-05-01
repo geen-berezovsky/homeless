@@ -1,6 +1,7 @@
 package ru.homeless.beans;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -15,10 +16,12 @@ import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.SelectEvent;
 
+import ru.homeless.entities.ContractControl;
 import ru.homeless.entities.ContractResult;
 import ru.homeless.entities.Document;
 import ru.homeless.entities.ServContract;
-import ru.homeless.services.GenericService;
+import ru.homeless.entities.Worker;
+import ru.homeless.services.ContractControlService;
 import ru.homeless.util.Util;
 
 @ManagedBean (name = "clientcontracts")
@@ -31,9 +34,14 @@ public class ClientContractsBean implements Serializable {
 	private List<ServContract> contractsList = null;
 	private ServContract selectedContract;
 	private Document selectedDocument;
+	private Worker worker;
+	private List<String> contractResultTypes;
+	//TO BE REFACTORED IN LATEST FUTURE: INCORRECT MODEL SPECIFICATION
+	private List<ContractControl> contractItems;
+	private ContractControl selectedContractControl;
 	
-	@ManagedProperty(value = "#{GenericService}")
-	private GenericService genericService;
+	@ManagedProperty(value = "#{ContractControlService}")
+	private ContractControlService contractControlService;
 	
 	public ClientContractsBean() {
 		
@@ -50,10 +58,11 @@ public class ClientContractsBean implements Serializable {
 	public void reload() {
 		HttpSession session = Util.getSession();
 		String cids = session.getAttribute("cid").toString();
+		worker = (Worker) session.getAttribute("worker");
 
 		if (cids != null && !cids.trim().equals("")) {
 			this.cid = Integer.parseInt(cids);
-			contractsList = getGenericService().getInstancesByClientId(ServContract.class, cid);
+			contractsList = getContractControlService().getInstancesByClientId(ServContract.class, cid);
 		}
 		newSelectedContract(); // set new contact
 		RequestContext rc = RequestContext.getCurrentInstance();
@@ -65,14 +74,14 @@ public class ClientContractsBean implements Serializable {
 	
 	
 	public void deleteContract() {
-		getGenericService().deleteInstance(getGenericService().getInstanceById(ServContract.class, selectedContract.getId()));
+		getContractControlService().deleteInstance(getContractControlService().getInstanceById(ServContract.class, selectedContract.getId()));
 		reload();
 	}
 
 	public void editContract() {
-		selectedContract = getGenericService().getInstanceById(ServContract.class, selectedContract.getId());
+		selectedContract = getContractControlService().getInstanceById(ServContract.class, selectedContract.getId());
 		RequestContext rc = RequestContext.getCurrentInstance();
-		rc.update("add_contract");	//force updating the add contract form	
+		rc.update("edit_contract");	//force updating the add contract form	
 	}
 
 	public void showAddContractDialog() {
@@ -89,12 +98,12 @@ public class ClientContractsBean implements Serializable {
 	
 	private boolean isClientHasNoOpenedContracts() {
 		log.info("Testing available contract results (possible encoding issues): ");
-		for (ContractResult c : getGenericService().getInstances(ContractResult.class)) {
+		for (ContractResult c : getContractControlService().getInstances(ContractResult.class)) {
 			if (c.getCaption().startsWith("Выполнен ")) {
 				log.info("\t"+c.getCaption());
 			}
 		}
-		List<ServContract> contracts = getGenericService().getInstancesByClientId(ServContract.class, cid);
+		List<ServContract> contracts = getContractControlService().getInstancesByClientId(ServContract.class, cid);
 		for (ServContract s : contracts) {
 			String result = s.getResult().getCaption();
 			log.info("Testing contract results for client "+cid+": ");
@@ -143,13 +152,48 @@ public class ClientContractsBean implements Serializable {
 		selectedDocument = (Document) event.getObject();
     }
 
-	public GenericService getGenericService() {
-		return genericService;
+	public Worker getWorker() {
+		return worker;
 	}
 
-	public void setGenericService(GenericService genericService) {
-		this.genericService = genericService;
-	}  
-	
+	public void setWorker(Worker worker) {
+		this.worker = worker;
+	}
+
+	public List<String> getContractResultTypes() {
+		List<String> l = new ArrayList<String>();
+		for (ContractResult e : getContractControlService().getInstances(ContractResult.class)) {
+			l.add(e.getCaption());
+		}
+		return l;
+	}
+
+	public void setContractResultTypes(List<String> contractResultTypes) {
+		this.contractResultTypes = contractResultTypes;
+	}
+
+	public List<ContractControl> getContractItems() {
+		return getContractControlService().getItemsByServContractId(selectedContract.getId());
+	}
+
+	public void setContractItems(List<ContractControl> contractItems) {
+		this.contractItems = contractItems;
+	}
+
+	public ContractControlService getContractControlService() {
+		return contractControlService;
+	}
+
+	public void setContractControlService(ContractControlService contractControlService) {
+		this.contractControlService = contractControlService;
+	}
+
+	public ContractControl getSelectedContractControl() {
+		return selectedContractControl;
+	}
+
+	public void setSelectedContractControl(ContractControl selectedContractControl) {
+		this.selectedContractControl = selectedContractControl;
+	}
 
 }

@@ -33,7 +33,7 @@ import ru.homeless.entities.FamilyCommunication;
 import ru.homeless.entities.NightStay;
 import ru.homeless.entities.Reasonofhomeless;
 import ru.homeless.entities.RecievedService;
-import ru.homeless.services.GenericService;
+import ru.homeless.services.ClientControlService;
 import ru.homeless.util.Util;
 
 @ManagedBean(name = "clientform")
@@ -45,7 +45,7 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
 	private int cid;
 
 	@ManagedProperty(value = "#{GenericService}")
-	private GenericService genericService;
+	private ClientControlService genericService;
 
 	private Client client;
 	private List<RecievedService> servicesList;
@@ -565,11 +565,11 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
 		log.info("Reload called!");
 	}
 
-	public GenericService getGenericService() {
+	public ClientControlService getGenericService() {
 		return genericService;
 	}
 
-	public void setGenericService(GenericService genericService) {
+	public void setGenericService(ClientControlService genericService) {
 		this.genericService = genericService;
 	}
 	

@@ -43,7 +43,7 @@
 									<p:button value="Удалить фото" title="Удалить фотографию клиента" icon="ui-icon-delete" style="width:178px;" />
 								</h:panelGrid>
 							</p:layoutUnit>
-							<p:layoutUnit position="center" style="max-height:290px" header="Персональная информация">
+							<p:layoutUnit position="center" style="max-height:290px;" header="Персональная информация">
 								<ui:include src="clientform/maininfo.xhtml" />
 							</p:layoutUnit>
 							<p:layoutUnit position="east" size="600" style="max-height:290px;" header="Оказанные услуги">
@@ -161,7 +161,7 @@
 
 								<p:contextMenu for="conlistId">
 									<p:menuitem value="Удалить" update="conlistId" icon="ui-icon-close" actionListener="#{clientcontracts.deleteContract()}" action="#{clientcontracts.reload()}" ajax="true" />
-									<p:menuitem value="Редактировать" update="conlistId" icon="ui-icon-pencil" actionListener="#{clientcontracts.editContract()}" ajax="true" oncomplete="addContractWv.show();" />
+									<p:menuitem value="Редактировать" update="conlistId" icon="ui-icon-pencil" actionListener="#{clientcontracts.editContract()}" ajax="true" oncomplete="editContractWv.show();" />
 								</p:contextMenu>
 
 								<p:dataTable id="conlistId" var="conlist" value="#{clientcontracts.contractsList}" paginator="true" rows="15"
@@ -216,7 +216,7 @@
 
 								<p:contextMenu for="shelterlistId">
 									<p:menuitem value="Удалить" update="shelterlistId" icon="ui-icon-close" actionListener="#{clientshelter.deleteShelter()}" action="#{clientshelter.reload()}" ajax="true" />
-									<p:menuitem value="Редактировать" update="shelterlistId" icon="ui-icon-pencil" actionListener="#{clientshelter.editShelter()}" ajax="true" oncomplete="addShelterWv.show();" />
+									<p:menuitem value="Редактировать" update="shelterlistId" icon="ui-icon-pencil" actionListener="#{clientshelter.editShelter()}" ajax="true" oncomplete="editShelterWv.show();" />
 								</p:contextMenu>
 
 								<p:dataTable id="shelterlistId" var="shelterlist" value="#{clientshelter.shelterList}" paginator="true" rows="15"
@@ -316,6 +316,7 @@
 	<ui:include src="dialogs/webcamera.xhtml" />
 	<ui:include src="dialogs/adddocument.xhtml" />
 	<ui:include src="dialogs/addcontract.xhtml" />
+	<ui:include src="dialogs/editcontract.xhtml" />
 	<ui:include src="dialogs/mysettings.xhtml" />
 
 

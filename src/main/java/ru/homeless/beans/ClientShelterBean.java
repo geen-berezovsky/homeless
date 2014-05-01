@@ -13,7 +13,7 @@ import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 
 import ru.homeless.entities.ShelterHistory;
-import ru.homeless.services.GenericService;
+import ru.homeless.services.ClientControlService;
 import ru.homeless.util.Util;
 
 @ManagedBean (name = "clientshelter")
@@ -27,7 +27,7 @@ public class ClientShelterBean implements Serializable {
 	private ShelterHistory selectedShelter;
 
 	@ManagedProperty(value = "#{GenericService}")
-	private GenericService genericService;
+	private ClientControlService genericService;
 	
 	public ClientShelterBean() {
 		
@@ -94,11 +94,11 @@ public class ClientShelterBean implements Serializable {
 		this.shelterList = shelterList;
 	}
 
-	public GenericService getGenericService() {
+	public ClientControlService getGenericService() {
 		return genericService;
 	}
 
-	public void setGenericService(GenericService genericService) {
+	public void setGenericService(ClientControlService genericService) {
 		this.genericService = genericService;
 	}
 }

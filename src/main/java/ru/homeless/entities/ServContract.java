@@ -5,6 +5,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -14,7 +15,7 @@ import javax.persistence.ManyToOne;
 @Entity
 public class ServContract implements Serializable {
 	private static final long serialVersionUID = 1L;
-	private int id;
+	private Integer id;
 	private Worker worker;
 	private int client;
 	private Date startDate;
@@ -22,7 +23,6 @@ public class ServContract implements Serializable {
 	private String docNum;
 	private ContractResult result;
 	private String commentResult;
-	
 	
 	public ServContract() {
 		
@@ -39,10 +39,11 @@ public class ServContract implements Serializable {
 	
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
-	public int getId() {
+	@Column(name="id")
+	public Integer getId() {
 		return id;
 	}
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 	
@@ -102,6 +103,5 @@ public class ServContract implements Serializable {
 	public void setCommentResult(String commentResult) {
 		this.commentResult = commentResult;
 	}
-
 
 }

@@ -1,0 +1,100 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui">
+<ui:composition>
+	<!-- 
+<script type="text/javascript">
+	function toggleAddContractDlg() {
+		selectDocumentWv.hide();
+		addContractWv.show();
+	}
+</script>
+ -->
+	<h:form id="edit_contract">
+		<p:messages />
+		<p:dialog id="editContractDlg" header="Редактирование существующего контракта" widgetVar="editContractWv" resizable="false" closable="true" modal="true" showEffect="fade" hideEffect="explode"
+			dynamic="true" closeOnEscape="true">
+
+			<h:panelGrid columns="2" id="edit_contract_panel_grid">
+				<p:row>
+					<p:outputLabel value="Ф.И.О клиента:" style="font-weight: bold" />
+				</p:row>
+				<p:row>
+					<p:outputLabel value="#{clientform.surname} #{clientform.firstname} #{clientform.middlename}" />
+				</p:row>
+				<p:row>
+					<p:outputLabel value="Работник:" style="font-weight: bold" />
+				</p:row>
+				<p:row>
+					<p:outputLabel value="#{clientcontracts.worker.surname} #{clientcontracts.worker.firstname} #{clientcontracts.worker.middlename}" />
+				</p:row>
+				<p:row>
+					<p:outputLabel value="Номер договора:" style="font-weight: bold" />
+				</p:row>
+				<p:row>
+					<p:outputLabel value="#{clientcontracts.selectedContract.id}" />
+				</p:row>
+				<p:row>
+					<p:outputLabel value="Дата начала:" style="font-weight: bold" />
+				</p:row>
+				<p:row>
+					<!-- 
+					<p:inputText value="#{clientcontracts.selectedContract.startDate}">
+						<f:convertDateTime pattern="MM.dd.yyyy" /> 
+					</p:inputText>
+					 -->
+					<p:calendar value="#{clientcontracts.selectedContract.startDate}" id="startContractDateCal" showOn="button" pattern="dd.MM.yyyy" />
+				</p:row>
+				<p:row>
+					<p:outputLabel value="Дата окончания:" style="font-weight: bold" />
+				</p:row>
+				<p:row>
+					<p:calendar value="#{clientcontracts.selectedContract.stopDate}" id="endContractDateCal" showOn="button" pattern="dd.MM.yyyy" />
+				</p:row>
+				<p:row>
+					<p:outputLabel value="Статус договора:" style="font-weight: bold" />
+				</p:row>
+				<p:row>
+					<p:selectOneMenu id="contractResultId" value="#{clientcontracts.selectedContract.result.caption}" style="width:300px;">
+						<f:selectItems value="#{clientcontracts.contractResultTypes}" var="contractResultTypes" itemValue="#{contractResultTypes}" />
+					</p:selectOneMenu>
+				</p:row>
+				<p:row>
+					<p:outputLabel value="Комментарии:" style="font-weight: bold" />
+				</p:row>
+				<p:row>
+					<p:inputTextarea value="#{clientcontracts.selectedContract.commentResult}" id="commentResultId" style="width:300px;" />
+				</p:row>
+			</h:panelGrid>
+			<p:dataTable id="contractItemsListId" var="contractItemsList" value="#{clientcontracts.contractItems}" paginator="true" rows="15"
+				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15"
+				rowKey="#{contractItemsList.id}" selection="#{clientcontracts.selectedContractControl}" selectionMode="single">
+
+				<p:column headerText="ID">
+					<h:outputText value="#{contractItemsList.id}" />
+				</p:column>
+
+				<p:column headerText="Сервисный план">
+					<h:outputText value="#{contractItemsList.contractpoints}" />
+				</p:column>
+				<p:column headerText="Комментарии">
+					<h:outputText value="#{contractItemsList.comments}" escape="false" />
+				</p:column>
+				<p:column headerText="Дата выполнения">
+					<h:outputText value="#{contractItemsList.endDate}">
+						<f:convertDateTime pattern="MM.dd.yyyy" />
+					</h:outputText>
+				</p:column>
+			</p:dataTable>
+			<p:separator />
+			<p:panel>
+				<p:growl id="editcontract_growl" showDetail="true" life="3000" />
+				<center>
+					<p:commandButton value="Обновить контракет" id="updateContractButtonId" actionListener="#{clientcontracts.updateSelectedContract()}" ajax="true"
+						update="@this edit_contract_panel_grid editcontract_growl" icon="ui-icon-check" oncomplete="editContractWv.hide()" />
+				</center>
+			</p:panel>
+		</p:dialog>
+	</h:form>
+</ui:composition>
+</html>

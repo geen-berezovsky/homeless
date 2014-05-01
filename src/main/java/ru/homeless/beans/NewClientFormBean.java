@@ -17,7 +17,7 @@ import ru.homeless.entities.Client;
 import ru.homeless.entities.Education;
 import ru.homeless.entities.FamilyCommunication;
 import ru.homeless.entities.NightStay;
-import ru.homeless.services.GenericService;
+import ru.homeless.services.ClientControlService;
 
 @ManagedBean(name = "newclientform")
 @ViewScoped
@@ -27,7 +27,7 @@ public class NewClientFormBean extends ClientDataBean implements Serializable {
 	public static Logger log = Logger.getLogger(NewClientFormBean.class);
 	
 	@ManagedProperty(value = "#{GenericService}")
-	private GenericService genericService;
+	private ClientControlService genericService;
 
 	public NewClientFormBean() {
 		setSelectedMonth(0);
@@ -82,11 +82,11 @@ public class NewClientFormBean extends ClientDataBean implements Serializable {
 
 	}
 
-	public GenericService getGenericService() {
+	public ClientControlService getGenericService() {
 		return genericService;
 	}
 
-	public void setGenericService(GenericService genericService) {
+	public void setGenericService(ClientControlService genericService) {
 		this.genericService = genericService;
 	}
 
