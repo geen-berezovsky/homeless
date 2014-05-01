@@ -91,7 +91,7 @@
 				<p:growl id="editcontract_growl" showDetail="true" life="3000" />
 				<center>
 					<p:commandButton value="Обновить контракет" id="updateContractButtonId" actionListener="#{clientcontracts.updateSelectedContract()}" ajax="true"
-						update="@this edit_contract_panel_grid editcontract_growl" icon="ui-icon-check" oncomplete="editContractWv.hide()" />
+						update="@this :m_tabview:contracts_form edit_contract_panel_grid editcontract_growl" icon="ui-icon-check" oncomplete="editContractWv.hide()" />
 				</center>
 			</p:panel>
 		</p:dialog>

@@ -13,10 +13,9 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 
-import ru.homeless.dao.WorkerDAO;
 import ru.homeless.entities.Document;
 import ru.homeless.entities.Worker;
-import ru.homeless.services.ClientControlService;
+import ru.homeless.services.WorkerService;
 import ru.homeless.util.Util;
 
 @ManagedBean (name = "mysettings")
@@ -33,15 +32,20 @@ public class MySettingsBean implements Serializable {
 	private String newPassword;
 	private String newPassword2;
 	
-	@ManagedProperty(value = "#{GenericService}")
-	private ClientControlService genericService;
+	@ManagedProperty(value = "#{WorkerService}")
+	private WorkerService workerService;
+	
 	
 	public MySettingsBean() {
 		HttpSession session = Util.getSession();
 		worker = (Worker) session.getAttribute("worker");
-		
+	}
+	
+	public void onShow() {
 		//get active document data from database
-		document = new WorkerDAO().getWorkerDocumentById(worker.getId());
+		log.info("Called reloading of the worker's document "+getWorkerService());
+		log.info(getWorkerService().getWorkerDocumentById(worker.getId()).getId());
+		document = getWorkerService().getWorkerDocumentById(worker.getId());
 		if (document == null) {
 			document = new Document();
 		}
@@ -114,7 +118,7 @@ public class MySettingsBean implements Serializable {
 		} else {
 			//Saving document data
 			try {
-				getGenericService().updateInstance(document);
+				getWorkerService().updateInstance(document);
 				msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Паспортные данные обновлены", "");
 			} catch (Exception e) {
 				msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Паспортные данные не обновлены!", "Пожалуйста, посмотрите логи.");
@@ -127,15 +131,15 @@ public class MySettingsBean implements Serializable {
 		if (worker.getSurname().trim().equals("") || worker.getFirstname().trim().equals("") || 
 				worker.getRules() == null || worker.getWarrantNum().trim().equals("") ||
 				worker.getWarrantDate() == null) {
-			msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Изменение данных пользователя", "Вы указали не все данные!");
+			msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Изменение данных работника", "Вы указали не все данные!");
 			FacesContext.getCurrentInstance().addMessage(null, msg);
 		} else {
 			//Saving document data
 			try {
-				getGenericService().updateInstance(worker);
-				msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Данные пользоватля обновлены", "");
+				getWorkerService().updateInstance(worker);
+				msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Данные работника обновлены", "");
 			} catch (Exception e) {
-				msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Данны пользователя не обновлены!", "Пожалуйста, посмотрите логи.");
+				msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Данны работника не обновлены!", "Пожалуйста, посмотрите логи.");
 			}
 			FacesContext.getCurrentInstance().addMessage(null, msg);
 		}
@@ -177,12 +181,13 @@ public class MySettingsBean implements Serializable {
 		Util.validateNumFormat(ctx, component, value);
 	}
 
-	public ClientControlService getGenericService() {
-		return genericService;
+	public WorkerService getWorkerService() {
+		return workerService;
 	}
 
-	public void setGenericService(ClientControlService genericService) {
-		this.genericService = genericService;
+	public void setWorkerService(WorkerService workerService) {
+		this.workerService = workerService;
 	}
+
 	
 }

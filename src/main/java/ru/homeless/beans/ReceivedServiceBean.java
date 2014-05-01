@@ -18,7 +18,7 @@ import ru.homeless.entities.Client;
 import ru.homeless.entities.RecievedService;
 import ru.homeless.entities.ServicesType;
 import ru.homeless.entities.Worker;
-import ru.homeless.services.ClientControlService;
+import ru.homeless.services.GenericService;
 import ru.homeless.util.Util;
 
 
@@ -33,7 +33,7 @@ public class ReceivedServiceBean implements Serializable {
 	private RecievedService selectedService;
 	
 	@ManagedProperty(value = "#{GenericService}")
-	private ClientControlService genericService;
+	private GenericService genericService;
 
 	
 	public ReceivedServiceBean() {
@@ -106,11 +106,11 @@ public class ReceivedServiceBean implements Serializable {
 		return Util.formatDate(query);
 	}
 
-	public ClientControlService getGenericService() {
+	public GenericService getGenericService() {
 		return genericService;
 	}
 
-	public void setGenericService(ClientControlService genericService) {
+	public void setGenericService(GenericService genericService) {
 		this.genericService = genericService;
 	}
 

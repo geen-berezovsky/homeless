@@ -12,12 +12,11 @@ import javax.faces.context.FacesContext;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 
-import ru.homeless.dao.GenericDAO;
 import ru.homeless.entities.Client;
 import ru.homeless.entities.Education;
 import ru.homeless.entities.FamilyCommunication;
 import ru.homeless.entities.NightStay;
-import ru.homeless.services.ClientControlService;
+import ru.homeless.services.GenericService;
 
 @ManagedBean(name = "newclientform")
 @ViewScoped
@@ -27,7 +26,7 @@ public class NewClientFormBean extends ClientDataBean implements Serializable {
 	public static Logger log = Logger.getLogger(NewClientFormBean.class);
 	
 	@ManagedProperty(value = "#{GenericService}")
-	private ClientControlService genericService;
+	private GenericService genericService;
 
 	public NewClientFormBean() {
 		setSelectedMonth(0);
@@ -54,11 +53,9 @@ public class NewClientFormBean extends ClientDataBean implements Serializable {
 		 * INITIALIZING RELEATED ENTITIES FOR AVOIDING NULL POINTER EXCEPTIONS ON VIEW SIDE
 		 */
 		
-		GenericDAO gd = new GenericDAO();
-	
-		c.setNightstay(gd.getInstanceByCaption(NightStay.class, "Нет ответа"));
-		c.setEducation(gd.getInstanceByCaption(Education.class, "Нет ответа"));
-		c.setFcom(gd.getInstanceByCaption(FamilyCommunication.class, "Нет ответа"));
+		c.setNightstay(getGenericService().getInstanceByCaption(NightStay.class, "Нет ответа"));
+		c.setEducation(getGenericService().getInstanceByCaption(Education.class, "Нет ответа"));
+		c.setFcom(getGenericService().getInstanceByCaption(FamilyCommunication.class, "Нет ответа"));
 
 		
 		FacesMessage msg = null;
@@ -82,11 +79,11 @@ public class NewClientFormBean extends ClientDataBean implements Serializable {
 
 	}
 
-	public ClientControlService getGenericService() {
+	public GenericService getGenericService() {
 		return genericService;
 	}
 
-	public void setGenericService(ClientControlService genericService) {
+	public void setGenericService(GenericService genericService) {
 		this.genericService = genericService;
 	}
 

@@ -11,7 +11,7 @@ import ru.homeless.dao.GenericDAO;
 
 @Service("GenericService")
 @Transactional(readOnly = false)
-public class ClientControlService implements IGenericService, Serializable {
+public class GenericService implements IGenericService, Serializable {
 
 	private static final long serialVersionUID = 1L;
 	@Autowired

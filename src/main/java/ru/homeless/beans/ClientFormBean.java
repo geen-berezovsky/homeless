@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.PostConstruct;
@@ -24,7 +23,6 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.event.TabChangeEvent;
 
 import ru.homeless.comparators.RecievedServiceSortingComparator;
-import ru.homeless.dao.ClientDAO;
 import ru.homeless.entities.Breadwinner;
 import ru.homeless.entities.ChronicDisease;
 import ru.homeless.entities.Client;
@@ -33,7 +31,7 @@ import ru.homeless.entities.FamilyCommunication;
 import ru.homeless.entities.NightStay;
 import ru.homeless.entities.Reasonofhomeless;
 import ru.homeless.entities.RecievedService;
-import ru.homeless.services.ClientControlService;
+import ru.homeless.services.GenericService;
 import ru.homeless.util.Util;
 
 @ManagedBean(name = "clientform")
@@ -45,7 +43,7 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
 	private int cid;
 
 	@ManagedProperty(value = "#{GenericService}")
-	private ClientControlService genericService;
+	private GenericService genericService;
 
 	private Client client;
 	private List<RecievedService> servicesList;
@@ -493,8 +491,8 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
 	}
 
 	public void refreshTabs() {
+		FacesContext context = FacesContext.getCurrentInstance();
 		if (cid!=0 && client != null) {
-			FacesContext context = FacesContext.getCurrentInstance();
 			ClientDocumentsBean cdb = context.getApplication().evaluateExpressionGet(context, "#{clientdocuments}", ClientDocumentsBean.class);
 			ClientContractsBean ccb = context.getApplication().evaluateExpressionGet(context, "#{clientcontracts}", ClientContractsBean.class);
 			ClientShelterBean csb = context.getApplication().evaluateExpressionGet(context, "#{clientshelter}", ClientShelterBean.class);
@@ -565,11 +563,11 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
 		log.info("Reload called!");
 	}
 
-	public ClientControlService getGenericService() {
+	public GenericService getGenericService() {
 		return genericService;
 	}
 
-	public void setGenericService(ClientControlService genericService) {
+	public void setGenericService(GenericService genericService) {
 		this.genericService = genericService;
 	}
 	

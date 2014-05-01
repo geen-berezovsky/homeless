@@ -23,7 +23,7 @@ import org.primefaces.context.RequestContext;
 import ru.homeless.converters.DocTypeConverter;
 import ru.homeless.entities.DocType;
 import ru.homeless.entities.Document;
-import ru.homeless.services.ClientControlService;
+import ru.homeless.services.GenericService;
 import ru.homeless.util.Util;
 
 @ManagedBean(name = "clientdocuments")
@@ -38,7 +38,7 @@ public class ClientDocumentsBean implements Serializable {
 	private List<DocType> docTypes;
 	
 	@ManagedProperty(value = "#{GenericService}")
-	private ClientControlService genericService;
+	private GenericService genericService;
 
 	public ClientDocumentsBean() {
 	}
@@ -182,12 +182,13 @@ public class ClientDocumentsBean implements Serializable {
 		DocTypeConverter.docTypesDB.addAll(docTypes);
 	}
 
-	public ClientControlService getGenericService() {
+	public GenericService getGenericService() {
 		return genericService;
 	}
 
-	public void setGenericService(ClientControlService genericService) {
+	public void setGenericService(GenericService genericService) {
 		this.genericService = genericService;
 	}
+
 
 }

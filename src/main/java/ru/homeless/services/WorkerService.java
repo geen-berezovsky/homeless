@@ -13,7 +13,7 @@ import ru.homeless.entities.Worker;
 
 @Service("WorkerService")
 @Transactional(readOnly = false)
-public class WorkerService extends ClientControlService implements Serializable {
+public class WorkerService extends GenericService implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	@Autowired

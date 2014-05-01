@@ -16,7 +16,7 @@ import ru.homeless.entities.Worker;
 
 @Service("ContractControlService")
 @Transactional(readOnly = false)
-public class ContractControlService extends ClientControlService implements Serializable {
+public class ContractControlService extends GenericService implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	@Autowired

@@ -76,11 +76,11 @@ public class Document implements Serializable {
 		this.whereAndWhom = whereAndWhom;
 	}
 
-	public int getClient() {
+	public Integer getClient() {
 		return client;
 	}
 
-	public void setClient(int client) {
+	public void setClient(Integer client) {
 		this.client = client;
 	}
 

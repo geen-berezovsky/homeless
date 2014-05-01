@@ -64,12 +64,8 @@ public class ClientContractsBean implements Serializable {
 			this.cid = Integer.parseInt(cids);
 			contractsList = getContractControlService().getInstancesByClientId(ServContract.class, cid);
 		}
-		newSelectedContract(); // set new contact
 		RequestContext rc = RequestContext.getCurrentInstance();
 		rc.update("conlistId");
-		for (ServContract s : contractsList) {
-			log.info(s.getResult().getCaption());
-		}
 	}
 	
 	
@@ -115,10 +111,6 @@ public class ClientContractsBean implements Serializable {
 		}
 		log.info("No uncompleted contracts found");
 		return true; //all contracts are completed partially or fully
-	}
-
-	public void newSelectedContract() {
-		selectedContract = new ServContract();
 	}
 
 	public int getCid() {
@@ -173,6 +165,7 @@ public class ClientContractsBean implements Serializable {
 	}
 
 	public List<ContractControl> getContractItems() {
+		log.info(selectedContract.toString());
 		return getContractControlService().getItemsByServContractId(selectedContract.getId());
 	}
 
@@ -194,6 +187,11 @@ public class ClientContractsBean implements Serializable {
 
 	public void setSelectedContractControl(ContractControl selectedContractControl) {
 		this.selectedContractControl = selectedContractControl;
+	}
+	
+	public void updateSelectedContract() {
+		getContractControlService().updateInstance(selectedContract);
+		reload();
 	}
 
 }
