@@ -17,8 +17,6 @@ import javax.servlet.http.HttpSession;
 
 public class Util {
 
-	public static ResourceBundle bundle = ResourceBundle.getBundle("config", FacesContext.getCurrentInstance().getViewRoot().getLocale());
-
 	public static HttpSession getSession() {
 		return (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
 	}
@@ -51,11 +49,11 @@ public class Util {
 	}
 
 	public static String getImagesStorageLocation() {
-		return bundle.getString("imagesStorageLocation");
+		return "/tmp";
 	}
 
 	public static String getTempImagesStorageLocation() {
-		return bundle.getString("imagesTempStorageLocation");
+		return "/tmp";
 	}
 
 	public static void validateTextOnly(FacesContext ctx, UIComponent component, Object value) {

@@ -18,10 +18,7 @@ public class ContractControlDAO extends GenericDAO implements Serializable {
 
 	@SuppressWarnings("unchecked")
 	public List<ContractControl> getItemsByServContractId(int id) {
-		log.info("Searching ContractControl items for servcontract="+id);
-		List<ContractControl> list = getSessionFactory().getCurrentSession().createCriteria(ContractControl.class).add(Restrictions.eq("servcontract", id)).list();
-		log.info("Got list of items "+list.toString());
-		return list;
+		return getSessionFactory().getCurrentSession().createCriteria(ContractControl.class).add(Restrictions.eq("servcontract", id)).list();
 	}
 
 }

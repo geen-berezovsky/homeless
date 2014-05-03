@@ -1,0 +1,47 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui">
+<ui:composition>
+	<h:form id="add_seriveplanitem">
+		<p:messages />
+		<p:dialog id="addSeriveplanitem" header="Добавить/Обновить пункт сервисного плана" widgetVar="addServiceItemWv" resizable="false" closable="true" modal="true" showEffect="fade" hideEffect="explode"
+			dynamic="true" closeOnEscape="true">
+			<h:panelGrid columns="2" id="add_serivceplanitem_panel_grid">
+				<p:row>
+					<p:outputLabel value="Клиент:" style="font-weight: bold" />
+				</p:row>
+				<p:row>
+					<p:outputLabel value="#{clientform.surname} #{clientform.firstname} #{clientform.middlename}" />
+				</p:row>
+				<p:row>
+					<p:outputLabel value="Цель:" style="font-weight: bold" />
+				</p:row>
+				<p:row>
+					<p:outputLabel value="#{clientcontracts.selectedContractControl.id}" />
+				</p:row>
+				<p:row>
+					<p:outputLabel value="Дата выполнения:" style="font-weight: bold" />
+				</p:row>
+				<p:row>
+					<p:calendar value="#{clientcontracts.selectedContractControl.endDate}" id="endContractControlDateCal" showOn="button" pattern="dd.MM.yyyy" />
+				</p:row>
+				<p:row>
+					<p:outputLabel value="Комментарии:" style="font-weight: bold" />
+				</p:row>
+				<p:row>
+					<p:editor id="contacts_editor" value="#{clientcontracts.selectedContractControl.comments}" />
+				</p:row>
+			</h:panelGrid>
+			<p:separator />
+			<p:panel>
+				<p:growl id="addserivceplanitem_growl" showDetail="true" life="5000" />
+				<center>
+					<p:commandButton value="Добавить/Обновить пункт сервисного плана" id="addserivceplanitemBid" actionListener="#{serviceplan.addServicePlanItem()}" ajax="true"
+						update="@this add_serivceplanitem_panel_grid :m_tabview:documents_form addserivceplanitem_growl" icon="ui-icon-check" />
+				</center>
+			</p:panel>
+		</p:dialog>
+	</h:form>
+
+</ui:composition>
+</html>

@@ -3,22 +3,18 @@ package ru.homeless.converters;
 import java.io.Serializable;
 import java.util.List;
 
-import javax.faces.bean.ApplicationScoped;
-import javax.faces.bean.ManagedBean;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
-import javax.faces.validator.Validator;
-import javax.faces.validator.ValidatorException;
 
-import ru.homeless.entities.DocType;
+import ru.homeless.entities.ContractResult;
 
-@FacesConverter(forClass = ru.homeless.entities.DocType.class, value = "docTypeConverter")
-public class DocTypeConverter implements Converter, Serializable {
+@FacesConverter(forClass = ru.homeless.entities.ContractResult.class, value = "contractResultTypeConverter")
+public class ContractResultTypeConverter implements Converter, Serializable {
 
 	private static final long serialVersionUID = 1L;
-	public static List<DocType> docTypesDB;
+	public static List<ContractResult> contractResultTypesDB;
 
 	@Override
 	public Object getAsObject(FacesContext arg0, UIComponent arg1, String submittedValue) {
@@ -27,7 +23,7 @@ public class DocTypeConverter implements Converter, Serializable {
 				return null;
 			} else {
 				int number = Integer.parseInt(submittedValue);
-				for (DocType d : docTypesDB) {
+				for (ContractResult d : contractResultTypesDB) {
 					if (d.getId() == number) {
 						return d;
 					}
@@ -44,7 +40,7 @@ public class DocTypeConverter implements Converter, Serializable {
 		if (value == null || value.equals("")) {
 			return "";
 		} else {
-			return String.valueOf(((DocType) value).getId());
+			return String.valueOf(((ContractResult) value).getId());
 		}
 	}
 

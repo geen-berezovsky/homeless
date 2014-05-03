@@ -43,8 +43,6 @@ public class MySettingsBean implements Serializable {
 	
 	public void onShow() {
 		//get active document data from database
-		log.info("Called reloading of the worker's document "+getWorkerService());
-		log.info(getWorkerService().getWorkerDocumentById(worker.getId()).getId());
 		document = getWorkerService().getWorkerDocumentById(worker.getId());
 		if (document == null) {
 			document = new Document();

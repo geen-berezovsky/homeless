@@ -5,10 +5,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
+import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
 
@@ -16,6 +18,7 @@ import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.SelectEvent;
 
+import ru.homeless.converters.ContractResultTypeConverter;
 import ru.homeless.entities.ContractControl;
 import ru.homeless.entities.ContractResult;
 import ru.homeless.entities.Document;
@@ -24,7 +27,7 @@ import ru.homeless.entities.Worker;
 import ru.homeless.services.ContractControlService;
 import ru.homeless.util.Util;
 
-@ManagedBean (name = "clientcontracts")
+@ManagedBean(name = "clientcontracts")
 @SessionScoped
 public class ClientContractsBean implements Serializable {
 
@@ -35,18 +38,18 @@ public class ClientContractsBean implements Serializable {
 	private ServContract selectedContract;
 	private Document selectedDocument;
 	private Worker worker;
-	private List<String> contractResultTypes;
-	//TO BE REFACTORED IN LATEST FUTURE: INCORRECT MODEL SPECIFICATION
+	private List<ContractResult> contractResultTypes;
+	// TO BE REFACTORED IN LATEST FUTURE: INCORRECT MODEL SPECIFICATION
 	private List<ContractControl> contractItems;
 	private ContractControl selectedContractControl;
-	
+
 	@ManagedProperty(value = "#{ContractControlService}")
 	private ContractControlService contractControlService;
-	
+
 	public ClientContractsBean() {
-		
+
 	}
-	
+
 	public String formatDate(Date q) {
 		if (q != null && !q.equals("")) {
 			return Util.formatDate(q);
@@ -54,7 +57,7 @@ public class ClientContractsBean implements Serializable {
 			return "";
 		}
 	}
-	
+
 	public void reload() {
 		HttpSession session = Util.getSession();
 		String cids = session.getAttribute("cid").toString();
@@ -67,67 +70,71 @@ public class ClientContractsBean implements Serializable {
 		RequestContext rc = RequestContext.getCurrentInstance();
 		rc.update("conlistId");
 	}
-	
-	
+
 	public void deleteContract() {
 		getContractControlService().deleteInstance(getContractControlService().getInstanceById(ServContract.class, selectedContract.getId()));
 		reload();
 	}
 
 	public void editContract() {
-		selectedContract = getContractControlService().getInstanceById(ServContract.class, selectedContract.getId());
 		RequestContext rc = RequestContext.getCurrentInstance();
-		rc.update("edit_contract");	//force updating the add contract form	
+		rc.update("edit_contract"); // next form should be updated immediatelly
+									// and manually!
 	}
 
 	public void showAddContractDialog() {
 		RequestContext rc = RequestContext.getCurrentInstance();
 		if (isClientHasNoOpenedContracts()) {
-			rc.execute("selectDocumentWv.show()");	
+			rc.execute("selectDocumentWv.show()");
 		} else {
-			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Невозможно добавить новый договор, пока не закрыт существующий!","Пожалуйста, закройте существующий открытый договор с этим клиентом сначала.");
+			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Невозможно добавить новый договор, пока не закрыт существующий!",
+					"Пожалуйста, закройте существующий открытый договор с этим клиентом сначала.");
 			FacesContext.getCurrentInstance().addMessage(null, msg);
 		}
-		
-		
+
 	}
-	
+
 	private boolean isClientHasNoOpenedContracts() {
 		log.info("Testing available contract results (possible encoding issues): ");
 		for (ContractResult c : getContractControlService().getInstances(ContractResult.class)) {
 			if (c.getCaption().startsWith("Выполнен ")) {
-				log.info("\t"+c.getCaption());
+				log.info("\t" + c.getCaption());
 			}
 		}
 		List<ServContract> contracts = getContractControlService().getInstancesByClientId(ServContract.class, cid);
 		for (ServContract s : contracts) {
 			String result = s.getResult().getCaption();
-			log.info("Testing contract results for client "+cid+": ");
-			log.info("\t"+result);
-			if (! result.startsWith("Выполнен ")) {
-				log.info("\t"+"Found, at least, one uncompleted contract");
-				return false; //there is at least one unclosed contract
+			log.info("Testing contract results for client " + cid + ": ");
+			log.info("\t" + result);
+			if (!result.startsWith("Выполнен ")) {
+				log.info("\t" + "Found, at least, one uncompleted contract");
+				return false; // there is at least one unclosed contract
 			}
 		}
 		log.info("No uncompleted contracts found");
-		return true; //all contracts are completed partially or fully
+		return true; // all contracts are completed partially or fully
 	}
 
 	public int getCid() {
 		return cid;
 	}
+
 	public void setCid(int cid) {
 		this.cid = cid;
 	}
+
 	public List<ServContract> getContractsList() {
 		return contractsList;
 	}
+
 	public void setContractsList(List<ServContract> contractsList) {
 		this.contractsList = contractsList;
 	}
+
 	public ServContract getSelectedContract() {
 		return selectedContract;
 	}
+
 	public void setSelectedContract(ServContract selectedContract) {
 		this.selectedContract = selectedContract;
 	}
@@ -139,10 +146,10 @@ public class ClientContractsBean implements Serializable {
 	public void setSelectedDocument(Document selectedDocument) {
 		this.selectedDocument = selectedDocument;
 	}
-	
-	public void onRowSelect(SelectEvent event) {  
+
+	public void onRowSelect(SelectEvent event) {
 		selectedDocument = (Document) event.getObject();
-    }
+	}
 
 	public Worker getWorker() {
 		return worker;
@@ -152,20 +159,7 @@ public class ClientContractsBean implements Serializable {
 		this.worker = worker;
 	}
 
-	public List<String> getContractResultTypes() {
-		List<String> l = new ArrayList<String>();
-		for (ContractResult e : getContractControlService().getInstances(ContractResult.class)) {
-			l.add(e.getCaption());
-		}
-		return l;
-	}
-
-	public void setContractResultTypes(List<String> contractResultTypes) {
-		this.contractResultTypes = contractResultTypes;
-	}
-
 	public List<ContractControl> getContractItems() {
-		log.info(selectedContract.toString());
 		return getContractControlService().getItemsByServContractId(selectedContract.getId());
 	}
 
@@ -188,10 +182,33 @@ public class ClientContractsBean implements Serializable {
 	public void setSelectedContractControl(ContractControl selectedContractControl) {
 		this.selectedContractControl = selectedContractControl;
 	}
-	
+
 	public void updateSelectedContract() {
 		getContractControlService().updateInstance(selectedContract);
 		reload();
+	}
+
+	public List<ContractResult> getContractResultTypes() {
+		return contractResultTypes;
+	}
+
+	public void setContractResultTypes(List<ContractResult> contractResultTypes) {
+		this.contractResultTypes = contractResultTypes;
+	}
+
+	@PostConstruct
+	// special for converter!
+	public void init() {
+		contractResultTypes = new ArrayList<ContractResult>();
+		contractResultTypes.addAll(getContractControlService().getInstances(ContractResult.class));
+		ContractResultTypeConverter.contractResultTypesDB = new ArrayList<ContractResult>();
+		ContractResultTypeConverter.contractResultTypesDB.addAll(contractResultTypes);
+	}
+
+	public void editServicePlanItem() {
+		RequestContext rc = RequestContext.getCurrentInstance();
+		rc.update("add_seriveplanitem"); // next form should be updated
+											// immediatelly and manually!
 	}
 
 }
