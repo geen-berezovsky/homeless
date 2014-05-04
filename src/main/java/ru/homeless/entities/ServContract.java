@@ -4,6 +4,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -13,6 +14,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 @Entity
 public class ServContract implements Serializable {
@@ -23,8 +25,10 @@ public class ServContract implements Serializable {
 	private Date startDate;
 	private Date stopDate;
 	private String docNum;
+	private Integer documentId;
 	private ContractResult result;
 	private String commentResult;
+	private Set<ContractControl> contractcontrols;
 	
 	public ServContract() {
 		
@@ -104,6 +108,24 @@ public class ServContract implements Serializable {
 
 	public void setCommentResult(String commentResult) {
 		this.commentResult = commentResult;
+	}
+
+	public Integer getDocumentId() {
+		return documentId;
+	}
+
+	public void setDocumentId(Integer documentId) {
+		this.documentId = documentId;
+	}
+
+	@OneToMany(fetch = FetchType.EAGER, targetEntity = ContractControl.class, cascade = CascadeType.ALL, orphanRemoval = true)
+	@JoinColumn(name = "servcontract")
+	public Set<ContractControl> getContractcontrols() {
+		return contractcontrols;
+	}
+
+	public void setContractcontrols(Set<ContractControl> contractcontrols) {
+		this.contractcontrols = contractcontrols;
 	}
 
 }

@@ -33,6 +33,8 @@ public class ContractControl implements Serializable {
 	public ContractControl(Integer servcontract, ContractPoints contractpoints) {
 		setServcontract(servcontract);
 		setContractpoints(contractpoints);
+		setEndDate(null);
+		setComments("");
 	}
 	
 	@Id

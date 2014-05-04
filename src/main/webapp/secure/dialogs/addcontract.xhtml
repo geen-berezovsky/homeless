@@ -40,133 +40,98 @@
 					<h:outputText value="#{cdoclist.address}" />
 				</p:column>
 
-				<p:ajax event="rowSelect" listener="#{clientcontracts.onRowSelect}"   
-                    oncomplete="toggleAddContractDlg();" update=":add_contract" /> 
+				<p:ajax event="rowSelect" listener="#{clientcontracts.onRowSelect}" oncomplete="toggleAddContractDlg();" update=":add_contract" />
 			</p:dataTable>
 
 		</p:dialog>
 	</h:form>
 
-<script type="text/javascript">
-	function toggleAddContractDlg() {
-		selectDocumentWv.hide();
-		addContractWv.show();
-	}
-</script>
+	<script type="text/javascript">
+		function toggleAddContractDlg() {
+			selectDocumentWv.hide();
+			addContractWv.show();
+		}
+	</script>
 
 	<h:form id="add_contract">
 		<p:messages />
-		<p:dialog id="addContractDlg" header="Добавление нового контракта" widgetVar="addContractWv" resizable="false" closable="true" modal="true" showEffect="fade"
-			hideEffect="explode" dynamic="true" closeOnEscape="true">
-			<h:panelGrid columns="2" id="add_docs_panel_grid">
-				<p:row>
-					<p:column>
-						<p:outputLabel value="Выбранный документ:" />
-					</p:column>
-				</p:row>
-				<p:row>
-					<p:column>
-						<p:outputLabel value="#{clientcontracts.selectedDocument.doctype} (сер. и номер.: #{clientcontracts.selectedDocument.docPrefix} #{clientcontracts.selectedDocument.docNum}) от #{clientcontracts.formatDate(clientcontracts.selectedDocument.date)}"/>
-					</p:column>
-				</p:row>
-			</h:panelGrid>			
+		<p:dialog id="addContractDlg" header="Добавление нового контракта" widgetVar="addContractWv" resizable="false" closable="true" modal="false" showEffect="fade" hideEffect="explode" dynamic="true"
+			closeOnEscape="true" onShow="#{clientcontracts.resetSelectedContract()}">
+
+			<p:layout style="min-width:1000px;min-height:380px;max-height:380px;">
+				<p:layoutUnit position="west" resizable="true" size="460" minSize="460" maxSize="500">
+					<h:panelGrid columns="2" id="add_docs_panel_grid">
+						<p:row>
+							<p:outputLabel value="Клиент:" style="font-weight: bold" />
+						</p:row>
+						<p:row>
+							<p:outputLabel value="#{clientform.surname} #{clientform.firstname} #{clientform.middlename}" />
+						</p:row>
+
+						<p:row>
+							<p:outputLabel value="Выбранный документ:" style="font-weight: bold" />
+						</p:row>
+						<p:row>
+							<p:outputLabel
+								value="#{clientcontracts.selectedDocument.doctype} (сер. и номер.: #{clientcontracts.selectedDocument.docPrefix} #{clientcontracts.selectedDocument.docNum}) от #{clientcontracts.formatDate(clientcontracts.selectedDocument.date)} #{clientcontracts.selectedDocument.whereAndWhom}" />
+						</p:row>
+						<p:row>
+							<p:outputLabel value="Дата начала:" style="font-weight: bold" validator="#{clientcontracts.validateStartDateFormat}"  required="true" requiredMessage="Обязательно к заполнению" />
+						</p:row>
+						<p:row>
+							<p:message display="tooltip" for="startNewContractDateCal" />
+							<p:calendar value="#{clientcontracts.selectedContract.startDate}" id="startNewContractDateCal" showOn="button" pattern="dd.MM.yyyy" />
+						</p:row>
+						<p:row>
+							<p:outputLabel value="Дата окончания:" style="font-weight: bold" validator="#{clientcontracts.validateStopDateFormat()}"  required="true" requiredMessage="Обязательно к заполнению"  />
+						</p:row>
+						<p:row>
+							<p:message display="tooltip" for="stopNewContractDateCal" />
+							<p:calendar value="#{clientcontracts.selectedContract.stopDate}" id="stopNewContractDateCal" showOn="button" pattern="dd.MM.yyyy" />
+						</p:row>
+						<p:row>
+							<p:outputLabel value="Работник:" style="font-weight: bold" />
+						</p:row>
+						<p:row>
+							<p:inputTextarea value="#{clientcontracts.workerSelfData}" style="width:300px;" />
+						</p:row>
+						<p:row>
+							<p:outputLabel value="Паспортные данные работника:" style="font-weight: bold" />
+						</p:row>
+						<p:row>
+							<p:message display="tooltip" for="workerPassportDataId" />
+							<p:inputTextarea id="workerPassportDataId" value="#{clientcontracts.workerPassportData}" style="width:300px;" validator="#{clientcontracts.validateWorkerPasportDataOnly}" />
+						</p:row>
+						<p:row>
+							<p:outputLabel value="Доверенность работника:" style="font-weight: bold" />
+						</p:row>
+						<p:row>
+							<p:message display="tooltip" for="workerWarrantDataId" />
+							<p:inputText id="workerWarrantDataId" value="#{clientcontracts.warrantData}" validator="#{clientcontracts.validateWorkerWarrantDataOnly}" style="width:300px;" />
+						</p:row>
+					</h:panelGrid>
+					<p:separator />
+					<center>
+						<p:commandButton value="Добавить контракт" update="@this add_docs_panel_grid :m_tabview:contracts_form:conlistId" actionListener="#{clientcontracts.addNewContract()}" />
+					</center>
+
+				</p:layoutUnit>
+
+				<p:layoutUnit position="center" size="460" minSize="460" maxSize="400" resizable="false" style="max-height:380px;">
+					<p:dataTable id="servitemsid" var="servitems" value="#{clientcontracts.contractPointsDataModel}" paginator="false" rows="100" selection="#{clientcontracts.selectedNewContractPoints}">
+						<p:column selectionMode="multiple" style="width:4%" />
+						<p:column headerText="ID" style="width:4%">
+							#{servitems.id}
+						</p:column>
+						<p:column headerText="Пункт сервисного плана" style="width:92%">  
+            				#{servitems.caption}  
+        				</p:column>
+					</p:dataTable>
+				</p:layoutUnit>
+			</p:layout>
+
 		</p:dialog>
 	</h:form>
-
-
-
-	<!-- 
-				<p:row>
-					<p:column>
-						<p:outputLabel value="Серия:" />
-					</p:column>
-				</p:row>
-				<p:row>
-					<p:column>
-						<p:message display="tooltip" for="ad_prefix" />
-						<p:inputText value="#{clientdocuments.selectedDocument.docPrefix}" id="ad_prefix" validator="#{clientdocuments.validatePrefix}" />
-					</p:column>
-				</p:row>
-				<p:row>
-					<p:column>
-						<p:outputLabel value="Номер:" />
-					</p:column>
-				</p:row>
-				<p:row>
-					<p:column>
-						<p:message display="tooltip" for="ad_number" />
-						<p:inputText value="#{clientdocuments.selectedDocument.docNum}" id="ad_number" validator="#{clientdocuments.validateNumber}" />
-					</p:column>
-				</p:row>
-				<p:row>
-					<p:column>
-						<p:outputLabel value="Дата выдачи:" />
-					</p:column>
-				</p:row>
-				<p:row>
-					<p:column>
-						<p:message display="tooltip" for="ad_date" />
-						<p:calendar value="#{clientdocuments.selectedDocument.date}" id="ad_date" showOn="button" pattern="dd.MM.yyyy" validator="#{clientdocuments.validateDate}" />
-					</p:column>
-				</p:row>
-				<p:row>
-					<p:column>
-						<p:outputLabel value="Кем выдан:" />
-					</p:column>
-				</p:row>
-				<p:row>
-					<p:column>
-						<p:message display="tooltip" for="ad_who" />
-						<p:inputText value="#{clientdocuments.selectedDocument.whereAndWhom}" id="ad_who" validator="#{clientdocuments.validateWho}" size="45" />
-					</p:column>
-				</p:row>
-
-				<p:row>
-					<p:column>
-						<p:outputLabel value="Регистрация:" />
-					</p:column>
-				</p:row>
-				<p:row>
-					<p:column>
-						<p:selectOneMenu id="docRegistrationId" value="#{clientdocuments.selectedDocument.registration}">
-							<f:selectItem itemLabel="Нет ответа" itemValue="0" />
-							<f:selectItem itemLabel="Нет" itemValue="1" />
-							<f:selectItem itemLabel="Да" itemValue="2" />
-						</p:selectOneMenu>
-					</p:column>
-				</p:row>
-				<p:row>
-					<p:column>
-						<p:outputLabel value="Регистрация (город):" />
-					</p:column>
-				</p:row>
-				<p:row>
-					<p:column>
-						<p:message display="tooltip" for="ad_city" />
-						<p:inputText value="#{clientdocuments.selectedDocument.city}" id="ad_city" validator="#{clientdocuments.validateCity}" size="45" />
-					</p:column>
-				</p:row>
-				<p:row>
-					<p:column>
-						<p:outputLabel value="Регистрация (адрес):" />
-					</p:column>
-				</p:row>
-				<p:row>
-					<p:column>
-						<p:message display="tooltip" for="ad_address" />
-						<p:inputText value="#{clientdocuments.selectedDocument.address}" id="ad_address" validator="#{clientdocuments.validateAddress}" size="45" />
-					</p:column>
-				</p:row>
-			</h:panelGrid>
-			<p:separator />
-			<p:panel>
-				<p:growl id="adddocs_growl" showDetail="true" life="3000" />
-				<center>
-					<p:commandButton value="Добавить/Обновить документ" id="addNewDocumentB" actionListener="#{clientdocuments.addSelectedDocument()}" ajax="true" update="@this add_docs_panel_grid adddocs_growl :m_tabview:documents_form" icon="ui-icon-check" oncomplete="addDocumentWv.hide()" />
-				</center>
-			</p:panel>
-			 -->
-
 
 </ui:composition>
 </html>

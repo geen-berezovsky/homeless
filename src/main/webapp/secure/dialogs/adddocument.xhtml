@@ -105,7 +105,7 @@
 			<p:panel>
 				<p:growl id="adddocs_growl" showDetail="true" life="5000" />
 				<center>
-					<p:commandButton value="Добавить/Обновить документ" id="addNewDocumentB" actionListener="#{clientdocuments.addSelectedDocument()}" ajax="true" update="@this add_docs_panel_grid :m_tabview:documents_form adddocs_growl" icon="ui-icon-check" oncomplete="addDocumentWv.hide()" />
+					<p:commandButton value="Добавить/Обновить документ" id="addNewDocumentB" actionListener="#{clientdocuments.addSelectedDocument()}" ajax="true" update="@this :select_document add_docs_panel_grid :m_tabview:documents_form adddocs_growl" icon="ui-icon-check" oncomplete="addDocumentWv.hide()" />
 				</center>
 			</p:panel>
 		</p:dialog>
