@@ -38,11 +38,7 @@
 					<p:outputLabel value="Дата начала:" style="font-weight: bold" />
 				</p:row>
 				<p:row>
-					<!-- 
-					<p:inputText value="#{clientcontracts.selectedContract.startDate}">
-						<f:convertDateTime pattern="MM.dd.yyyy" /> 
-					</p:inputText>
-					 -->
+
 					<p:calendar value="#{clientcontracts.selectedContract.startDate}" id="startContractDateCal" showOn="button" pattern="dd.MM.yyyy" />
 				</p:row>
 				<p:row>
@@ -68,8 +64,8 @@
 			</h:panelGrid>
 
 			<p:contextMenu for="contractItemsListId">
-				<p:menuitem value="Редактировать" update="contractItemsListId" icon="ui-icon-pencil" actionListener="#{clientcontracts.editServicePlanItem()}" ajax="true" oncomplete="addServiceItemWv.show();" />
-				<p:menuitem value="Удалить" update="contractItemsListId" icon="ui-icon-close" actionListener="#{clientcontracts.deleteServicePlanItem()}" action="#{clientcontracts.reload()}" ajax="true" />
+				<p:menuitem value="Редактировать" update=":add_seriveplanitem contractItemsListId" icon="ui-icon-pencil" actionListener="#{clientcontracts.editServicePlanItem()}" ajax="true" oncomplete="addServiceItemWv.show();" />
+				<p:menuitem value="Удалить" update=":add_seriveplanitem contractItemsListId" icon="ui-icon-close" actionListener="#{clientcontracts.deleteServicePlanItem()}" action="#{clientcontracts.reload()}" ajax="true" />
 			</p:contextMenu>
 			<p:dataTable id="contractItemsListId" var="contractItemsList" value="#{clientcontracts.contractItems}" paginator="true" rows="15"
 				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15"
@@ -86,7 +82,7 @@
 				</p:column>
 				<p:column headerText="Дата выполнения">
 					<h:outputText value="#{contractItemsList.endDate}">
-						<f:convertDateTime pattern="MM.dd.yyyy" />
+						<f:convertDateTime pattern="dd.MM.yyyy" type="date" timeZone="#{clientcontracts.timeZone}"/>
 					</h:outputText>
 				</p:column>
 			</p:dataTable>
@@ -95,11 +91,9 @@
 				<p:growl id="editcontract_growl" showDetail="true" life="3000" />
 				<center>
 					<p:commandButton value="Добавить пункт сервисного плана" id="addServicePlanItemId" ajax="true"
-						update="@this :m_tabview:contracts_form contractItemsListId edit_contract_panel_grid editcontract_growl" icon="ui-icon-circle-plus" onclick="addServiceItemWv.show()" />
-						<!-- 
+						update="@this :add_seriveplanitem :m_tabview:contracts_form contractItemsListId edit_contract_panel_grid editcontract_growl" icon="ui-icon-circle-plus" actionListener="#{clientcontracts.resetTableSelection()}" />
 					<p:commandButton value="Обновить контракт" id="updateContractButtonId" actionListener="#{clientcontracts.updateSelectedContract()}" ajax="true"
 						update="@this :m_tabview:contracts_form edit_contract_panel_grid editcontract_growl" icon="ui-icon-disk" oncomplete="editContractWv.hide()" />
-						-->
 				</center>
 			</p:panel>
 		</p:dialog>

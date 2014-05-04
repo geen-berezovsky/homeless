@@ -18,6 +18,20 @@ public class ContractResult implements Serializable {
 		
 	}
 	
+	public boolean equals(Object o) {
+		if (o == null) return false;
+		if (! (o instanceof ContractResult)) {
+			return false;
+		}
+		ContractResult d = (ContractResult) o;
+		if (getId() == d.getId()) {
+			return true;
+		} else {
+			return false;	
+		}
+	}
+
+	
 	public ContractResult(String caption) {
 		setCaption(caption);
 	}

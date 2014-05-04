@@ -5,7 +5,7 @@
 	<h:form id="add_seriveplanitem">
 		<p:messages />
 		<p:dialog id="addSeriveplanitem" header="Добавить/Обновить пункт сервисного плана" widgetVar="addServiceItemWv" resizable="false" closable="true" modal="true" showEffect="fade" hideEffect="explode"
-			dynamic="true" closeOnEscape="true">
+			dynamic="true" closeOnEscape="true" onShow="#{clientcontracts.initContractControl()}">
 			<h:panelGrid columns="2" id="add_serivceplanitem_panel_grid">
 				<p:row>
 					<p:outputLabel value="Клиент:" style="font-weight: bold" />
@@ -17,7 +17,9 @@
 					<p:outputLabel value="Цель:" style="font-weight: bold" />
 				</p:row>
 				<p:row>
-					<p:outputLabel value="#{clientcontracts.selectedContractControl.id}" />
+					<p:selectOneMenu id="contractPointId" value="#{clientcontracts.selectedContractControl.contractpoints}" converter="contractPointsTypeConverter" style="width: 300px;">
+						<f:selectItems value="#{clientcontracts.contractPointsItems}" var="contractPointsType" itemLabel="#{contractPointsType.caption}" itemValue="#{contractPointsType}" />
+					</p:selectOneMenu>
 				</p:row>
 				<p:row>
 					<p:outputLabel value="Дата выполнения:" style="font-weight: bold" />
@@ -36,8 +38,8 @@
 			<p:panel>
 				<p:growl id="addserivceplanitem_growl" showDetail="true" life="5000" />
 				<center>
-					<p:commandButton value="Добавить/Обновить пункт сервисного плана" id="addserivceplanitemBid" actionListener="#{serviceplan.addServicePlanItem()}" ajax="true"
-						update="@this add_serivceplanitem_panel_grid :m_tabview:documents_form addserivceplanitem_growl" icon="ui-icon-check" />
+					<p:commandButton value="Добавить/Обновить пункт сервисного плана" id="addserivceplanitemBid" actionListener="#{clientcontracts.addServicePlanItem()}" ajax="true"
+						update="@this :edit_contract:contractItemsListId addserivceplanitem_growl" icon="ui-icon-check" onclick="addServiceItemWv.hide()"/>
 				</center>
 			</p:panel>
 		</p:dialog>

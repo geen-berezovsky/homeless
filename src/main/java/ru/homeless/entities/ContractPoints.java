@@ -19,6 +19,20 @@ public class ContractPoints implements Serializable {
 		
 	}
 	
+	public boolean equals(Object o) {
+		if (o == null) return false;
+		if (! (o instanceof ContractPoints)) {
+			return false;
+		}
+		ContractPoints d = (ContractPoints) o;
+		if (getId() == d.getId()) {
+			return true;
+		} else {
+			return false;	
+		}
+	}
+
+	
 	public ContractPoints(String caption, int audience) {
 		setCaption(caption);
 		setAudience(audience);

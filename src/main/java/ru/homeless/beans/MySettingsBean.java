@@ -2,6 +2,7 @@ package ru.homeless.beans;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.TimeZone;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -31,6 +32,7 @@ public class MySettingsBean implements Serializable {
 	private String oldPassword;
 	private String newPassword;
 	private String newPassword2;
+	private TimeZone timeZone;
 	
 	@ManagedProperty(value = "#{WorkerService}")
 	private WorkerService workerService;
@@ -39,6 +41,7 @@ public class MySettingsBean implements Serializable {
 	public MySettingsBean() {
 		HttpSession session = Util.getSession();
 		worker = (Worker) session.getAttribute("worker");
+		timeZone = TimeZone.getDefault();
 	}
 	
 	public void onShow() {
@@ -185,6 +188,14 @@ public class MySettingsBean implements Serializable {
 
 	public void setWorkerService(WorkerService workerService) {
 		this.workerService = workerService;
+	}
+
+	public TimeZone getTimeZone() {
+		return timeZone;
+	}
+
+	public void setTimeZone(TimeZone timeZone) {
+		this.timeZone = timeZone;
 	}
 
 	
