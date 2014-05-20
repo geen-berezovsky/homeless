@@ -97,6 +97,12 @@ public class ClientContractsBean implements Serializable {
 		if (cids != null && !cids.trim().equals("")) {
 			this.cid = Integer.parseInt(cids);
 		}
+
+		//update service plan items for actual contract
+		if (selectedContract!=null && selectedContract.getContractcontrols() != null) {
+			contractItems = new ArrayList<ContractControl>(selectedContract.getContractcontrols());
+		}
+
 	}
 
 	public void deleteContract() {
@@ -107,6 +113,7 @@ public class ClientContractsBean implements Serializable {
 	public void editContract() {
 		RequestContext rc = RequestContext.getCurrentInstance();
 		rc.update("edit_contract"); // next form should be updated immediatelly and manually!
+		reload();
 	}
 
 	public void showAddContractDialog() {
@@ -186,16 +193,6 @@ public class ClientContractsBean implements Serializable {
 		this.worker = worker;
 	}
 
-	public List<ContractControl> getContractItems() {
-		List<ContractControl> clist = new ArrayList<ContractControl>();
-		clist.addAll(selectedContract.getContractcontrols());
-		return clist;
-	}
-
-	public void setContractItems(List<ContractControl> contractItems) {
-		this.contractItems = contractItems;
-	}
-
 	public GenericService getGenericService() {
 		return genericService;
 	}
@@ -239,6 +236,7 @@ public class ClientContractsBean implements Serializable {
 		ContractPointsTypeConverter.contractPointsTypesDB.addAll(contractPointsItems);
 		
 		contractPointsDataModel = new ContractPointsDataModel(contractPointsItems);
+		
 	}
 
 	public void editServicePlanItem() {
@@ -246,6 +244,7 @@ public class ClientContractsBean implements Serializable {
 		rc.execute("contractItemsListWv.unselectAllRows()");
 		rc.update("add_seriveplanitem"); // next form should be updated
 											// immediatelly and manually!
+		reload();
 	}
 
 	public void resetTableSelection() {
@@ -274,17 +273,20 @@ public class ClientContractsBean implements Serializable {
 		if (selectedContractControl.getServcontract() == null || selectedContractControl.getServcontract() == 0) {
 			//This is new record
 			selectedContractControl.setServcontract(selectedContract.getId());
-			getGenericService().addInstance(selectedContractControl);
+			//getGenericService().addInstance(selectedContractControl);
+			selectedContract.getContractcontrols().add(selectedContractControl);
 		} else {
 			getGenericService().updateInstance(selectedContractControl);	
 		}
+		
+		getGenericService().updateInstance(selectedContract);
+		reload();
 	}
 	
 	public void deleteServicePlanItem() {
-		getGenericService().deleteInstance(selectedContractControl);
-		RequestContext rc = RequestContext.getCurrentInstance();
+		selectedContract.getContractcontrols().remove(selectedContractControl);
+		getGenericService().updateInstance(selectedContract);
 		reload();
-		rc.update("contractItemsListId");
 	}
 
 	public TimeZone getTimeZone() {
@@ -393,6 +395,7 @@ public class ClientContractsBean implements Serializable {
 			RequestContext rc = RequestContext.getCurrentInstance();
 			rc.update("conlistId");
 			rc.execute("addContractWv.hide()");
+			reload();
 
 		}
 	}
@@ -427,6 +430,14 @@ public class ClientContractsBean implements Serializable {
 
 	public void setSelectedNewContractPoints(ContractPoints[] selectedNewContractPoints) {
 		this.selectedNewContractPoints = selectedNewContractPoints;
+	}
+
+	public List<ContractControl> getContractItems() {
+		return contractItems;
+	}
+
+	public void setContractItems(List<ContractControl> contractItems) {
+		this.contractItems = contractItems;
 	}
 }
 
