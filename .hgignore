@@ -1,5 +1,7 @@
 target
-.settings
+.settings$
 .hgignore
 .classpath
 .project
+.idea
+homeless.iml

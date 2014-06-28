@@ -1,0 +1,154 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui">
+<ui:composition>
+	<p:dialog id="mySettings" header="Мои настройки" widgetVar="mySettingsWv" resizable="false" closable="true" modal="true" showEffect="fade" hideEffect="explode" dynamic="true" closeOnEscape="true" onShow="#{mysettings.onShow()}">
+		<h:form id="my_settings">
+			<p:messages />
+
+			<p:panelGrid id="my_settings_panel_grid">
+				<p:row>
+					<p:column>
+						<p:outputLabel value="Фамилия:" />
+					</p:column>
+					<p:column>
+						<p:message display="tooltip" for="my_settings_surname" />
+						<p:inputText value="#{mysettings.worker.surname}" id="my_settings_surname" validator="#{mysettings.validateTextOnly}" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column>
+						<p:outputLabel value="Имя:" />
+					</p:column>
+					<p:column>
+						<p:message display="tooltip" for="my_settings_firstname" />
+						<p:inputText value="#{mysettings.worker.firstname}" id="my_settings_firstname" validator="#{mysettings.validateTextOnly}" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column>
+						<p:outputLabel value="Отчество:" />
+					</p:column>
+					<p:column>
+						<p:message display="tooltip" for="my_settings_middlename" />
+						<p:inputText value="#{mysettings.worker.middlename}" id="my_settings_middlename" validator="#{mysettings.validateTextOnly}" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column>
+						<p:outputLabel value="Должность:" />
+					</p:column>
+					<p:column>
+						<p:inputText value="#{mysettings.worker.rules}" id="my_settings_role" disabled="true" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column>
+						<p:outputLabel value="Номер доверенности:" />
+					</p:column>
+					<p:column>
+						<p:message display="tooltip" for="my_settings_agnum" />
+						<p:inputText value="#{mysettings.worker.warrantNum}" id="my_settings_agnum" validator="#{mysettings.validateNumOnly}" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column>
+						<p:outputLabel value="Дата доверенности:" />
+					</p:column>
+					<p:column>
+						<p:message display="tooltip" for="my_settings_ag_num_date" />
+						<p:inputText value="#{mysettings.worker.warrantDate}" id="my_settings_ag_num_date" mask="99.99.9999" validator="#{mysettings.validateWarrantDateFormat}">
+							<f:convertDateTime pattern="dd.MM.yyyy" type="date" timeZone="#{mysettings.timeZone}" />
+						</p:inputText>
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column colspan="2">
+						<center>
+							<b><p:outputLabel value="Паспортные данные" /></b>
+						</center>
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column>
+						<p:outputLabel value="Серия:" />
+					</p:column>
+					<p:column>
+						<p:inputText value="#{mysettings.document.docPrefix}" id="my_settings_docprefix" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column>
+						<p:outputLabel value="Номер:" />
+					</p:column>
+					<p:column>
+						<p:inputText value="#{mysettings.document.docNum}" id="my_settings_docnum" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column>
+						<p:outputLabel value="Когда выдан:" />
+					</p:column>
+					<p:column>
+						<p:inputText value="#{mysettings.document.date}" id="my_settings_docdate" mask="99.99.9999" validator="#{mysettings.validateDocumentDateFormat}">
+							<f:convertDateTime pattern="dd.MM.yyyy" type="date" timeZone="#{mysettings.timeZone}" />
+						</p:inputText>
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column>
+						<p:outputLabel value="Кем выдан:" />
+					</p:column>
+					<p:column>
+						<p:inputText value="#{mysettings.document.whereAndWhom}" id="my_settings_docWhereAndWhom" />
+					</p:column>
+				</p:row>
+
+				<p:row>
+					<p:column colspan="2">
+						<center>
+							<b><p:outputLabel value="Смена пароля" /></b>
+						</center>
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column>
+						<p:outputLabel value="Старый пароль:" />
+					</p:column>
+					<p:column>
+						<p:password value="#{mysettings.oldPassword}" id="my_settings_oldpassword" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column>
+						<p:outputLabel value="Новый пароль:" />
+					</p:column>
+					<p:column>
+						<p:password value="#{mysettings.newPassword}" id="my_settings_newpassword" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column>
+						<p:outputLabel value="Новый пароль еще раз:" />
+					</p:column>
+					<p:column>
+						<p:password value="#{mysettings.newPassword2}" id="my_settings_newPassword2" />
+					</p:column>
+				</p:row>
+
+
+
+			</p:panelGrid>
+			<p:panel>
+				<p:growl id="growl" showDetail="true" life="3000" />
+				<center>
+					<p:commandButton value="Сохранить" actionListener="#{mysettings.updateWorkerSettings}" id="updateWorkerSettingsForm" update="@this :m_tabview:base_form my_settings_panel_grid growl"
+						icon="ui-icon-check" oncomplete="mySettingsWv.hide()"/>
+				</center>
+			</p:panel>
+		</h:form>
+	</p:dialog>
+
+
+</ui:composition>
+</html>
