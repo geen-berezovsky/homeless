@@ -1,0 +1,41 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui">
+<ui:composition>
+	<p:dialog id="roomEdit" header="Редактирование параметров комнаты" widgetVar="roomEditWv" resizable="false" closable="true" modal="true" showEffect="fade" hideEffect="explode" dynamic="true" closeOnEscape="true">
+		<h:form id="room_data">
+			<p:messages />
+
+            <p:panelGrid columns="2" id="edit_room_grid">
+                <p:row>
+                    <p:outputLabel value="Номер комнаты:" />
+                </p:row>
+                <p:row>
+                    <p:inputText value="#{roomb.selectedRoom.roomnumber}" id="roomNumber" size="40" />
+                </p:row>
+                <p:row>
+                    <p:outputLabel value="Максимально возможное число проживающих:" />
+                </p:row>
+                <p:row>
+                    <p:inputText value="#{roomb.selectedRoom.roommaxlivers}" id="roomMaxLivers" size="40" />
+                </p:row>
+                <p:row>
+                    <p:outputLabel value="Комментарии:" />
+                </p:row>
+                <p:row>
+                    <p:inputTextarea value="#{roomb.selectedRoom.roomnotes}" id="roomComments" size="40" />
+                </p:row>
+            </p:panelGrid>
+            <center>
+                <p:commandButton value="Обновить" actionListener="#{roomb.updateRoomData()}" id="updateRoom" update="@this @form :room_data :room_settings"
+                                 icon="ui-icon-check" oncomplete="roomEditWv.hide()"/>
+            </center>
+
+
+
+		</h:form>
+	</p:dialog>
+
+
+</ui:composition>
+</html>

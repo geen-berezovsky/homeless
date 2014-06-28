@@ -1,0 +1,37 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui">
+<ui:composition>
+    <!--  onShow="#{roomb.onShow()}" -->
+	<p:dialog id="roomSettings" header="Настройки комнат" widgetVar="roomSettingsWv" resizable="false" closable="true" modal="true" showEffect="fade" hideEffect="explode" dynamic="true" closeOnEscape="true">
+		<h:form id="room_settings">
+			<p:messages />
+
+            <p:panelGrid id="room_settings_panel_grid">
+            <p:row>
+                <p:column>
+
+                    <p:selectOneRadio id="roomId" value="#{roomb.selectedRoomId}" layout="pageDirection">
+                        <f:selectItems itemLabel="#{roomVal.roomnumber}  (занято #{roomVal.currentnumoflivers} из #{roomVal.roommaxlivers})" value="#{roomb.rooms}" var="roomVal" itemValue="#{roomVal.id}"/>
+                    </p:selectOneRadio>
+                    <center>
+                    <p:commandButton value="Редактировать" actionListener="#{roomb.updateSelectedData()}" id="editExactRoom" update="@this @form :room_data"
+                                     icon="ui-icon-check" oncomplete="roomEditWv.show()"/>
+                    <p:commandButton value="Добавить" actionListener="#{roomb.addNewRoom()}" id="addRoom" update="@this @form :room_data"
+                                     icon="ui-icon-plus"/>
+                    <p:commandButton value="Удалить" actionListener="#{roomb.deleteSelectedRoom()}" id="deleteRoom" update="@this @form :room_data"
+                                     icon="ui-icon-trash"/>
+
+
+                    </center>
+                </p:column>
+            </p:row>
+            </p:panelGrid>
+
+
+		</h:form>
+	</p:dialog>
+
+
+</ui:composition>
+</html>

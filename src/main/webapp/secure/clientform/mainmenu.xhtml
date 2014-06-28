@@ -4,7 +4,7 @@
 <ui:composition>
 
 	<h:form id="mainMenu">
-		<p:menubar>
+		<p:menubar autoDisplay="false">
 
 			<p:submenu label="Клиенты" icon="ui-icon-document">
 				<p:menuitem value="Найти клиента" onclick="searchByNameDlg.show();"></p:menuitem>
@@ -16,6 +16,7 @@
 
 			<p:submenu label="Настройки" icon="ui-icon-pencil">
 				<p:menuitem value="Мои настройки" icon="ui-icon-arrowreturnthick-1-w" onclick="mySettingsWv.show()"></p:menuitem>
+                <p:menuitem value="Настройки комнат" icon="ui-icon-arrowreturnthick-1-w" oncomplete="roomSettingsWv.show()" onclick="#{roomb.onShow()}"></p:menuitem>
 			</p:submenu>
 
 			<p:submenu label="Окна"></p:submenu>
