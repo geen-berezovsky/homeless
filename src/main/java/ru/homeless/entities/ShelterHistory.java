@@ -23,7 +23,16 @@ public class ShelterHistory implements Serializable {
 	private Date typhVac;
 	private Date fluorogr;
 	private int roomId;
-	private ShelterResult sr;
+
+    public Integer getShelterresult() {
+        return shelterresult;
+    }
+
+    public void setShelterresult(Integer shelterresult) {
+        this.shelterresult = shelterresult;
+    }
+
+    private Integer shelterresult;
 	
 	public ShelterHistory() {
 		
@@ -34,12 +43,7 @@ public class ShelterHistory implements Serializable {
 		setInShelter(inShelter);
 		setOutShelter(outShelter);
 		setRoomId(roomId);
-		setSr(sr);
-		/*
-		int i = Main.rooms.get(roomId)-1;
-		Main.rooms.remove(roomId);
-		Main.rooms.put(roomId, i);
-		*/
+        setShelterresult(sr.getId());
 	}
 	
 	@Id
@@ -101,15 +105,7 @@ public class ShelterHistory implements Serializable {
 	public void setRoomId(int roomId) {
 		this.roomId = roomId;
 	}
+/*
+	*/
 
-	@ManyToOne
-	@JoinColumn(name="shelterresult")
-	public ShelterResult getSr() {
-		return sr;
-	}
-
-	public void setSr(ShelterResult sr) {
-		this.sr = sr;
-	}
-	
 }

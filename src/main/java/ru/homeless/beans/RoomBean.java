@@ -6,6 +6,7 @@ import ru.homeless.entities.Document;
 import ru.homeless.entities.Room;
 import ru.homeless.entities.Worker;
 import ru.homeless.services.GenericService;
+import ru.homeless.services.RoomService;
 import ru.homeless.services.WorkerService;
 import ru.homeless.util.Util;
 
@@ -60,16 +61,17 @@ public class RoomBean implements Serializable {
 
     private Integer selectedRoomId;
 
-    public GenericService getGenericService() {
-        return genericService;
+
+    public RoomService getRoomService() {
+        return roomService;
     }
 
-    public void setGenericService(GenericService genericService) {
-        this.genericService = genericService;
+    public void setRoomService(RoomService roomService) {
+        this.roomService = roomService;
     }
 
-    @ManagedProperty(value = "#{GenericService}")
-	private GenericService genericService;
+    @ManagedProperty(value = "#{RoomService}")
+	private RoomService roomService;
 
 
 	public RoomBean() {
@@ -79,31 +81,36 @@ public class RoomBean implements Serializable {
 	
 	public void onShow() {
         rooms.clear();
-        rooms.addAll(genericService.getInstances(Room.class));
+        rooms.addAll(roomService.getInstances(Room.class));
 	}
 
 
     public void updateSelectedData() {
-        setSelectedRoom(genericService.getInstanceById(Room.class,selectedRoomId));
+        setSelectedRoom(roomService.getInstanceById(Room.class,selectedRoomId));
 
     }
 
     public void addNewRoom() {
         selectedRoom = new Room();
         selectedRoom.setRoomnumber("Новая комната");
-        genericService.addInstance(selectedRoom);
+        roomService.addInstance(selectedRoom);
         onShow();
 
     }
 
     public void deleteSelectedRoom() {
-        setSelectedRoom(genericService.getInstanceById(Room.class,selectedRoomId));
-        genericService.deleteInstance(selectedRoom);
+        setSelectedRoom(roomService.getInstanceById(Room.class,selectedRoomId));
+        if (getRoomService().isRoomReadyToBeDeleted(selectedRoomId)) {
+            roomService.deleteInstance(selectedRoom);
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,"Данные по комнате "+selectedRoom.getRoomnumber()+" безвозвратно удалены", ""));
+        } else {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"В комнате есть проживающие, ее удалить нельзя!", ""));
+        }
         onShow();
     }
 
     public void updateRoomData() {
-        genericService.updateInstance(selectedRoom);
+        roomService.updateInstance(selectedRoom);
         onShow();
     }
 
