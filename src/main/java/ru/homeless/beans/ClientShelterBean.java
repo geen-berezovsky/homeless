@@ -1,18 +1,25 @@
 package ru.homeless.beans;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
+import javax.faces.component.UIComponent;
+import javax.faces.context.FacesContext;
+import javax.faces.validator.ValidatorException;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 
+import ru.homeless.entities.Room;
 import ru.homeless.entities.ShelterHistory;
+import ru.homeless.entities.ShelterResult;
 import ru.homeless.services.GenericService;
 import ru.homeless.util.Util;
 
@@ -26,11 +33,27 @@ public class ClientShelterBean implements Serializable {
 	private List<ShelterHistory> shelterList = null;
 	private ShelterHistory selectedShelter;
 
+
+    public List<Room> getRooms() {
+        return rooms;
+    }
+
+    public void setRooms(List<Room> rooms) {
+        this.rooms = rooms;
+    }
+
+    private List<Room> rooms;
+
+
+    public String shelterStatus(Integer sid) {
+        return ((ShelterResult) genericService.getInstanceById(ShelterResult.class,sid)).getCaption();
+    }
+
 	@ManagedProperty(value = "#{GenericService}")
 	private GenericService genericService;
 	
 	public ClientShelterBean() {
-		
+        rooms = new ArrayList<>();
 	}
 	
 	public String formatDate(Date q) {
@@ -66,8 +89,36 @@ public class ClientShelterBean implements Serializable {
 		rc.update("add_shelter");	//force updating the add shelter form	
 	}
 
-	
-	public void newSelectedShelter() {
+    public void validateStartDateFormat(FacesContext ctx, UIComponent component, Object value) {
+        log.info("Val start called");
+        if (value==null || value.toString().trim().equals("")) {
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                    "Пожалуйста введите дату начала проживания", "Формат даты: ДД.ММ.ГГГГ");
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            throw new ValidatorException(msg);
+        }
+        Date result = Util.validateDateFormat(ctx, component, value);
+        if (result != null) {
+            selectedShelter.setInShelter(result);
+        }
+    }
+
+    public void validateStopDateFormat(FacesContext ctx, UIComponent component, Object value) {
+        log.info("Val stop called");
+        if (value==null || value.toString().trim().equals("")) {
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                    "Пожалуйста введите дату окончания проживания", "Формат даты: ДД.ММ.ГГГГ");
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            throw new ValidatorException(msg);
+        }
+        Date result = Util.validateDateFormat(ctx, component, value);
+        if (result != null) {
+            selectedShelter.setOutShelter(result);
+        }
+    }
+
+
+    public void newSelectedShelter() {
 		selectedShelter = new ShelterHistory();
 	}
 
@@ -101,4 +152,12 @@ public class ClientShelterBean implements Serializable {
 	public void setGenericService(GenericService genericService) {
 		this.genericService = genericService;
 	}
+
+
+    public void onShow() {
+        log.info("Called on show for Shelter");
+        rooms.clear();
+        rooms.addAll(genericService.getInstances(Room.class));
+    }
+
 }

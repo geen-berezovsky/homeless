@@ -19,6 +19,31 @@
 	</script>
 
 </h:head>
+
+<!--
+<h:form id="form1">
+    <p:menubar id="mainMenu">
+    <p:submenu label="Main menu" icon="ui-icon-document">
+        <p:menuitem value="My settings" onclick="mySettingsWv.show()" url="#" >
+        </p:menuitem>
+    </p:submenu>
+    </p:menubar>
+
+
+ <p:remoteCommand name="onShow" action="#{mybean.onShow()}"
+                     partialSubmit="true" process="@this"/>
+
+</h:form>
+
+<p:dialog id="mySettingsDlg" header="My Settings" widgetVar="mySettingsWv" resizable="false"
+          closable="true" modal="true" showEffect="fade" hideEffect="explode" dynamic="true"
+          closeOnEscape="true" onShow="onShow()">
+        <h:outputLabel value="Settings dialog" />
+</p:dialog>
+-->
+
+
+
 <h:body onload="#{clientform.refreshTabs()}">
 	<p:layout id="basePageLayout" fullPage="true">
 		<p:layoutUnit position="north" id="topMenu" size="50">
@@ -249,13 +274,16 @@
 										<h:outputText value="#{clientshelter.formatDate(shelterlist.typhVac)}" />
 									</p:column>
 									<p:column headerText="Статус">
-										<h:outputText value="#{shelterlist.sr}" />
+										<h:outputText value="#{clientshelter.shelterStatus(shelterlist.shelterresult)}" />
 									</p:column>
 
 								</p:dataTable>
 								<p:panel>
 									<center>
-										<p:commandButton value="Добавить сведения о проживании" onclick="addShelterWv.show();" icon="ui-icon-circle-plus" type="button" />
+                                        <!-- This remote command are necessary for direct lazy loading data to the specified dialog/form -->
+                                        <p:remoteCommand name="shelterOnShow" action="#{clientshelter.onShow()}"
+                                                         partialSubmit="true" process="@this" update=":add_shelter"/>
+                                        <p:commandButton value="Добавить сведения о проживании" onclick="addShelterWv.show();" icon="ui-icon-circle-plus" type="button" />
 									</center>
 								</p:panel>
 
@@ -316,6 +344,7 @@
 	<ui:include src="dialogs/webcamera.xhtml" />
 	<ui:include src="dialogs/adddocument.xhtml" />
 	<ui:include src="dialogs/addcontract.xhtml" />
+    <ui:include src="dialogs/addshelter.xhtml" />
 	<ui:include src="dialogs/editcontract.xhtml" />
 	<ui:include src="dialogs/mysettings.xhtml" />
     <ui:include src="dialogs/roomsettings.xhtml" />

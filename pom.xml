@@ -9,6 +9,13 @@
 	<properties>
 		<spring.version>4.0.3.RELEASE</spring.version>
 	</properties>
+    <repositories>
+        <repository>
+            <id>prime-repo</id>
+            <name>Prime Repo</name>
+            <url>http://repository.primefaces.org</url>
+        </repository>
+    </repositories>
 
 
 	<build>

@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.TimeZone;
 
 @ManagedBean (name = "roomb")
-@SessionScoped
+@ViewScoped
 public class RoomBean implements Serializable {
 
 	private static final long serialVersionUID = 1L;

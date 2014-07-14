@@ -7,16 +7,16 @@
 		<p:menubar autoDisplay="false">
 
 			<p:submenu label="Клиенты" icon="ui-icon-document">
-				<p:menuitem value="Найти клиента" onclick="searchByNameDlg.show();"></p:menuitem>
-				<p:menuitem value="Найти клиента по рег. номеру" onclick="searchByIdDlg.show()"></p:menuitem>
-				<p:menuitem value="Мои клиенты" onclick="cameraServiceWv.show();"></p:menuitem>
+				<p:menuitem value="Найти клиента" onclick="searchByNameDlg.show();" url="#"></p:menuitem>
+				<p:menuitem value="Найти клиента по рег. номеру" onclick="searchByIdDlg.show()" url="#"></p:menuitem>
+				<p:menuitem value="Мои клиенты" onclick="cameraServiceWv.show();" url="#"></p:menuitem>
 				<p:menuitem value="Оказанные мной услуги" url="#"></p:menuitem>
-				<p:menuitem value="Добавить клиента" onclick="addClientWv.show();"></p:menuitem>
+				<p:menuitem value="Добавить клиента" onclick="addClientWv.show();" url="#"></p:menuitem>
 			</p:submenu>
 
 			<p:submenu label="Настройки" icon="ui-icon-pencil">
-				<p:menuitem value="Мои настройки" icon="ui-icon-arrowreturnthick-1-w" onclick="mySettingsWv.show()"></p:menuitem>
-                <p:menuitem value="Настройки комнат" icon="ui-icon-arrowreturnthick-1-w" oncomplete="roomSettingsWv.show()" onclick="#{roomb.onShow()}"></p:menuitem>
+				<p:menuitem value="Мои настройки" icon="ui-icon-arrowreturnthick-1-w" onclick="mySettingsWv.show()" url="#"></p:menuitem>
+                <p:menuitem value="Настройки комнат" icon="ui-icon-arrowreturnthick-1-w" onclick="roomSettingsWv.show()" url="#"></p:menuitem>
 			</p:submenu>
 
 			<p:submenu label="Окна"></p:submenu>
@@ -29,7 +29,14 @@
 
 		</p:menubar>
 
-	</h:form>
+        <!-- This remote commands are necessary for direct lazy loading data to the specified dialog/form -->
+        <p:remoteCommand name="mysettingsOnShow" action="#{mysettings.onShow()}"
+                         partialSubmit="true" process="@this" update=":my_settings"/>
+        <p:remoteCommand name="roomsettingsOnShow" action="#{roomb.onShow()}"
+                         partialSubmit="true" process="@this" update=":room_settings"/>
+
+
+    </h:form>
 
 </ui:composition>
 </html>
