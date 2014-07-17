@@ -33,6 +33,16 @@ public class ClientShelterBean implements Serializable {
 	private List<ShelterHistory> shelterList = null;
 	private ShelterHistory selectedShelter;
 
+    public List<ShelterResult> getShelterResultList() {
+        return shelterResultList;
+    }
+
+    public void setShelterResultList(List<ShelterResult> shelterResultList) {
+        this.shelterResultList = shelterResultList;
+    }
+
+    private List<ShelterResult> shelterResultList = null;
+
 
     public List<Room> getRooms() {
         return rooms;
@@ -46,14 +56,23 @@ public class ClientShelterBean implements Serializable {
 
 
     public String shelterStatus(Integer sid) {
-        return ((ShelterResult) genericService.getInstanceById(ShelterResult.class,sid)).getCaption();
+        Object obj = genericService.getInstanceById(ShelterResult.class,sid);
+        if (obj != null) {
+            return ((ShelterResult) obj).getCaption();
+        } else {
+            return "";
+        }
+
     }
+
+
 
 	@ManagedProperty(value = "#{GenericService}")
 	private GenericService genericService;
 	
 	public ClientShelterBean() {
         rooms = new ArrayList<>();
+        shelterResultList = new ArrayList<>();
 	}
 	
 	public String formatDate(Date q) {
@@ -90,33 +109,44 @@ public class ClientShelterBean implements Serializable {
 	}
 
     public void validateStartDateFormat(FacesContext ctx, UIComponent component, Object value) {
-        log.info("Val start called");
+        FacesMessage msg = null;
         if (value==null || value.toString().trim().equals("")) {
-            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                    "Пожалуйста введите дату начала проживания", "Формат даты: ДД.ММ.ГГГГ");
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR,"Пожалуйста введите дату начала проживания", "Формат даты: ДД.ММ.ГГГГ");
             FacesContext.getCurrentInstance().addMessage(null, msg);
             throw new ValidatorException(msg);
         }
         Date result = Util.validateDateFormat(ctx, component, value);
-        if (result != null) {
-            selectedShelter.setInShelter(result);
+        if (result == null) {
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR,"Некоректный формат даты", "Формат даты: ДД.ММ.ГГГГ");
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            throw new ValidatorException(msg);
         }
     }
 
     public void validateStopDateFormat(FacesContext ctx, UIComponent component, Object value) {
-        log.info("Val stop called");
+        FacesMessage msg = null;
         if (value==null || value.toString().trim().equals("")) {
-            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                    "Пожалуйста введите дату окончания проживания", "Формат даты: ДД.ММ.ГГГГ");
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Пожалуйста введите дату окончания проживания", "Формат даты: ДД.ММ.ГГГГ");
             FacesContext.getCurrentInstance().addMessage(null, msg);
             throw new ValidatorException(msg);
         }
         Date result = Util.validateDateFormat(ctx, component, value);
-        if (result != null) {
-            selectedShelter.setOutShelter(result);
+        if (result == null) {
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR,"Некоректный формат даты", "Формат даты: ДД.ММ.ГГГГ");
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            throw new ValidatorException(msg);
         }
     }
 
+    public void validateVaccinationDateFormat(FacesContext ctx, UIComponent component, Object value) {
+        FacesMessage msg = null;
+        Date result = Util.validateDateFormat(ctx, component, value);
+        if (result == null) {
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR,"Некоректный формат даты", "Формат даты: ДД.ММ.ГГГГ");
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            throw new ValidatorException(msg);
+        }
+    }
 
     public void newSelectedShelter() {
 		selectedShelter = new ShelterHistory();
@@ -158,6 +188,7 @@ public class ClientShelterBean implements Serializable {
         log.info("Called on show for Shelter");
         rooms.clear();
         rooms.addAll(genericService.getInstances(Room.class));
+        shelterResultList.addAll(genericService.getInstances(ShelterResult.class));
     }
 
 }

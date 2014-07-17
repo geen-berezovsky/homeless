@@ -28,6 +28,7 @@
                     <p:calendar value="#{clientshelter.selectedShelter.inShelter}"
                                 id="startNewShelterDateCal" showOn="button" pattern="dd.MM.yyyy"/>
                 </p:row>
+
                 <p:row>
                     <p:outputLabel value="Дата выселения:" style="font-weight: bold"
                                    validator="#{clientshelter.validateStopDateFormat}" required="true"
@@ -38,6 +39,8 @@
                     <p:calendar value="#{clientshelter.selectedShelter.outShelter}" id="stopNewShelterDateCal"
                                 showOn="button" pattern="dd.MM.yyyy"/>
                 </p:row>
+
+
                 <p:row>
                     <p:outputLabel value="Комната:" style="font-weight: bold"/>
                 </p:row>
@@ -48,6 +51,56 @@
                                 value="#{clientshelter.rooms}" var="roomVal" itemValue="#{roomVal.id}"/>
                     </p:selectOneRadio>
                 </p:row>
+
+                <p:row>
+                    <p:outputLabel value="Дата проведения флюорографии:" style="font-weight: bold"
+                                   validator="#{clientshelter.validateVaccinationDateFormat}"/>
+                </p:row>
+                <p:row>
+                    <p:message display="tooltip" for="fluDateCal"/>
+                    <p:calendar value="#{clientshelter.selectedShelter.fluorogr}" id="fluDateCal"
+                                showOn="button" pattern="dd.MM.yyyy"/>
+                </p:row>
+                <p:row>
+                    <p:outputLabel value="Дата прививки от дифтерии:" style="font-weight: bold"
+                                   validator="#{clientshelter.validateVaccinationDateFormat}"/>
+                </p:row>
+                <p:row>
+                    <p:message display="tooltip" for="diftDateCal"/>
+                    <p:calendar value="#{clientshelter.selectedShelter.dipthVac}" id="diftDateCal"
+                                showOn="button" pattern="dd.MM.yyyy"/>
+                </p:row>
+                <p:row>
+                    <p:outputLabel value="Дата прививки от гепатита:" style="font-weight: bold"
+                                   validator="#{clientshelter.validateVaccinationDateFormat}"/>
+                </p:row>
+                <p:row>
+                    <p:message display="tooltip" for="hepDateCal"/>
+                    <p:calendar value="#{clientshelter.selectedShelter.hepotitsVac}" id="hepDateCal"
+                                showOn="button" pattern="dd.MM.yyyy"/>
+                </p:row>
+                <p:row>
+                    <p:outputLabel value="Дата прививки от тифа:" style="font-weight: bold"
+                                   validator="#{clientshelter.validateVaccinationDateFormat}"/>
+                </p:row>
+                <p:row>
+                    <p:message display="tooltip" for="typhDateCal"/>
+                    <p:calendar value="#{clientshelter.selectedShelter.typhVac}" id="typhDateCal"
+                                showOn="button" pattern="dd.MM.yyyy"/>
+                </p:row>
+
+                <p:row>
+                    <h:outputText value="Статус:" />
+                </p:row>
+                <p:row>
+                    <p:selectOneMenu id="shelterStatus" value="#{clientshelter.shelterStatus(clientshelter.selectedShelter.shelterresult)}" style="width:150px;">
+                        <f:selectItems value="#{clientshelter.shelterResultList}" var="shelterStatus" itemValue="#{shelterStatus}" />
+                    </p:selectOneMenu>
+                </p:row>
+
+
+
+
             </h:panelGrid>
             <p:separator/>
             <center>
