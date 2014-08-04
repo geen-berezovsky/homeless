@@ -4,13 +4,15 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
+import java.io.Serializable;
+
 import static javax.persistence.GenerationType.IDENTITY;
 
 /**
  * Created by maxim on 28.06.14.
  */
 @Entity
-public class Room {
+public class Room implements Serializable {
 
     private Integer id;
 

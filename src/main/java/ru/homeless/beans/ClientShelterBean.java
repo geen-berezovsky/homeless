@@ -54,18 +54,14 @@ public class ClientShelterBean implements Serializable {
 
     private List<Room> rooms;
 
-
     public String shelterStatus(Integer sid) {
         Object obj = genericService.getInstanceById(ShelterResult.class,sid);
         if (obj != null) {
             return ((ShelterResult) obj).getCaption();
         } else {
-            return "";
+            return "NULL";
         }
-
     }
-
-
 
 	@ManagedProperty(value = "#{GenericService}")
 	private GenericService genericService;
@@ -189,6 +185,11 @@ public class ClientShelterBean implements Serializable {
         rooms.clear();
         rooms.addAll(genericService.getInstances(Room.class));
         shelterResultList.addAll(genericService.getInstances(ShelterResult.class));
+    }
+
+    public void addNewShelterData() {
+        log.info("CALLED");
+        System.out.println("SHIT happends");
     }
 
 }

@@ -24,15 +24,15 @@ public class ShelterHistory implements Serializable {
 	private Date fluorogr;
 	private int roomId;
 
-    public Integer getShelterresult() {
+    public ShelterResult getShelterresult() {
         return shelterresult;
     }
 
-    public void setShelterresult(Integer shelterresult) {
+    public void setShelterresult(ShelterResult shelterresult) {
         this.shelterresult = shelterresult;
     }
 
-    private Integer shelterresult;
+    private ShelterResult shelterresult;
 	
 	public ShelterHistory() {
 		
@@ -43,7 +43,7 @@ public class ShelterHistory implements Serializable {
 		setInShelter(inShelter);
 		setOutShelter(outShelter);
 		setRoomId(roomId);
-        setShelterresult(sr.getId());
+        setShelterresult(sr);
 	}
 	
 	@Id
