@@ -42,4 +42,18 @@ public class ShelterResult implements Serializable {
 	public String toString() {
 		return caption;
 	}
+
+    public boolean equals(Object o) {
+        if (o == null) return false;
+        if (! (o instanceof ShelterResult)) {
+            return false;
+        }
+        ShelterResult d = (ShelterResult) o;
+        if (getId() == d.getId()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 }

@@ -17,6 +17,7 @@ import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 
+import ru.homeless.entities.Client;
 import ru.homeless.entities.Room;
 import ru.homeless.entities.ShelterHistory;
 import ru.homeless.entities.ShelterResult;
@@ -85,7 +86,16 @@ public class ClientShelterBean implements Serializable {
 
 		if (cids != null && !cids.trim().equals("")) {
 			this.cid = Integer.parseInt(cids);
-			setShelterList(getGenericService().getInstancesByClientId(ShelterHistory.class, cid));
+            //TODO: REFACTOR
+            System.out.println();
+//			setShelterList(getGenericService().getInstancesByClientId(ShelterHistory.class, cid));
+            /*
+            ArrayList<Object> objectArrayList = new ArrayList<>();
+            objectArrayList.addAll(getGenericService().getInstancesByClientId(ShelterHistory.class, cid));
+            for (Object o: objectArrayList) {
+                log.info("Object val: "+o.getClass().getCanonicalName());
+            }
+            */
 		}
 		newSelectedShelter(); // set new shelter
 		RequestContext rc = RequestContext.getCurrentInstance();
@@ -188,8 +198,22 @@ public class ClientShelterBean implements Serializable {
     }
 
     public void addNewShelterData() {
-        log.info("CALLED");
-        System.out.println("SHIT happends");
+
+        //setting actual client
+        selectedShelter.setClient(getGenericService().getInstanceById(Client.class, cid));
+
+
+        log.info("Adding new shelter record for client "+cid);
+        log.info(selectedShelter.getClient());
+        log.info("Дата заселения: "+selectedShelter.getInShelter());
+        log.info("Дата выселения: "+selectedShelter.getOutShelter());
+        log.info("Комната: "+selectedShelter.getRoomId());
+        log.info("Флюха: "+selectedShelter.getFluorogr());
+        log.info("Дифтерия: "+selectedShelter.getDipthVac());
+        log.info("Гепатит: "+selectedShelter.getHepotitsVac());
+        log.info("Тиф: "+selectedShelter.getTyphVac());
+        log.info("Status: "+selectedShelter.getShelterresult().getCaption());
+        getGenericService().addInstance(selectedShelter);
     }
 
 }

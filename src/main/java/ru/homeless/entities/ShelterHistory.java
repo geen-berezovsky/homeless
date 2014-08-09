@@ -5,17 +5,17 @@ import static javax.persistence.GenerationType.IDENTITY;
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 @Entity
+@Table (name = "ShelterHistory")
 public class ShelterHistory implements Serializable {
 	private static final long serialVersionUID = 1L;
+
+    @Id
+    @GeneratedValue(strategy = IDENTITY)
 	private int id;
-	private int client;
+	private Client client;
 	private Date inShelter;
 	private Date outShelter;
 	private Date hepotitsVac;
@@ -24,6 +24,8 @@ public class ShelterHistory implements Serializable {
 	private Date fluorogr;
 	private int roomId;
 
+    @OneToOne(targetEntity = ShelterResult.class)
+    @JoinColumn (name = "shelterresult")
     public ShelterResult getShelterresult() {
         return shelterresult;
     }
@@ -38,7 +40,7 @@ public class ShelterHistory implements Serializable {
 		
 	}
 	
-	public ShelterHistory(int client, Date inShelter, Date outShelter, int roomId, ShelterResult sr) {
+	public ShelterHistory(Client client, Date inShelter, Date outShelter, int roomId, ShelterResult sr) {
 		setClient(client);
 		setInShelter(inShelter);
 		setOutShelter(outShelter);
@@ -54,11 +56,13 @@ public class ShelterHistory implements Serializable {
 	public void setId(int id) {
 		this.id = id;
 	}
-	
-	public int getClient() {
+
+    @ManyToOne(fetch = FetchType.EAGER, targetEntity = Client.class)
+    @JoinColumn(name = "client")
+    public Client getClient() {
 		return client;
 	}
-	public void setClient(int client) {
+	public void setClient(Client client) {
 		this.client = client;
 	}
 	public Date getInShelter() {
@@ -105,7 +109,6 @@ public class ShelterHistory implements Serializable {
 	public void setRoomId(int roomId) {
 		this.roomId = roomId;
 	}
-/*
-	*/
+
 
 }

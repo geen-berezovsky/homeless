@@ -29,7 +29,8 @@ public class Room implements Serializable {
     private String roomnotes;
 
     public Integer getCurrentnumoflivers() {
-        return currentnumoflivers;
+        if (currentnumoflivers == null) currentnumoflivers = 0;
+            return currentnumoflivers;
     }
 
     public void setCurrentnumoflivers(Integer currentnumoflivers) {

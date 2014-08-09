@@ -1,5 +1,6 @@
 package ru.homeless.primefaces.model;
 
+import java.io.Serializable;
 import java.util.List;
 
 import javax.faces.model.ListDataModel;
@@ -8,7 +9,7 @@ import org.primefaces.model.SelectableDataModel;
 
 import ru.homeless.entities.ContractPoints;
 
-public class ContractPointsDataModel extends ListDataModel<ContractPoints> implements SelectableDataModel<ContractPoints> {
+public class ContractPointsDataModel extends ListDataModel<ContractPoints> implements SelectableDataModel<ContractPoints>, Serializable {
 	
 	public ContractPointsDataModel() {
 		

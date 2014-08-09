@@ -23,12 +23,8 @@ import org.primefaces.event.SelectEvent;
 
 import ru.homeless.converters.ContractPointsTypeConverter;
 import ru.homeless.converters.ContractResultTypeConverter;
-import ru.homeless.entities.ContractControl;
-import ru.homeless.entities.ContractPoints;
-import ru.homeless.entities.ContractResult;
-import ru.homeless.entities.Document;
-import ru.homeless.entities.ServContract;
-import ru.homeless.entities.Worker;
+import ru.homeless.converters.ShelterResultConverter;
+import ru.homeless.entities.*;
 import ru.homeless.primefaces.model.ContractPointsDataModel;
 import ru.homeless.services.GenericService;
 import ru.homeless.services.WorkerService;
@@ -47,6 +43,7 @@ public class ClientContractsBean implements Serializable {
 	private Worker worker;
 	private Document workerDocument;
 	private List<ContractResult> contractResultTypes;
+    private List<ShelterResult> shelterResults;
 
 	private List<ContractControl> contractItems;
 	private List<ContractPoints> contractPointsItems;
@@ -234,6 +231,13 @@ public class ClientContractsBean implements Serializable {
 		contractPointsItems.addAll(getGenericService().getInstances(ContractPoints.class));
 		ContractPointsTypeConverter.contractPointsTypesDB = new ArrayList<ContractPoints>();
 		ContractPointsTypeConverter.contractPointsTypesDB.addAll(contractPointsItems);
+
+        shelterResults = new ArrayList<ShelterResult>();
+        shelterResults.addAll(getGenericService().getInstances(ShelterResult.class));
+        ShelterResultConverter.shelterResultList = new ArrayList<ShelterResult>();
+        ShelterResultConverter.shelterResultList.addAll(shelterResults);
+
+
 		
 		contractPointsDataModel = new ContractPointsDataModel(contractPointsItems);
 		

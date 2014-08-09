@@ -16,7 +16,7 @@ public class RoomDAO extends GenericDAO implements Serializable {
 	private static final long serialVersionUID = 1L;
 	public static Logger log = Logger.getLogger(RoomDAO.class);
 
-
+    @SuppressWarnings("unchecked")
     public boolean isRoomReadyToBeDeleted(int id) {
         List<ShelterHistory> list = getSessionFactory().getCurrentSession().
                 createCriteria(ShelterHistory.class).add(Restrictions.eq("roomId", id)).add(Restrictions.eq("shelterresult",1)).list();
