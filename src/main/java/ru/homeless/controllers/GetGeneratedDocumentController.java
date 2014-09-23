@@ -40,7 +40,7 @@ public class GetGeneratedDocumentController {
 	 */
 	@RequestMapping(value = "/getClientByID", method = RequestMethod.GET, produces = "text/html; charset=utf-8")
 	public @ResponseBody
-	String getGeneratedDocument(@RequestParam(value = "id", required = true, defaultValue = "1") String id) {
+	String getGeneratedDocument(@RequestParam(value = "id", required = true, defaultValue = "7") String id) {
 		String value = ((Client) getGenericService().getInstanceById(Client.class, Integer.parseInt(id))).toString();
 		log.info(value);
 		return value;
@@ -78,9 +78,9 @@ public class GetGeneratedDocumentController {
 			e1.printStackTrace();
 		}
 		Map<String, String> map = new HashMap<String, String>();
-		map.put("shit1", "говно 1");
 		map.put("shit2", "говно 2");
 		map.put("shit3", "говно 3");
+		map.put("shit1", "говно 1");
 		InputStream resourceAsStream = context.getResourceAsStream("/WEB-INF/templates/template.docx");
 		XWPFDocument document = null;
 		try {
