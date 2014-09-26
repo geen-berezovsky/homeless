@@ -2,14 +2,14 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui">
 <ui:composition>
-	<p:selectManyCheckbox id="reasonOfHomelessId" value="#{clientform.clientReasonsofhomeless}" layout="pageDirection" >
+	<p:selectManyCheckbox id="reasonOfHomelessId" value="#{clientform.clientReasonsofhomeless}" layout="pageDirection" styleClass="base_form_value_text">
 		<f:selectItems value="#{clientform.reasonofhomelessTypes}" var="rh_var" itemValue="#{rh_iv}" />
 	</p:selectManyCheckbox>
 	<p:separator />
-	<p:selectBooleanCheckbox value="#{clientform.anotherHomelessReasonChecked}" valueChangeListener="#{clientform.selectedHomelessReasonItemsChanged}">
+	<p:selectBooleanCheckbox value="#{clientform.anotherHomelessReasonChecked}" valueChangeListener="#{clientform.selectedHomelessReasonItemsChanged}" styleClass="base_form_value_text">
 		<p:ajax update="anotherHomelessReasons" listener="#{clientform.itemSelected}" />
 	</p:selectBooleanCheckbox>
-	<h:outputText value=" Другие" />
-	<p:inputText id="anotherHomelessReasons" style="#{clientform.anotherHomelessReasonStyle}" value="#{clientform.uniqReason}" />
+	<h:outputText value=" Другие" styleClass="base_form_caption_text"/>
+	<p:inputText id="anotherHomelessReasons" style="#{clientform.anotherHomelessReasonStyle}" value="#{clientform.uniqReason}" styleClass="base_form_value_text"/>
 </ui:composition>
 </html>

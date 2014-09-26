@@ -1,8 +1,63 @@
 @CHARSET "UTF-8";
 
+.ui-menu {
+	font-size: 75% !important;
+}
+
+.ui-tabs {
+	font-size: 75% !important;
+}
+.base_form_panel_grid_class td, .base_form_panel_grid_class tr
+{
+    border-style: none !important
+}
+.base_form_panel_grid_class .ui-outputlabel .ui-widget {
+	width: 20px;	
+}
+
+.ui-button {
+		font-size: 12px !important;
+}
+
+.bottomLayoutMainForm {
+	border: none !important;
+	overflow-y:hidden;
+	overflow-x:hidden;
+	
+}
+
+.topLayoutMainForm {
+	border: none !important;
+	overflow-y:hidden;
+	overflow-x:hidden;
+	
+}
+
+.photoOperationButtons {
+	display: inline-block;
+	overflow-y:hidden;
+	overflow-x:hidden;
+}
+
+.base_form_caption_text {
+	font-size: 12px !important;
+	font-weight: bold !important;
+}
+
+.base_form_value_text {
+	font-size: 12px !important;
+}
+
+.received_services_datatable {
+	font-size: 12px !important;
+	
+}
+
+/*
 .ui-widget,.ui-widget .ui-widget {
 	font-size: 90% !important;
 }
+*/
 .ui-layout-north {
 	z-index: 20 !important;
 	overflow: visible !important;;
@@ -14,7 +69,7 @@
 
 .ui-layout-south {
 	z-index: 0 !important;
-	min-height: 380px;
+	min-height: 400px;
 }
 
 .companyHeaderGrid tr, .companyHeaderGrid td {

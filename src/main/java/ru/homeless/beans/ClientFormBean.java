@@ -415,9 +415,7 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
         } else {
             //update "homeless till the moment" (don't move it after client data copying!)
             updateHomelessDate(selectedMonth);
-
             client = copyClientDataToClient(client);
-
             //Update Surname, FirstName and MiddleName for starting with uppercase letter
             String fl = client.getSurname().toUpperCase().substring(0, 1);
             String ll = client.getSurname().toLowerCase().substring(1, client.getSurname().length());
@@ -465,14 +463,15 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
         try {
             getGenericService().updateInstance(client);
             msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Сохранено", "");
+            try {
+                cfb.reloadAll();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         } catch (Exception e) {
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Клиент не сохранен!", "");
         }
-        try {
-            cfb.reloadAll();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+
         FacesContext.getCurrentInstance().addMessage(null, msg);
     }
 

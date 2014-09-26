@@ -76,30 +76,33 @@
 									</p:selectOneMenu>
 								</p:column>
 							</p:row>
+							
 							<p:row>
-								<p:column>
-									<p:outputLabel value="Бездомный с момента:" />
-								</p:column>
+								<p:outputLabel value="Бездомный с момента:" />
 							</p:row>
 							<p:row>
-								<p:column>
-									<p:selectOneMenu id="newSelectMonth" value="#{newclientform.selectedMonth}">
-										<f:selectItem itemLabel="Январь" itemValue="0" />
-										<f:selectItem itemLabel="Февраль" itemValue="1" />
-										<f:selectItem itemLabel="Март" itemValue="2" />
-										<f:selectItem itemLabel="Апрель" itemValue="3" />
-										<f:selectItem itemLabel="Май" itemValue="4" />
-										<f:selectItem itemLabel="Июнь" itemValue="5" />
-										<f:selectItem itemLabel="Июль" itemValue="6" />
-										<f:selectItem itemLabel="Август" itemValue="7" />
-										<f:selectItem itemLabel="Сентябрь" itemValue="8" />
-										<f:selectItem itemLabel="Октябрь" itemValue="9" />
-										<f:selectItem itemLabel="Ноябрь" itemValue="10" />
-										<f:selectItem itemLabel="Декабрь" itemValue="11" />
-									</p:selectOneMenu>
-									<p:message display="tooltip" for="newSelectedYear" />
-									<p:inputText value="#{newclientform.selectedYear}" mask="9999" id="newSelectedYear" size="4" validator="#{newclientform.validateHomelessYear}" />
-								</p:column>
+									<p:row>
+										<p:selectOneMenu id="newSelectMonth" value="#{newclientform.selectedMonth}">
+											<f:selectItem itemLabel="Январь" itemValue="0" />
+											<f:selectItem itemLabel="Февраль" itemValue="1" />
+											<f:selectItem itemLabel="Март" itemValue="2" />
+											<f:selectItem itemLabel="Апрель" itemValue="3" />
+											<f:selectItem itemLabel="Май" itemValue="4" />
+											<f:selectItem itemLabel="Июнь" itemValue="5" />
+											<f:selectItem itemLabel="Июль" itemValue="6" />
+											<f:selectItem itemLabel="Август" itemValue="7" />
+											<f:selectItem itemLabel="Сентябрь" itemValue="8" />
+											<f:selectItem itemLabel="Октябрь" itemValue="9" />
+											<f:selectItem itemLabel="Ноябрь" itemValue="10" />
+											<f:selectItem itemLabel="Декабрь" itemValue="11" />
+										</p:selectOneMenu>
+									</p:row>
+									<div class="ui-selectonemenu ui-widget ui-state-default ui-corner-all ui-helper-clearfix">
+										<p:row>
+											<p:message display="tooltip" for="newSelectedYear" />
+											<p:inputText value="#{newclientform.selectedYear}" mask="9999" id="newSelectedYear" size="4" validator="#{newclientform.validateHomelessYear}" />
+										</p:row>
+									</div>
 							</p:row>
 							<p:row>
 								<p:column>

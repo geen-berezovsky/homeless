@@ -2,15 +2,15 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui">
 <ui:composition>
-	<p:selectManyCheckbox id="chronicDiseasesId" value="#{clientform.clientChronicDisease}" layout="pageDirection">
+	<p:selectManyCheckbox id="chronicDiseasesId" value="#{clientform.clientChronicDisease}" layout="pageDirection" styleClass="base_form_value_text">
 		<f:selectItems value="#{clientform.chronicDiseaseTypes}" var="chdvar" itemValue="#{chdiv}" />
 	</p:selectManyCheckbox>
 
 	<p:separator />
-	<p:selectBooleanCheckbox value="#{clientform.anotherChronicalDisasterChecked}" valueChangeListener="#{clientform.selectedChronicsItemsChanged}">
+	<p:selectBooleanCheckbox value="#{clientform.anotherChronicalDisasterChecked}" valueChangeListener="#{clientform.selectedChronicsItemsChanged}" styleClass="base_form_value_text">
 		<p:ajax update="anotherChronincs" listener="#{clientform.itemSelected}" />
 	</p:selectBooleanCheckbox>
-	<h:outputText value=" Другие" />
-	<p:inputText id="anotherChronincs" style="#{clientform.anotherChronicsStyle}" value="#{clientform.uniqDisease}" />
+	<h:outputText value=" Другие"  styleClass="base_form_caption_text"/>
+	<p:inputText id="anotherChronincs" style="#{clientform.anotherChronicsStyle}" value="#{clientform.uniqDisease}"  styleClass="base_form_value_text"/>
 </ui:composition>
 </html>

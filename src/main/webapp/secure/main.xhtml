@@ -50,7 +50,7 @@
 			<ui:include src="clientform/mainmenu.xhtml" />
 		</p:layoutUnit>
 		<p:layoutUnit position="center" resizable="true" collapsible="true">
-			<p:tabView effect="fade" effectDuration="normal" id="m_tabview" style="#{clientform.mainPanelVisibility}">
+			<p:tabView effect="fade" effectDuration="normal" id="m_tabview" style="#{clientform.mainPanelVisibility}" styleClass="topLayoutMainForm" scrollable="false">
 				<p:ajax event="tabChange" listener="#{clientform.tabChangeListener}" update="base_form documents_form contracts_form shelter_form" />
 				<p:tab title="Базовая информация">
 					<!-- *** Basic Client Form *** -->
@@ -58,29 +58,29 @@
 					<h:form id="base_form">
 
 						<p:growl id="growl" showDetail="true" life="3000" />
-						<p:layout id="base_client" style="min-width:400px;min-height:730px;">
-							<p:layoutUnit position="north" size="5" header="#{clientform.surname} #{clientform.firstname} #{clientform.middlename} (ID = #{clientform.id})" style="min-height:26px" />
+						<p:layout id="base_client" style="min-width:400px;min-height:745px;" styleClass="topLayoutMainForm">
+							<p:layoutUnit position="north" size="5" header="#{clientform.surname} #{clientform.firstname} #{clientform.middlename} (ID = #{clientform.id})" style="min-height:26px" styleClass="topLayoutMainForm"/>
 							<p:layoutUnit position="west" size="200" style="max-height:290px;" header="Фотография">
 								<p:graphicImage value="#{clientform.clientFormAvatar}" cache="false" />
-								<h:panelGrid columns="1" cellpadding="5" styleClass="photoOperationButtons">
-									<p:button value="Сфотографировать" title="Сфотографировать клиента на веб камеру" icon="ui-icon-aquire" style="width:178px;" onclick="cameraServiceWv.show();" />
-									<p:button value="Загрузить фото" title="Загрузить фотографию с диска" icon="ui-icon-open" style="width:178px;" />
-									<p:button value="Удалить фото" title="Удалить фотографию клиента" icon="ui-icon-delete" style="width:178px;" />
+								<h:panelGrid columns="1" styleClass="photoOperationButtons">
+									<p:button value="Камера" title="Сфотографировать клиента на веб камеру" icon="ui-icon-aquire" style="width:178px;" onclick="cameraServiceWv.show();" />
+									<p:button value="Загрузить" title="Загрузить фотографию с диска" icon="ui-icon-open" style="width:178px;" />
+									<p:button value="Удалить" title="Удалить фотографию клиента" icon="ui-icon-delete" style="width:178px;" />
 								</h:panelGrid>
 							</p:layoutUnit>
 							<p:layoutUnit position="center" style="max-height:290px;" header="Персональная информация">
 								<ui:include src="clientform/maininfo.xhtml" />
 							</p:layoutUnit>
-							<p:layoutUnit position="east" size="600" style="max-height:290px;" header="Оказанные услуги">
+							<p:layoutUnit position="east" size="500" style="max-height:290px;" header="Оказанные услуги">
 								<ui:include src="clientform/providedservices.xhtml" />
 							</p:layoutUnit>
-							<p:layoutUnit position="south" size="250">
+							<p:layoutUnit position="south" size="200" styleClass="bottomLayoutMainForm">
 
-								<p:layout>
-									<p:layoutUnit position="west" size="300" header="Дополнительная информация">
+								<p:layout styleClass="photoOperationButtons">
+									<p:layoutUnit position="west" size="350" header="Дополнительная информация">
 										<ui:include src="clientform/personalinfo.xhtml" />
 									</p:layoutUnit>
-									<p:layoutUnit position="center">
+									<p:layoutUnit position="center" styleClass="bottomLayoutMainForm">
 										<p:layout>
 											<p:layoutUnit position="west" size="33%" header="Причины бездомности">
 												<ui:include src="clientform/homelessreasons.xhtml" />
@@ -93,7 +93,7 @@
 											</p:layoutUnit>
 										</p:layout>
 									</p:layoutUnit>
-									<p:layoutUnit position="south" size="100" style="min-height: 25px; max-height: 25px">
+									<p:layoutUnit position="south" size="100" style="min-height: 45px; max-height: 45px" styleClass="bottomLayoutMainForm">
 										<center>
 											<p:commandButton value="Сохранить" actionListener="#{clientform.saveClientForm(clientform)}" id="saveClientForm" update="@this :m_tabview:base_form base_form_panel_grid growl"
 												icon="ui-icon-check" />
