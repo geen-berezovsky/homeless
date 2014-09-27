@@ -22,96 +22,96 @@ import ru.homeless.services.GenericService;
 import ru.homeless.util.Util;
 
 
-@ManagedBean (name = "services")
+@ManagedBean(name = "services")
 @ViewScoped
 public class ReceivedServiceBean implements Serializable {
 
-	private static final Logger log = Logger.getLogger(ReceivedServiceBean.class);
-	private static final long serialVersionUID = 1L;
-	private Date date;
-	private List<String> selectedItems; //we can put only strings there
-	private RecievedService selectedService;
-	
-	@ManagedProperty(value = "#{GenericService}")
-	private GenericService genericService;
+    private static final Logger log = Logger.getLogger(ReceivedServiceBean.class);
+    private static final long serialVersionUID = 1L;
+    private Date date;
+    private List<String> selectedItems; //we can put only strings there
+    private RecievedService selectedService;
 
-	
-	public ReceivedServiceBean() {
-		resetForm();
-	}
-	
-	private void resetForm() {
-		setDate(Calendar.getInstance().getTime());
-		setSelectedItems(new ArrayList<String>());
-	}
+    @ManagedProperty(value = "#{GenericService}")
+    private GenericService genericService;
 
-	public List<ServicesType> getAvailableServices() {
-		return getGenericService().getInstances(ServicesType.class);
-	}
 
-	public List<String> getSelectedItems() {
-		return selectedItems;
-	}
+    public ReceivedServiceBean() {
+        resetForm();
+    }
 
-	public void setSelectedItems(List<String> selectedItems) {
-		this.selectedItems = selectedItems;
-	}
+    private void resetForm() {
+        setDate(Calendar.getInstance().getTime());
+        setSelectedItems(new ArrayList<String>());
+    }
 
-	public void addSelectedServices(ClientFormBean cb) {
-		for (ServicesType st : getAvailableServices()) {
-			for (String s : selectedItems) {
-				if (st.getCaption().equals(s)) {
-					HttpSession httpsession = Util.getSession();
-					Worker w = (Worker) httpsession.getAttribute("worker");
-					
-					Client c = getGenericService().getInstanceById(Client.class, cb.getClient().getId());
-					c.getRecievedservices().add(new RecievedService(w,c,st,date)); //adding new received service
-					getGenericService().updateInstance(c);
-				}
-			}
-		}
-		resetForm();
-		try {
-			cb.reloadAll();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	public void deleteService() {
-		log.info("Deleting selected received service: "+selectedService.getServiceType().getCaption());
-		Client c = selectedService.getClient();
-		c.getRecievedservices().remove(selectedService);
-		getGenericService().updateInstance(c);
-	}
-	
-	
-	public RecievedService getSelectedService() {
-		return selectedService;
-	}
+    public List<ServicesType> getAvailableServices() {
+        return getGenericService().getInstances(ServicesType.class);
+    }
 
-	public void setSelectedService(RecievedService selectedService) {
-		this.selectedService = selectedService;
-	}
+    public List<String> getSelectedItems() {
+        return selectedItems;
+    }
 
-	public Date getDate() {
-		return date;
-	}
+    public void setSelectedItems(List<String> selectedItems) {
+        this.selectedItems = selectedItems;
+    }
 
-	public void setDate(Date date) {
-		this.date = date;
-	}
+    public void addSelectedServices(ClientFormBean cb) {
+        for (ServicesType st : getAvailableServices()) {
+            for (String s : selectedItems) {
+                if (st.getCaption().equals(s)) {
+                    HttpSession httpsession = Util.getSession();
+                    Worker w = (Worker) httpsession.getAttribute("worker");
 
-	public String formattedDate(Date query) {
-		return Util.formatDate(query);
-	}
+                    Client c = getGenericService().getInstanceById(Client.class, cb.getClient().getId());
+                    c.getRecievedservices().add(new RecievedService(w, c, st, date)); //adding new received service
+                    getGenericService().updateInstance(c);
+                }
+            }
+        }
+        resetForm();
+        try {
+            cb.reloadAll();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
-	public GenericService getGenericService() {
-		return genericService;
-	}
+    public void deleteService() {
+        log.info("Deleting selected received service: " + selectedService.getServiceType().getCaption());
+        Client c = selectedService.getClient();
+        c.getRecievedservices().remove(selectedService);
+        getGenericService().updateInstance(c);
+    }
 
-	public void setGenericService(GenericService genericService) {
-		this.genericService = genericService;
-	}
+
+    public RecievedService getSelectedService() {
+        return selectedService;
+    }
+
+    public void setSelectedService(RecievedService selectedService) {
+        this.selectedService = selectedService;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public String formattedDate(Date query) {
+        return Util.formatDate(query);
+    }
+
+    public GenericService getGenericService() {
+        return genericService;
+    }
+
+    public void setGenericService(GenericService genericService) {
+        this.genericService = genericService;
+    }
 
 }

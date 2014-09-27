@@ -38,7 +38,7 @@
 		<!-- *********************          Search Details Dialog          ********************* -->
 		<p:dialog id="displayFoundByName" header="Список найденных клиентов" widgetVar="displayFoundByName" resizable="false" closable="true" modal="true" showEffect="fade" hideEffect="explode" closeOnEscape="true">
 			<p:dataTable var="client" value="#{clientsearch.foundList}" paginator="true" rows="15"
-				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15">
+				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15" paginatorPosition="bottom" styleClass="received_services_datatable">
 				<p:column headerText="ID">
 					<h:outputText value="#{client.id}" />
 				</p:column>

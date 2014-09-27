@@ -45,6 +45,7 @@
 
 
 <h:body onload="#{clientform.refreshTabs()}">
+
 	<p:layout id="basePageLayout" fullPage="true">
 		<p:layoutUnit position="north" id="topMenu" size="50">
 			<ui:include src="clientform/mainmenu.xhtml" />
@@ -61,12 +62,12 @@
 						<p:layout id="base_client" style="min-width:400px;min-height:745px;" styleClass="topLayoutMainForm">
 							<p:layoutUnit position="north" size="5" header="#{clientform.surname} #{clientform.firstname} #{clientform.middlename} (ID = #{clientform.id})" style="min-height:26px" styleClass="topLayoutMainForm"/>
 							<p:layoutUnit position="west" size="200" style="max-height:290px;" header="Фотография">
-								<p:graphicImage value="#{clientform.clientFormAvatar}" cache="false" />
-								<h:panelGrid columns="1" styleClass="photoOperationButtons">
-									<p:button value="Камера" title="Сфотографировать клиента на веб камеру" icon="ui-icon-aquire" style="width:178px;" onclick="cameraServiceWv.show();" />
-									<p:button value="Загрузить" title="Загрузить фотографию с диска" icon="ui-icon-open" style="width:178px;" />
-									<p:button value="Удалить" title="Удалить фотографию клиента" icon="ui-icon-delete" style="width:178px;" />
-								</h:panelGrid>
+								<p:graphicImage id="main_avatatr" value="#{clientform.clientFormAvatar}" cache="false" styleClass="avatar_block1"/>
+                                <p:menu styleClass="avatar_block2">
+                                    <p:menuitem value="Камера" actionListener="#{photoCamBean.showDlg()}" ajax="true" icon="ui-icon-star" />
+                                    <p:menuitem value="Загрузить" update="" ajax="true" icon="ui-icon-disk" />
+                                    <p:menuitem value="Удалить" update="" ajax="true" icon="ui-icon-close" />
+                                </p:menu>
 							</p:layoutUnit>
 							<p:layoutUnit position="center" style="max-height:290px;" header="Персональная информация">
 								<ui:include src="clientform/maininfo.xhtml" />
@@ -339,9 +340,9 @@
 	</p:panel>
 	<!-- Include Dialogs -->
 	<ui:include src="dialogs/search.xhtml" />
+    <ui:include src="dialogs/webcamera.xhtml" />
 	<ui:include src="dialogs/addservices.xhtml" />
 	<ui:include src="dialogs/addclient.xhtml" />
-	<ui:include src="dialogs/webcamera.xhtml" />
 	<ui:include src="dialogs/adddocument.xhtml" />
 	<ui:include src="dialogs/addcontract.xhtml" />
     <ui:include src="dialogs/addshelter.xhtml" />

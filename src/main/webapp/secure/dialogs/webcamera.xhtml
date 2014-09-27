@@ -2,27 +2,28 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui">
 <ui:composition>
-	<p:dialog id="cameraService" header="Сфотографировать клиента" widgetVar="cameraServiceWv" resizable="false" closable="true" modal="true" showEffect="fade" hideEffect="explode" dynamic="true"
-		closeOnEscape="true" onHide="#{photoCamBean.onhide()}">
-		<h:form id="webcamera_form">
+    <h:form id="webcamera_form">
+    <p:messages />
+
+    <p:dialog id="cameraService" header="Сфотографировать клиента" widgetVar="cameraServiceWv" resizable="false" closable="true" modal="true" showEffect="fade" hideEffect="explode" dynamic="true"
+		closeOnEscape="true" onHide="#{photoCamBean.onhide()}" position="left top">
+
 			<p:messages />
-				<h:panelGrid columns="2">
-					<p:photoCam widgetVar="pc" listener="#{photoCamBean.oncapture}" update="photos" />
+				<h:panelGrid columns="4">
+					<p:photoCam widgetVar="pc" listener="#{photoCamBean.oncapture}" update="photo useButton" />
 
 					<p:commandButton type="button" value="Сфотографировать!" onclick="pc.capture()" />
 
-					<p:commandButton id="useButton" type="button" value="Использовать" actionListener="#{photoCamBean.usePhoto}" style="#{photoCamBean.useVisible}" />
+                    <p:imageSwitch id="photo" style="#{photoCamBean.useVisible}" effect="scrollRight">
+                        <ui:repeat value="photoCamBean.photos" var="photo">
+                            <p:graphicImage value="/images/temp/#{photoCamBean.filename}.png" />
+                        </ui:repeat>
+                    </p:imageSwitch>
+                    <p:commandButton id="useButton" value="Использовать!" actionListener="#{photoCamBean.usePhoto}" style="#{photoCamBean.useVisible}" oncomplete="cameraServiceWv.hide();" ajax="true"/>
 				</h:panelGrid>
-			<p:panel id="b_panel">
-				<p:imageSwitch id="photos" style="#{photoCamBean.useVisible}">
-					<ui:repeat value="#{photoCamBean.photos}" var="photo">
-						<p:graphicImage value="/images/temp/#{photo}.png" />
-					</ui:repeat>
-				</p:imageSwitch>
-			</p:panel>
-		</h:form>
-	</p:dialog>
 
+	</p:dialog>
+    </h:form>
 
 </ui:composition>
 </html>
