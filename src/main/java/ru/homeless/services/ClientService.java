@@ -30,5 +30,8 @@ public class ClientService extends GenericService implements Serializable {
 	public List<Client> getClientsByCriteria(int id, String surname, String firstname, String middlename, String _date) {
 		return getClientDAO().getClientsByCriteria(id, surname, firstname, middlename, _date);
 	}
-	
+
+    public boolean setClientAvatar(Client client, byte[] resizedBytes) {
+        return getClientDAO().setClientAvatar(client, resizedBytes);
+    }
 }

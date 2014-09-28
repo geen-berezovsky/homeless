@@ -1,6 +1,7 @@
 package ru.homeless.dao;
 
 import java.io.Serializable;
+import java.sql.Blob;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -9,6 +10,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
+import org.hibernate.Hibernate;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -51,4 +53,15 @@ public class ClientDAO extends GenericDAO implements Serializable {
 		}
 		return clients ;
 	}
+
+    public boolean setClientAvatar(Client client, byte[] resizedBytes) {
+        Blob avatar = Hibernate.getLobCreator(getSessionFactory().getCurrentSession()).createBlob(resizedBytes);
+        client.setAvatar(avatar);
+        try {
+            updateInstance(client);
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
 }

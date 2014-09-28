@@ -59,9 +59,9 @@
 					<h:form id="base_form">
 
 						<p:growl id="growl" showDetail="true" life="3000" />
-						<p:layout id="base_client" style="min-width:400px;min-height:745px;" styleClass="topLayoutMainForm">
+						<p:layout id="base_client" style="min-width:400px;min-height:750px;" styleClass="topLayoutMainForm">
 							<p:layoutUnit position="north" size="5" header="#{clientform.surname} #{clientform.firstname} #{clientform.middlename} (ID = #{clientform.id})" style="min-height:26px" styleClass="topLayoutMainForm"/>
-							<p:layoutUnit position="west" size="200" style="max-height:290px;" header="Фотография">
+							<p:layoutUnit position="west" size="210" style="max-height:300px;" header="Фотография">
 								<p:graphicImage id="main_avatatr" value="#{clientform.clientFormAvatar}" cache="false" styleClass="avatar_block1"/>
                                 <p:menu styleClass="avatar_block2">
                                     <p:menuitem value="Камера" actionListener="#{photoCamBean.showDlg()}" ajax="true" icon="ui-icon-star" />
@@ -69,10 +69,10 @@
                                     <p:menuitem value="Удалить" update="" ajax="true" icon="ui-icon-close" />
                                 </p:menu>
 							</p:layoutUnit>
-							<p:layoutUnit position="center" style="max-height:290px;" header="Персональная информация">
+							<p:layoutUnit position="center" style="max-height:300px;" header="Персональная информация">
 								<ui:include src="clientform/maininfo.xhtml" />
 							</p:layoutUnit>
-							<p:layoutUnit position="east" size="500" style="max-height:290px;" header="Оказанные услуги">
+							<p:layoutUnit position="east" size="500" style="max-height:300px;" header="Оказанные услуги">
 								<ui:include src="clientform/providedservices.xhtml" />
 							</p:layoutUnit>
 							<p:layoutUnit position="south" size="200" styleClass="bottomLayoutMainForm">

@@ -3,6 +3,7 @@ package ru.homeless.services;
 import java.io.Serializable;
 import java.util.List;
 
+import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,7 +22,7 @@ public class GenericService implements IGenericService, Serializable {
 		return genericDAO;
 	}
 
-	public void setGenericDAO(GenericDAO genericDAO) {
+    public void setGenericDAO(GenericDAO genericDAO) {
 		this.genericDAO = genericDAO;
 	}
 
@@ -66,6 +67,6 @@ public class GenericService implements IGenericService, Serializable {
 	public <T> List<T> getInstancesByClientId(Class<T> clazz, int id) {
 		return getGenericDAO().getInstancesByClientId(clazz, id);
 	}
-	
+
 
 }
