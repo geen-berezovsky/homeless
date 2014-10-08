@@ -18,6 +18,13 @@ import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.EmbeddedValueResolverAware;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.core.env.Environment;
+import org.springframework.stereotype.Controller;
 import ru.homeless.entities.Worker;
 import ru.homeless.services.WorkerService;
 import ru.homeless.util.Util;
@@ -32,7 +39,7 @@ import ru.homeless.util.Util;
 public class UserBean implements Serializable {
 	private static final long serialVersionUID = 1L;
 	public static Logger log = Logger.getLogger(UserBean.class);
-	
+
 	@ManagedProperty(value = "#{WorkerService}")
 	private WorkerService workerService;
 	

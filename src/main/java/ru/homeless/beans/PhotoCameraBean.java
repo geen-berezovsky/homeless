@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.nio.file.*;
 import java.sql.Blob;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,13 +29,22 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.event.CaptureEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.SpringProperties;
+import org.springframework.core.env.Environment;
+import org.springframework.stereotype.*;
+import org.springframework.stereotype.Component;
+import ru.homeless.configuration.Configuration;
 import ru.homeless.entities.Client;
 import ru.homeless.services.ClientService;
 import ru.homeless.services.GenericService;
 import ru.homeless.util.Util;
 
+import static java.nio.file.StandardCopyOption.*;
+
 @ManagedBean (name = "photoCamBean")
 @ViewScoped
+@Component
 public class PhotoCameraBean implements Serializable{
 
 	private static final long serialVersionUID = 1L;
@@ -46,6 +56,16 @@ public class PhotoCameraBean implements Serializable{
     private ClientService clientService;
 
     private File resultFile;
+
+    public String getNewFileName() {
+        return newFileName;
+    }
+
+    public void setNewFileName(String newFileName) {
+        this.newFileName = newFileName;
+    }
+
+    private String newFileName;
 
 
     private String getRandomImageName() {  
@@ -68,16 +88,7 @@ public class PhotoCameraBean implements Serializable{
 
         //PREPARE BUFFERED IMAGE AND SET ITS SIZE
         BufferedImage bi = new BufferedImage(177, 144, BufferedImage.TYPE_INT_ARGB);
-        /*
 
-        Graphics2D g = bi.createGraphics();
-        Stroke drawingStroke = new BasicStroke(3);
-        Rectangle2D rect = new Rectangle2D.Double(0, 0, 177, 144);
-        g.setStroke(drawingStroke);
-        g.draw(rect);
-        g.setPaint(Color.LIGHT_GRAY);
-        g.fill(rect);
-*/
         //READING IMAGE FROM DISK TO BYTE ARRAY
         byte[] bytes = new byte[(int) resultFile.length()];
         FileInputStream fis = null;
@@ -97,12 +108,16 @@ public class PhotoCameraBean implements Serializable{
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Image scaledImage = bi.getScaledInstance(177, 144, Image.SCALE_SMOOTH);
-        bi.getGraphics().drawImage(scaledImage, 0, 0, new Color(0,0,0), null);
+
+        BufferedImage resizedImage = new BufferedImage(177, 144, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g = resizedImage.createGraphics();
+        g.drawImage(bi, 0, 0, 177, 144, null);
+        g.dispose();
+
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         byte[] resizedBytes;
         try {
-            ImageIO.write(bi, "png", baos);
+            ImageIO.write(resizedImage, "png", baos);
             baos.flush();
         } catch (IOException e) {
             e.printStackTrace();
@@ -113,7 +128,6 @@ public class PhotoCameraBean implements Serializable{
         } catch (IOException e) {
             e.printStackTrace();
         }
-        log.info("Resized bytes = "+resizedBytes.length);
 
         //SAVING DATA
         if (!getClientService().setClientAvatar(client, resizedBytes)) {
@@ -121,9 +135,28 @@ public class PhotoCameraBean implements Serializable{
             FacesContext.getCurrentInstance().addMessage(null, msg);
         }
 
-
         RequestContext context = RequestContext.getCurrentInstance();
-        context.update("main_avatatr");
+        context.update(":m_tabview:base_form:main_avatatr");
+
+        //NOW MOVE THE ORIGINAL FILE FROM CACHE TO THE STORAGE
+        Path src_file = Paths.get(newFileName);
+        File pf = new File(Configuration.photos);
+        if (! pf.exists()) {
+            pf.mkdirs();
+        }
+
+        Path dst_file = Paths.get(Configuration.photos+"/" + filename + ".png");
+
+
+        try {
+            Files.move(src_file, dst_file, REPLACE_EXISTING);
+        } catch (IOException e) {
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Оригинал фото не сохранен!", "Подробности в логе.");
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            e.printStackTrace();
+        }
+
+        log.info(Configuration.photos+"/"+ filename + ".png");
 
     }
 
@@ -146,7 +179,7 @@ public class PhotoCameraBean implements Serializable{
           
         ServletContext servletContext = (ServletContext) FacesContext.getCurrentInstance().getExternalContext().getContext();
         File destTempDir = new File(servletContext.getRealPath("") + File.separator + "images" + File.separator + "temp");
-        String newFileName = servletContext.getRealPath("") + File.separator + "images" + File.separator + "temp"+File.separator + filename + ".png";
+        newFileName = servletContext.getRealPath("") + File.separator + "images" + File.separator + "temp"+File.separator + filename + ".png";
         resultFile = new File(newFileName);
         if (!destTempDir.exists()) {
         	destTempDir.mkdirs();
