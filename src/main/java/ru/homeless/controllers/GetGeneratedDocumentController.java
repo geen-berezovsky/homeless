@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import ru.homeless.entities.Client;
 import ru.homeless.entities.NightStay;
+import ru.homeless.generators.GenericGenerator;
 import ru.homeless.processors.WordDocumentReplaceProcessor;
 import ru.homeless.services.IGenericService;
 
@@ -77,18 +78,26 @@ public class GetGeneratedDocumentController {
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
+		XWPFDocument document = null;
+		
+		GenericGenerator gg = new GenericGenerator();
+		document = gg.generate(request);
+		// get document
+		
+		
+		/*
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("shit2", "говно 2");
 		map.put("shit3", "говно 3");
 		map.put("shit1", "говно 1");
 		InputStream resourceAsStream = context.getResourceAsStream("/WEB-INF/templates/template.docx");
-		XWPFDocument document = null;
+		
 		try {
 			document = WordDocumentReplaceProcessor.searchInParagraphs(new XWPFDocument(resourceAsStream), map);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
+*/
 		try {
 			out.flush();
 			document.write(out);
@@ -96,7 +105,6 @@ public class GetGeneratedDocumentController {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
 		return "Document sent";
 	}
 
