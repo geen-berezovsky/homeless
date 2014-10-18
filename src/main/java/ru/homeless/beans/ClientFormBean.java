@@ -22,6 +22,7 @@ import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.TabChangeEvent;
 
+import org.primefaces.model.StreamedContent;
 import ru.homeless.comparators.RecievedServiceSortingComparator;
 import ru.homeless.entities.Breadwinner;
 import ru.homeless.entities.ChronicDisease;

@@ -6,6 +6,7 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.file.*;
 import java.sql.Blob;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +28,7 @@ import org.hibernate.LobHelper;
 import org.hibernate.SessionFactory;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.CaptureEvent;
+import org.primefaces.model.DefaultStreamedContent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -77,7 +79,7 @@ public class PhotoCameraBean implements Serializable{
     	setUseVisible("display: none;");
     }
 
-    public void usePhoto() {
+    public void usePhoto() throws SQLException {
         //1. check that user don't have actual photo, or delete it from the target directory
     	//2. copy source file to the target directory with the new name
         //3. make an avatar and save it to the database
@@ -134,9 +136,20 @@ public class PhotoCameraBean implements Serializable{
             FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Аватар не сохранен!", "Подробности в логе.");
             FacesContext.getCurrentInstance().addMessage(null, msg);
         }
+        //Update the client's data on page
 
-        RequestContext context = RequestContext.getCurrentInstance();
-        context.update(":m_tabview:base_form:main_avatatr");
+        InputStream imageInByteArray = new ByteArrayInputStream(baos.toByteArray());
+        imageInByteArray = new ByteArrayInputStream(resizedBytes);
+
+        //Evaluating ClientForm Bean
+        FacesContext context = FacesContext.getCurrentInstance();
+        ClientFormBean cf = context.getApplication().evaluateExpressionGet(context, "#{clientform}", ClientFormBean.class);
+        //cf.refreshTabs();
+        //cf.setClientFormAvatar(new DefaultStreamedContent(imageInByteArray, "image/png"));
+        cf.reloadAll();
+
+        //RequestContext rc = RequestContext.getCurrentInstance();
+        //rc.update("photo_main_avatar");
 
         //NOW MOVE THE ORIGINAL FILE FROM CACHE TO THE STORAGE
         Path src_file = Paths.get(newFileName);

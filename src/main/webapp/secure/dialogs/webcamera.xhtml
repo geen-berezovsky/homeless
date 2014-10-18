@@ -19,7 +19,7 @@
                             <p:graphicImage value="/images/temp/#{photoCamBean.filename}.png" />
                         </ui:repeat>
                     </p:imageSwitch>
-                    <p:commandButton id="useButton" value="Использовать!" actionListener="#{photoCamBean.usePhoto}" style="#{photoCamBean.useVisible}" oncomplete="cameraServiceWv.hide();" ajax="true"/>
+                    <p:commandButton id="useButton" value="Использовать!" actionListener="#{photoCamBean.usePhoto}" style="#{photoCamBean.useVisible}" oncomplete="cameraServiceWv.hide();" ajax="true" update=":m_tabview:base_form:photo_main_avatar"/>
 				</h:panelGrid>
 
 	</p:dialog>

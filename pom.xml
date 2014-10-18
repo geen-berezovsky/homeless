@@ -69,11 +69,25 @@
 
 	<dependencies>
 		<!-- PrimeFaces -->
+        <!--
+            Note: version 4.0 contain a bug with dynamic updating the image
 		<dependency>
 			<groupId>org.primefaces</groupId>
 			<artifactId>primefaces</artifactId>
 			<version>4.0</version>
 		</dependency>
+        -->
+        <!-- NOTE!!!: We are using custom (unofficial) build of PrimeFaces 4 (with latest updates) because of default JAR from
+            repo1.maven.org does not contain bugfix for Issue 6210 (http://code.google.com/p/primefaces/issues/detail?id=6210)
+            This bugfix was included in 4.0.1
+            The package is taken from http://primefaces.github.io/ and built from original sources by this team.
+            Now it is placed to lib directory of the project and should be installed by Maven in the default location
+            with GAV described below -->
+        <dependency>
+            <groupId>ru.homeless.org.primefaces</groupId>
+            <artifactId>primefaces</artifactId>
+            <version>4.0.6-UR2</version>
+        </dependency>
 		<dependency>
 			<groupId>org.primefaces.themes</groupId>
 			<artifactId>all-themes</artifactId>
