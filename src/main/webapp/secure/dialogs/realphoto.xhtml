@@ -1,0 +1,22 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui">
+<ui:composition>
+	<p:dialog id="realPhoto" header="Фотография клиента: #{clientform.surname} #{clientform.firstname} #{clientform.middlename} (ID = #{clientform.id})" widgetVar="realPhotoWv" resizable="false" closable="true" modal="true" showEffect="size" hideEffect="explode" dynamic="true" closeOnEscape="true" position="left top">
+		<h:form id="real_photo_form">
+			<p:messages />
+                <p:panel>
+                    <h:outputText style="font-size: 10px" value="Оригинал изображения: #{clientform.originalPhotoFilePath}"/>
+                </p:panel>
+                <p:imageSwitch id="realPhotoSwitch" effect="scrollRight">
+                    <p:graphicImage id="realPhotoImage" value="#{clientform.clientFormRealPhoto}" cache="false"/>
+                </p:imageSwitch>
+                <p:panel>
+                    <h:outputText style="font-size: 10px" value="Чтобы скопировать изображение, щелкните правой кнопкой по нему и выберите 'Скопировать изображение'"/>
+                </p:panel>
+			<p:growl id="growl" showDetail="true" life="3000" />
+		</h:form>
+	</p:dialog>
+
+</ui:composition>
+</html>

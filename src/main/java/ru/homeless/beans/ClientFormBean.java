@@ -86,9 +86,10 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
     public void reloadAll(int id) throws SQLException {
         this.cid = id;
         this.mainPanelVisibility = "display: block;";
-        RequestContext rc = RequestContext.getCurrentInstance();
-        rc.execute("reload();");
         reloadAll();
+        RequestContext rc = RequestContext.getCurrentInstance();
+        //rc.execute("reload();");
+        rc.update("m_tabview");
     }
 
     public void reloadAll() throws SQLException {
@@ -578,5 +579,12 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
     public void setGenericService(GenericService genericService) {
         this.genericService = genericService;
     }
+
+    public void openPhotoDlg() {
+        RequestContext rc = RequestContext.getCurrentInstance();
+        rc.execute("realPhotoWv.show();");
+    }
+
+
 
 }

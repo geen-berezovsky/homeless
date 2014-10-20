@@ -79,7 +79,7 @@ public class PhotoCameraBean implements Serializable{
     	setUseVisible("display: none;");
     }
 
-    public void usePhoto() throws SQLException {
+    public void usePhoto() throws SQLException, IOException {
         //1. check that user don't have actual photo, or delete it from the target directory
     	//2. copy source file to the target directory with the new name
         //3. make an avatar and save it to the database
@@ -130,7 +130,15 @@ public class PhotoCameraBean implements Serializable{
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+        //Set photo name in database and photo checksum
+        String checksum = "";
+        FileInputStream fisc = new FileInputStream(new File(newFileName));
+        checksum = org.apache.commons.codec.digest.DigestUtils.md5Hex(fisc);
+        fisc.close();
+        log.info("New photo checksum: "+checksum);
+        client.setPhotoCheckSum(checksum);
+        client.setPhotoName(filename+".png");
+        log.info("New photo name: "+filename+".png");
         //SAVING DATA
         if (!getClientService().setClientAvatar(client, resizedBytes)) {
             FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Аватар не сохранен!", "Подробности в логе.");

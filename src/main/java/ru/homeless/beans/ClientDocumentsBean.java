@@ -190,5 +190,13 @@ public class ClientDocumentsBean implements Serializable {
 		this.genericService = genericService;
 	}
 
+    public void resetForm() {
+        RequestContext rc = RequestContext.getCurrentInstance();
+        newSelectedDocument();
+        rc.update("add_document:add_docs_panel_grid");
+        //rc.update("addDocumentWv");
+        rc.execute("addDocumentWv.show()");
+    }
 
 }
+

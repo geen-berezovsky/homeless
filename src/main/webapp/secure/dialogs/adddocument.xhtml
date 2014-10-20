@@ -9,69 +9,69 @@
 			<h:panelGrid columns="2" id="add_docs_panel_grid">
 				<p:row>
 					<p:column>
-						<p:outputLabel value="Тип документа:" />
+						<p:outputLabel value="Тип документа:" styleClass="base_form_caption_text"/>
 					</p:column>
 				</p:row>
 				<p:row>
 					<p:column>
-						<p:selectOneMenu id="docTypeId" value="#{clientdocuments.selectedDocument.doctype}" converter="docTypeConverter" style="width: 300px;">
+						<p:selectOneMenu id="docTypeId" value="#{clientdocuments.selectedDocument.doctype}" converter="docTypeConverter" style="width: 300px;" styleClass="base_form_value_text">
 							<f:selectItems value="#{clientdocuments.docTypes}" var="docType" itemLabel="#{docType.caption}" itemValue="#{docType}" />
 						</p:selectOneMenu>
 					</p:column>
 				</p:row>
 				<p:row>
 					<p:column>
-						<p:outputLabel value="Серия:" />
+						<p:outputLabel value="Серия:" styleClass="base_form_caption_text"/>
 					</p:column>
 				</p:row>
 				<p:row>
 					<p:column>
 						<p:message display="tooltip" for="ad_prefix" />
-						<p:inputText value="#{clientdocuments.selectedDocument.docPrefix}" id="ad_prefix" validator="#{clientdocuments.validatePrefix}" />
+						<p:inputText value="#{clientdocuments.selectedDocument.docPrefix}" id="ad_prefix" validator="#{clientdocuments.validatePrefix}"  styleClass="base_form_value_text"/>
 					</p:column>
 				</p:row>
 				<p:row>
 					<p:column>
-						<p:outputLabel value="Номер:" />
+						<p:outputLabel value="Номер:" styleClass="base_form_caption_text"/>
 					</p:column>
 				</p:row>
 				<p:row>
 					<p:column>
 						<p:message display="tooltip" for="ad_number" />
-						<p:inputText value="#{clientdocuments.selectedDocument.docNum}" id="ad_number" validator="#{clientdocuments.validateNumber}" />
+						<p:inputText value="#{clientdocuments.selectedDocument.docNum}" id="ad_number" validator="#{clientdocuments.validateNumber}" styleClass="base_form_value_text" />
 					</p:column>
 				</p:row>
 				<p:row>
 					<p:column>
-						<p:outputLabel value="Дата выдачи:" />
+						<p:outputLabel value="Дата выдачи:" styleClass="base_form_caption_text"/>
 					</p:column>
 				</p:row>
 				<p:row>
 					<p:column>
 						<p:message display="tooltip" for="ad_date" />
-						<p:calendar value="#{clientdocuments.selectedDocument.date}" id="ad_date" showOn="button" pattern="dd.MM.yyyy" validator="#{clientdocuments.validateDate}" />
+						<p:calendar value="#{clientdocuments.selectedDocument.date}" id="ad_date" showOn="button" pattern="dd.MM.yyyy" validator="#{clientdocuments.validateDate}"  styleClass="base_form_value_text"/>
 					</p:column>
 				</p:row>
 				<p:row>
 					<p:column>
-						<p:outputLabel value="Кем выдан:" />
+						<p:outputLabel value="Кем выдан:" styleClass="base_form_caption_text"/>
 					</p:column>
 				</p:row>
 				<p:row>
 					<p:column>
 						<p:message display="tooltip" for="ad_who" />
-						<p:inputText value="#{clientdocuments.selectedDocument.whereAndWhom}" id="ad_who" validator="#{clientdocuments.validateWho}" size="45" />
+						<p:inputText value="#{clientdocuments.selectedDocument.whereAndWhom}" id="ad_who" validator="#{clientdocuments.validateWho}" size="45"  styleClass="base_form_value_text"/>
 					</p:column>
 				</p:row>
 
 				<p:row>
 					<p:column>
-						<p:outputLabel value="Регистрация:" />
+						<p:outputLabel value="Регистрация:" styleClass="base_form_caption_text"/>
 					</p:column>
 				</p:row>
 				<p:row>
 					<p:column>
-						<p:selectOneMenu id="docRegistrationId" value="#{clientdocuments.selectedDocument.registration}">
+						<p:selectOneMenu id="docRegistrationId" value="#{clientdocuments.selectedDocument.registration}"  styleClass="base_form_value_text">
 							<f:selectItem itemLabel="Нет ответа" itemValue="0" />
 							<f:selectItem itemLabel="Нет" itemValue="1" />
 							<f:selectItem itemLabel="Да" itemValue="2" />
@@ -80,24 +80,24 @@
 				</p:row>
 				<p:row>
 					<p:column>
-						<p:outputLabel value="Регистрация (город):" />
+						<p:outputLabel value="Регистрация (город):" styleClass="base_form_caption_text"/>
 					</p:column>
 				</p:row>
 				<p:row>
 					<p:column>
 						<p:message display="tooltip" for="ad_city" />
-						<p:inputText value="#{clientdocuments.selectedDocument.city}" id="ad_city" validator="#{clientdocuments.validateCity}" size="45" />
+						<p:inputText value="#{clientdocuments.selectedDocument.city}" id="ad_city" validator="#{clientdocuments.validateCity}" size="45"  styleClass="base_form_value_text"/>
 					</p:column>
 				</p:row>
 				<p:row>
 					<p:column>
-						<p:outputLabel value="Регистрация (адрес):" />
+						<p:outputLabel value="Регистрация (адрес):" styleClass="base_form_caption_text"/>
 					</p:column>
 				</p:row>
 				<p:row>
 					<p:column>
 						<p:message display="tooltip" for="ad_address" />
-						<p:inputText value="#{clientdocuments.selectedDocument.address}" id="ad_address" validator="#{clientdocuments.validateAddress}" size="45" />
+						<p:inputText value="#{clientdocuments.selectedDocument.address}" id="ad_address" validator="#{clientdocuments.validateAddress}" size="45"  styleClass="base_form_value_text"/>
 					</p:column>
 				</p:row>
 			</h:panelGrid>

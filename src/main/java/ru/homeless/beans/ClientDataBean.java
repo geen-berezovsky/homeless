@@ -6,11 +6,7 @@ import java.awt.Graphics2D;
 import java.awt.Stroke;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.Serializable;
+import java.io.*;
 import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.Calendar;
@@ -27,11 +23,13 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.validator.ValidatorException;
 import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 
+import ru.homeless.configuration.Configuration;
 import ru.homeless.entities.Breadwinner;
 import ru.homeless.entities.ChronicDisease;
 import ru.homeless.entities.Client;
@@ -77,11 +75,13 @@ public class ClientDataBean implements Serializable {
 	private Date regDate;
 	private String whereWasBorn;
 	private Blob avatar;
+    private String originalPhotoFilePath;
 
 	private Date date;
 	
 	//custom
 	private StreamedContent clientFormAvatar; //fake
+    private StreamedContent clientFormRealPhoto; //fake
 	private String formattedDate;
 	protected int selectedMonth;
 	private int selectedYear;
@@ -535,6 +535,40 @@ public class ClientDataBean implements Serializable {
 	}
 
 
+    public StreamedContent getClientFormRealPhoto() throws IOException {
+        File resultFile = new File(getOriginalPhotoFilePath());
+        BufferedImage bi = new BufferedImage(177, 144, BufferedImage.TYPE_INT_ARGB);
+        byte[] bytes = new byte[(int) resultFile.length()];
+        FileInputStream fis = null;
+        fis = new FileInputStream(resultFile);
+        fis.read(bytes);
+        fis.close();
+        ByteArrayInputStream in = new ByteArrayInputStream(bytes);
+        bi = ImageIO.read(in);
+        BufferedImage resizedImage = new BufferedImage(640, 480, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g = resizedImage.createGraphics();
+        g.drawImage(bi, 0, 0, 640, 480, null);
+        g.dispose();
 
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        byte[] resizedBytes;
+        ImageIO.write(resizedImage, "png", baos);
+        baos.flush();
+        resizedBytes = baos.toByteArray();
+        baos.close();
+        InputStream imageInByteArray = new ByteArrayInputStream(baos.toByteArray());
+        return new DefaultStreamedContent(imageInByteArray, "image/png");
+    }
 
+    public void setClientFormRealPhoto(StreamedContent clientFormRealPhoto) {
+        this.clientFormRealPhoto = clientFormRealPhoto;
+    }
+
+    public String getOriginalPhotoFilePath() {
+        return new File(Configuration.photos+"/"+getPhotoName()).getAbsolutePath().toString();
+    }
+
+    public void setOriginalPhotoFilePath(String originalPhotoFilePath) {
+        this.originalPhotoFilePath = originalPhotoFilePath;
+    }
 }

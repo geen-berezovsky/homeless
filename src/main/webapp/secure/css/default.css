@@ -11,6 +11,11 @@
 .ui-tabs {
 	font-size: 75% !important;
 }
+
+.ui-dialog-title {
+    font-size: 75% !important;
+}
+
 .base_form_panel_grid_class td, .base_form_panel_grid_class tr
 {
     border-style: none !important

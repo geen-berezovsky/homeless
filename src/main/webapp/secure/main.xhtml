@@ -20,30 +20,6 @@
 
 </h:head>
 
-<!--
-<h:form id="form1">
-    <p:menubar id="mainMenu">
-    <p:submenu label="Main menu" icon="ui-icon-document">
-        <p:menuitem value="My settings" onclick="mySettingsWv.show()" url="#" >
-        </p:menuitem>
-    </p:submenu>
-    </p:menubar>
-
-
- <p:remoteCommand name="onShow" action="#{mybean.onShow()}"
-                     partialSubmit="true" process="@this"/>
-
-</h:form>
-
-<p:dialog id="mySettingsDlg" header="My Settings" widgetVar="mySettingsWv" resizable="false"
-          closable="true" modal="true" showEffect="fade" hideEffect="explode" dynamic="true"
-          closeOnEscape="true" onShow="onShow()">
-        <h:outputLabel value="Settings dialog" />
-</p:dialog>
--->
-
-
-
 <h:body onload="#{clientform.refreshTabs()}" styleClass="body_style">
 
 	<p:layout id="basePageLayout" fullPage="true">
@@ -64,7 +40,9 @@
 							<p:layoutUnit position="west" size="210" style="max-height:300px;" header="Фотография">
                                 <p:imageSwitch id="photo_main_avatar" effect="scrollRight">
                                     <ui:repeat value="photoCamBean.photos" var="photo_main_avatar_var">
-                                        <p:graphicImage id="main_avatar" value="#{clientform.clientFormAvatar}" cache="false" styleClass="avatar_block1"/>
+                                        <p:commandLink actionListener="#{clientform.openPhotoDlg}">
+                                            <p:graphicImage id="main_avatar" value="#{clientform.clientFormAvatar}" cache="false" styleClass="avatar_block1"/>
+                                        </p:commandLink>
                                     </ui:repeat>
                                 </p:imageSwitch>
 
@@ -176,7 +154,7 @@
 
 								</p:dataTable>
 								<center>
-									<p:commandButton value="Добавить документ" onclick="addDocumentWv.show();" icon="ui-icon-circle-plus" type="button" />
+									<p:commandButton value="Добавить документ" icon="ui-icon-circle-plus" process="@this" actionListener="#{clientdocuments.resetForm}"/>
 								</center>
 
 
@@ -356,6 +334,7 @@
     <ui:include src="dialogs/roomsettings.xhtml" />
     <ui:include src="dialogs/editroom.xhtml" />
 	<ui:include src="dialogs/addserviceplanitem.xhtml" />
+    <ui:include src="dialogs/realphoto.xhtml" />
 
 
 
