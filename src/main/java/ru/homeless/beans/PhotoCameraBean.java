@@ -70,115 +70,12 @@ public class PhotoCameraBean implements Serializable{
     private String newFileName;
 
 
-    private String getRandomImageName() {  
-        int i = (int) (Math.random() * 10000000);  
-        return String.valueOf(i);
-    }  
-
     public PhotoCameraBean() {
     	setUseVisible("display: none;");
     }
 
-    public void usePhoto() throws SQLException, IOException {
-        //1. check that user don't have actual photo, or delete it from the target directory
-    	//2. copy source file to the target directory with the new name
-        //3. make an avatar and save it to the database
-        HttpSession session = Util.getSession();
-        String cid = session.getAttribute("cid").toString();
-        Client client = getClientService().getInstanceById(Client.class, Integer.parseInt(cid));
-        log.info("Working with client "+client.getSurname());
-
-        //PREPARE BUFFERED IMAGE AND SET ITS SIZE
-        BufferedImage bi = new BufferedImage(177, 144, BufferedImage.TYPE_INT_ARGB);
-
-        //READING IMAGE FROM DISK TO BYTE ARRAY
-        byte[] bytes = new byte[(int) resultFile.length()];
-        FileInputStream fis = null;
-        try {
-            fis = new FileInputStream(resultFile);
-            fis.read(bytes);
-            fis.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        //CONVERT BYTE ARRAY TO THE BUFFERED IMAGE
-        ByteArrayInputStream in = new ByteArrayInputStream(bytes);
-        try {
-            bi = ImageIO.read(in);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        BufferedImage resizedImage = new BufferedImage(177, 144, BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g = resizedImage.createGraphics();
-        g.drawImage(bi, 0, 0, 177, 144, null);
-        g.dispose();
-
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        byte[] resizedBytes;
-        try {
-            ImageIO.write(resizedImage, "png", baos);
-            baos.flush();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        resizedBytes = baos.toByteArray();
-        try {
-            baos.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        //Set photo name in database and photo checksum
-        String checksum = "";
-        FileInputStream fisc = new FileInputStream(new File(newFileName));
-        checksum = org.apache.commons.codec.digest.DigestUtils.md5Hex(fisc);
-        fisc.close();
-        log.info("New photo checksum: "+checksum);
-        client.setPhotoCheckSum(checksum);
-        client.setPhotoName(filename+".png");
-        log.info("New photo name: "+filename+".png");
-        //SAVING DATA
-        if (!getClientService().setClientAvatar(client, resizedBytes)) {
-            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Аватар не сохранен!", "Подробности в логе.");
-            FacesContext.getCurrentInstance().addMessage(null, msg);
-        }
-        //Update the client's data on page
-
-        InputStream imageInByteArray = new ByteArrayInputStream(baos.toByteArray());
-        imageInByteArray = new ByteArrayInputStream(resizedBytes);
-
-        //Evaluating ClientForm Bean
-        FacesContext context = FacesContext.getCurrentInstance();
-        ClientFormBean cf = context.getApplication().evaluateExpressionGet(context, "#{clientform}", ClientFormBean.class);
-        //cf.refreshTabs();
-        //cf.setClientFormAvatar(new DefaultStreamedContent(imageInByteArray, "image/png"));
-        cf.reloadAll();
-
-        //RequestContext rc = RequestContext.getCurrentInstance();
-        //rc.update("photo_main_avatar");
-
-        //NOW MOVE THE ORIGINAL FILE FROM CACHE TO THE STORAGE
-        Path src_file = Paths.get(newFileName);
-        File pf = new File(Configuration.photos);
-        if (! pf.exists()) {
-            pf.mkdirs();
-        }
-
-        Path dst_file = Paths.get(Configuration.photos+"/" + filename + ".png");
-
-
-        try {
-            Files.move(src_file, dst_file, REPLACE_EXISTING);
-        } catch (IOException e) {
-            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Оригинал фото не сохранен!", "Подробности в логе.");
-            FacesContext.getCurrentInstance().addMessage(null, msg);
-            e.printStackTrace();
-        }
-
-        log.info(Configuration.photos+"/"+ filename + ".png");
-
+    public void usePhoto() throws IOException, SQLException {
+        Util.applyNewPhoto(clientService, resultFile, filename);
     }
 
     public void onhide() {
@@ -195,7 +92,7 @@ public class PhotoCameraBean implements Serializable{
 		rc.update(":webcamera_form:b_panel");
 
     	
-        filename = getRandomImageName();
+        filename = Util.getRandomImageName();
         byte[] data = captureEvent.getData();  
           
         ServletContext servletContext = (ServletContext) FacesContext.getCurrentInstance().getExternalContext().getContext();
@@ -232,7 +129,12 @@ public class PhotoCameraBean implements Serializable{
         context.execute("cameraServiceWv.show();");
     }
 
-	public String getUseVisible() {
+    public void showOpenDlg() {
+        RequestContext context = RequestContext.getCurrentInstance();
+        context.execute("uploadPhotoWv.show();");
+    }
+
+    public String getUseVisible() {
 		return useVisible;
 	}
 
@@ -255,4 +157,37 @@ public class PhotoCameraBean implements Serializable{
     public void setClientService(ClientService clientService) {
         this.clientService = clientService;
     }
+
+    public void deletePhoto() throws  SQLException {
+        //We don't delete the photo forever!!!
+        //We clean the fields in database and rename the original photo to ID_{OLD_FILENAME}
+        HttpSession session = Util.getSession();
+        String cid = session.getAttribute("cid").toString();
+        Client client = getClientService().getInstanceById(Client.class, Integer.parseInt(cid));
+        client.setAvatar(null);
+        String new_filename = String.valueOf(client.getId())+"_"+client.getPhotoName();
+
+        Path src_file = Paths.get(Configuration.photos+"/" + client.getPhotoName());
+        Path dst_file = Paths.get(Configuration.photos+"/" + new_filename);
+        try {
+            Files.move(src_file, dst_file, REPLACE_EXISTING);
+        } catch (IOException e) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Невозможно удалить оригинальный файл", "Его не существует в хранилище"));
+            e.printStackTrace();
+        }
+
+        client.setPhotoName("");
+        client.setPhotoCheckSum("");
+
+        getClientService().updateInstance(client);
+
+        log.info("File "+src_file+" has been renamed to "+dst_file);
+
+        //Reloading the main bean
+        //Evaluating ClientForm Bean
+        FacesContext context = FacesContext.getCurrentInstance();
+        ClientFormBean cf = context.getApplication().evaluateExpressionGet(context, "#{clientform}", ClientFormBean.class);
+        cf.reloadAll(client.getId());
+    }
+
 }

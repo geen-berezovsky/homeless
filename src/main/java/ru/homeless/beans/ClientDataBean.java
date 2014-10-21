@@ -497,7 +497,6 @@ public class ClientDataBean implements Serializable {
 		Calendar c = GregorianCalendar.getInstance();
 		c.set(year, month, 1, 0, 0, 0);
 		// setting updated value to the client
-		log.info("Setting time = "+c.getTime()+" -> "+year+" "+month);
 		setHomelessdate(c.getTime());
 	}	
 
@@ -537,27 +536,13 @@ public class ClientDataBean implements Serializable {
 
     public StreamedContent getClientFormRealPhoto() throws IOException {
         File resultFile = new File(getOriginalPhotoFilePath());
-        BufferedImage bi = new BufferedImage(177, 144, BufferedImage.TYPE_INT_ARGB);
-        byte[] bytes = new byte[(int) resultFile.length()];
-        FileInputStream fis = null;
-        fis = new FileInputStream(resultFile);
-        fis.read(bytes);
-        fis.close();
-        ByteArrayInputStream in = new ByteArrayInputStream(bytes);
-        bi = ImageIO.read(in);
-        BufferedImage resizedImage = new BufferedImage(640, 480, BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g = resizedImage.createGraphics();
-        g.drawImage(bi, 0, 0, 640, 480, null);
-        g.dispose();
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        byte[] resizedBytes;
-        ImageIO.write(resizedImage, "png", baos);
-        baos.flush();
-        resizedBytes = baos.toByteArray();
-        baos.close();
-        InputStream imageInByteArray = new ByteArrayInputStream(baos.toByteArray());
-        return new DefaultStreamedContent(imageInByteArray, "image/png");
+        if (!resultFile.exists() || photoCheckSum.trim().equals("") || photoName.trim().equals("")) {
+            return null;
+        } else {
+            StreamedContent sc = Util.loadResizedPhotoFromDisk(resultFile);
+            return sc;
+        }
     }
 
     public void setClientFormRealPhoto(StreamedContent clientFormRealPhoto) {
@@ -565,7 +550,13 @@ public class ClientDataBean implements Serializable {
     }
 
     public String getOriginalPhotoFilePath() {
-        return new File(Configuration.photos+"/"+getPhotoName()).getAbsolutePath().toString();
+        File f = new File(Configuration.photos+"/"+getPhotoName());
+        String str = f.getAbsolutePath().toString();
+        if (!f.exists()) {
+            return str + " не найден в хранилище";
+        } else {
+            return str;
+        }
     }
 
     public void setOriginalPhotoFilePath(String originalPhotoFilePath) {

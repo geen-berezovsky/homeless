@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui">
 
 <h:head>
-	<title>Добро пожаловать, #{user.name}!</title>
+    <title>Добро пожаловать, #{user.name}!</title>
 	<link href="css/default.css" rel="stylesheet" type="text/css" />
 	<link href="css/clientform.css" rel="stylesheet" type="text/css" />
 	<script type="text/javascript">
@@ -48,8 +48,8 @@
 
                                 <p:menu styleClass="avatar_block2">
                                     <p:menuitem value="Камера" actionListener="#{photoCamBean.showDlg()}" ajax="true" icon="ui-icon-star" />
-                                    <p:menuitem value="Загрузить" update="" ajax="true" icon="ui-icon-disk" />
-                                    <p:menuitem value="Удалить" update="" ajax="true" icon="ui-icon-close" />
+                                    <p:menuitem value="Загрузить" actionListener="#{photoCamBean.showOpenDlg()}" ajax="true" icon="ui-icon-disk" />
+                                    <p:menuitem value="Удалить" actionListener="#{photoCamBean.deletePhoto}" ajax="true" icon="ui-icon-close" />
                                 </p:menu>
 							</p:layoutUnit>
 							<p:layoutUnit position="center" style="max-height:300px;" header="Персональная информация">
@@ -335,6 +335,7 @@
     <ui:include src="dialogs/editroom.xhtml" />
 	<ui:include src="dialogs/addserviceplanitem.xhtml" />
     <ui:include src="dialogs/realphoto.xhtml" />
+    <ui:include src="dialogs/photoupload.xhtml" />
 
 
 

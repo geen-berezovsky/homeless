@@ -13,6 +13,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
+import javax.faces.component.UIInput;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.event.ValueChangeEvent;
@@ -88,8 +89,12 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
         this.mainPanelVisibility = "display: block;";
         reloadAll();
         RequestContext rc = RequestContext.getCurrentInstance();
-        //rc.execute("reload();");
         rc.update("m_tabview");
+        rc.update("upload_photo_form");
+
+        //RequestContext rc = RequestContext.getCurrentInstance();
+        //rc.execute("reload();");
+
     }
 
     public void reloadAll() throws SQLException {
@@ -126,11 +131,12 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
         //set actual client id to session for using in another applications
         HttpSession session = Util.getSession();
         session.setAttribute("cid", cid);
-
-
+        /*
+        This is bufix for FireFox because it does not keep value after refreshing from cached page
+        We are setting model values only for drop down lists manually (hope their value is small :-) )
+         */
         log.info("Successfully loaded data for client id=" + this.cid + ", " + client.getSurname() + " " + client.getFirstname() + " " + client.getMiddlename());
     }
-
 
     public void reloadClientData() {
         setClient(getGenericService().getInstanceById(Client.class, getCid()));
@@ -505,7 +511,6 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
             ccb.reload();
             csb.reload();
             log.info("Reloaded all data for the selected client " + cid);
-
         }
     }
 

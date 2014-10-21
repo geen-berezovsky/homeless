@@ -1,0 +1,17 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui">
+<ui:composition>
+    <h:form id="upload_photo_form" enctype="multipart/form-data">
+	<p:dialog id="uploadPhoto" header="Загрузка новой фотографии для клиента: #{clientform.surname} #{clientform.firstname} #{clientform.middlename} (ID = #{clientform.id})" widgetVar="uploadPhotoWv" resizable="false" closable="true" modal="true" showEffect="size" hideEffect="explode" dynamic="true" closeOnEscape="true" position="left top">
+			<p:messages />
+            <p:fileUpload value="#{fileUploadView.file}" mode="simple" skinSimple="true" label="Выбрать файл..." update="photoUp"/>
+            <p:commandButton value="Загрузить" actionListener="#{fileUploadView.upload}" ajax="false" update="growl">
+                <f:ajax execute="@all" render="@form"/>
+            </p:commandButton>
+			<p:growl id="growl" showDetail="true" life="3000" />
+	</p:dialog>
+    </h:form>
+
+</ui:composition>
+</html>
