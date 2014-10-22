@@ -212,7 +212,7 @@ public class ClientShelterBean implements Serializable {
         log.info("Дифтерия: "+selectedShelter.getDipthVac());
         log.info("Гепатит: "+selectedShelter.getHepotitsVac());
         log.info("Тиф: "+selectedShelter.getTyphVac());
-        log.info("Status: "+selectedShelter.getShelterresult().getCaption());
+        log.info("Status: "+selectedShelter.getShelterresult());
         getGenericService().addInstance(selectedShelter);
     }
 

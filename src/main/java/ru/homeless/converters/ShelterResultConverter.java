@@ -43,7 +43,6 @@ public class ShelterResultConverter implements Converter, Serializable {
 		if (value == null || value.equals("")) {
 			return "";
 		} else {
-            System.out.println("Returning shit "+String.valueOf(((ShelterResult) value).getId()));
 			return String.valueOf(((ShelterResult) value).getId());
 		}
 	}

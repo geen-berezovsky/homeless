@@ -10,8 +10,7 @@
             <p:panelGrid id="room_settings_panel_grid">
             <p:row>
                 <p:column>
-
-                    <p:selectOneRadio id="roomId" value="#{roomb.selectedRoomId}" layout="pageDirection">
+                    <p:selectOneRadio id="roomId" value="#{roomb.selectedRoomId}" layout="pageDirection" styleClass="base_form_value_text">
                         <f:selectItems itemLabel="#{roomVal.roomnumber}  (занято #{roomVal.currentnumoflivers} из #{roomVal.roommaxlivers})" value="#{roomb.rooms}" var="roomVal" itemValue="#{roomVal.id}"/>
                     </p:selectOneRadio>
                     <center>

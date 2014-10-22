@@ -12,85 +12,85 @@
         <h:form id="add_shelter">
             <h:panelGrid columns="2" id="add_shelters_panel_grid">
                 <p:row>
-                    <p:outputLabel value="Клиент:" style="font-weight: bold"/>
+                    <p:outputLabel value="Клиент:" styleClass="base_form_caption_text"/>
                 </p:row>
                 <p:row>
                     <p:outputLabel
-                            value="#{clientform.surname} #{clientform.firstname} #{clientform.middlename}"/>
+                            value="#{clientform.surname} #{clientform.firstname} #{clientform.middlename}" styleClass="base_form_value_text"/>
                 </p:row>
                 <p:row>
-                    <p:outputLabel value="Дата заселения:" style="font-weight: bold"
+                    <p:outputLabel value="Дата заселения:"
                                    validator="#{clientcontracts.validateStartDateFormat}" required="true"
-                                   requiredMessage="Обязательно к заполнению"/>
+                                   requiredMessage="Обязательно к заполнению" styleClass="base_form_caption_text"/>
                 </p:row>
                 <p:row>
                     <p:message display="tooltip" for="startNewShelterDateCal"/>
                     <p:calendar value="#{clientshelter.selectedShelter.inShelter}"
-                                id="startNewShelterDateCal" showOn="button" pattern="dd.MM.yyyy"/>
+                                id="startNewShelterDateCal" showOn="button" pattern="dd.MM.yyyy" styleClass="base_form_value_text"/>
                 </p:row>
 
                 <p:row>
-                    <p:outputLabel value="Дата выселения:" style="font-weight: bold"
+                    <p:outputLabel value="Дата выселения:"
                                    validator="#{clientshelter.validateStopDateFormat}" required="true"
-                                   requiredMessage="Обязательно к заполнению"/>
+                                   requiredMessage="Обязательно к заполнению" styleClass="base_form_caption_text"/>
                 </p:row>
                 <p:row>
                     <p:message display="tooltip" for="stopNewShelterDateCal"/>
                     <p:calendar value="#{clientshelter.selectedShelter.outShelter}" id="stopNewShelterDateCal"
-                                showOn="button" pattern="dd.MM.yyyy"/>
+                                showOn="button" pattern="dd.MM.yyyy" styleClass="base_form_value_text"/>
                 </p:row>
 
 
                 <p:row>
-                    <p:outputLabel value="Комната:" style="font-weight: bold"/>
+                    <p:outputLabel value="Комната:" styleClass="base_form_caption_text"/>
                 </p:row>
                 <p:row>
-                    <p:selectOneMenu id="shRoomId" value="#{clientshelter.selectedShelter.roomId}" style="width:150px;">
+                    <p:selectOneMenu id="shRoomId" value="#{clientshelter.selectedShelter.roomId}" style="width:185px;" styleClass="base_form_value_text">
                         <f:selectItems itemLabel="#{roomVal.roomnumber}  (занято #{roomVal.currentnumoflivers} из #{roomVal.roommaxlivers})" value="#{clientshelter.rooms}" var="roomVal" itemValue="#{roomVal.id}" />
                     </p:selectOneMenu>
                 </p:row>
                 <p:row>
-                    <p:outputLabel value="Дата проведения флюорографии:" style="font-weight: bold"
+                    <p:outputLabel value="Дата проведения флюорографии:" styleClass="base_form_caption_text"
                                    validator="#{clientshelter.validateVaccinationDateFormat}"/>
                 </p:row>
                 <p:row>
                     <p:message display="tooltip" for="fluDateCal"/>
                     <p:calendar value="#{clientshelter.selectedShelter.fluorogr}" id="fluDateCal"
-                                showOn="button" pattern="dd.MM.yyyy"/>
+                                showOn="button" pattern="dd.MM.yyyy" styleClass="base_form_value_text"/>
                 </p:row>
                 <p:row>
-                    <p:outputLabel value="Дата прививки от дифтерии:" style="font-weight: bold"
+                    <p:outputLabel value="Дата прививки от дифтерии:" styleClass="base_form_caption_text"
                                    validator="#{clientshelter.validateVaccinationDateFormat}"/>
                 </p:row>
                 <p:row>
                     <p:message display="tooltip" for="diftDateCal"/>
                     <p:calendar value="#{clientshelter.selectedShelter.dipthVac}" id="diftDateCal"
-                                showOn="button" pattern="dd.MM.yyyy"/>
+                                showOn="button" pattern="dd.MM.yyyy" styleClass="base_form_value_text"/>
                 </p:row>
                 <p:row>
-                    <p:outputLabel value="Дата прививки от гепатита:" style="font-weight: bold"
+                    <p:outputLabel value="Дата прививки от гепатита:" styleClass="base_form_caption_text"
                                    validator="#{clientshelter.validateVaccinationDateFormat}"/>
                 </p:row>
                 <p:row>
                     <p:message display="tooltip" for="hepDateCal"/>
                     <p:calendar value="#{clientshelter.selectedShelter.hepotitsVac}" id="hepDateCal"
-                                showOn="button" pattern="dd.MM.yyyy"/>
+                                showOn="button" pattern="dd.MM.yyyy" styleClass="base_form_value_text"/>
                 </p:row>
                 <p:row>
-                    <p:outputLabel value="Дата прививки от тифа:" style="font-weight: bold"
+                    <p:outputLabel value="Дата прививки от тифа:" styleClass="base_form_caption_text"
                                    validator="#{clientshelter.validateVaccinationDateFormat}"/>
                 </p:row>
                 <p:row>
                     <p:message display="tooltip" for="typhDateCal"/>
                     <p:calendar value="#{clientshelter.selectedShelter.typhVac}" id="typhDateCal"
-                                showOn="button" pattern="dd.MM.yyyy"/>
+                                showOn="button" pattern="dd.MM.yyyy" styleClass="base_form_value_text"/>
                 </p:row>
 
                 <p:row>
-                    <p:outputLabel value="Статус:" style="font-weight: bold"/>
+                    <p:outputLabel value="Статус:" styleClass="base_form_caption_text"/>
                 </p:row>
                 <p:row>
-                    <p:selectOneMenu converter="shelterResultConverter"  id="shelterStatus" value="#{clientshelter.selectedShelter.shelterresult}" style="width:150px;">
+                    <p:selectOneMenu converter="shelterResultConverter"  id="shelterStatus" value="#{clientshelter.selectedShelter.shelterresult}" style="width:185px;" styleClass="base_form_value_text">
                         <f:selectItems value="#{clientshelter.shelterResultList}" var="shelterStatus" itemLabel="#{shelterStatus.caption}" itemValue="#{shelterStatus}" />
                     </p:selectOneMenu>
                 </p:row>

@@ -9,7 +9,7 @@
 
 			<p:dataTable id="cdoclistId" var="cdoclist" value="#{clientdocuments.documentsList}" paginator="true" rows="15"
 				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15" rowKey="#{cdoclist.id}"
-				selection="#{clientcontracts.selectedDocument}" selectionMode="single">
+				selection="#{clientcontracts.selectedDocument}" selectionMode="single" paginatorPosition="bottom" styleClass="default_datatable">
 
 				<p:column headerText="ID" style="width:0px;">
 					<h:outputText value="#{cdoclist.id}" />
@@ -62,52 +62,52 @@
 				<p:layoutUnit position="west" resizable="true" size="460" minSize="460" maxSize="500">
 					<h:panelGrid columns="2" id="add_docs_panel_grid">
 						<p:row>
-							<p:outputLabel value="Клиент:" style="font-weight: bold" />
+							<p:outputLabel value="Клиент:" styleClass="base_form_caption_text"  />
 						</p:row>
 						<p:row>
-							<p:outputLabel value="#{clientform.surname} #{clientform.firstname} #{clientform.middlename}" />
+							<p:outputLabel value="#{clientform.surname} #{clientform.firstname} #{clientform.middlename}" styleClass="base_form_value_text"/>
 						</p:row>
 
 						<p:row>
-							<p:outputLabel value="Выбранный документ:" style="font-weight: bold" />
+							<p:outputLabel value="Выбранный документ:" styleClass="base_form_caption_text"  />
 						</p:row>
 						<p:row>
 							<p:outputLabel
-								value="#{clientcontracts.selectedDocument.doctype} (сер. и номер.: #{clientcontracts.selectedDocument.docPrefix} #{clientcontracts.selectedDocument.docNum}) от #{clientcontracts.formatDate(clientcontracts.selectedDocument.date)} #{clientcontracts.selectedDocument.whereAndWhom}" />
+								value="#{clientcontracts.selectedDocument.doctype} (сер. и номер.: #{clientcontracts.selectedDocument.docPrefix} #{clientcontracts.selectedDocument.docNum}) от #{clientcontracts.formatDate(clientcontracts.selectedDocument.date)} #{clientcontracts.selectedDocument.whereAndWhom}" styleClass="base_form_value_text"/>
 						</p:row>
 						<p:row>
-							<p:outputLabel value="Дата начала:" style="font-weight: bold" validator="#{clientcontracts.validateStartDateFormat}"  required="true" requiredMessage="Обязательно к заполнению" />
+							<p:outputLabel value="Дата начала:" styleClass="base_form_caption_text"  validator="#{clientcontracts.validateStartDateFormat}"  required="true" requiredMessage="Обязательно к заполнению" />
 						</p:row>
 						<p:row>
 							<p:message display="tooltip" for="startNewContractDateCal" />
-							<p:calendar value="#{clientcontracts.selectedContract.startDate}" id="startNewContractDateCal" showOn="button" pattern="dd.MM.yyyy" />
+							<p:calendar value="#{clientcontracts.selectedContract.startDate}" id="startNewContractDateCal" showOn="button" pattern="dd.MM.yyyy" styleClass="base_form_value_text"/>
 						</p:row>
 						<p:row>
-							<p:outputLabel value="Дата окончания:" style="font-weight: bold" validator="#{clientcontracts.validateStopDateFormat()}"  required="true" requiredMessage="Обязательно к заполнению"  />
+							<p:outputLabel value="Дата окончания:" styleClass="base_form_caption_text"  validator="#{clientcontracts.validateStopDateFormat()}"  required="true" requiredMessage="Обязательно к заполнению"  />
 						</p:row>
 						<p:row>
 							<p:message display="tooltip" for="stopNewContractDateCal" />
-							<p:calendar value="#{clientcontracts.selectedContract.stopDate}" id="stopNewContractDateCal" showOn="button" pattern="dd.MM.yyyy" />
+							<p:calendar value="#{clientcontracts.selectedContract.stopDate}" id="stopNewContractDateCal" showOn="button" pattern="dd.MM.yyyy" styleClass="base_form_value_text"/>
 						</p:row>
 						<p:row>
-							<p:outputLabel value="Работник:" style="font-weight: bold" />
+							<p:outputLabel value="Работник:" styleClass="base_form_caption_text"  />
 						</p:row>
 						<p:row>
-							<p:inputTextarea value="#{clientcontracts.workerSelfData}" style="width:300px;" />
+							<p:inputTextarea value="#{clientcontracts.workerSelfData}" style="width:300px;" styleClass="base_form_value_text"/>
 						</p:row>
 						<p:row>
-							<p:outputLabel value="Паспортные данные работника:" style="font-weight: bold" />
+							<p:outputLabel value="Паспортные данные работника:" styleClass="base_form_caption_text"  />
 						</p:row>
 						<p:row>
 							<p:message display="tooltip" for="workerPassportDataId" />
-							<p:inputTextarea id="workerPassportDataId" value="#{clientcontracts.workerPassportData}" style="width:300px;" validator="#{clientcontracts.validateWorkerPasportDataOnly}" />
+							<p:inputTextarea id="workerPassportDataId" value="#{clientcontracts.workerPassportData}" style="width:300px;" validator="#{clientcontracts.validateWorkerPasportDataOnly}" styleClass="base_form_value_text"/>
 						</p:row>
 						<p:row>
-							<p:outputLabel value="Доверенность работника:" style="font-weight: bold" />
+							<p:outputLabel value="Доверенность работника:" styleClass="base_form_caption_text"  />
 						</p:row>
 						<p:row>
 							<p:message display="tooltip" for="workerWarrantDataId" />
-							<p:inputText id="workerWarrantDataId" value="#{clientcontracts.warrantData}" validator="#{clientcontracts.validateWorkerWarrantDataOnly}" style="width:300px;" />
+							<p:inputText id="workerWarrantDataId" value="#{clientcontracts.warrantData}" validator="#{clientcontracts.validateWorkerWarrantDataOnly}" style="width:300px;" styleClass="base_form_value_text"/>
 						</p:row>
 					</h:panelGrid>
 					<p:separator />
@@ -118,7 +118,7 @@
 				</p:layoutUnit>
 
 				<p:layoutUnit position="center" size="460" minSize="460" maxSize="400" resizable="false" style="max-height:380px;">
-					<p:dataTable id="servitemsid" var="servitems" value="#{clientcontracts.contractPointsDataModel}" paginator="false" rows="100" selection="#{clientcontracts.selectedNewContractPoints}">
+					<p:dataTable id="servitemsid" var="servitems" value="#{clientcontracts.contractPointsDataModel}" paginator="false" rows="100" selection="#{clientcontracts.selectedNewContractPoints}" paginatorPosition="bottom" styleClass="default_datatable">
 						<p:column selectionMode="multiple" style="width:4%" />
 						<p:column headerText="ID" style="width:4%">
 							#{servitems.id}

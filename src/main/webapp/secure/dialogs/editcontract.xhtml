@@ -17,48 +17,48 @@
 
 			<h:panelGrid columns="2" id="edit_contract_panel_grid">
 				<p:row>
-					<p:outputLabel value="Ф.И.О клиента:" style="font-weight: bold" />
+					<p:outputLabel value="Ф.И.О клиента:" styleClass="base_form_caption_text"/>
 				</p:row>
 				<p:row>
-					<p:outputLabel value="#{clientform.surname} #{clientform.firstname} #{clientform.middlename}" />
+					<p:outputLabel value="#{clientform.surname} #{clientform.firstname} #{clientform.middlename}" styleClass="base_form_value_text"/>
 				</p:row>
 				<p:row>
-					<p:outputLabel value="Работник:" style="font-weight: bold" />
+					<p:outputLabel value="Работник:" styleClass="base_form_caption_text"/>
 				</p:row>
 				<p:row>
-					<p:outputLabel value="#{clientcontracts.worker.surname} #{clientcontracts.worker.firstname} #{clientcontracts.worker.middlename}" />
+					<p:outputLabel value="#{clientcontracts.worker.surname} #{clientcontracts.worker.firstname} #{clientcontracts.worker.middlename}" styleClass="base_form_value_text"/>
 				</p:row>
 				<p:row>
-					<p:outputLabel value="Номер договора:" style="font-weight: bold" />
+					<p:outputLabel value="Номер договора:" styleClass="base_form_caption_text" />
 				</p:row>
 				<p:row>
-					<p:outputLabel value="#{clientcontracts.selectedContract.id}" />
+					<p:outputLabel value="#{clientcontracts.selectedContract.id}" styleClass="base_form_value_text"/>
 				</p:row>
 				<p:row>
-					<p:outputLabel value="Дата начала:" style="font-weight: bold" />
+					<p:outputLabel value="Дата начала:" styleClass="base_form_caption_text" />
 				</p:row>
 				<p:row>
-					<p:calendar value="#{clientcontracts.selectedContract.startDate}" id="startContractDateCal" showOn="button" pattern="dd.MM.yyyy" />
+					<p:calendar value="#{clientcontracts.selectedContract.startDate}" id="startContractDateCal" showOn="button" pattern="dd.MM.yyyy" styleClass="base_form_value_text"/>
 				</p:row>
 				<p:row>
-					<p:outputLabel value="Дата окончания:" style="font-weight: bold" />
+					<p:outputLabel value="Дата окончания:" styleClass="base_form_caption_text" />
 				</p:row>
 				<p:row>
-					<p:calendar value="#{clientcontracts.selectedContract.stopDate}" id="endContractDateCal" showOn="button" pattern="dd.MM.yyyy" />
+					<p:calendar value="#{clientcontracts.selectedContract.stopDate}" id="endContractDateCal" showOn="button" pattern="dd.MM.yyyy" styleClass="base_form_value_text"/>
 				</p:row>
 				<p:row>
-					<p:outputLabel value="Статус договора:" style="font-weight: bold" />
+					<p:outputLabel value="Статус договора:" styleClass="base_form_caption_text" />
 				</p:row>
 				<p:row>
-					<p:selectOneMenu id="contractResultId" value="#{clientcontracts.selectedContract.result}" converter="contractResultTypeConverter" style="width: 300px;">
+					<p:selectOneMenu id="contractResultId" value="#{clientcontracts.selectedContract.result}" converter="contractResultTypeConverter" style="width: 300px;" styleClass="base_form_value_text">
 						<f:selectItems value="#{clientcontracts.contractResultTypes}" var="contractResultType" itemLabel="#{contractResultType.caption}" itemValue="#{contractResultType}" />
 					</p:selectOneMenu>
 				</p:row>
 				<p:row>
-					<p:outputLabel value="Комментарии:" style="font-weight: bold" />
+					<p:outputLabel value="Комментарии:" styleClass="base_form_caption_text" />
 				</p:row>
 				<p:row>
-					<p:inputTextarea value="#{clientcontracts.selectedContract.commentResult}" id="commentResultId" style="width:300px;" />
+					<p:inputTextarea value="#{clientcontracts.selectedContract.commentResult}" id="commentResultId" style="width:300px;" styleClass="base_form_value_text"/>
 				</p:row>
 			</h:panelGrid>
 
@@ -68,7 +68,7 @@
 			</p:contextMenu>
 			<p:dataTable id="contractItemsListId" var="contractItemsList" value="#{clientcontracts.contractItems}" paginator="true" rows="15"
 				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15"
-				rowKey="#{contractItemsList.id}" selection="#{clientcontracts.selectedContractControl}" selectionMode="single" widgetVar="contractItemsListWv">
+				rowKey="#{contractItemsList.id}" selection="#{clientcontracts.selectedContractControl}" selectionMode="single" widgetVar="contractItemsListWv" styleClass="default_datatable" paginatorPosition="bottom">
 				<p:column headerText="ID">
 					<h:outputText value="#{contractItemsList.id}" />
 				</p:column>

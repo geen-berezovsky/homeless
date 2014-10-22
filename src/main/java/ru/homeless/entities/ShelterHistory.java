@@ -23,24 +23,25 @@ public class ShelterHistory implements Serializable {
 	private Date typhVac;
 	private Date fluorogr;
 	private int roomId;
-
+/*
     @OneToOne(targetEntity = ShelterResult.class)
     @JoinColumn (name = "shelterresult")
-    public ShelterResult getShelterresult() {
+    */
+    public Integer getShelterresult() {
         return shelterresult;
     }
 
-    public void setShelterresult(ShelterResult shelterresult) {
+    public void setShelterresult(Integer shelterresult) {
         this.shelterresult = shelterresult;
     }
 
-    private ShelterResult shelterresult;
+    private Integer shelterresult;
 	
 	public ShelterHistory() {
 		
 	}
 	
-	public ShelterHistory(Client client, Date inShelter, Date outShelter, int roomId, ShelterResult sr) {
+	public ShelterHistory(Client client, Date inShelter, Date outShelter, int roomId, Integer sr) {
 		setClient(client);
 		setInShelter(inShelter);
 		setOutShelter(outShelter);

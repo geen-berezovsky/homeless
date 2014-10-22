@@ -5,7 +5,6 @@
 <h:head>
     <title>Добро пожаловать, #{user.name}!</title>
 	<link href="css/default.css" rel="stylesheet" type="text/css" />
-	<link href="css/clientform.css" rel="stylesheet" type="text/css" />
 	<script type="text/javascript">
 		function openSearchResult() {
 			searchByNameDlg.hide();
@@ -121,7 +120,7 @@
 
 								<p:dataTable id="doclistId" var="doclist" value="#{clientdocuments.documentsList}" paginator="true" rows="15"
 									paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15"
-									rowKey="#{doclist.id}" selection="#{clientdocuments.selectedDocument}" selectionMode="single">
+									rowKey="#{doclist.id}" selection="#{clientdocuments.selectedDocument}" selectionMode="single" paginatorPosition="bottom" styleClass="default_datatable">
 
 									<p:column headerText="ID">
 										<h:outputText value="#{doclist.id}" />
@@ -175,7 +174,7 @@
 
 								<p:dataTable id="conlistId" var="conlist" value="#{clientcontracts.contractsList}" paginator="true" rows="15"
 									paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15"
-									rowKey="#{conlist.id}" selection="#{clientcontracts.selectedContract}" selectionMode="single">
+									rowKey="#{conlist.id}" selection="#{clientcontracts.selectedContract}" selectionMode="single" styleClass="default_datatable" paginatorPosition="bottom">
 
 									<p:column headerText="ID">
 										<h:outputText value="#{conlist.id}" />
@@ -230,7 +229,7 @@
 
 								<p:dataTable id="shelterlistId" var="shelterlist" value="#{clientshelter.shelterList}" paginator="true" rows="15"
 									paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15"
-									rowKey="#{shelterlist.id}" selection="#{clientshelter.selectedShelter}" selectionMode="single">
+									rowKey="#{shelterlist.id}" selection="#{clientshelter.selectedShelter}" selectionMode="single" styleClass="default_datatable" paginatorPosition="bottom">
 
 									<p:column headerText="ID">
 										<h:outputText value="#{shelterlist.id}" />
@@ -337,7 +336,11 @@
     <ui:include src="dialogs/realphoto.xhtml" />
     <ui:include src="dialogs/photoupload.xhtml" />
 
-
+    <p:dialog id="notImplementedDlg" header="Этот раздел еще не имплементирован" widgetVar="notImplementedDlgWv" resizable="false" closable="true" modal="true" showEffect="fade" hideEffect="explode" closeOnEscape="true">
+        <p:panel>
+            <p:outputLabel value="Этот раздел находится в разработке" />
+        </p:panel>
+    </p:dialog>
 
 
 </h:body>

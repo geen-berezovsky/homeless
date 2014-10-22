@@ -8,22 +8,22 @@
 
             <p:panelGrid columns="2" id="edit_room_grid">
                 <p:row>
-                    <p:outputLabel value="Номер комнаты:" />
+                    <p:outputLabel value="Номер комнаты:" styleClass="base_form_caption_text"/>
                 </p:row>
                 <p:row>
-                    <p:inputText value="#{roomb.selectedRoom.roomnumber}" id="roomNumber" size="40" />
+                    <p:inputText value="#{roomb.selectedRoom.roomnumber}" id="roomNumber" size="40" styleClass="base_form_value_text"/>
                 </p:row>
                 <p:row>
-                    <p:outputLabel value="Максимально возможное число проживающих:" />
+                    <p:outputLabel value="Максимально возможное число проживающих:" styleClass="base_form_caption_text"/>
                 </p:row>
                 <p:row>
-                    <p:inputText value="#{roomb.selectedRoom.roommaxlivers}" id="roomMaxLivers" size="40" />
+                    <p:inputText value="#{roomb.selectedRoom.roommaxlivers}" id="roomMaxLivers" size="40" styleClass="base_form_value_text"/>
                 </p:row>
                 <p:row>
-                    <p:outputLabel value="Комментарии:" />
+                    <p:outputLabel value="Комментарии:" styleClass="base_form_caption_text"/>
                 </p:row>
                 <p:row>
-                    <p:inputTextarea value="#{roomb.selectedRoom.roomnotes}" id="roomComments" size="40" />
+                    <p:inputTextarea value="#{roomb.selectedRoom.roomnotes}" id="roomComments" size="40" styleClass="base_form_value_text"/>
                 </p:row>
             </p:panelGrid>
             <center>

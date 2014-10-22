@@ -8,30 +8,30 @@
 			dynamic="true" closeOnEscape="true" onShow="#{clientcontracts.initContractControl()}">
 			<h:panelGrid columns="2" id="add_serivceplanitem_panel_grid">
 				<p:row>
-					<p:outputLabel value="Клиент:" style="font-weight: bold" />
+					<p:outputLabel value="Клиент:" styleClass="base_form_caption_text" />
 				</p:row>
 				<p:row>
-					<p:outputLabel value="#{clientform.surname} #{clientform.firstname} #{clientform.middlename}" />
+					<p:outputLabel value="#{clientform.surname} #{clientform.firstname} #{clientform.middlename}" styleClass="base_form_value_text"/>
 				</p:row>
 				<p:row>
-					<p:outputLabel value="Цель:" style="font-weight: bold" />
+					<p:outputLabel value="Цель:" styleClass="base_form_caption_text" />
 				</p:row>
 				<p:row>
-					<p:selectOneMenu id="contractPointId" value="#{clientcontracts.selectedContractControl.contractpoints}" converter="contractPointsTypeConverter" style="width: 300px;">
+					<p:selectOneMenu id="contractPointId" value="#{clientcontracts.selectedContractControl.contractpoints}" converter="contractPointsTypeConverter" style="width: 300px;" styleClass="base_form_value_text">
 						<f:selectItems value="#{clientcontracts.contractPointsItems}" var="contractPointsType" itemLabel="#{contractPointsType.caption}" itemValue="#{contractPointsType}" />
 					</p:selectOneMenu>
 				</p:row>
 				<p:row>
-					<p:outputLabel value="Дата выполнения:" style="font-weight: bold" />
+					<p:outputLabel value="Дата выполнения:" styleClass="base_form_caption_text" />
 				</p:row>
 				<p:row>
-					<p:calendar value="#{clientcontracts.selectedContractControl.endDate}" id="endContractControlDateCal" showOn="button" pattern="dd.MM.yyyy" />
+					<p:calendar value="#{clientcontracts.selectedContractControl.endDate}" id="endContractControlDateCal" showOn="button" pattern="dd.MM.yyyy" styleClass="base_form_value_text"/>
 				</p:row>
 				<p:row>
-					<p:outputLabel value="Комментарии:" style="font-weight: bold" />
+					<p:outputLabel value="Комментарии:" styleClass="base_form_caption_text" />
 				</p:row>
 				<p:row>
-					<p:editor id="contacts_editor" value="#{clientcontracts.selectedContractControl.comments}" />
+					<p:editor id="contacts_editor" value="#{clientcontracts.selectedContractControl.comments}" styleClass="base_form_value_text"/>
 				</p:row>
 			</h:panelGrid>
 			<p:separator />

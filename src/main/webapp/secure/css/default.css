@@ -16,6 +16,18 @@
     font-size: 75% !important;
 }
 
+.ui-selectonemenu-panel {
+    font-size: 75% !important;
+}
+
+.ui-messages-info-summary {
+    font-size: 75% !important;
+}
+
+.ui-messages-error-summary {
+    font-size: 75% !important;
+}
+
 .base_form_panel_grid_class td, .base_form_panel_grid_class tr
 {
     border-style: none !important
@@ -65,9 +77,12 @@
 	font-size: 12px !important;
 }
 
-.received_services_datatable {
+.default_datatable {
 	font-size: 12px !important;
-	
+}
+
+.ui-datepicker {
+    font-size: 75% !important;
 }
 
 /*
