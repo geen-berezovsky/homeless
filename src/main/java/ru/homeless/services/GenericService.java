@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ru.homeless.dao.GenericDAO;
+import ru.homeless.entities.Client;
 
 @Service("GenericService")
 @Transactional(readOnly = false)
@@ -68,5 +69,9 @@ public class GenericService implements IGenericService, Serializable {
 		return getGenericDAO().getInstancesByClientId(clazz, id);
 	}
 
+    @Transactional
+    public <T> List<T> getInstancesByClientId(Class<T> clazz, Client client) {
+        return getGenericDAO().getInstancesByClientId(clazz, client);
+    }
 
 }

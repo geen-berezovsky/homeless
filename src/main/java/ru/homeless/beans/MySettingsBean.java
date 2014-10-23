@@ -14,6 +14,7 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 
+import org.primefaces.context.RequestContext;
 import ru.homeless.entities.Document;
 import ru.homeless.entities.Worker;
 import ru.homeless.services.WorkerService;
@@ -43,14 +44,21 @@ public class MySettingsBean implements Serializable {
 		worker = (Worker) session.getAttribute("worker");
 		timeZone = TimeZone.getDefault();
 	}
-	
-	public void onShow() {
-		//get active document data from database
-		document = getWorkerService().getWorkerDocumentById(worker.getId());
-		if (document == null) {
-			document = new Document();
-		}
-	}
+
+    public void updateDocument() {
+        //get active document data from database
+        document = getWorkerService().getWorkerDocumentById(worker.getId());
+        if (document == null) {
+            document = new Document();
+        }
+    }
+
+	public void openDlg() {
+        updateDocument();
+        RequestContext rc = RequestContext.getCurrentInstance();
+        rc.execute("mySettingsWv.show();");
+
+    }
 	
 	public Document getDocument() {
 		return document;
@@ -85,7 +93,11 @@ public class MySettingsBean implements Serializable {
 
 	
 	public void updateWorkerSettings() {
+        if (document == null) {
+            updateDocument();
+        }
 		FacesMessage msg = null;
+        boolean foundErrors = false;
 		//first, check the password
 		if (! oldPassword.trim().equals("")) {
 			//it is right password?
@@ -95,56 +107,72 @@ public class MySettingsBean implements Serializable {
 					//ok, let's check newPassword2
 					if (! newPassword2.trim().equals("") && newPassword2.trim().equals(newPassword.trim())) {
 						//all passwords are correct
+                        log.info("Updating the password...");
 						worker.setPassword(newPassword.trim());
+                        log.info("Password has been successfully updated");
 						msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Изменение пароля", "Пароль успешно обновлен");
 					} else {
+                        log.info("Password has not been updated");
+                        foundErrors = true;
 						msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Изменение пароля", "Вы не указали или указали некорректное повторение нового пароля");
 					}
 				} else {
 					//old password exists, but no new password provided
+                    log.info("No new password has been provided");
 					msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Изменение пароля", "Вы не указали новый пароль");
 				}
 			} else {
+                log.info("Incorrect old password");
+                foundErrors = true;
 				msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Изменение пароля", "Вы указали некорректный старый пароль");
 			}
-		}
-		if (msg != null) {
-			FacesContext.getCurrentInstance().addMessage(null, msg);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
 		}
 		//then, check passport data
 		if (document.getDocPrefix().trim().equals("") || document.getDocNum().trim().equals("") || 
 				document.getDate() == null || document.getWhereAndWhom().trim().equals("")) {
 			msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Паспортные данные", "Пожалуйста, заполните все данные по паспорту!");
-			FacesContext.getCurrentInstance().addMessage(null, msg);
 		} else {
 			//Saving document data
 			try {
+                document.setRegistration(0); // THIS IS FAKE FOR COMPATIBILITY
 				getWorkerService().updateInstance(document);
 				msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Паспортные данные обновлены", "");
+                log.info("Passport data successfully updated");
 			} catch (Exception e) {
+                log.info("Cannot update password data");
+                foundErrors = true;
 				msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Паспортные данные не обновлены!", "Пожалуйста, посмотрите логи.");
 				e.printStackTrace();
 			}
-			FacesContext.getCurrentInstance().addMessage(null, msg);
 		}
+        FacesContext.getCurrentInstance().addMessage(null, msg);
 		
 		//then check all private fields
 		if (worker.getSurname().trim().equals("") || worker.getFirstname().trim().equals("") || 
 				worker.getRules() == null || worker.getWarrantNum().trim().equals("") ||
 				worker.getWarrantDate() == null) {
-			msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Изменение данных работника", "Вы указали не все данные!");
-			FacesContext.getCurrentInstance().addMessage(null, msg);
+			    msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Изменение данных работника", "Вы указали не все данные!");
+                foundErrors = true;
+                log.info("Cannot update worker personal data");
 		} else {
 			//Saving document data
 			try {
 				getWorkerService().updateInstance(worker);
 				msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Данные работника обновлены", "");
+                log.info("Worker personal data successfully updated");
 			} catch (Exception e) {
 				msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Данны работника не обновлены!", "Пожалуйста, посмотрите логи.");
+                foundErrors = true;
+                log.info("Cannot update worker personal data, please see the logs");
 			}
-			FacesContext.getCurrentInstance().addMessage(null, msg);
 		}
-		
+        FacesContext.getCurrentInstance().addMessage(null, msg);
+
+        if (!foundErrors) {
+            RequestContext rc = RequestContext.getCurrentInstance();
+            rc.execute("mySettingsWv.hide();");
+        }
 	}
 	
 	//Validators
@@ -176,10 +204,6 @@ public class MySettingsBean implements Serializable {
 				document.setDate(result);
 			}
 		}
-	}
-
-	public void validateNumOnly(FacesContext ctx, UIComponent component, Object value) {
-		Util.validateNumFormat(ctx, component, value);
 	}
 
 	public WorkerService getWorkerService() {

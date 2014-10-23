@@ -10,6 +10,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import ru.homeless.entities.Client;
 import ru.homeless.entities.ContractControl;
 import ru.homeless.services.IGenericService;
 
@@ -69,11 +70,18 @@ public class GenericDAO implements IGenericService, Serializable {
 	}
 
 	@SuppressWarnings("unchecked")
-	@Override
 	public <T> List<T>getInstancesByClientId(Class<T> clazz, int id) {
 		Criteria c = getSessionFactory().getCurrentSession().createCriteria(clazz).add(Restrictions.eq("client", id)); 
 		c.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 		return c.list();
 	}
+
+    @SuppressWarnings("unchecked")
+    public <T> List<T>getInstancesByClientId(Class<T> clazz, Client client) {
+        Criteria c = getSessionFactory().getCurrentSession().createCriteria(clazz).add(Restrictions.eq("client", client));
+        c.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+        return c.list();
+    }
+
 
 }

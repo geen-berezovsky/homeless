@@ -82,10 +82,9 @@ public class Util {
 	}
 
 	public static void validateTextOnly(FacesContext ctx, UIComponent component, Object value) {
-		String str = value.toString();
-		if (!isTextOnlyValid(str)) {
+		if (!isTextOnlyValid(value.toString())) {
 			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR,
-					"ФИО не может содержать цифры, спецсимволы и пробелы!\nТолько русский или латинский текст, а также тире.", "Пожалуйста, проверьте форму!");
+					"ФИО не может содержать цифры, спецсимволы и пробелы и быть пустым!\nТолько русский или латинский текст, а также тире.", "Пожалуйста, проверьте форму!");
 			throw new ValidatorException(msg);
 		}
 	}

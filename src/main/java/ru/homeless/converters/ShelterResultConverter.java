@@ -18,7 +18,6 @@ public class ShelterResultConverter implements Converter, Serializable {
 
 	@Override
 	public Object getAsObject(FacesContext arg0, UIComponent arg1, String submittedValue) {
-        System.out.println("Submitted value = "+submittedValue);
 		try {
 			if (submittedValue.trim().equals("")) {
 				return null;
@@ -27,8 +26,7 @@ public class ShelterResultConverter implements Converter, Serializable {
 
 				for (ShelterResult  shelterResult : shelterResultList) {
 					if (shelterResult.getId() == number) {
-                        System.out.println("Returning "+shelterResult.getCaption());
-						return shelterResult;
+						return shelterResult.getId();
 					}
 				}
 			}
@@ -43,7 +41,7 @@ public class ShelterResultConverter implements Converter, Serializable {
 		if (value == null || value.equals("")) {
 			return "";
 		} else {
-			return String.valueOf(((ShelterResult) value).getId());
+			return String.valueOf(value);
 		}
 	}
 

@@ -86,16 +86,6 @@ public class ClientShelterBean implements Serializable {
 
 		if (cids != null && !cids.trim().equals("")) {
 			this.cid = Integer.parseInt(cids);
-            //TODO: REFACTOR
-            System.out.println();
-//			setShelterList(getGenericService().getInstancesByClientId(ShelterHistory.class, cid));
-            /*
-            ArrayList<Object> objectArrayList = new ArrayList<>();
-            objectArrayList.addAll(getGenericService().getInstancesByClientId(ShelterHistory.class, cid));
-            for (Object o: objectArrayList) {
-                log.info("Object val: "+o.getClass().getCanonicalName());
-            }
-            */
 		}
 		newSelectedShelter(); // set new shelter
 		RequestContext rc = RequestContext.getCurrentInstance();
@@ -109,8 +99,12 @@ public class ClientShelterBean implements Serializable {
 	}
 
 	public void editShelter() {
-		selectedShelter = getGenericService().getInstanceById(ShelterHistory.class, selectedShelter.getId());
+        rooms.clear();
+        rooms.addAll(genericService.getInstances(Room.class));
+        shelterResultList.addAll(genericService.getInstances(ShelterResult.class));
+        selectedShelter = getGenericService().getInstanceById(ShelterHistory.class, selectedShelter.getId());
 		RequestContext rc = RequestContext.getCurrentInstance();
+        rc.execute("addShelterWv.show();");
 		rc.update("add_shelter");	//force updating the add shelter form	
 	}
 
@@ -174,7 +168,11 @@ public class ClientShelterBean implements Serializable {
 	}
 
 	public List<ShelterHistory> getShelterList() {
-		return shelterList;
+        if (cid != 0) {
+            return getGenericService().getInstancesByClientId(ShelterHistory.class, getGenericService().getInstanceById(Client.class, cid));
+        } else {
+            return new ArrayList<ShelterHistory>();
+        }
 	}
 
 	public void setShelterList(List<ShelterHistory> shelterList) {
@@ -190,11 +188,13 @@ public class ClientShelterBean implements Serializable {
 	}
 
 
-    public void onShow() {
-        log.info("Called on show for Shelter");
+    public void addNewShelter() {
         rooms.clear();
         rooms.addAll(genericService.getInstances(Room.class));
         shelterResultList.addAll(genericService.getInstances(ShelterResult.class));
+        selectedShelter = new ShelterHistory();
+        RequestContext rc = RequestContext.getCurrentInstance();
+        rc.execute("addShelterWv.show();");
     }
 
     public void addNewShelterData() {
@@ -214,6 +214,17 @@ public class ClientShelterBean implements Serializable {
         log.info("Тиф: "+selectedShelter.getTyphVac());
         log.info("Status: "+selectedShelter.getShelterresult());
         getGenericService().addInstance(selectedShelter);
+
+        //Update the table
+//        RequestContext rc = RequestContext.getCurrentInstance();
+  //      rc.update(":m_tabview:shelter_form:shelterlistId");
+        //RequestContext rc = RequestContext.getCurrentInstance();
+        //rc.update(":m_tabview:shelter_form");
+
+
+
+
+
     }
 
 }

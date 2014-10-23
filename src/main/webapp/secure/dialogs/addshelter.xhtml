@@ -5,11 +5,10 @@
       xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui">
 <ui:composition>
     <p:messages/>
-
+    <h:form id="add_shelter">
     <p:dialog id="addShelter" header="Измените информацию о проживании" widgetVar="addShelterWv" resizable="false"
               closable="true" modal="true" showEffect="fade"
-              hideEffect="explode" dynamic="true" closeOnEscape="true" onShow="shelterOnShow()">
-        <h:form id="add_shelter">
+              hideEffect="explode" dynamic="true" closeOnEscape="true">
             <h:panelGrid columns="2" id="add_shelters_panel_grid">
                 <p:row>
                     <p:outputLabel value="Клиент:" styleClass="base_form_caption_text"/>
@@ -91,7 +90,7 @@
                 </p:row>
                 <p:row>
                     <p:selectOneMenu converter="shelterResultConverter"  id="shelterStatus" value="#{clientshelter.selectedShelter.shelterresult}" style="width:185px;" styleClass="base_form_value_text">
-                        <f:selectItems value="#{clientshelter.shelterResultList}" var="shelterStatus" itemLabel="#{shelterStatus.caption}" itemValue="#{shelterStatus}" />
+                        <f:selectItems value="#{clientshelter.shelterResultList}" var="shelterStatus" itemLabel="#{shelterStatus.caption}" itemValue="#{shelterStatus.id}" />
                     </p:selectOneMenu>
                 </p:row>
 
@@ -104,14 +103,13 @@
             <p:growl id="editshelter_growl" showDetail="true" life="3000" />
             <center>
                 <p:commandButton value="Добавить данные о проживании" id="updateShelterButton"
-                                 update="@this editshelter_growl" ajax="true"
+                                 update="@this :m_tabview:shelter_form editshelter_growl" ajax="true"
                                  actionListener="#{clientshelter.addNewShelterData()}"  icon="ui-icon-disk" oncomplete="addShelterWv.hide()" />
 
             </center>
             </p:panel>
-    </h:form>
     </p:dialog>
-
+</h:form>
 
 
 </ui:composition>

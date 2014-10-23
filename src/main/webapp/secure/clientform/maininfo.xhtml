@@ -5,38 +5,46 @@
 
 	<p:panelGrid columns="2" id="base_form_panel_grid" styleClass="base_form_panel_grid_class">
 		<p:row>
-			<p:outputLabel value="Фамилия:" styleClass="base_form_caption_text"/>
+			<p:outputLabel value="Фамилия:" for="cedit_surname" styleClass="base_form_caption_text"/>
 		</p:row>
 		<p:row>
 			<p:message display="tooltip" for="cedit_surname" />
-			<p:inputText value="#{clientform.surname}" id="cedit_surname" validator="#{clientform.validateTextOnly}" size="40" styleClass="base_form_value_text" />
+			<p:inputText value="#{clientform.surname}" id="cedit_surname" validator="#{clientform.validateTextOnly}" size="40" styleClass="base_form_value_text" required="true">
+                <f:validateLength minimum="2" />
+            </p:inputText>
 		</p:row>
 		<p:row>
-			<p:outputLabel value="Имя:" styleClass="base_form_caption_text"/>
+			<p:outputLabel value="Имя:" for="cedit_firstname" styleClass="base_form_caption_text"/>
 		</p:row>
 		<p:row>
 			<p:message display="tooltip" for="cedit_firstname" />
-			<p:inputText value="#{clientform.firstname}" id="cedit_firstname" validator="#{clientform.validateTextOnly}" size="40" styleClass="base_form_value_text"/>
+			<p:inputText value="#{clientform.firstname}" id="cedit_firstname" validator="#{clientform.validateTextOnly}" size="40" styleClass="base_form_value_text" required="true">
+                <f:validateLength minimum="2" />
+            </p:inputText>
 		</p:row>
 		<p:row>
-			<p:outputLabel value="Отчество:" styleClass="base_form_caption_text"/>
+			<p:outputLabel value="Отчество:" for="cedit_middlename" styleClass="base_form_caption_text"/>
 		</p:row>
 		<p:row>
 			<p:message display="tooltip" for="cedit_middlename" />
-			<p:inputText value="#{clientform.middlename}" id="cedit_middlename" validator="#{clientform.validateTextOnly}" size="40" styleClass="base_form_value_text"/>
+			<p:inputText value="#{clientform.middlename}" id="cedit_middlename" validator="#{clientform.validateTextOnly}" size="40" styleClass="base_form_value_text" required="true">
+                <f:validateLength minimum="2" />
+            </p:inputText>
 		</p:row>
 		<p:row>
-			<p:outputLabel value="Дата рождения:" styleClass="base_form_caption_text"/>
+			<p:outputLabel for="cedit_bdate" value="Дата рождения:" styleClass="base_form_caption_text"/>
 		</p:row>
 		<p:row>
 			<p:message display="tooltip" for="cedit_bdate" />
-			<p:inputText value="#{clientform.formattedDate}" id="cedit_bdate" mask="99.99.9999" validator="#{clientform.validateBirthDateFormat}" size="10" styleClass="base_form_value_text"/>
+			<p:inputText value="#{clientform.formattedDate}" id="cedit_bdate" mask="99.99.9999" validator="#{clientform.validateBirthDateFormat}" size="10" styleClass="base_form_value_text" required="true">
+                <f:validateLength minimum="2" />
+            </p:inputText>
 		</p:row>
 		<p:row>
 			<p:outputLabel value="Пол:" styleClass="base_form_caption_text"/>
 		</p:row>
 		<p:row>
-			<p:selectOneMenu id="selectGender" value="#{clientform.gender}" styleClass="base_form_value_text">
+			<p:selectOneMenu id="selectGender" value="#{clientform.gender}" styleClass="base_form_value_text" required="true">
 				<f:selectItem itemLabel="Мужской" itemValue="true" />
 				<f:selectItem itemLabel="Женский" itemValue="false" />
 			</p:selectOneMenu>

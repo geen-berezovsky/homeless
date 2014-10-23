@@ -2,11 +2,7 @@ package ru.homeless.beans;
 
 import java.io.Serializable;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -17,6 +13,7 @@ import javax.faces.component.UIInput;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.event.ValueChangeEvent;
+import javax.faces.validator.ValidatorException;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
@@ -425,6 +422,16 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
             updateHomelessDate(selectedMonth);
             client = copyClientDataToClient(client);
             //Update Surname, FirstName and MiddleName for starting with uppercase letter
+/*
+            if (client.getSurname().trim().equals("") || client.getMiddlename().trim().equals("") || client.getFirstname().trim().equals("")) {
+                FacesMessage msg1 = new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                        "ФИО не может содержать цифры, спецсимволы и пробелы и быть пустым!\nТолько русский или латинский текст, а также тире.", "Пожалуйста, проверьте форму!");
+                    FacesContext.getCurrentInstance().addMessage(null, msg1);
+                throw new ValidatorException(msg1);
+            }
+*/
+
+
             String fl = client.getSurname().toUpperCase().substring(0, 1);
             String ll = client.getSurname().toLowerCase().substring(1, client.getSurname().length());
             client.setSurname(fl + ll);
@@ -569,7 +576,7 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
         FacesContext context = FacesContext.getCurrentInstance();
         log.info("Loading My Settings Data...");
         MySettingsBean mb = context.getApplication().evaluateExpressionGet(context, "#{mysettings}", MySettingsBean.class);
-        mb.onShow();
+        mb.updateDocument();
         log.info("Success. Loading Rooms Data...");
         RoomBean rb = context.getApplication().evaluateExpressionGet(context,"#{roomb}",RoomBean.class);
         rb.onShow();
@@ -591,5 +598,24 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
     }
 
 
+    public void addClient() throws SQLException {
+
+        HttpSession session = Util.getSession();
+
+        log.info("Creating new client and adding it to the database");
+        Client client = new Client("", "", "", false, null, null, "", "");
+
+        //Setting new values to the relations
+        client.setNightstay(getGenericService().getInstanceByCaption(NightStay.class, "Нет ответа"));
+        client.setEducation(getGenericService().getInstanceByCaption(Education.class, "Нет ответа"));
+        client.setFcom(getGenericService().getInstanceByCaption(FamilyCommunication.class, "Нет ответа"));
+
+        getGenericService().addInstance(client);
+        session.setAttribute("cid", client.getId());
+        log.info("Client with ID="+client.getId()+" successfully added to the database and set to the http session");
+        copyClientToClientData(client);
+        reloadAll(client.getId());
+
+    }
 
 }

@@ -11,7 +11,7 @@
 				<p:menuitem value="Найти клиента по рег. номеру" onclick="searchByIdDlg.show()" url="#"></p:menuitem>
 				<p:menuitem value="Мои клиенты" onclick="notImplementedDlgWv.show();" url="#"></p:menuitem>
 				<p:menuitem value="Оказанные мной услуги" onclick="notImplementedDlgWv.show();" url="#"></p:menuitem>
-				<p:menuitem value="Добавить клиента" onclick="addClientWv.show();" url="#"></p:menuitem>
+				<p:menuitem value="Добавить клиента" action="#{clientform.addClient()}"></p:menuitem>
 			</p:submenu>
 
 			<p:submenu label="Настройки" icon="ui-icon-pencil">

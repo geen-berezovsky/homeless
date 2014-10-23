@@ -1,63 +1,65 @@
 <?xml version = "1.0" encoding = "UTF-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui">
-<ui:composition><!-- onShow="#{mysettings.onShow()}" -->
-	<p:dialog id="mySettings" header="Мои настройки" widgetVar="mySettingsWv" resizable="false" closable="true" modal="true" showEffect="fade" hideEffect="explode" dynamic="true" closeOnEscape="true" onShow="mysettingsOnShow()">
-		<h:form id="my_settings">
-			<p:messages />
+<ui:composition>
+    <h:form id="my_settings">
+	<p:dialog id="mySettings" header="Мои настройки" widgetVar="mySettingsWv" resizable="false" closable="true" modal="true" showEffect="fade" hideEffect="explode" dynamic="true" closeOnEscape="true">
+
+			<p:messages id="my_settings_default_messages"/>
 
 			<p:panelGrid id="my_settings_panel_grid">
 				<p:row>
 					<p:column>
-						<p:outputLabel value="Фамилия:" styleClass="base_form_caption_text"/>
+						<p:outputLabel value="Фамилия:" for="my_settings_surname" styleClass="base_form_caption_text"/>
 					</p:column>
 					<p:column>
 						<p:message display="tooltip" for="my_settings_surname" />
-						<p:inputText value="#{mysettings.worker.surname}" id="my_settings_surname" validator="#{mysettings.validateTextOnly}" styleClass="base_form_value_text"/>
+						<p:inputText value="#{mysettings.worker.surname}" id="my_settings_surname" validator="#{mysettings.validateTextOnly}" styleClass="base_form_value_text" required="true"/>
 					</p:column>
 				</p:row>
 				<p:row>
 					<p:column>
-						<p:outputLabel value="Имя:" styleClass="base_form_caption_text"/>
+						<p:outputLabel value="Имя:" for="my_settings_firstname" styleClass="base_form_caption_text"/>
 					</p:column>
 					<p:column>
 						<p:message display="tooltip" for="my_settings_firstname" />
-						<p:inputText value="#{mysettings.worker.firstname}" id="my_settings_firstname" validator="#{mysettings.validateTextOnly}" styleClass="base_form_value_text"/>
+						<p:inputText value="#{mysettings.worker.firstname}" id="my_settings_firstname" validator="#{mysettings.validateTextOnly}" styleClass="base_form_value_text" required="true"/>
 					</p:column>
 				</p:row>
 				<p:row>
 					<p:column>
-						<p:outputLabel value="Отчество:" styleClass="base_form_caption_text"/>
+						<p:outputLabel value="Отчество:" for="my_settings_middlename" styleClass="base_form_caption_text"/>
 					</p:column>
 					<p:column>
 						<p:message display="tooltip" for="my_settings_middlename" />
-						<p:inputText value="#{mysettings.worker.middlename}" id="my_settings_middlename" validator="#{mysettings.validateTextOnly}" styleClass="base_form_value_text"/>
+						<p:inputText value="#{mysettings.worker.middlename}" id="my_settings_middlename" validator="#{mysettings.validateTextOnly}" styleClass="base_form_value_text" required="true"/>
 					</p:column>
 				</p:row>
 				<p:row>
 					<p:column>
-						<p:outputLabel value="Должность:" styleClass="base_form_caption_text"/>
+						<p:outputLabel value="Должность:" for="my_settings_role" styleClass="base_form_caption_text"/>
 					</p:column>
 					<p:column>
-						<p:inputText value="#{mysettings.worker.rules}" id="my_settings_role" disabled="true" styleClass="base_form_value_text"/>
+                        <p:message display="tooltip" for="my_settings_role" />
+						<p:inputText value="#{mysettings.worker.rules}" id="my_settings_role" disabled="true" styleClass="base_form_value_text" required="true"/>
 					</p:column>
 				</p:row>
 				<p:row>
 					<p:column>
-						<p:outputLabel value="Номер доверенности:" styleClass="base_form_caption_text"/>
+						<p:outputLabel value="Номер доверенности:" for="my_settings_agnum" styleClass="base_form_caption_text"/>
 					</p:column>
 					<p:column>
 						<p:message display="tooltip" for="my_settings_agnum" />
-						<p:inputText value="#{mysettings.worker.warrantNum}" id="my_settings_agnum" validator="#{mysettings.validateNumOnly}" styleClass="base_form_value_text"/>
+						<p:inputText value="#{mysettings.worker.warrantNum}" id="my_settings_agnum" styleClass="base_form_value_text" required="true"/>
 					</p:column>
 				</p:row>
 				<p:row>
 					<p:column>
-						<p:outputLabel value="Дата доверенности:" styleClass="base_form_caption_text"/>
+						<p:outputLabel value="Дата доверенности:" for="my_settings_ag_num_date" styleClass="base_form_caption_text"/>
 					</p:column>
 					<p:column>
 						<p:message display="tooltip" for="my_settings_ag_num_date" />
-						<p:inputText value="#{mysettings.worker.warrantDate}" id="my_settings_ag_num_date" mask="99.99.9999" validator="#{mysettings.validateWarrantDateFormat}" styleClass="base_form_value_text">
+						<p:inputText value="#{mysettings.worker.warrantDate}" id="my_settings_ag_num_date" mask="99.99.9999" validator="#{mysettings.validateWarrantDateFormat}" styleClass="base_form_value_text" required="true">
 							<f:convertDateTime pattern="dd.MM.yyyy" type="date" timeZone="#{mysettings.timeZone}" />
 						</p:inputText>
 					</p:column>
@@ -71,36 +73,41 @@
 				</p:row>
 				<p:row>
 					<p:column>
-						<p:outputLabel value="Серия:" styleClass="base_form_caption_text"/>
+						<p:outputLabel value="Серия:" for="my_settings_docprefix" styleClass="base_form_caption_text"/>
 					</p:column>
 					<p:column>
-						<p:inputText value="#{mysettings.document.docPrefix}" id="my_settings_docprefix" styleClass="base_form_value_text"/>
-					</p:column>
-				</p:row>
-				<p:row>
-					<p:column>
-						<p:outputLabel value="Номер:" styleClass="base_form_caption_text"/>
-					</p:column>
-					<p:column>
-						<p:inputText value="#{mysettings.document.docNum}" id="my_settings_docnum" styleClass="base_form_value_text"/>
+                        <p:message display="tooltip" for="my_settings_docprefix" />
+						<p:inputText value="#{mysettings.document.docPrefix}" id="my_settings_docprefix" styleClass="base_form_value_text" required="true"/>
 					</p:column>
 				</p:row>
 				<p:row>
 					<p:column>
-						<p:outputLabel value="Когда выдан:" styleClass="base_form_caption_text"/>
+						<p:outputLabel value="Номер:" for="my_settings_docnum" styleClass="base_form_caption_text"/>
 					</p:column>
 					<p:column>
-						<p:inputText value="#{mysettings.document.date}" id="my_settings_docdate" mask="99.99.9999" validator="#{mysettings.validateDocumentDateFormat}" styleClass="base_form_value_text">
+                        <p:message display="tooltip" for="my_settings_docnum" />
+						<p:inputText value="#{mysettings.document.docNum}" id="my_settings_docnum" styleClass="base_form_value_text" required="true"/>
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column>
+						<p:outputLabel value="Когда выдан:" for="my_settings_docdate" styleClass="base_form_caption_text"/>
+					</p:column>
+					<p:column>
+                        <p:message display="tooltip" for="my_settings_docdate" />
+						<p:inputText value="#{mysettings.document.date}" id="my_settings_docdate" mask="99.99.9999" validator="#{mysettings.validateDocumentDateFormat}" styleClass="base_form_value_text" required="true">
 							<f:convertDateTime pattern="dd.MM.yyyy" type="date" timeZone="#{mysettings.timeZone}" />
+                            <f:validateLength minimum="10"/>
 						</p:inputText>
 					</p:column>
 				</p:row>
 				<p:row>
 					<p:column>
-						<p:outputLabel value="Кем выдан:" styleClass="base_form_caption_text"/>
+						<p:outputLabel value="Кем выдан:" for="my_settings_docWhereAndWhom" styleClass="base_form_caption_text"/>
 					</p:column>
 					<p:column>
-						<p:inputText value="#{mysettings.document.whereAndWhom}" id="my_settings_docWhereAndWhom" styleClass="base_form_value_text"/>
+                        <p:message display="tooltip" for="my_settings_docWhereAndWhom" />
+						<p:inputText value="#{mysettings.document.whereAndWhom}" id="my_settings_docWhereAndWhom" styleClass="base_form_value_text" required="true"/>
 					</p:column>
 				</p:row>
 
@@ -113,25 +120,28 @@
 				</p:row>
 				<p:row>
 					<p:column>
-						<p:outputLabel value="Старый пароль:" styleClass="base_form_caption_text"/>
+						<p:outputLabel value="Старый пароль:" for="my_settings_oldpassword" styleClass="base_form_caption_text"/>
 					</p:column>
 					<p:column>
+                        <p:message display="tooltip" for="my_settings_oldpassword" />
 						<p:password value="#{mysettings.oldPassword}" id="my_settings_oldpassword" styleClass="base_form_value_text"/>
 					</p:column>
 				</p:row>
 				<p:row>
 					<p:column>
-						<p:outputLabel value="Новый пароль:" styleClass="base_form_caption_text"/>
+						<p:outputLabel value="Новый пароль:" for="my_settings_newpassword" styleClass="base_form_caption_text"/>
 					</p:column>
 					<p:column>
+                        <p:message display="tooltip" for="my_settings_newpassword" />
 						<p:password value="#{mysettings.newPassword}" id="my_settings_newpassword" styleClass="base_form_value_text"/>
 					</p:column>
 				</p:row>
 				<p:row>
 					<p:column>
-						<p:outputLabel value="Новый пароль еще раз:" styleClass="base_form_caption_text"/>
+						<p:outputLabel value="Новый пароль еще раз:" for="my_settings_newPassword2" styleClass="base_form_caption_text"/>
 					</p:column>
 					<p:column>
+                        <p:message display="tooltip" for="my_settings_newPassword2" />
 						<p:password value="#{mysettings.newPassword2}" id="my_settings_newPassword2" styleClass="base_form_value_text"/>
 					</p:column>
 				</p:row>
@@ -140,14 +150,15 @@
 
 			</p:panelGrid>
 			<p:panel>
-				<p:growl id="growl" showDetail="true" life="3000" />
+				<p:growl id="growl" showDetail="true" life="5000" />
 				<center>
-					<p:commandButton value="Сохранить" actionListener="#{mysettings.updateWorkerSettings}" id="updateWorkerSettingsForm" update="@this :m_tabview:base_form my_settings_panel_grid growl"
-						icon="ui-icon-check" oncomplete="mySettingsWv.hide()"/>
+					<p:commandButton value="Сохранить" actionListener="#{mysettings.updateWorkerSettings}" id="updateWorkerSettingsForm" update="@this :m_tabview:base_form my_settings_panel_grid my_settings_default_messages growl"
+						icon="ui-icon-check" />
+                    <!-- :m_tabview:base_form my_settings_panel_grid -->
 				</center>
 			</p:panel>
-		</h:form>
 	</p:dialog>
+</h:form>
 
 
 </ui:composition>
