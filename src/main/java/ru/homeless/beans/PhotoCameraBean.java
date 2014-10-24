@@ -21,7 +21,7 @@ import javax.imageio.stream.FileImageOutputStream;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
 
-import com.sun.xml.internal.messaging.saaj.util.ByteInputStream;
+import com.sun.xml.messaging.saaj.util.ByteInputStream;
 import org.apache.log4j.Logger;
 import org.hibernate.Hibernate;
 import org.hibernate.LobHelper;

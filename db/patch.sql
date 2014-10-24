@@ -4,13 +4,7 @@ ALTER TABLE `homeless`.`RecievedService` CHANGE COLUMN `id` `id` INT(11) NOT NUL
 update Client set nightStay=1 where nightStay is null;
 ALTER TABLE ServContract add documentId int(11);
 
-CREATE TABLE `homeless`.`Room` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `roomnumber` VARCHAR(20) NULL,
-  `roommaxlivers` INT(5) NULL,
-  `roomnotes` TEXT NULL,
-  `currentnumoflivers` INT(5) NULL,
-  PRIMARY KEY (`id`));
+CREATE TABLE `homeless`.`Room` (  `id` INT NOT NULL AUTO_INCREMENT,  `roomnumber` VARCHAR(20) NULL,  `roommaxlivers` INT(5) NULL,  `roomnotes` TEXT NULL,  `currentnumoflivers` INT(5) NULL,  PRIMARY KEY (`id`));
 
 INSERT INTO `homeless`.`Room` (`id`, `roomnumber`, `roommaxlivers`) VALUES ('1', '1.1', '8');
 INSERT INTO `homeless`.`Room` (`id`, `roomnumber`, `roommaxlivers`) VALUES ('2', '1.2', '10');
