@@ -24,7 +24,7 @@ echo "Getting info about latest DB data backup for local restoring"
 LAST_DB=`ssh ${CONNECT_STR} 'ls /ServRoot/DB/Backup/db-* | sort | tail -n 1'`
 echo "Latest DB data backup is ${LAST_DB}. Downloading it..."
 scp stinger@10.0.0.2:${LAST_DB} ~/db.zip
-
+cp ../db/patch.sql ~/tmp_ext/
 pushd ~/tmp_ext
 tar -zxf ~/full.tar.gz
 unzip ~/db.zip
@@ -39,7 +39,7 @@ echo "CREATE DATABASE homeless CHARACTER SET utf8 COLLATE utf8_general_ci;" | my
 echo "Loading the DB dump"
 mysql --user=homeless --password=homeless homeless < homeless.sql
 echo "Applying patch for the database"
-mysql --user=homeless --password=homeless homeless < ../db/patch.sql
+mysql --user=homeless --password=homeless homeless < patch.sql
 echo "Deleting all other data from temp directory"
 rm -rf ~/tmp_ext/*
 CUR_DATE=`date`
