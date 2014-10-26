@@ -44,3 +44,15 @@ CUR_DATE=`date`
 echo "Setting the new update timestamp ${CUR_DATE}"
 echo ${CUR_DATE}>~/demo/timestamp.txt
 popd
+echo "Updating application at application server"
+echo "Stopping tomcat"
+/opt/tomcat/bin/shutdown.sh
+echo "Waiting 10 seconds to stop"
+sleep 10
+echo "Deleting old application"
+rm -rf /opt/tomcat/webapps/homeless*
+echo "Deploying the new application"
+mv -f ../target/homeless.war /opt/tomcat/webapps/
+echo "Starting tomcat"
+/opt/tomcat/bin/startup.sh
+echo "Application has been updated"
