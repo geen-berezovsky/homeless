@@ -43,9 +43,6 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
     private static final long serialVersionUID = 1L;
     private int cid;
 
-    @ManagedProperty(value = "#{GenericService}")
-    private GenericService genericService;
-
     private Client client;
     private List<RecievedService> servicesList;
     private String mainPanelVisibility;
@@ -149,19 +146,6 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
         } else {
             log.info("Oops, but this client is not found in database...");
         }
-
-        //set new values for relations if not exist
-        if (client.getNightstay() == null ) {
-            client.setNightstay(getGenericService().getInstanceByCaption(NightStay.class, "Нет ответа"));
-        }
-        if (client.getEducation() == null) {
-            client.setEducation(getGenericService().getInstanceByCaption(Education.class, "Нет ответа"));
-        }
-        if (client.getFcom() == null) {
-            client.setFcom(getGenericService().getInstanceByCaption(FamilyCommunication.class, "Нет ответа"));
-        }
-
-
     }
 
 
@@ -597,14 +581,6 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
         rb.onShow();
         log.info("Success.");
 
-    }
-
-    public GenericService getGenericService() {
-        return genericService;
-    }
-
-    public void setGenericService(GenericService genericService) {
-        this.genericService = genericService;
     }
 
     public void openPhotoDlg() {

@@ -18,6 +18,7 @@ import java.util.regex.Pattern;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -37,6 +38,7 @@ import ru.homeless.entities.Education;
 import ru.homeless.entities.FamilyCommunication;
 import ru.homeless.entities.NightStay;
 import ru.homeless.entities.Reasonofhomeless;
+import ru.homeless.services.GenericService;
 import ru.homeless.util.Util;
 
 /*
@@ -78,8 +80,20 @@ public class ClientDataBean implements Serializable {
     private String originalPhotoFilePath;
 
 	private Date date;
-	
-	//custom
+
+    public GenericService getGenericService() {
+        return genericService;
+    }
+
+    public void setGenericService(GenericService genericService) {
+        this.genericService = genericService;
+    }
+
+    @ManagedProperty(value = "#{GenericService}")
+    private GenericService genericService;
+
+
+    //custom
 	private StreamedContent clientFormAvatar; //fake
     private StreamedContent clientFormRealPhoto; //fake
 	private String formattedDate;
@@ -250,7 +264,13 @@ public class ClientDataBean implements Serializable {
 	}
 
 	public NightStay getNightStay() {
-		return nightStay;
+        if (nightStay == null) {
+            return
+                    getGenericService().getInstanceByCaption(NightStay.class, "Нет ответа");
+        } else {
+            return nightStay;
+        }
+
 	}
 
 	public void setNightStay(NightStay nightStay) {
@@ -258,7 +278,13 @@ public class ClientDataBean implements Serializable {
 	}
 
 	public Education getEducation() {
-		return education;
+        //set new values for relations if not exist
+        if (education == null) {
+            return
+            getGenericService().getInstanceByCaption(Education.class, "Нет ответа");
+        } else {
+            return education;
+        }
 	}
 
 	public void setEducation(Education education) {
@@ -266,7 +292,11 @@ public class ClientDataBean implements Serializable {
 	}
 
 	public FamilyCommunication getFcom() {
-		return fcom;
+        if (fcom == null ) {
+            return getGenericService().getInstanceByCaption(FamilyCommunication.class, "Нет ответа");
+        } else {
+            return fcom;
+        }
 	}
 
 	public void setFcom(FamilyCommunication fcom) {
