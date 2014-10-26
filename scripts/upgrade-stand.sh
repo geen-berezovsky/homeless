@@ -38,6 +38,8 @@ echo "Creating the new database"
 echo "CREATE DATABASE homeless CHARACTER SET utf8 COLLATE utf8_general_ci;" | mysql --user=homeless --password=homeless
 echo "Loading the DB dump"
 mysql --user=homeless --password=homeless homeless < homeless.sql
+echo "Applying patch for the database"
+mysql --user=homeless --password=homeless homeless < ../db/patch.sql
 echo "Deleting all other data from temp directory"
 rm -rf ~/tmp_ext/*
 CUR_DATE=`date`
