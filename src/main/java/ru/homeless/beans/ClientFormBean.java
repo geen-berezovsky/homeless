@@ -1,6 +1,6 @@
 package ru.homeless.beans;
 
-import java.io.Serializable;
+import java.io.*;
 import java.sql.SQLException;
 import java.util.*;
 
@@ -12,6 +12,7 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.component.UIInput;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
+import javax.faces.event.ComponentSystemEvent;
 import javax.faces.event.ValueChangeEvent;
 import javax.faces.validator.ValidatorException;
 import javax.servlet.http.HttpSession;
@@ -22,6 +23,7 @@ import org.primefaces.event.TabChangeEvent;
 
 import org.primefaces.model.StreamedContent;
 import ru.homeless.comparators.RecievedServiceSortingComparator;
+import ru.homeless.configuration.Configuration;
 import ru.homeless.entities.Breadwinner;
 import ru.homeless.entities.ChronicDisease;
 import ru.homeless.entities.Client;
@@ -74,7 +76,7 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
     private List<String> familyCommunicationTypes;
     private List<String> breadwinnerTypes;
 
-    public ClientFormBean() {
+    public ClientFormBean()  {
         this.mainPanelVisibility = "display: none;";
         clientBreadwinners = new ArrayList<String>(); //avoid null pointer exception on save form method
         clientReasonsofhomeless = new ArrayList<String>(); // -//-

@@ -35,6 +35,8 @@
 					<p:commandButton id="loginButton" value="Вход" update="growl"
 						actionListener="#{user.login}"
 						oncomplete="handleLoginRequest(xhr, status, args)" ajax="true" />
+                    <p:separator />
+                    <p:outputLabel styleClass="updatedAt" value="Обновлено в #{user.deploymentTimeStamp}" />
 				</center>
 			</f:facet>
 

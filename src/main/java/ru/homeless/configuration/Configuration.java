@@ -13,10 +13,13 @@ import org.springframework.stereotype.Component;
 public class Configuration {
 
     public static String photos;
+    public static String timestampFile;
 
     @Autowired
-    public Configuration(@Value("${photos}") String photos) {
+    public Configuration(@Value("${photos}") String photos, @Value("${timestampFile}") String timestampFile) {
         this.photos = photos;
+        this.timestampFile = timestampFile;
     }
+
 
 }

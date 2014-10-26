@@ -1,7 +1,6 @@
 package ru.homeless.beans;
 
-import java.io.IOException;
-import java.io.Serializable;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -25,6 +24,7 @@ import org.springframework.context.EmbeddedValueResolverAware;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
+import ru.homeless.configuration.Configuration;
 import ru.homeless.entities.Worker;
 import ru.homeless.services.WorkerService;
 import ru.homeless.util.Util;
@@ -40,8 +40,30 @@ public class UserBean implements Serializable {
 	private static final long serialVersionUID = 1L;
 	public static Logger log = Logger.getLogger(UserBean.class);
 
-	@ManagedProperty(value = "#{WorkerService}")
+    public String getDeploymentTimeStamp() {
+        return deploymentTimeStamp;
+    }
+
+    public void setDeploymentTimeStamp(String deploymentTimeStamp) {
+        this.deploymentTimeStamp = deploymentTimeStamp;
+    }
+
+    private String deploymentTimeStamp;
+
+    @ManagedProperty(value = "#{WorkerService}")
 	private WorkerService workerService;
+
+    public UserBean() throws IOException {
+        //update deployment timestamp
+        FileInputStream fstream = new FileInputStream(Configuration.timestampFile);
+        BufferedReader br = new BufferedReader(new InputStreamReader(fstream));
+        String strLine = "";
+        while ((strLine = br.readLine()) != null) {
+            deploymentTimeStamp = strLine;
+        }
+        // Close the input stream
+        fstream.close();
+    }
 	
 	/*
 	 * username = Worker.getFirstname + Worker.getSurname

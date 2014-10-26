@@ -66,6 +66,7 @@
 				</executions>
 			</plugin>
 		</plugins>
+        <finalName>homeless.war</finalName>
 	</build>
 
 	<dependencies>
@@ -235,6 +236,5 @@
         </dependency>
 
 	</dependencies>
-
 
 </project>
