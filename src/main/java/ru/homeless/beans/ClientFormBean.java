@@ -149,6 +149,19 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
         } else {
             log.info("Oops, but this client is not found in database...");
         }
+
+        //set new values for relations if not exist
+        if (client.getNightstay() == null ) {
+            client.setNightstay(getGenericService().getInstanceByCaption(NightStay.class, "Нет ответа"));
+        }
+        if (client.getEducation() == null) {
+            client.setEducation(getGenericService().getInstanceByCaption(Education.class, "Нет ответа"));
+        }
+        if (client.getFcom() == null) {
+            client.setFcom(getGenericService().getInstanceByCaption(FamilyCommunication.class, "Нет ответа"));
+        }
+
+
     }
 
 
