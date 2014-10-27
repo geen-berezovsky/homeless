@@ -4,8 +4,9 @@
 <ui:composition>
 
 	<h:form id="mainMenu">
+        <p:tooltip />
+        <p:growl id="messages" autoUpdate="true" showDetail="true" />
 		<p:menubar autoDisplay="false">
-
 			<p:submenu label="Клиенты" icon="ui-icon-document">
 				<p:menuitem value="Найти клиента" onclick="searchByNameDlg.show();" url="#"></p:menuitem>
 				<p:menuitem value="Найти клиента по рег. номеру" onclick="searchByIdDlg.show()" url="#"></p:menuitem>
@@ -13,10 +14,9 @@
 				<p:menuitem value="Оказанные мной услуги" onclick="notImplementedDlgWv.show();" url="#"></p:menuitem>
 				<p:menuitem value="Добавить клиента" action="#{clientform.addClient()}"></p:menuitem>
 			</p:submenu>
-
 			<p:submenu label="Настройки" icon="ui-icon-pencil">
-				<p:menuitem value="Мои настройки" icon="ui-icon-arrowreturnthick-1-w" onclick="mySettingsWv.show()" url="#"></p:menuitem>
-                <p:menuitem value="Настройки комнат" icon="ui-icon-arrowreturnthick-1-w" onclick="roomSettingsWv.show()" url="#"></p:menuitem>
+                <p:menuitem value="Мои настройки" icon="ui-icon-arrowreturnthick-1-w" action="#{mysettings.openDlg()}"></p:menuitem>
+                <p:menuitem value="Настройки комнат" icon="ui-icon-arrowreturnthick-1-w" action="#{roomb.openDlg()}"></p:menuitem>
 			</p:submenu>
 
 			<p:submenu label="Окна"></p:submenu>
@@ -28,13 +28,6 @@
 			<p:menuitem value="Выход" actionListener="#{user.logout}" ajax="false" id="exitId" />
 
 		</p:menubar>
-
-        <!-- This remote commands are necessary for direct lazy loading data to the specified dialog/form -->
-        <p:remoteCommand name="mysettingsOnShow" action="#{mysettings.onShow()}"
-                         partialSubmit="true" process="@this" update=":my_settings"/>
-        <p:remoteCommand name="roomsettingsOnShow" action="#{roomb.onShow()}"
-                         partialSubmit="true" process="@this" update=":room_settings"/>
-
 
     </h:form>
 

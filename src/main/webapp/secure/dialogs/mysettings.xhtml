@@ -5,8 +5,6 @@
     <h:form id="my_settings">
 	<p:dialog id="mySettings" header="Мои настройки" widgetVar="mySettingsWv" resizable="false" closable="true" modal="true" showEffect="fade" hideEffect="explode" dynamic="true" closeOnEscape="true">
 
-			<p:messages id="my_settings_default_messages"/>
-
 			<p:panelGrid id="my_settings_panel_grid">
 				<p:row>
 					<p:column>
@@ -152,7 +150,7 @@
 			<p:panel>
 				<p:growl id="growl" showDetail="true" life="5000" />
 				<center>
-					<p:commandButton value="Сохранить" actionListener="#{mysettings.updateWorkerSettings}" id="updateWorkerSettingsForm" update="@this :m_tabview:base_form my_settings_panel_grid my_settings_default_messages growl"
+					<p:commandButton value="Сохранить" actionListener="#{mysettings.updateWorkerSettings}" id="updateWorkerSettingsForm" update="@this :m_tabview:base_form my_settings_panel_grid growl"
 						icon="ui-icon-check" />
                     <!-- :m_tabview:base_form my_settings_panel_grid -->
 				</center>

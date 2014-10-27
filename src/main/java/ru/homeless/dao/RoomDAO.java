@@ -1,6 +1,7 @@
 package ru.homeless.dao;
 
 import org.apache.log4j.Logger;
+import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 import ru.homeless.entities.Document;
@@ -18,15 +19,20 @@ public class RoomDAO extends GenericDAO implements Serializable {
 
     @SuppressWarnings("unchecked")
     public boolean isRoomReadyToBeDeleted(int id) {
-        List<ShelterHistory> list = getSessionFactory().getCurrentSession().
-                createCriteria(ShelterHistory.class).add(Restrictions.eq("roomId", id)).add(Restrictions.eq("shelterresult",1)).list();
-
-        if (list != null && list.size() > 0) {
+        if (getCurrentRoomLiversNumber(id) > 0) {
             return false;
         } else {
             return true;
         }
+    }
 
+    @SuppressWarnings("unchecked")
+    public int getCurrentRoomLiversNumber(int roomId) {
+        //get number of livers with status 'Living'
+        Criteria c = getSessionFactory().getCurrentSession().createCriteria(ShelterHistory.class).add(Restrictions.eq("roomId",roomId)).add(Restrictions.eq("shelterresult",1));
+        c.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+        List<ShelterHistory> list = c.list();
+        return list.size();
     }
 
 }

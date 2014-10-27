@@ -34,5 +34,8 @@ public class RoomService extends GenericService implements Serializable {
         return getRoomDAO().isRoomReadyToBeDeleted(id);
     }
 
-
+    @Transactional
+    public int getCurrentRoomLiversNumber(int roomId) {
+        return getRoomDAO().getCurrentRoomLiversNumber(roomId);
+    }
 }

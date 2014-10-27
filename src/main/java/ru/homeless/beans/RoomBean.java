@@ -78,10 +78,24 @@ public class RoomBean implements Serializable {
 		HttpSession session = Util.getSession();
         rooms = new ArrayList<>();
 	}
-	
-	public void onShow() {
+
+
+    public void openDlg() {
+        updateRoomsData();
+        RequestContext rc = RequestContext.getCurrentInstance();
+        rc.update("room_settings");
+        rc.execute("roomSettingsWv.show();");
+    }
+
+
+    public void updateRoomsData() {
         rooms.clear();
         rooms.addAll(roomService.getInstances(Room.class));
+        for (Room r : rooms) {
+            r.setCurrentnumoflivers(getRoomService().getCurrentRoomLiversNumber(r.getId()));
+            //update current livers view in the database
+            getRoomService().updateInstance(r);
+        }
 	}
 
 
@@ -94,7 +108,7 @@ public class RoomBean implements Serializable {
         selectedRoom = new Room();
         selectedRoom.setRoomnumber("Новая комната");
         roomService.addInstance(selectedRoom);
-        onShow();
+        updateRoomsData();
 
     }
 
@@ -106,12 +120,12 @@ public class RoomBean implements Serializable {
         } else {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"В комнате есть проживающие, ее удалить нельзя!", ""));
         }
-        onShow();
+        updateRoomsData();
     }
 
     public void updateRoomData() {
         roomService.updateInstance(selectedRoom);
-        onShow();
+        updateRoomsData();
     }
 
 	

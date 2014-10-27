@@ -7,6 +7,7 @@ import java.util.TimeZone;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
+import javax.faces.bean.SessionScoped;
 import javax.faces.bean.ViewScoped;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -57,7 +58,6 @@ public class MySettingsBean implements Serializable {
         updateDocument();
         RequestContext rc = RequestContext.getCurrentInstance();
         rc.execute("mySettingsWv.show();");
-
     }
 	
 	public Document getDocument() {
@@ -99,7 +99,6 @@ public class MySettingsBean implements Serializable {
 		FacesMessage msg = null;
         boolean foundErrors = false;
 		//first, check the password
-		if (! oldPassword.trim().equals("")) {
 			//it is right password?
 			if (oldPassword.trim().equals(worker.getPassword())) {
 				//found old password, let's check if new password fields are filled
@@ -127,7 +126,6 @@ public class MySettingsBean implements Serializable {
 				msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Изменение пароля", "Вы указали некорректный старый пароль");
 			}
             FacesContext.getCurrentInstance().addMessage(null, msg);
-		}
 		//then, check passport data
 		if (document.getDocPrefix().trim().equals("") || document.getDocNum().trim().equals("") || 
 				document.getDate() == null || document.getWhereAndWhom().trim().equals("")) {
@@ -136,7 +134,13 @@ public class MySettingsBean implements Serializable {
 			//Saving document data
 			try {
                 document.setRegistration(0); // THIS IS FAKE FOR COMPATIBILITY
-				getWorkerService().updateInstance(document);
+                document.setWorker(worker.getId());
+                if (document.getId() == null) {
+                    getWorkerService().addInstance(document);
+                } else {
+                    getWorkerService().updateInstance(document);
+                }
+
 				msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Паспортные данные обновлены", "");
                 log.info("Passport data successfully updated");
 			} catch (Exception e) {

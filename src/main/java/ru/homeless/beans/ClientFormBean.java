@@ -571,16 +571,9 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
 
     @PostConstruct
     public void postConstructExample() {
-        log.info("Loading initial data:");
-        FacesContext context = FacesContext.getCurrentInstance();
-        log.info("Loading My Settings Data...");
-        MySettingsBean mb = context.getApplication().evaluateExpressionGet(context, "#{mysettings}", MySettingsBean.class);
-        mb.updateDocument();
-        log.info("Success. Loading Rooms Data...");
-        RoomBean rb = context.getApplication().evaluateExpressionGet(context,"#{roomb}",RoomBean.class);
-        rb.onShow();
-        log.info("Success.");
-
+        /*
+        Do nothing now. Just a stub.
+         */
     }
 
     public void openPhotoDlg() {

@@ -22,6 +22,7 @@ import ru.homeless.entities.Room;
 import ru.homeless.entities.ShelterHistory;
 import ru.homeless.entities.ShelterResult;
 import ru.homeless.services.GenericService;
+import ru.homeless.services.RoomService;
 import ru.homeless.util.Util;
 
 @ManagedBean (name = "clientshelter")
@@ -56,7 +57,7 @@ public class ClientShelterBean implements Serializable {
     private List<Room> rooms;
 
     public String shelterStatus(Integer sid) {
-        Object obj = genericService.getInstanceById(ShelterResult.class,sid);
+        Object obj = getRoomService().getInstanceById(ShelterResult.class, sid);
         if (obj != null) {
             return ((ShelterResult) obj).getCaption();
         } else {
@@ -64,10 +65,28 @@ public class ClientShelterBean implements Serializable {
         }
     }
 
-	@ManagedProperty(value = "#{GenericService}")
-	private GenericService genericService;
-	
-	public ClientShelterBean() {
+    public RoomService getRoomService() {
+        return roomService;
+    }
+
+    public void setRoomService(RoomService roomService) {
+        this.roomService = roomService;
+    }
+
+    @ManagedProperty(value = "#{RoomService}")
+	private RoomService roomService;
+
+    public void updateRoomsData() {
+        rooms.clear();
+        rooms.addAll(roomService.getInstances(Room.class));
+        for (Room r : rooms) {
+            r.setCurrentnumoflivers(getRoomService().getCurrentRoomLiversNumber(r.getId()));
+            //update current livers view in the database
+            getRoomService().updateInstance(r);
+        }
+    }
+
+    public ClientShelterBean() {
         rooms = new ArrayList<>();
         shelterResultList = new ArrayList<>();
 	}
@@ -89,23 +108,26 @@ public class ClientShelterBean implements Serializable {
 		}
 		newSelectedShelter(); // set new shelter
 		RequestContext rc = RequestContext.getCurrentInstance();
-		rc.update("shelterlistId");	
+		rc.update("shelterlistId");
+        rc.update("add_shelter");	//force updating the add shelter form
 	}
 	
 	
 	public void deleteShelter() {
-		getGenericService().deleteInstance(getGenericService().getInstanceById(ShelterHistory.class, selectedShelter.getId()));
+        getRoomService().deleteInstance(getRoomService().getInstanceById(ShelterHistory.class, selectedShelter.getId()));
+        updateRoomsData();
 		reload();
 	}
 
 	public void editShelter() {
-        rooms.clear();
-        rooms.addAll(genericService.getInstances(Room.class));
-        shelterResultList.addAll(genericService.getInstances(ShelterResult.class));
-        selectedShelter = getGenericService().getInstanceById(ShelterHistory.class, selectedShelter.getId());
+        updateRoomsData();
+        shelterResultList = new ArrayList<>();
+        shelterResultList.addAll(getRoomService().getInstances(ShelterResult.class));
+        selectedShelter = getRoomService().getInstanceById(ShelterHistory.class, selectedShelter.getId());
 		RequestContext rc = RequestContext.getCurrentInstance();
+        rc.update("add_shelter");
         rc.execute("addShelterWv.show();");
-		rc.update("add_shelter");	//force updating the add shelter form	
+
 	}
 
     public void validateStartDateFormat(FacesContext ctx, UIComponent component, Object value) {
@@ -169,7 +191,7 @@ public class ClientShelterBean implements Serializable {
 
 	public List<ShelterHistory> getShelterList() {
         if (cid != 0) {
-            return getGenericService().getInstancesByClientId(ShelterHistory.class, getGenericService().getInstanceById(Client.class, cid));
+            return getRoomService().getInstancesByClientId(ShelterHistory.class, getRoomService().getInstanceById(Client.class, cid));
         } else {
             return new ArrayList<ShelterHistory>();
         }
@@ -179,28 +201,24 @@ public class ClientShelterBean implements Serializable {
 		this.shelterList = shelterList;
 	}
 
-	public GenericService getGenericService() {
-		return genericService;
-	}
-
-	public void setGenericService(GenericService genericService) {
-		this.genericService = genericService;
-	}
-
-
     public void addNewShelter() {
-        rooms.clear();
-        rooms.addAll(genericService.getInstances(Room.class));
-        shelterResultList.addAll(genericService.getInstances(ShelterResult.class));
+        updateRoomsData();
+        shelterResultList = new ArrayList<>();
+        shelterResultList.addAll(getRoomService().getInstances(ShelterResult.class));
         selectedShelter = new ShelterHistory();
         RequestContext rc = RequestContext.getCurrentInstance();
+        rc.update("add_shelter");
         rc.execute("addShelterWv.show();");
+    }
+
+    public String formatRoomValue(int roomId) {
+        return getRoomService().getInstanceById(Room.class,roomId).getRoomnumber();
     }
 
     public void addNewShelterData() {
 
         //setting actual client
-        selectedShelter.setClient(getGenericService().getInstanceById(Client.class, cid));
+        selectedShelter.setClient(getRoomService().getInstanceById(Client.class, cid));
 
 
         log.info("Adding new shelter record for client "+cid);
@@ -213,11 +231,12 @@ public class ClientShelterBean implements Serializable {
         log.info("Гепатит: "+selectedShelter.getHepotitsVac());
         log.info("Тиф: "+selectedShelter.getTyphVac());
         log.info("Status: "+selectedShelter.getShelterresult());
-        getGenericService().addInstance(selectedShelter);
+        getRoomService().addInstance(selectedShelter);
+        selectedShelter = new ShelterHistory();
 
         //Update the table
-//        RequestContext rc = RequestContext.getCurrentInstance();
-  //      rc.update(":m_tabview:shelter_form:shelterlistId");
+        RequestContext rc = RequestContext.getCurrentInstance();
+        rc.update("add_shelter");
         //RequestContext rc = RequestContext.getCurrentInstance();
         //rc.update(":m_tabview:shelter_form");
 

@@ -2,9 +2,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui">
 <ui:composition>
-    <!--  onShow="#{roomb.onShow()}" -->
-	<p:dialog id="roomSettings" header="Настройки комнат" widgetVar="roomSettingsWv" resizable="false" closable="true" modal="true" showEffect="fade" hideEffect="explode" dynamic="true" closeOnEscape="true" onShow="roomsettingsOnShow()">
-		<h:form id="room_settings">
+    <h:form id="room_settings">
+	<p:dialog id="roomSettings" header="Настройки комнат" widgetVar="roomSettingsWv" resizable="false" closable="true" modal="true" showEffect="fade" hideEffect="explode" dynamic="true" closeOnEscape="true">
 			<p:messages />
 
             <p:panelGrid id="room_settings_panel_grid">
@@ -28,9 +27,8 @@
             </p:panelGrid>
 
 
-		</h:form>
 	</p:dialog>
-
+    </h:form>
 
 </ui:composition>
 </html>
