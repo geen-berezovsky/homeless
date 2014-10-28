@@ -15,12 +15,15 @@ public class GenericGenerator {
 		
 		switch (Integer.parseInt(request.getParameter("requestType"))) {
 			case IDocumentMapping.DOCUMENT_SOCIAL_HELP: {
-				return hrp.generateSpravka1(request);
+				return hrp.generateSocialHelpDocument(request);
 			}
 			case IDocumentMapping.DOCUMENT_FREE_TRAVEL: {
-				return hrp.generateSpravka2(request);
+				return hrp.generateFreeTravelDocument(request);
 			}
-		   default: {
+            case IDocumentMapping.DOCUMENT_SANITATION: {
+                return hrp.generateSanitationDocument(request);
+            }
+            default: {
 	   			return null;
 		   }
 		}

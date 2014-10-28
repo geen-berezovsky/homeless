@@ -5,14 +5,31 @@ import java.util.Date;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 
 public interface IDocumentMapping {
-	
+
+    /*
+    Template file: DocumentSocialHelp.docx
+    Document title: Справка о социальной помощи
+     */
 	public final int DOCUMENT_SOCIAL_HELP = 2;
-	
+    public final String DOCUMENT_SOCIAL_HELP_TEMPLATE_PATH = "WEB-INF/templates/DocumentSocialHelp.docx";
+
+    /*
+    Template file: DocumentFreeTravel.docx
+    Document title: Справка о получении социальной помощи (не препятствовать проезду)
+     */
 	public final int DOCUMENT_FREE_TRAVEL = 4;
+    public final String DOCUMENT_FREE_TRAVEL_TEMPLATE_PATH = "WEB-INF/templates/DocumentFreeTravel.docx";
 	
+    /*
+    Template file: DocumentSanitation.docx
+    Document title: Направление на санитарную обработку
+     */
 	public final int DOCUMENT_SANITATION = 8;
-	
-	public XWPFDocument documentType1(int requestType, int cid, String city, Date date1);
-	public XWPFDocument documentType2(int requestType, int cid, int wid, Date date1);
+    public final String DOCUMENT_SANITATION_TEMPLATE_PATH = "WEB-INF/templates/DocumentSanitation.docx";
+
+
+	public XWPFDocument documentSocialHelpImpl(int requestType, int clientId, Date issueDate);
+	public XWPFDocument documentFreeTravelImpl(int requestType, int clientId, String travelCity, Date issueDate);
+    public XWPFDocument documentSanitationImpl(int requestType, int clientId, Date issueDate);
 	
 }

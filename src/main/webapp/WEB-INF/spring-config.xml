@@ -12,8 +12,10 @@
   
   
 
- <context:component-scan base-package="ru.homeless.controllers" />
+ <context:component-scan base-package="ru.homeless" />
  <mvc:annotation-driven />
+ <context:annotation-config />
+ <context:spring-configured />
 
  	<bean id="DataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close" >
 		<property name="driverClassName" value="org.gjt.mm.mysql.Driver" />
@@ -72,5 +74,5 @@
 
  <bean id="genericService" class="ru.homeless.services.GenericService"></bean>
  <bean id="genericDAO" class="ru.homeless.dao.GenericDAO"></bean>
- 
+
 </beans>

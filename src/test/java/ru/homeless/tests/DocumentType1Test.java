@@ -10,7 +10,7 @@ import ru.homeless.parsers.HttpRequestParser;
 import ru.homeless.shared.IDocumentMapping;
 
 public class DocumentType1Test {
-
+/*
 	@Test
 	public void notNullTest() throws IOException {
 		HttpRequestParser hrp = new HttpRequestParser();
@@ -29,5 +29,5 @@ public class DocumentType1Test {
 		Assert.assertTrue(result.toString().contains(city));
 	}
 
-	
+*/
 }
