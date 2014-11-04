@@ -1,5 +1,6 @@
 package ru.homeless.parsers;
 
+import java.io.UnsupportedEncodingException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -52,6 +53,14 @@ public class HttpRequestParser {
         }
     }
 
+    private int parseContractId(HttpServletRequest request) {
+        return Integer.parseInt(request.getParameter("contractId"));
+    }
+
+    private int parseWorkerId(HttpServletRequest request) {
+        return Integer.parseInt(request.getParameter("workerId"));
+    }
+
     private ServletContext parseContext(HttpServletRequest request) {
         return request.getSession().getServletContext();
     }
@@ -79,5 +88,15 @@ public class HttpRequestParser {
         replaced_document = documentMapping.documentSanitationImpl(IDocumentMapping.DOCUMENT_SANITATION, parseClientId(request), parseIssueDate(request), parseContext(request));
         return replaced_document;
     }
+
+    public XWPFDocument generateDefaultContract(HttpServletRequest request) throws UnsupportedEncodingException {
+        if (documentMapping == null) {
+            documentMapping = new DefaultDocumentMapping();
+        }
+        replaced_document = documentMapping.documentDefaultContractImpl(IDocumentMapping.DOCUMENT_DEFAULT_CONTRACT, parseClientId(request), parseIssueDate(request), parseContractId(request), parseWorkerId(request), parseContext(request));
+        return replaced_document;
+    }
+
+
 
 }

@@ -9,13 +9,15 @@ import org.springframework.stereotype.Component;
 import ru.homeless.parsers.HttpRequestParser;
 import ru.homeless.shared.IDocumentMapping;
 
+import java.io.UnsupportedEncodingException;
+
 @Component
 public class GenericGenerator {
 
     @Autowired
     HttpRequestParser hrp;
 
-	public XWPFDocument generate(HttpServletRequest request) {
+	public XWPFDocument generate(HttpServletRequest request) throws UnsupportedEncodingException {
         if (hrp == null ) {
             hrp = new HttpRequestParser();
         }
@@ -31,6 +33,10 @@ public class GenericGenerator {
             case IDocumentMapping.DOCUMENT_SANITATION: {
                 return hrp.generateSanitationDocument(request);
             }
+            case IDocumentMapping.DOCUMENT_DEFAULT_CONTRACT: {
+                return hrp.generateDefaultContract(request);
+            }
+
             default: {
 	   			return null;
 		   }

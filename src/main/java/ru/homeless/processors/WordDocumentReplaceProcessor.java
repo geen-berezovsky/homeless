@@ -21,11 +21,13 @@ public class WordDocumentReplaceProcessor {
                                 log.info("Processing word "+xwpfRunText);
 	                            String[] paragraphs = entry.getValue().split("\n");
 	                            //entry.setValue("");
-	                            createParagraphs(document, xwpfParagraph, paragraphs);
+	                            //createParagraphs(document, xwpfParagraph, paragraphs);
 	                        //}
+                            log.info("Setting text "+entry.getKey() + " with "+entry.getValue());
 	                        xwpfRunText = xwpfRunText.replaceAll(entry.getKey(), entry.getValue());
 	                    }
 	                }
+                    log.info("Set "+xwpfRunText+" to the position ");
 	                xwpfRun.setText(xwpfRunText, 0);
 	            }
 	        }
@@ -38,10 +40,13 @@ public class WordDocumentReplaceProcessor {
                                 String xwpfRunText = r.getText(r.getTextPosition());
                                 for(Map.Entry<String, String> entry : replacedMap.entrySet()) {
                                     if (xwpfRunText != null && xwpfRunText.contains(entry.getKey())) {
+                                        log.info("Processing word "+xwpfRunText);
                                         String[] paragraphs = entry.getValue().split("\n");
                                         xwpfRunText = xwpfRunText.replaceAll(entry.getKey(), entry.getValue());
+                                        log.info("Setting text "+entry.getKey() + " with "+entry.getValue());
                                     }
                                 }
+                                log.info("Set "+xwpfRunText+" to the position ");
                                 r.setText(xwpfRunText, 0);
                             }
                         }
