@@ -39,6 +39,9 @@ public class GetGeneratedDocumentController {
 	@Autowired
 	private IGenericService genericService;
 
+    @Autowired
+    private GenericGenerator gg;
+
 
     /*
      * Example how to request with the parameter
@@ -71,8 +74,11 @@ public class GetGeneratedDocumentController {
 			e1.printStackTrace();
 		}
 		XWPFDocument document = null;
-		
-		GenericGenerator gg = new GenericGenerator();
+
+        if (gg == null) {
+            gg = new GenericGenerator();
+        }
+
 		document = gg.generate(request);
 
 		try {

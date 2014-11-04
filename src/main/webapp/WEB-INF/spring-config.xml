@@ -74,5 +74,9 @@
 
  <bean id="genericService" class="ru.homeless.services.GenericService"></bean>
  <bean id="genericDAO" class="ru.homeless.dao.GenericDAO"></bean>
+ <bean id="genericGenerator" class="ru.homeless.generators.GenericGenerator"></bean>
+ <bean id="httpRequestParser" class="ru.homeless.parsers.HttpRequestParser"></bean>
+ <bean id="defaultDocumentMapping" class="ru.homeless.mappings.DefaultDocumentMapping"></bean>
 
 </beans>
+

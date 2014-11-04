@@ -1,8 +1,11 @@
 package ru.homeless.shared;
 
+import java.text.ParseException;
 import java.util.Date;
 
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
+
+import javax.servlet.ServletContext;
 
 public interface IDocumentMapping {
 
@@ -28,8 +31,8 @@ public interface IDocumentMapping {
     public final String DOCUMENT_SANITATION_TEMPLATE_PATH = "WEB-INF/templates/DocumentSanitation.docx";
 
 
-	public XWPFDocument documentSocialHelpImpl(int requestType, int clientId, Date issueDate);
-	public XWPFDocument documentFreeTravelImpl(int requestType, int clientId, String travelCity, Date issueDate);
-    public XWPFDocument documentSanitationImpl(int requestType, int clientId, Date issueDate);
+	public XWPFDocument documentSocialHelpImpl(int requestType, int clientId, Date issueDate, ServletContext context);
+	public XWPFDocument documentFreeTravelImpl(int requestType, int clientId, String travelCity, Date issueDate, ServletContext context);
+    public XWPFDocument documentSanitationImpl(int requestType, int clientId, Date issueDate, ServletContext context);
 	
 }

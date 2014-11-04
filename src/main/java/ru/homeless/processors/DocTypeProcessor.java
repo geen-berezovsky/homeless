@@ -1,40 +1,38 @@
-package ru.homeless.doctypes;
+package ru.homeless.processors;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigInteger;
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
 
 import org.apache.log4j.Logger;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
-import org.springframework.beans.factory.annotation.Autowired;
 
-import org.springframework.beans.factory.annotation.Configurable;
-import ru.homeless.processors.WordDocumentReplaceProcessor;
-
-@Configurable
-public class FormParametersHandler {
+public class DocTypeProcessor {
 	protected Map<String, String> parameters;
 	protected XWPFDocument replacedDocument = null;
 	protected String pathToTemplate = null;
-    public static final Logger log = Logger.getLogger(FormParametersHandler.class);
+    public static final Logger log = Logger.getLogger(DocTypeProcessor.class);
 	protected BigInteger generatedNum = null;
 	
 	XWPFDocument document = null;
-	@Autowired
+
 	private ServletContext context;
-	
+
 	//getting default params
-	public FormParametersHandler (Map<String, String> parameters, String pathToTemplate) {
+	public DocTypeProcessor(Map<String, String> parameters, ServletContext context, String pathToTemplate) {
 		generatedNum = generateDocumentId();
 		this.pathToTemplate = pathToTemplate;
 		this.parameters = parameters;
+        this.context = context;
 	}
-	
-	public XWPFDocument replaceParametersInDocument() {
+
+    public DocTypeProcessor() {
+    }
+
+    public XWPFDocument replaceParametersInDocument() {
 		InputStream resourceAsStream = context.getResourceAsStream(pathToTemplate);
 		try {
             for (Map.Entry e : parameters.entrySet()) {
