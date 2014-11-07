@@ -88,6 +88,7 @@ public class ClientShelterBean implements Serializable {
 
     public ClientShelterBean() {
         rooms = new ArrayList<>();
+        shelterList = new ArrayList<>();
         shelterResultList = new ArrayList<>();
 	}
 	
@@ -98,14 +99,18 @@ public class ClientShelterBean implements Serializable {
 			return "";
 		}
 	}
-	
-	public void reload() {
-		HttpSession session = Util.getSession();
-		String cids = session.getAttribute("cid").toString();
 
-		if (cids != null && !cids.trim().equals("")) {
-			this.cid = Integer.parseInt(cids);
-		}
+    public void updateCid() {
+        HttpSession session = Util.getSession();
+        String cids = session.getAttribute("cid").toString();
+
+        if (cids != null && !cids.trim().equals("")) {
+            this.cid = Integer.parseInt(cids);
+        }
+    }
+
+	public void reload() {
+		updateCid();
 		newSelectedShelter(); // set new shelter
 		RequestContext rc = RequestContext.getCurrentInstance();
 		rc.update("shelterlistId");
@@ -211,15 +216,17 @@ public class ClientShelterBean implements Serializable {
         rc.execute("addShelterWv.show();");
     }
 
-    public String formatRoomValue(int roomId) {
-        return getRoomService().getInstanceById(Room.class,roomId).getRoomnumber();
+    public String formatRoomValue(Integer roomId) {
+        log.info("provided room id = "+roomId);
+        log.info(getRoomService().toString());
+        if (roomId == null || roomId == 0) return null; else
+            return getRoomService().getInstanceById(Room.class,roomId).getRoomnumber();
     }
 
     public void addNewShelterData() {
 
         //setting actual client
         selectedShelter.setClient(getRoomService().getInstanceById(Client.class, cid));
-
 
         log.info("Adding new shelter record for client "+cid);
         log.info(selectedShelter.getClient());

@@ -22,7 +22,7 @@ public class ShelterHistory implements Serializable {
 	private Date dipthVac;
 	private Date typhVac;
 	private Date fluorogr;
-	private int roomId;
+	private Integer roomId;
 
     public Integer getShelterresult() {
         return shelterresult;
@@ -100,11 +100,11 @@ public class ShelterHistory implements Serializable {
 		this.fluorogr = fluorogr;
 	}
 
-	public int getRoomId() {
+	public Integer getRoomId() {
 		return roomId;
 	}
 
-	public void setRoomId(int roomId) {
+	public void setRoomId(Integer roomId) {
 		this.roomId = roomId;
 	}
 

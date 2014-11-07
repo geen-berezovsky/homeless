@@ -15,11 +15,13 @@
 		function reload() {
 			location.reload();
 		}
+
 	</script>
 
 </h:head>
 
 <h:body onload="#{clientform.refreshTabs()}" styleClass="body_style">
+
 
 	<p:layout id="basePageLayout" fullPage="true">
 		<p:layoutUnit position="north" id="topMenu" size="50">
@@ -198,11 +200,10 @@
 										<h:outputText value="#{conlist.commentResult}" />
 									</p:column>
 
-									<p:column headerText="Открыть в Word">
+									<p:column headerText="Договор">
 										<center>
-											<p:commandButton action="#{clientform.reloadAll(client.id)}" id="selectButton" icon="ui-icon-folder-open" oncomplete="displayFoundByName.hide();" title="Открыть клиента" ajax="true"
-												update=":m_tabview:base_form :add_services" />
-										</center>
+                                            <p:commandButton value="Открыть" ajax="true" actionListener="#{clientcontracts.downloadContract(conlist.id)}"/>
+                                        </center>
 									</p:column>
 
 								</p:dataTable>

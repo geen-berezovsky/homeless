@@ -21,6 +21,8 @@ import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.SelectEvent;
 
+import org.primefaces.model.StreamedContent;
+import ru.homeless.configuration.Configuration;
 import ru.homeless.converters.ContractPointsTypeConverter;
 import ru.homeless.converters.ContractResultTypeConverter;
 import ru.homeless.converters.ShelterResultConverter;
@@ -64,6 +66,27 @@ public class ClientContractsBean implements Serializable {
 	public ClientContractsBean() {
 		timeZone = TimeZone.getDefault();
 	}
+
+    public void downloadContract(int id) {
+        RequestContext rc = RequestContext.getCurrentInstance();
+
+        selectedContract = getGenericService().getInstanceById(ServContract.class, id);
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("window.location.href = \"");
+        sb.append(Configuration.reportEngineUrl);
+        sb.append("/getGeneratedContract?");
+        sb.append("requestType=100");
+        sb.append("&clientId="+this.cid);
+        sb.append("&contractId="+selectedContract.getId());
+        sb.append("&workerId="+selectedContract.getWorker().getId());
+        sb.append("\"");
+
+        log.info("Executing "+sb.toString());
+
+        rc.execute(sb.toString());
+
+    }
 
 	public String formatDate(Date q) {
 		if (q != null && !q.equals("")) {

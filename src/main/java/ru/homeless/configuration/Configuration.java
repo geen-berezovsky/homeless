@@ -14,11 +14,13 @@ public class Configuration {
 
     public static String photos;
     public static String timestampFile;
+    public static String reportEngineUrl;
 
     @Autowired
-    public Configuration(@Value("${photos}") String photos, @Value("${timestampFile}") String timestampFile) {
+    public Configuration(@Value("${photos}") String photos, @Value("${timestampFile}") String timestampFile, @Value("${reportEngineUrl}") String reportEngineUrl) {
         this.photos = photos;
         this.timestampFile = timestampFile;
+        this.reportEngineUrl = reportEngineUrl;
     }
 
 
