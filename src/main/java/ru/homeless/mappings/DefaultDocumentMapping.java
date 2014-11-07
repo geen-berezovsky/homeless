@@ -44,8 +44,12 @@ public class DefaultDocumentMapping implements IDocumentMapping {
     private Map<String, String> map = null;
 
     private String convertDate(Date date) {
-        DateFormat df = new SimpleDateFormat("dd.MM.yyyy", Locale.ENGLISH);
-        return (df.format(date));
+        if (date == null) {
+            return null;
+        } else {
+            DateFormat df = new SimpleDateFormat("dd.MM.yyyy", Locale.ENGLISH);
+            return (df.format(date));
+        }
     }
 
     private void putDefaultValuesInMap(Client client, String documentNumber, Date issueDate)  {
@@ -151,14 +155,19 @@ public class DefaultDocumentMapping implements IDocumentMapping {
             putDefaultValuesInMap(client, "789789789", issueDate);
 
             //prepare replacements for placeholders
-            map.put("contract_num",servContract.getDocNum());
+            if (servContract.getDocNum() == null) {
+                map.put("contract_num",String.valueOf(servContract.getId()));
+            } else {
+                map.put("contract_num",servContract.getDocNum());
+            }
+
             map.put("contract_date", convertDate(servContract.getStartDate()));
             map.put("worker_short_info", worker.getSurname()+" "+worker.getFirstname());
             map.put("client_short_info", client.getSurname()+" "+client.getFirstname());
 
             map.put("client_full_info", client.getSurname()+" "+client.getFirstname());
             map.put("worker_full_info", worker.getSurname()+" "+worker.getFirstname());
-            map.put("org_full_info", "немного дерьма");
+            map.put("org_full_info", "some_info");
 
             List<ContractControl> contractControls = contractService.getContractControlPointsByServContractId(servContract.getId());
             String contractControlReplacement = String.valueOf((char)10);

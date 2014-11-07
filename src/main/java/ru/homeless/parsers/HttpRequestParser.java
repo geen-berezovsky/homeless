@@ -35,6 +35,7 @@ public class HttpRequestParser {
         Date issueDate = null;
         DateFormat df = new SimpleDateFormat("dd.MM.yyyy", Locale.ENGLISH);
         String sDate = request.getParameter("issueDate");
+        if (sDate!=null && !sDate.trim().equals(""))
         try {
             issueDate = df.parse(sDate);
         } catch (ParseException e) {
