@@ -4,6 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.util.Date;
 
+import org.apache.poi.hwpf.HWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 
 import javax.servlet.ServletContext;
@@ -39,10 +40,10 @@ public interface IDocumentMapping {
     public final String DOCUMENT_DEFAULT_CONTRACT_TEMPLATE_PATH = "WEB-INF/templates/documents/DocumentDefaultContract.docx";
 
 
-    public XWPFDocument documentSocialHelpImpl(int requestType, int clientId, Date issueDate, ServletContext context);
-	public XWPFDocument documentFreeTravelImpl(int requestType, int clientId, String travelCity, Date issueDate, ServletContext context);
-    public XWPFDocument documentSanitationImpl(int requestType, int clientId, Date issueDate, ServletContext context);
+    public HWPFDocument documentSocialHelpImpl(int requestType, int clientId, Date issueDate, ServletContext context);
+	public HWPFDocument documentFreeTravelImpl(int requestType, int clientId, String travelCity, Date issueDate, ServletContext context);
+    public HWPFDocument documentSanitationImpl(int requestType, int clientId, Date issueDate, ServletContext context);
 
-    public XWPFDocument documentDefaultContractImpl(int requestType, int clientId, Date issueDate, int contractId, int workerId, ServletContext context) throws UnsupportedEncodingException;
+    public HWPFDocument documentDefaultContractImpl(int requestType, int clientId, Date issueDate, int contractId, int workerId, ServletContext context) throws UnsupportedEncodingException;
 	
 }

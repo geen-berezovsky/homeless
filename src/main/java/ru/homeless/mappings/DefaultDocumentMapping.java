@@ -1,6 +1,7 @@
 package ru.homeless.mappings;
 
 import org.apache.log4j.Logger;
+import org.apache.poi.hwpf.HWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
@@ -62,7 +63,7 @@ public class DefaultDocumentMapping implements IDocumentMapping {
     }
 
     @Override
-    public XWPFDocument documentSocialHelpImpl(int requestType, int clientId, Date issueDate, ServletContext context) {
+    public HWPFDocument documentSocialHelpImpl(int requestType, int clientId, Date issueDate, ServletContext context) {
         Client client = contractService.getInstanceById(Client.class, clientId);
         if (client == null) {
             return null;
@@ -73,7 +74,7 @@ public class DefaultDocumentMapping implements IDocumentMapping {
     }
 
     @Override
-    public XWPFDocument documentFreeTravelImpl(int requestType, int clientId, String travelCity, Date issueDate, ServletContext context)  {
+    public HWPFDocument documentFreeTravelImpl(int requestType, int clientId, String travelCity, Date issueDate, ServletContext context)  {
         Client client = contractService.getInstanceById(Client.class, clientId);
         if (client == null) {
             return null;
@@ -85,7 +86,7 @@ public class DefaultDocumentMapping implements IDocumentMapping {
     }
 
     @Override
-    public XWPFDocument documentSanitationImpl(int requestType, int clientId, Date issueDate, ServletContext context)  {
+    public HWPFDocument documentSanitationImpl(int requestType, int clientId, Date issueDate, ServletContext context)  {
         Client client = contractService.getInstanceById(Client.class, clientId);
         if (client == null) {
             return null;
@@ -96,7 +97,7 @@ public class DefaultDocumentMapping implements IDocumentMapping {
     }
 
     @Override
-    public XWPFDocument documentDefaultContractImpl(int requestType, int clientId, Date issueDate, int contractId, int workerId, ServletContext context) throws UnsupportedEncodingException {
+    public HWPFDocument documentDefaultContractImpl(int requestType, int clientId, Date issueDate, int contractId, int workerId, ServletContext context) throws UnsupportedEncodingException {
         Client client = contractService.getInstanceById(Client.class, clientId);
         if (client == null) {
             return null;
@@ -123,7 +124,7 @@ public class DefaultDocumentMapping implements IDocumentMapping {
         resultFilename = URLEncoder.encode(resultFilename,"UTF-8");
         resultFilename = resultFilename.replaceAll("\\*","%20");
         context.setAttribute("resultFileName",resultFilename);
-        XWPFDocument finalDocument = null;
+        HWPFDocument finalDocument = null;
 
         //file can contain the space in its path
         /*
@@ -140,7 +141,7 @@ public class DefaultDocumentMapping implements IDocumentMapping {
             log.info("The contract for client ID="+client.getId()+" already exist, taking it from the storage");
             try {
                 FileInputStream fileInputStream = new FileInputStream(new File(contractPath));
-                finalDocument = new XWPFDocument(fileInputStream);
+                finalDocument = new HWPFDocument(fileInputStream);
                 fileInputStream.close();
 
             } catch (FileNotFoundException e) {

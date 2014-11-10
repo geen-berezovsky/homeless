@@ -4,12 +4,35 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.apache.poi.hwpf.HWPFDocument;
+import org.apache.poi.hwpf.usermodel.CharacterRun;
+import org.apache.poi.hwpf.usermodel.Paragraph;
+import org.apache.poi.hwpf.usermodel.Range;
+import org.apache.poi.hwpf.usermodel.Section;
 import org.apache.poi.xwpf.usermodel.*;
 import org.apache.xmlbeans.XmlCursor;
 
 public class WordDocumentReplaceProcessor {
     public static final Logger log = Logger.getLogger(WordDocumentReplaceProcessor.class);
-	public static XWPFDocument searchInParagraphs(XWPFDocument document, Map<String, String> replacedMap) {
+	public static HWPFDocument searchInParagraphs(HWPFDocument document, Map<String, String> replacedMap) {
+        Range r1 = document.getRange();
+        for (int i = 0; i < r1.numSections(); ++i ) {
+            Section s = r1.getSection(i);
+            for (int x = 0; x < s.numParagraphs(); x++) {
+                Paragraph p = s.getParagraph(x);
+                for (int z = 0; z < p.numCharacterRuns(); z++) {
+                    CharacterRun run = p.getCharacterRun(z);
+                    String text = run.text();
+                    for(Map.Entry<String, String> entry : replacedMap.entrySet()) {
+                        if (text != null && text.contains(entry.getKey())) {
+                            run.replaceText(entry.getKey(), entry.getValue());
+                        }
+                    }
+                }
+            }
+        }
+        /*
+        public static XWPFDocument searchInParagraphs(XWPFDocument document, Map<String, String> replacedMap) {
 		 List<XWPFParagraph> xwpfParagraphs = document.getParagraphs();
 	        for(XWPFParagraph xwpfParagraph : xwpfParagraphs) {
 	            List<XWPFRun> xwpfRuns = xwpfParagraph.getRuns();
@@ -53,9 +76,10 @@ public class WordDocumentReplaceProcessor {
                     }
                 }
             }
+            */
 	        return document;
 	    }
-
+/*
 	 private static void createParagraphs(XWPFDocument document, XWPFParagraph xwpfParagraph, String[] paragraphs) {
 	        if(xwpfParagraph!=null){
 	            for (int i = 0; i < paragraphs.length; i++) {
@@ -68,4 +92,5 @@ public class WordDocumentReplaceProcessor {
 	            document.removeBodyElement(document.getPosOfParagraph(xwpfParagraph));
 	        }
 	    }
+	    */
 }

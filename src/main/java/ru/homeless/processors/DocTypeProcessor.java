@@ -8,16 +8,17 @@ import java.util.Map;
 import javax.servlet.ServletContext;
 
 import org.apache.log4j.Logger;
+import org.apache.poi.hwpf.HWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 
 public class DocTypeProcessor {
 	protected Map<String, String> parameters;
-	protected XWPFDocument replacedDocument = null;
+	protected HWPFDocument replacedDocument = null;
 	protected String pathToTemplate = null;
     public static final Logger log = Logger.getLogger(DocTypeProcessor.class);
 	protected BigInteger generatedNum = null;
-	
-	XWPFDocument document = null;
+
+    HWPFDocument document = null;
 
 	private ServletContext context;
 
@@ -32,13 +33,13 @@ public class DocTypeProcessor {
     public DocTypeProcessor() {
     }
 
-    public XWPFDocument replaceParametersInDocument() {
+    public HWPFDocument replaceParametersInDocument() {
 		InputStream resourceAsStream = context.getResourceAsStream(pathToTemplate);
 		try {
             for (Map.Entry e : parameters.entrySet()) {
                 log.info(e.getKey()+"="+e.getValue());
             }
-			document = WordDocumentReplaceProcessor.searchInParagraphs(new XWPFDocument(resourceAsStream), parameters);
+			document = WordDocumentReplaceProcessor.searchInParagraphs(new HWPFDocument(resourceAsStream), parameters);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

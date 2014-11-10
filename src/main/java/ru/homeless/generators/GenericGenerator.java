@@ -2,6 +2,7 @@ package ru.homeless.generators;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.poi.hwpf.HWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,7 @@ public class GenericGenerator {
     @Autowired
     HttpRequestParser hrp;
 
-	public XWPFDocument generate(HttpServletRequest request) throws UnsupportedEncodingException {
+	public HWPFDocument generate(HttpServletRequest request) throws UnsupportedEncodingException {
         if (hrp == null ) {
             hrp = new HttpRequestParser();
         }

@@ -11,6 +11,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
+import org.apache.poi.hwpf.HWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,7 @@ public class HttpRequestParser {
 	
 	public static final Logger log = Logger.getLogger(HttpRequestParser.class);
 
-	XWPFDocument replaced_document = null;
+    HWPFDocument replaced_document = null;
 
     @Autowired
     IDocumentMapping documentMapping;
@@ -66,7 +67,7 @@ public class HttpRequestParser {
         return request.getSession().getServletContext();
     }
 	
-	public XWPFDocument generateSocialHelpDocument(HttpServletRequest request) {
+	public HWPFDocument generateSocialHelpDocument(HttpServletRequest request) {
         if (documentMapping == null) {
             documentMapping = new DefaultDocumentMapping();
         }
@@ -74,7 +75,7 @@ public class HttpRequestParser {
 		return replaced_document;
 	}
 
-	public XWPFDocument generateFreeTravelDocument(HttpServletRequest request) {
+	public HWPFDocument generateFreeTravelDocument(HttpServletRequest request) {
         if (documentMapping == null) {
             documentMapping = new DefaultDocumentMapping();
         }
@@ -82,7 +83,7 @@ public class HttpRequestParser {
 		return replaced_document;
 	}
 
-    public XWPFDocument generateSanitationDocument(HttpServletRequest request) {
+    public HWPFDocument generateSanitationDocument(HttpServletRequest request) {
         if (documentMapping == null) {
             documentMapping = new DefaultDocumentMapping();
         }
@@ -90,7 +91,7 @@ public class HttpRequestParser {
         return replaced_document;
     }
 
-    public XWPFDocument generateDefaultContract(HttpServletRequest request) throws UnsupportedEncodingException {
+    public HWPFDocument generateDefaultContract(HttpServletRequest request) throws UnsupportedEncodingException {
         if (documentMapping == null) {
             documentMapping = new DefaultDocumentMapping();
         }
