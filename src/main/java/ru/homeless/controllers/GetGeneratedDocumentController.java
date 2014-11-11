@@ -70,7 +70,8 @@ public class GetGeneratedDocumentController {
 	String getGeneratedWordDocument(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
 
 		response.setContentType("application/msword");
-		String headerResponse = "attachment;filename=";
+        String headerResponse = "attachment; filename*=UTF-8''";
+		//String headerResponse = "attachment;filename=";
 		headerResponse = headerResponse.concat("Document.doc");
 		response.addHeader("Content-disposition", headerResponse);
 

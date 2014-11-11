@@ -12,6 +12,7 @@ import ru.homeless.dao.ContractDAO;
 import ru.homeless.dao.IContractDAO;
 import ru.homeless.entities.Client;
 import ru.homeless.entities.ContractControl;
+import ru.homeless.entities.Document;
 
 @Service("ContractService")
 @Transactional(readOnly = false)
@@ -23,6 +24,16 @@ public class ContractService extends GenericService implements IContractService 
 	@Transactional
     public List<ContractControl> getContractControlPointsByServContractId(int servContractId) {
         return contractDAO.getContractControlPointsByServContractId(servContractId);
+    }
+
+    @Override
+    public Document getWorkerDocumentForContractByWorkerId(int workerId) {
+        return contractDAO.getWorkerDocumentForContractByWorkerId(workerId);
+    }
+
+    @Override
+    public Document getClientDocumentForContractByContractId(int contractId) {
+        return contractDAO.getClientDocumentForContractByContractId(contractId);
     }
 
 }

@@ -9,26 +9,37 @@ import org.apache.poi.hwpf.usermodel.CharacterRun;
 import org.apache.poi.hwpf.usermodel.Paragraph;
 import org.apache.poi.hwpf.usermodel.Range;
 import org.apache.poi.hwpf.usermodel.Section;
+import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.xwpf.usermodel.*;
 import org.apache.xmlbeans.XmlCursor;
 
 public class WordDocumentReplaceProcessor {
     public static final Logger log = Logger.getLogger(WordDocumentReplaceProcessor.class);
 	public static HWPFDocument searchInParagraphs(HWPFDocument document, Map<String, String> replacedMap) {
+
+
         Range r1 = document.getRange();
         for (int i = 0; i < r1.numSections(); ++i ) {
             Section s = r1.getSection(i);
             for (int x = 0; x < s.numParagraphs(); x++) {
                 Paragraph p = s.getParagraph(x);
+                for(Map.Entry<String, String> entry : replacedMap.entrySet()) {
+                    p.replaceText(entry.getKey(), entry.getValue());
+                }
+                /*
+                log.info("Paragraph text: "+p.text());
                 for (int z = 0; z < p.numCharacterRuns(); z++) {
                     CharacterRun run = p.getCharacterRun(z);
                     String text = run.text();
+                    log.info("Processing word "+text);
                     for(Map.Entry<String, String> entry : replacedMap.entrySet()) {
                         if (text != null && text.contains(entry.getKey())) {
+                            log.info("Replacing token "+entry.getKey());
                             run.replaceText(entry.getKey(), entry.getValue());
                         }
                     }
                 }
+                */
             }
         }
         /*
