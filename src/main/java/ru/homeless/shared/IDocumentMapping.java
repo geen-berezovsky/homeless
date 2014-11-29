@@ -18,34 +18,34 @@ public interface IDocumentMapping {
     Document title: Справка о социальной помощи
      */
 	public final int DOCUMENT_SOCIAL_HELP = 2;
-    public final String DOCUMENT_SOCIAL_HELP_TEMPLATE_PATH = "WEB-INF/templates/documents/help.doc";
+    public final String DOCUMENT_SOCIAL_HELP_TEMPLATE_PATH = "WEB-INF/templates/documents/help.docx";
 
     /*
     Template file: DocumentFreeTravel.docx
     Document title: Справка о получении социальной помощи (не препятствовать проезду)
      */
 	public final int DOCUMENT_FREE_TRAVEL = 4;
-    public final String DOCUMENT_FREE_TRAVEL_TEMPLATE_PATH = "WEB-INF/templates/documents/travel.doc";
+    public final String DOCUMENT_FREE_TRAVEL_TEMPLATE_PATH = "WEB-INF/templates/documents/travel.docx";
 	
     /*
     Template file: DocumentSanitation.docx
     Document title: Направление на санитарную обработку
      */
 	public final int DOCUMENT_SANITATION = 6;
-    public final String DOCUMENT_SANITATION_TEMPLATE_PATH = "WEB-INF/templates/documents/sanitation.doc";
+    public final String DOCUMENT_SANITATION_TEMPLATE_PATH = "WEB-INF/templates/documents/sanitation.docx";
 
     /*
     Template file: DocumentDefaultContract.docx
     Document title: Стандартный контракт
     */
     public final int DOCUMENT_DEFAULT_CONTRACT = 100;
-    public final String DOCUMENT_DEFAULT_CONTRACT_TEMPLATE_PATH = "WEB-INF/templates/documents/contract_template.doc";
+    public final String DOCUMENT_DEFAULT_CONTRACT_TEMPLATE_PATH = "WEB-INF/templates/documents/contract_template.docx";
 
 
-    public HWPFDocument documentSocialHelpImpl(int requestType, int clientId, Date issueDate, ServletContext context);
-	public HWPFDocument documentFreeTravelImpl(int requestType, int clientId, String travelCity, Date issueDate, ServletContext context);
-    public HWPFDocument documentSanitationImpl(int requestType, int clientId, Date issueDate, ServletContext context);
+    public XWPFDocument documentSocialHelpImpl(int requestType, int clientId, Date issueDate, ServletContext context);
+	public XWPFDocument documentFreeTravelImpl(int requestType, int clientId, String travelCity, Date issueDate, ServletContext context);
+    public XWPFDocument documentSanitationImpl(int requestType, int clientId, Date issueDate, ServletContext context);
 
-    public HWPFDocument documentDefaultContractImpl(int requestType, int clientId, Date issueDate, int contractId, int workerId, ServletContext context) throws UnsupportedEncodingException;
+    public XWPFDocument documentDefaultContractImpl(int requestType, int clientId, Date issueDate, int contractId, int workerId, ServletContext context) throws UnsupportedEncodingException;
 	
 }

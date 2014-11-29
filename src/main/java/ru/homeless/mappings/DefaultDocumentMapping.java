@@ -2,6 +2,7 @@ package ru.homeless.mappings;
 
 import org.apache.log4j.Logger;
 import org.apache.poi.hwpf.HWPFDocument;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.homeless.configuration.Configuration;
@@ -57,7 +58,7 @@ public class DefaultDocumentMapping implements IDocumentMapping {
     }
 
     @Override
-    public HWPFDocument documentSocialHelpImpl(int requestType, int clientId, Date issueDate, ServletContext context) {
+    public XWPFDocument documentSocialHelpImpl(int requestType, int clientId, Date issueDate, ServletContext context) {
         Client client = contractService.getInstanceById(Client.class, clientId);
         if (client == null) {
             return null;
@@ -68,7 +69,7 @@ public class DefaultDocumentMapping implements IDocumentMapping {
     }
 
     @Override
-    public HWPFDocument documentFreeTravelImpl(int requestType, int clientId, String travelCity, Date issueDate, ServletContext context)  {
+    public XWPFDocument documentFreeTravelImpl(int requestType, int clientId, String travelCity, Date issueDate, ServletContext context)  {
         Client client = contractService.getInstanceById(Client.class, clientId);
         if (client == null) {
             return null;
@@ -80,7 +81,7 @@ public class DefaultDocumentMapping implements IDocumentMapping {
     }
 
     @Override
-    public HWPFDocument documentSanitationImpl(int requestType, int clientId, Date issueDate, ServletContext context)  {
+    public XWPFDocument documentSanitationImpl(int requestType, int clientId, Date issueDate, ServletContext context)  {
         Client client = contractService.getInstanceById(Client.class, clientId);
         if (client == null) {
             return null;
@@ -91,7 +92,7 @@ public class DefaultDocumentMapping implements IDocumentMapping {
     }
 
     @Override
-    public HWPFDocument documentDefaultContractImpl(int requestType, int clientId, Date issueDate, int contractId, int workerId, ServletContext context) throws UnsupportedEncodingException {
+    public XWPFDocument documentDefaultContractImpl(int requestType, int clientId, Date issueDate, int contractId, int workerId, ServletContext context) throws UnsupportedEncodingException {
         Client client = contractService.getInstanceById(Client.class, clientId);
         if (client == null) {
             return null;
@@ -99,7 +100,7 @@ public class DefaultDocumentMapping implements IDocumentMapping {
 
         //check that this contract is not exist in storage, otherwise take it and send to the requestor
         ServContract servContract = contractService.getInstanceById(ServContract.class, contractId);
-        String sourceFile = client.getSurname() + "_" + client.getFirstname() + "_" + client.getId() + "_" + servContract.getId() + ".doc";
+        String sourceFile = client.getSurname() + "_" + client.getFirstname() + "_" + client.getId() + "_" + servContract.getId() + ".docx";
         log.info("Contracts dir = "+ Configuration.contractsDir);
         File contractsDir = new File(Configuration.contractsDir);
         if (!contractsDir.exists()) {
@@ -118,7 +119,7 @@ public class DefaultDocumentMapping implements IDocumentMapping {
         resultFilename = URLEncoder.encode(resultFilename,"UTF-8");
         resultFilename = resultFilename.replaceAll("\\*","%20");
         context.setAttribute("resultFileName",resultFilename);
-        HWPFDocument finalDocument = null;
+        XWPFDocument finalDocument = null;
 
         //file can contain the space in its path
         log.info("Destination contract file path is "+contractPath);
@@ -127,7 +128,7 @@ public class DefaultDocumentMapping implements IDocumentMapping {
             log.info("The contract for client ID="+client.getId()+" already exist, taking it from the storage");
             try {
                 FileInputStream fileInputStream = new FileInputStream(new File(contractPath));
-                finalDocument = new HWPFDocument(fileInputStream);
+                finalDocument = new XWPFDocument(fileInputStream);
                 fileInputStream.close();
 
             } catch (FileNotFoundException e) {

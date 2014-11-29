@@ -15,17 +15,74 @@ import org.apache.xmlbeans.XmlCursor;
 
 public class WordDocumentReplaceProcessor {
     public static final Logger log = Logger.getLogger(WordDocumentReplaceProcessor.class);
-	public static HWPFDocument searchInParagraphs(HWPFDocument document, Map<String, String> replacedMap) {
+	public static XWPFDocument searchInParagraphs(XWPFDocument document, Map<String, String> replacedMap) {
+        List<XWPFParagraph> xwpfParagraphs = document.getParagraphs();
+        for (XWPFParagraph xwpfParagraph : xwpfParagraphs) {
+            List<XWPFRun> xwpfRuns = xwpfParagraph.getRuns();
+            for (XWPFRun xwpfRun : xwpfRuns) {
 
+                String xwpfRunText = xwpfRun.getText(0);
+                String xwpfRunTextFiltered = "";
+                log.info("String = "+xwpfRunText);
+                for (Map.Entry<String, String> entry : replacedMap.entrySet()) {
+                    if (xwpfRunText != null) {
 
-        Range r1 = document.getRange();
-        for (int i = 0; i < r1.numSections(); ++i ) {
-            Section s = r1.getSection(i);
-            for (int x = 0; x < s.numParagraphs(); x++) {
-                Paragraph p = s.getParagraph(x);
-                for(Map.Entry<String, String> entry : replacedMap.entrySet()) {
-                    p.replaceText(entry.getKey(), entry.getValue());
+                        if (entry.getKey() != null && entry.getValue() != null && xwpfRunText.contains(entry.getKey())) {
+                            log.info("Replacing \""+xwpfRunText+"\""+" with entry.key="+entry.getKey()+" and value "+entry.getValue());
+                            xwpfRunTextFiltered = xwpfRunText.replace(entry.getKey(), entry.getValue());
+                            xwpfRun.setText(xwpfRunTextFiltered,0);
+                            log.info("Set " + xwpfRunTextFiltered);
+                        }
+                    }
+                    /*
+                    if (xwpfRunText != null && xwpfRunText.contains(entry.getKey())) {
+                        log.info("Processing word " + xwpfRunText);
+                        String[] paragraphs = entry.getValue().split("\n");
+                        //createParagraphs(document, xwpfParagraph, paragraphs);
+                        log.info("Setting text " + entry.getKey() + " with " + entry.getValue());
+                        xwpfRunText = xwpfRunText.replaceAll(entry.getKey(), entry.getValue());
+                    }
+                    */
                 }
+                //xwpfRun.setText(xwpfRunText, 0);
+            }
+        }
+        /*
+        List<XWPFTable> xwpfTables = document.getTables();
+        for (XWPFTable tbl : xwpfTables) {
+            for (XWPFTableRow row : tbl.getRows()) {
+                for (XWPFTableCell cell : row.getTableCells()) {
+                    for (XWPFParagraph p : cell.getParagraphs()) {
+                        for (XWPFRun r : p.getRuns()) {
+                            String xwpfRunText = r.getText(r.getTextPosition());
+                            for (Map.Entry<String, String> entry : replacedMap.entrySet()) {
+                                if (xwpfRunText != null && xwpfRunText.contains(entry.getKey())) {
+                                    log.info("Processing word " + xwpfRunText);
+                                    String[] paragraphs = entry.getValue().split("\n");
+                                    xwpfRunText = xwpfRunText.replaceAll(entry.getKey(), entry.getValue());
+                                    log.info("Setting text " + entry.getKey() + " with " + entry.getValue());
+                                }
+                            }
+                            log.info("Set " + xwpfRunText + " to the position ");
+                            r.setText(xwpfRunText, 0);
+                        }
+                    }
+                }
+            }
+        }
+        */
+
+        return document;
+    }
+
+//        Range r1 = document.getRange();
+//        for (int i = 0; i < r1.numSections(); ++i ) {
+//            Section s = r1.getSection(i);
+//            for (int x = 0; x < s.numParagraphs(); x++) {
+//                Paragraph p = s.getParagraph(x);
+//                for(Map.Entry<String, String> entry : replacedMap.entrySet()) {
+//                    p.replaceText(entry.getKey(), entry.getValue());
+//                }
                 /*
                 log.info("Paragraph text: "+p.text());
                 for (int z = 0; z < p.numCharacterRuns(); z++) {
@@ -40,55 +97,11 @@ public class WordDocumentReplaceProcessor {
                     }
                 }
                 */
-            }
-        }
+//            }
+//        }
         /*
         public static XWPFDocument searchInParagraphs(XWPFDocument document, Map<String, String> replacedMap) {
-		 List<XWPFParagraph> xwpfParagraphs = document.getParagraphs();
-	        for(XWPFParagraph xwpfParagraph : xwpfParagraphs) {
-	            List<XWPFRun> xwpfRuns = xwpfParagraph.getRuns();
-	            for(XWPFRun xwpfRun : xwpfRuns) {
-	                String xwpfRunText = xwpfRun.getText(xwpfRun.getTextPosition());
-	                for(Map.Entry<String, String> entry : replacedMap.entrySet()) {
-	                    if (xwpfRunText != null && xwpfRunText.contains(entry.getKey())) {
-	                        //if (entry.getValue().contains("\n")) {
-                                log.info("Processing word "+xwpfRunText);
-	                            String[] paragraphs = entry.getValue().split("\n");
-	                            //entry.setValue("");
-	                            //createParagraphs(document, xwpfParagraph, paragraphs);
-	                        //}
-                            log.info("Setting text "+entry.getKey() + " with "+entry.getValue());
-	                        xwpfRunText = xwpfRunText.replaceAll(entry.getKey(), entry.getValue());
-	                    }
-	                }
-                    log.info("Set "+xwpfRunText+" to the position ");
-	                xwpfRun.setText(xwpfRunText, 0);
-	            }
-	        }
-            List<XWPFTable> xwpfTables = document.getTables();
-            for (XWPFTable tbl : xwpfTables) {
-                for (XWPFTableRow row : tbl.getRows()) {
-                    for (XWPFTableCell cell : row.getTableCells()) {
-                        for (XWPFParagraph p : cell.getParagraphs()) {
-                            for (XWPFRun r : p.getRuns()) {
-                                String xwpfRunText = r.getText(r.getTextPosition());
-                                for(Map.Entry<String, String> entry : replacedMap.entrySet()) {
-                                    if (xwpfRunText != null && xwpfRunText.contains(entry.getKey())) {
-                                        log.info("Processing word "+xwpfRunText);
-                                        String[] paragraphs = entry.getValue().split("\n");
-                                        xwpfRunText = xwpfRunText.replaceAll(entry.getKey(), entry.getValue());
-                                        log.info("Setting text "+entry.getKey() + " with "+entry.getValue());
-                                    }
-                                }
-                                log.info("Set "+xwpfRunText+" to the position ");
-                                r.setText(xwpfRunText, 0);
-                            }
-                        }
-                    }
-                }
-            }
-            */
-	        return document;
+
 	    }
 /*
 	 private static void createParagraphs(XWPFDocument document, XWPFParagraph xwpfParagraph, String[] paragraphs) {

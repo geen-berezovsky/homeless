@@ -18,7 +18,7 @@ public class GenericGenerator {
     @Autowired
     HttpRequestParser hrp;
 
-	public HWPFDocument generate(HttpServletRequest request) throws UnsupportedEncodingException {
+	public XWPFDocument generate(HttpServletRequest request) throws UnsupportedEncodingException {
         if (hrp == null ) {
             hrp = new HttpRequestParser();
         }

@@ -24,7 +24,7 @@ public class HttpRequestParser {
 	
 	public static final Logger log = Logger.getLogger(HttpRequestParser.class);
 
-    HWPFDocument replaced_document = null;
+    XWPFDocument replaced_document = null;
 
     @Autowired
     IDocumentMapping documentMapping;
@@ -67,7 +67,7 @@ public class HttpRequestParser {
         return request.getSession().getServletContext();
     }
 	
-	public HWPFDocument generateSocialHelpDocument(HttpServletRequest request) {
+	public XWPFDocument generateSocialHelpDocument(HttpServletRequest request) {
         if (documentMapping == null) {
             documentMapping = new DefaultDocumentMapping();
         }
@@ -75,7 +75,7 @@ public class HttpRequestParser {
 		return replaced_document;
 	}
 
-	public HWPFDocument generateFreeTravelDocument(HttpServletRequest request) {
+	public XWPFDocument generateFreeTravelDocument(HttpServletRequest request) {
         if (documentMapping == null) {
             documentMapping = new DefaultDocumentMapping();
         }
@@ -83,7 +83,7 @@ public class HttpRequestParser {
 		return replaced_document;
 	}
 
-    public HWPFDocument generateSanitationDocument(HttpServletRequest request) {
+    public XWPFDocument generateSanitationDocument(HttpServletRequest request) {
         if (documentMapping == null) {
             documentMapping = new DefaultDocumentMapping();
         }
@@ -91,7 +91,7 @@ public class HttpRequestParser {
         return replaced_document;
     }
 
-    public HWPFDocument generateDefaultContract(HttpServletRequest request) throws UnsupportedEncodingException {
+    public XWPFDocument generateDefaultContract(HttpServletRequest request) throws UnsupportedEncodingException {
         if (documentMapping == null) {
             documentMapping = new DefaultDocumentMapping();
         }

@@ -69,9 +69,8 @@ public class GetGeneratedDocumentController {
 	public @ResponseBody 
 	String getGeneratedWordDocument(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
 
-		response.setContentType("application/msword");
+		response.setContentType("application/vnd.ms-word");
         String headerResponse = "attachment; filename*=UTF-8''";
-		//String headerResponse = "attachment;filename=";
 		headerResponse = headerResponse.concat("Document.doc");
 		response.addHeader("Content-disposition", headerResponse);
 
@@ -81,7 +80,7 @@ public class GetGeneratedDocumentController {
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
-        HWPFDocument document = null;
+        XWPFDocument document = null;
 
         if (gg == null) {
             gg = new GenericGenerator();
@@ -106,7 +105,7 @@ public class GetGeneratedDocumentController {
     public @ResponseBody
     String getGeneratedContract(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
 
-        response.setContentType("application/msword");
+        response.setContentType("application/vnd.ms-word");
         String headerResponse = "attachment; filename*=UTF-8''";
 
         ServletOutputStream out = null;
@@ -115,7 +114,7 @@ public class GetGeneratedDocumentController {
         } catch (IOException e1) {
             e1.printStackTrace();
         }
-        HWPFDocument document = null;
+        XWPFDocument document = null;
 
         if (gg == null) {
             gg = new GenericGenerator();

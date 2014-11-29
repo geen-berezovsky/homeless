@@ -20,7 +20,7 @@ public class DocTypeProcessor {
     public static final Logger log = Logger.getLogger(DocTypeProcessor.class);
 	protected BigInteger generatedNum = null;
 
-    HWPFDocument document = null;
+    XWPFDocument document = null;
 
 	private ServletContext context;
 
@@ -35,13 +35,13 @@ public class DocTypeProcessor {
     public DocTypeProcessor() {
     }
 
-    public HWPFDocument replaceParametersInDocument() {
+    public XWPFDocument replaceParametersInDocument() {
 		InputStream resourceAsStream = context.getResourceAsStream(pathToTemplate);
 		try {
             for (Map.Entry e : parameters.entrySet()) {
                 log.info(e.getKey()+"="+e.getValue());
             }
-			document = WordDocumentReplaceProcessor.searchInParagraphs(new HWPFDocument(resourceAsStream), parameters);
+			document = WordDocumentReplaceProcessor.searchInParagraphs(new XWPFDocument(resourceAsStream), parameters);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
