@@ -75,18 +75,6 @@
 
  <bean id="persistenceExceptionTranslationPostProcessor"
   class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor" />
-<!--
-    <bean class="ru.homeless.services.GenericService" />
-    <bean class="ru.homeless.dao.GenericDAO" />
-
-    <bean class="ru.homeless.services.ContractService" />
-    <bean class="ru.homeless.dao.ContractDAO" />
--->
-    <!--
-        <bean class="ru.homeless.generators.GenericGenerator" />
-         <bean class="ru.homeless.parsers.HttpRequestParser" />
-     <bean class="ru.homeless.mappings.DefaultDocumentMapping" />
-     -->
 
 </beans>
 

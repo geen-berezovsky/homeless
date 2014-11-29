@@ -1,14 +1,16 @@
 package ru.homeless.controllers;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.lang.reflect.Method;
+import java.net.URL;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.core.io.Resource;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -55,11 +57,16 @@ public class GetGeneratedDocumentController {
      */
     @RequestMapping(value = "/", method = RequestMethod.GET, produces = "text/html; charset=utf-8")
     public @ResponseBody
-    String getDefaultMessage() {
-        String res = "Документ \"Справка о социальной помощи\": /getGeneratedWordDocument?requestType=2&clientId=[clientId]&issueDate=[issueDate]<br><br>";
-        res += "Документ \"Справка о получении социальной помощи (не препятствовать проезду)\": /getGeneratedWordDocument?requestType=4&clientId=[clientId]&travelCity=[travelCity]&issueDate=[issueDate]<br><br>";
-        res += "Документ \"Направление на санитарную обработку\": /getGeneratedWordDocument?requestType=6&clientId=[clientId]&issueDate=[issueDate]<br><br>";
-        return "Пожалуйста сформируйте GET запрос для формирования документа<br><br>"+res;
+    String getDefaultMessage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String res = "";
+        InputStream is = context.getResource("help.html").openStream();
+        BufferedReader br = new BufferedReader(new InputStreamReader(is));
+        String line;
+        while ((line = br.readLine()) != null) {
+            res+=line;
+        }
+        br.close();
+        return res;
     }
 
 	/*
@@ -69,9 +76,9 @@ public class GetGeneratedDocumentController {
 	public @ResponseBody 
 	String getGeneratedWordDocument(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
 
-		response.setContentType("application/vnd.ms-word");
+		response.setContentType("application/vnd.openxmlformats-officedocument.wordprocessingml.document");
         String headerResponse = "attachment; filename*=UTF-8''";
-		headerResponse = headerResponse.concat("Document.doc");
+		headerResponse = headerResponse.concat("GeneratedDocument.docx");
 		response.addHeader("Content-disposition", headerResponse);
 
 		ServletOutputStream out = null;
@@ -105,7 +112,7 @@ public class GetGeneratedDocumentController {
     public @ResponseBody
     String getGeneratedContract(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
 
-        response.setContentType("application/vnd.ms-word");
+        response.setContentType("application/vnd.openxmlformats-officedocument.wordprocessingml.document");
         String headerResponse = "attachment; filename*=UTF-8''";
 
         ServletOutputStream out = null;

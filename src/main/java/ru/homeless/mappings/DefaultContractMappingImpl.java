@@ -1,7 +1,6 @@
 package ru.homeless.mappings;
 
 import org.apache.log4j.Logger;
-import org.apache.poi.hwpf.HWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -10,95 +9,38 @@ import ru.homeless.entities.*;
 import ru.homeless.processors.DocTypeProcessor;
 import ru.homeless.services.IContractService;
 import ru.homeless.shared.IDocumentMapping;
+import ru.homeless.util.Util;
 
 import javax.servlet.ServletContext;
 import java.io.*;
 import java.net.URLEncoder;
 import java.sql.SQLException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
- * Created by maxim on 28.10.14.
- * Implementation of document processing
+ * Created by maxim on 30.11.14.
  */
 @Component
-public class DefaultDocumentMapping implements IDocumentMapping {
+public class DefaultContractMappingImpl implements ICustomMapping {
 
-
-    public static final Logger log = Logger.getLogger(DefaultDocumentMapping.class);
+    public static final Logger log = Logger.getLogger(DefaultContractMappingImpl.class);
 
     @Autowired
     private IContractService contractService;
 
-    private Map<String, String> map = null;
-
-    private String convertDate(Date date) {
-        if (date == null) {
-            return null;
-        } else {
-            DateFormat df = new SimpleDateFormat("dd.MM.yyyy", Locale.ENGLISH);
-            return (df.format(date));
-        }
-    }
-
-    private void putDefaultValuesInMap(Client client, String documentNumber, Date issueDate)  {
-        map.put("[t:client:name]", client.getSurname()+" "+client.getFirstname()+" "+client.getMiddlename());
-        map.put("[t:num]", documentNumber);
-        map.put("[t:client:birth]", convertDate(client.getDate()));
-        map.put("clientWhereWasBorn", client.getWhereWasBorn());
-        map.put("clientId", String.valueOf(client.getId()));
-        map.put("[t:today]", convertDate(issueDate));
-
-        //[t:signatory1]
-        //[t:signatory2]
-
+    @Override
+    public XWPFDocument getDocument(Map<String, String> map) {
+        //STUB
+        return null;
     }
 
     @Override
-    public XWPFDocument documentSocialHelpImpl(int requestType, int clientId, Date issueDate, ServletContext context) {
-        Client client = contractService.getInstanceById(Client.class, clientId);
-        if (client == null) {
-            return null;
-        }
-        map = new HashMap<String, String>();
-        putDefaultValuesInMap(client, "123123123", issueDate);
-        return new DocTypeProcessor(map, context, IDocumentMapping.DOCUMENT_SOCIAL_HELP_TEMPLATE_PATH).replaceParametersInDocument();
-    }
-
-    @Override
-    public XWPFDocument documentFreeTravelImpl(int requestType, int clientId, String travelCity, Date issueDate, ServletContext context)  {
-        Client client = contractService.getInstanceById(Client.class, clientId);
-        if (client == null) {
-            return null;
-        }
-        map = new HashMap<String, String>();
-        putDefaultValuesInMap(client, "456456456", issueDate);
-        map.put("[t:city]", travelCity);
-        return new DocTypeProcessor(map, context, IDocumentMapping.DOCUMENT_FREE_TRAVEL_TEMPLATE_PATH).replaceParametersInDocument();
-    }
-
-    @Override
-    public XWPFDocument documentSanitationImpl(int requestType, int clientId, Date issueDate, ServletContext context)  {
-        Client client = contractService.getInstanceById(Client.class, clientId);
-        if (client == null) {
-            return null;
-        }
-        map = new HashMap<String, String>();
-        putDefaultValuesInMap(client, "789789789", issueDate);
-        return new DocTypeProcessor(map, context, IDocumentMapping.DOCUMENT_SANITATION_TEMPLATE_PATH).replaceParametersInDocument();
-    }
-
-    @Override
-    public XWPFDocument documentDefaultContractImpl(int requestType, int clientId, Date issueDate, int contractId, int workerId, ServletContext context) throws UnsupportedEncodingException {
-        Client client = contractService.getInstanceById(Client.class, clientId);
-        if (client == null) {
-            return null;
-        }
+    public XWPFDocument getDocument(Map<String, String> map, Client client, int contractId, int workerId, ServletContext context) {
 
         //check that this contract is not exist in storage, otherwise take it and send to the requestor
+        log.info("SERVICE="+contractService.toString());
         ServContract servContract = contractService.getInstanceById(ServContract.class, contractId);
         String sourceFile = client.getSurname() + "_" + client.getFirstname() + "_" + client.getId() + "_" + servContract.getId() + ".docx";
         log.info("Contracts dir = "+ Configuration.contractsDir);
@@ -116,7 +58,11 @@ public class DefaultDocumentMapping implements IDocumentMapping {
 
         //prepare the result filename of the generated contract
         String resultFilename = sourceFile.replaceAll(" ","*");
-        resultFilename = URLEncoder.encode(resultFilename,"UTF-8");
+        try {
+            resultFilename = URLEncoder.encode(resultFilename, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            log.error(e.getMessage(), e);
+        }
         resultFilename = resultFilename.replaceAll("\\*","%20");
         context.setAttribute("resultFileName",resultFilename);
         XWPFDocument finalDocument = null;
@@ -140,7 +86,6 @@ public class DefaultDocumentMapping implements IDocumentMapping {
             }
         } else {
             map = new HashMap<String, String>();
-            putDefaultValuesInMap(client, "789789789", issueDate);
 
             //prepare replacements for placeholders
             if (servContract.getDocNum() == null) {
@@ -151,22 +96,22 @@ public class DefaultDocumentMapping implements IDocumentMapping {
 
             Document workerDocument = contractService.getWorkerDocumentForContractByWorkerId(worker.getId());
             Document clientDocument = contractService.getClientDocumentForContractByContractId(contractId);
-            String clientData = client.getSurname()+" "+client.getFirstname()+" "+client.getMiddlename()+", "+convertDate(client.getDate())+" г.р.";
+            String clientData = client.getSurname()+" "+client.getFirstname()+" "+client.getMiddlename()+", "+ Util.convertDate(client.getDate())+" г.р.";
             String workerData = worker.getRules().getCaption()+" "+worker.getSurname()+" "+worker.getFirstname()+" "+worker.getMiddlename();
 
-            map.put("[label:import:contract_date]", convertDate(servContract.getStartDate()));
-            map.put("[label:import:worker_short_info]", workerData+", действующий на основании доверенности "+worker.getWarrantNum()+" от "+convertDate(worker.getWarrantDate()));
+            map.put("[label:import:contract_date]", Util.convertDate(servContract.getStartDate()));
+            map.put("[label:import:worker_short_info]", workerData+", действующий на основании доверенности "+worker.getWarrantNum()+" от "+Util.convertDate(worker.getWarrantDate()));
             map.put("[label:import:client_short_info]", clientData);
 
-            map.put("[label:import:client_info]", clientData+". "+clientDocument.getDoctype().getCaption()+" "+clientDocument.getDocPrefix()+" "+clientDocument.getDocNum()+" выдан "+convertDate(clientDocument.getDate()) + " "+clientDocument.getWhereAndWhom());
+            map.put("[label:import:client_info]", clientData+". "+clientDocument.getDoctype().getCaption()+" "+clientDocument.getDocPrefix()+" "+clientDocument.getDocNum()+" выдан "+Util.convertDate(clientDocument.getDate()) + " "+clientDocument.getWhereAndWhom());
 
-            map.put("[label:import:worker]", workerData+". "+workerDocument.getDoctype().getCaption()+" "+workerDocument.getDocPrefix()+" "+workerDocument.getDocNum()+" выдан "+convertDate(workerDocument.getDate()) + " "+workerDocument.getWhereAndWhom());
+            map.put("[label:import:worker]", workerData+". "+workerDocument.getDoctype().getCaption()+" "+workerDocument.getDocPrefix()+" "+workerDocument.getDocNum()+" выдан "+Util.convertDate(workerDocument.getDate()) + " "+workerDocument.getWhereAndWhom());
             map.put("[label:import:org_info]", IDocumentMapping.ORGANIZATION_INFO);
 
             List<ContractControl> contractControls = contractService.getContractControlPointsByServContractId(servContract.getId());
             String contractControlReplacement = String.valueOf((char)10);
             for (ContractControl cc : contractControls) {
-                    contractControlReplacement += "- "+cc.getContractpoints().getCaption() + ";"+String.valueOf((char)13);
+                contractControlReplacement += "- "+cc.getContractpoints().getCaption() + ";"+String.valueOf((char)13);
             }
             map.put("[label:import:contract_points]", contractControlReplacement);
 
@@ -186,7 +131,7 @@ public class DefaultDocumentMapping implements IDocumentMapping {
 
 
             //generate the contract
-            finalDocument = new DocTypeProcessor(map, context, IDocumentMapping.DOCUMENT_DEFAULT_CONTRACT_TEMPLATE_PATH).replaceParametersInDocument();
+            finalDocument = new DocTypeProcessor(map, IDocumentMapping.DOCUMENT_DEFAULT_CONTRACT_TEMPLATE_PATH).replaceParametersInDocument();
 
 
             // Save the contract to the disk in the proper path
@@ -208,4 +153,5 @@ public class DefaultDocumentMapping implements IDocumentMapping {
 
         return finalDocument;
     }
+
 }

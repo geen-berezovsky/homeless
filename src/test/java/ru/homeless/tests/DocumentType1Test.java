@@ -1,14 +1,5 @@
 package ru.homeless.tests;
 
-import java.io.IOException;
-
-import org.apache.poi.xwpf.usermodel.XWPFDocument;
-import org.junit.Assert;
-import org.junit.Test;
-
-import ru.homeless.parsers.HttpRequestParser;
-import ru.homeless.shared.IDocumentMapping;
-
 public class DocumentType1Test {
 /*
 	@Test

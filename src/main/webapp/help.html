@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<h2>Генерирование справки:</h2>
+<h4>GET: /getGeneratedWordDocument</h4>
+
+<p>Обязательные параметры:</p>
+
+&nbsp;&nbsp;&nbsp;&nbsp;requestType* =
+<ul>
+    <li>2 - Справка о социальной помощи</li>
+    <li>4 - Справка о получении социальной помощи (не препятствовать проезду)</li>
+    <li>6 - Направление на санитарную обработку</li>
+    <li>8 - Направление на диспансеризацию</li>
+    <li>10 - Справка о регистрации</li>
+    <li>12 - Справка по "Транзиту"</li>
+    <li>14 - Запрос в отдел ЗАГС</li>
+    <li>16 - Произвольная справка</li>
+</ul>
+
+    &nbsp;&nbsp;&nbsp;&nbsp;clientId* - ID клиента, для которого формируем справку<br>
+
+<p>Необязательные параметры:</p>
+
+    &nbsp;&nbsp;&nbsp;&nbsp;issueDate - дата формирования справки (формат дд.мм.гггг). Если не указана, то используется текущая.<br>
+
+<p>Параметры, относящиеся к конкретным запросам:</p>
+
+    &nbsp;&nbsp;&nbsp;&nbsp;travelCity - город в который направляется клиент (тип 4 и тип 12)<br>
+
+<p>Пример: http://HOST:PORT/homeless-report-engine/getGeneratedWordDocument?requestType=2&clientId=13000&issueDate=09.09.2009</p>
+
+<h2>Генерирование контракта (в случае наличия, новый контракт не генерируется, отдается уже существующий)</h2>
+<h4>GET: /getGeneratedContract</h4>
+
+<p>Обязательные параметры:</p>
+
+    &nbsp;&nbsp;&nbsp;&nbsp;requestType* =
+<ul>
+    <li>100 - Стандартный контракт</li>
+    <li>102 - Контракт с проживающим</li>
+</ul>
+    &nbsp;&nbsp;&nbsp;&nbsp;contractId* - ID контракта для формирования документа (у одного клиента их может быть несколько)<br>
+
+    &nbsp;&nbsp;&nbsp;&nbsp;clientId* - ID клиента, для которого формируем документ<br>
+
+    &nbsp;&nbsp;&nbsp;&nbsp;workerId* - ID работника, формирующего документ<br>
+
+<p>Необязательные параметры:</p>
+
+    &nbsp;&nbsp;&nbsp;&nbsp;issueDate - дата формирования контракта (формат дд.мм.гггг). Если не указана, то используется текущая.<br>
+
+    <p>Параметры, относящиеся к конкретным запросам:</p>
+
+<p>Пример: http://HOST:PORT/homeless-report-engine/getGeneratedContract?requestType=100&clientId=13000&contractId=328&issueDate=10.10.2010&workerId=2</p>
+
+</body>
+</html>

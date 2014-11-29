@@ -1,9 +1,6 @@
 package ru.homeless.processors;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.math.BigInteger;
 import java.util.Map;
 
@@ -18,38 +15,37 @@ public class DocTypeProcessor {
 	protected HWPFDocument replacedDocument = null;
 	protected String pathToTemplate = null;
     public static final Logger log = Logger.getLogger(DocTypeProcessor.class);
-	protected BigInteger generatedNum = null;
 
     XWPFDocument document = null;
 
 	private ServletContext context;
 
-	//getting default params
-	public DocTypeProcessor(Map<String, String> parameters, ServletContext context, String pathToTemplate) {
-		generatedNum = generateDocumentId();
+	public DocTypeProcessor(Map<String, String> parameters, String pathToTemplate) {
 		this.pathToTemplate = pathToTemplate;
 		this.parameters = parameters;
-        this.context = context;
 	}
 
-    public DocTypeProcessor() {
-    }
-
     public XWPFDocument replaceParametersInDocument() {
-		InputStream resourceAsStream = context.getResourceAsStream(pathToTemplate);
-		try {
+        InputStream resourceAsStream = null;
+        try {
+            resourceAsStream = new FileInputStream(new File(pathToTemplate));
+        } catch (FileNotFoundException e) {
+            log.error(e.getMessage(),e);
+        }
+        try {
             for (Map.Entry e : parameters.entrySet()) {
                 log.info(e.getKey()+"="+e.getValue());
             }
-			document = WordDocumentReplaceProcessor.searchInParagraphs(new XWPFDocument(resourceAsStream), parameters);
+            if (new File(pathToTemplate).exists()) {
+                document = WordDocumentReplaceProcessor.searchInParagraphs(new XWPFDocument(resourceAsStream), parameters);
+            } else {
+                log.error("Document template "+pathToTemplate+" does not exist or not accessible");
+            }
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
         return document;
 	}
 	
-	private BigInteger generateDocumentId() {
-		return null;
-	}
 
 }

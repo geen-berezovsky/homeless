@@ -10,10 +10,12 @@ import org.springframework.stereotype.Component;
 public class Configuration {
 
     public static String contractsDir;
+    public static String templatesDir;
 
     @Autowired
-    public Configuration(@Value("${contractsDir}") String contractsDir) {
+    public Configuration(@Value("${contractsDir}") String contractsDir,@Value("${templatesDir}") String templatesDir) {
         this.contractsDir = contractsDir;
+        this.templatesDir = templatesDir;
     }
 
 
