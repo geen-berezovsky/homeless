@@ -1,63 +1,93 @@
 package ru.homeless.processors;
 
+import java.io.File;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBException;
 
 import org.apache.log4j.Logger;
-import org.apache.poi.hwpf.HWPFDocument;
-import org.apache.poi.hwpf.usermodel.CharacterRun;
-import org.apache.poi.hwpf.usermodel.Paragraph;
-import org.apache.poi.hwpf.usermodel.Range;
-import org.apache.poi.hwpf.usermodel.Section;
-import org.apache.poi.ss.usermodel.Font;
-import org.apache.poi.xwpf.usermodel.*;
-import org.apache.xmlbeans.XmlCursor;
+import org.docx4j.dml.wordprocessingDrawing.Inline;
+import org.docx4j.jaxb.Context;
+import org.docx4j.jaxb.XPathBinderAssociationIsPartialException;
+import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
+import org.docx4j.openpackaging.parts.WordprocessingML.BinaryPartAbstractImage;
+import org.docx4j.wml.Drawing;
+import org.docx4j.wml.Jc;
+import org.docx4j.wml.JcEnumeration;
+import org.docx4j.wml.ObjectFactory;
+import org.docx4j.wml.P;
+import org.docx4j.wml.PPr;
+import org.docx4j.wml.R;
+import org.docx4j.wml.Text;
 
 public class WordDocumentReplaceProcessor {
     public static final Logger log = Logger.getLogger(WordDocumentReplaceProcessor.class);
-	public static XWPFDocument searchInParagraphs(XWPFDocument document, Map<String, String> replacedMap) {
-        List<XWPFParagraph> xwpfParagraphs = document.getParagraphs();
-        for (XWPFParagraph xwpfParagraph : xwpfParagraphs) {
-            List<XWPFRun> xwpfRuns = xwpfParagraph.getRuns();
-            for (XWPFRun xwpfRun : xwpfRuns) {
-                String xwpfRunText = xwpfRun.getText(0);
-                String xwpfRunTextFiltered = "";
-                log.info("String = "+xwpfRunText);
-                for (Map.Entry<String, String> entry : replacedMap.entrySet()) {
-                    if (xwpfRunText != null) {
-                        if (entry.getKey() != null && entry.getValue() != null && xwpfRunText.contains(entry.getKey())) {
-                            log.info("Replacing \""+xwpfRunText+"\""+" with entry.key="+entry.getKey()+" and value "+entry.getValue());
-                            xwpfRunText = xwpfRunText.replace(entry.getKey(), entry.getValue());
-                            log.info("Set " + xwpfRunTextFiltered);
-                        }
-                    }
-                }
-                xwpfRun.setText(xwpfRunText, 0);
-            }
-        }
-        List<XWPFTable> xwpfTables = document.getTables();
-        for (XWPFTable tbl : xwpfTables) {
-            for (XWPFTableRow row : tbl.getRows()) {
-                for (XWPFTableCell cell : row.getTableCells()) {
-                    for (XWPFParagraph p : cell.getParagraphs()) {
-                        for (XWPFRun r : p.getRuns()) {
-                            String xwpfRunText = r.getText(r.getTextPosition());
-                            for (Map.Entry<String, String> entry : replacedMap.entrySet()) {
-                                if (xwpfRunText != null && xwpfRunText.contains(entry.getKey())) {
-                                    log.info("Processing word " + xwpfRunText);
-                                    xwpfRunText = xwpfRunText.replace(entry.getKey(), entry.getValue());
-                                    log.info("Setting text " + entry.getKey() + " with " + entry.getValue());
-                                }
-                            }
-                            log.info("Set " + xwpfRunText + " to the position ");
-                            r.setText(xwpfRunText, 0);
-                        }
-                    }
-                }
-            }
-        }
+    private ObjectFactory factory;
+    private WordprocessingMLPackage document;
 
+    public WordDocumentReplaceProcessor(WordprocessingMLPackage document) {
+    	this.document = document;
+    }
+    
+    public WordprocessingMLPackage searchInParagraphs(Map<String, String> replacedMap, byte[] photo, int avatarLocation) throws Exception {
+
+    	final String XPATH_TO_SELECT_TEXT_NODES = "//w:t";
+    	
+    	//IF PHOTO NOT NULL AND WE KNOW WHERE TO INSERT IT, DO IT!
+    	//get current factory
+    	factory = Context.getWmlObjectFactory();
+    	//init new paragraph and insert into it the avatar
+    	P paragraphWithImage = addInlineImageToParagraph(createInlineImage(photo));
+    	
+		//SET ALIGNMENT TO THE RIGHT
+		PPr paragraphProperties = factory.createPPr();
+		Jc justification = factory.createJc();
+		justification.setVal(JcEnumeration.RIGHT);
+		paragraphProperties.setJc(justification);
+		paragraphWithImage.setPPr(paragraphProperties);
+		
+		//add new paragraph to the start of document (0th position)
+		document.getMainDocumentPart().getContent().add(0, paragraphWithImage);
+
+    	
+		List<?> texts = document.getMainDocumentPart().getJAXBNodesViaXPath(XPATH_TO_SELECT_TEXT_NODES, true);
+		for (Object obj : texts) {
+			Text text = (Text) ((JAXBElement<?>) obj).getValue();
+			String textValue = text.getValue();
+			for (Entry<String, String> entry : replacedMap.entrySet()) {
+				if (textValue != null && textValue.contains(entry.getKey())) {
+					textValue = textValue.replace(entry.getKey(), entry.getValue());
+				}
+			}
+			text.setValue(textValue);
+		}
+
+    	
         return document;
     }
+    
+	private Inline createInlineImage(byte[] bytes) throws Exception {
+		BinaryPartAbstractImage imagePart = BinaryPartAbstractImage.createImagePart(document, bytes);
+		int docPrId = 1;
+		int cNvPrId = 2;
+		return imagePart.createImageInline("Filename hint", "Alternative text", docPrId, cNvPrId, false);
+	}
+	
+	private static P addInlineImageToParagraph(Inline inline) {
+		// Now add the in-line image to a paragraph
+		ObjectFactory factory = new ObjectFactory();
+		P paragraph = factory.createP();
+		R run = factory.createR();
+		paragraph.getContent().add(run);
+		Drawing drawing = factory.createDrawing();
+		run.getContent().add(drawing);
+		drawing.getAnchorOrInline().add(inline);
+		return paragraph;
+	}
+
+
 
 }

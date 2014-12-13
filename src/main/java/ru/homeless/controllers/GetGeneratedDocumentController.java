@@ -1,40 +1,29 @@
 package ru.homeless.controllers;
 
-import java.io.*;
-import java.lang.reflect.Method;
-import java.net.URL;
-import java.net.URLEncoder;
-import java.util.HashMap;
-import java.util.Map;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 
-import org.springframework.core.io.Resource;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.http.HttpHeaders;
 import org.apache.log4j.Logger;
-import org.apache.poi.hwpf.HWPFDocument;
-import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.docx4j.openpackaging.exceptions.Docx4JException;
+import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import ru.homeless.entities.Client;
-import ru.homeless.entities.NightStay;
 import ru.homeless.generators.GenericGenerator;
-import ru.homeless.processors.WordDocumentReplaceProcessor;
-import ru.homeless.services.GenericService;
 import ru.homeless.services.IGenericService;
-import ru.homeless.shared.IDocumentMapping;
 
 @Controller
 public class GetGeneratedDocumentController {
@@ -87,7 +76,7 @@ public class GetGeneratedDocumentController {
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
-        XWPFDocument document = null;
+		WordprocessingMLPackage document = null;
 
         if (gg == null) {
             gg = new GenericGenerator();
@@ -95,11 +84,14 @@ public class GetGeneratedDocumentController {
 
 		document = gg.generate(request);
 
+	
 		try {
 			out.flush();
-			document.write(out);
+			document.save(out);
 			out.close();
 		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (Docx4JException e) {
 			e.printStackTrace();
 		}
 		return "Document sent";
@@ -121,7 +113,7 @@ public class GetGeneratedDocumentController {
         } catch (IOException e1) {
             e1.printStackTrace();
         }
-        XWPFDocument document = null;
+        WordprocessingMLPackage document = null;
 
         if (gg == null) {
             gg = new GenericGenerator();
@@ -136,11 +128,13 @@ public class GetGeneratedDocumentController {
 
         try {
             out.flush();
-            document.write(out);
+    		document.save(out);
             out.close();
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        } catch (Docx4JException e) {
+			e.printStackTrace();
+		}
         return "Document sent";
     }
 

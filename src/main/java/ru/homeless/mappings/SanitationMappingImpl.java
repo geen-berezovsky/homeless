@@ -1,12 +1,14 @@
 package ru.homeless.mappings;
 
-import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import java.util.Map;
+
+import javax.servlet.ServletContext;
+
+import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
+
 import ru.homeless.entities.Client;
 import ru.homeless.processors.DocTypeProcessor;
 import ru.homeless.shared.IDocumentMapping;
-
-import javax.servlet.ServletContext;
-import java.util.Map;
 
 /**
  * Created by maxim on 30.11.14.
@@ -14,12 +16,12 @@ import java.util.Map;
 public class SanitationMappingImpl implements ICustomMapping {
 
     @Override
-    public XWPFDocument getDocument(Map map) {
-        return new DocTypeProcessor(map, IDocumentMapping.DOCUMENT_SANITATION_TEMPLATE_PATH).replaceParametersInDocument();
+    public WordprocessingMLPackage getDocument(Map map) {
+        return new DocTypeProcessor(map, IDocumentMapping.DOCUMENT_SANITATION_TEMPLATE_PATH).replaceParametersInDocument(null,0);
     }
 
     @Override
-    public XWPFDocument getDocument(Map<String, String> map, Client client, int contractId, int workerId, ServletContext context) {
+    public WordprocessingMLPackage getDocument(Map<String, String> map, Client client, int contractId, int workerId, ServletContext context) {
         return null;
     }
 }

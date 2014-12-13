@@ -3,10 +3,10 @@ package ru.homeless.generators;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
-import org.apache.poi.xwpf.usermodel.XWPFDocument;
-
+import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
 import ru.homeless.entities.Client;
 import ru.homeless.parsers.CustomValuesHttpRequestParser;
 import ru.homeless.services.IContractService;
@@ -46,8 +46,8 @@ public class GenericGenerator {
         defaultValuesMap.put("clientId", String.valueOf(client.getId()));
         defaultValuesMap.put("[t:today]", Util.convertDate(issueDate)); defaultValuesMap.put("[t:date]", Util.convertDate(issueDate)); //synonym
 
-        //[t:signatory1]
-        //[t:signatory2]
+        defaultValuesMap.put("[t:signatory1]", IDocumentMapping.SIGN_PART_1);
+        defaultValuesMap.put("[t:signatory2]", IDocumentMapping.SIGN_PART_2);
 
     }
 
@@ -67,7 +67,7 @@ public class GenericGenerator {
     }
 
 
-    public XWPFDocument generate(HttpServletRequest request) throws UnsupportedEncodingException {
+    public WordprocessingMLPackage generate(HttpServletRequest request) throws UnsupportedEncodingException {
         if (hrp == null ) {
             hrp = new CustomValuesHttpRequestParser();
         }
@@ -85,6 +85,8 @@ public class GenericGenerator {
         putDefaultValuesInMap(client, "000000000000", parseIssueDate(request));
 
 		switch (Integer.parseInt(request.getParameter("requestType"))) {
+		
+			//STANDARD DOCUMENTS
 			case IDocumentMapping.DOCUMENT_SOCIAL_HELP: {
 				return hrp.generateSocialHelpDocument(request, client, defaultValuesMap);
 			}
@@ -109,8 +111,8 @@ public class GenericGenerator {
             case IDocumentMapping.DOCUMENT_CUSTOM: {
                 return hrp.generateCustomDocument(request, client, defaultValuesMap);
             }
-
-
+            
+            //STANDARD CONTRACTS
             case IDocumentMapping.DOCUMENT_DEFAULT_CONTRACT: {
                 return hrp.generateDefaultContract(request, client, defaultValuesMap);
             }

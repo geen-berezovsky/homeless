@@ -1,22 +1,22 @@
 package ru.homeless.processors;
 
-import java.io.*;
-import java.math.BigInteger;
+import java.io.File;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
+import javax.xml.bind.JAXBException;
 
 import org.apache.log4j.Logger;
-import org.apache.poi.hwpf.HWPFDocument;
-import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.docx4j.jaxb.XPathBinderAssociationIsPartialException;
+import org.docx4j.openpackaging.exceptions.Docx4JException;
+import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
 
 public class DocTypeProcessor {
 	protected Map<String, String> parameters;
-	protected HWPFDocument replacedDocument = null;
 	protected String pathToTemplate = null;
     public static final Logger log = Logger.getLogger(DocTypeProcessor.class);
 
-    XWPFDocument document = null;
+    WordprocessingMLPackage document = null;
 
 	private ServletContext context;
 
@@ -25,24 +25,25 @@ public class DocTypeProcessor {
 		this.parameters = parameters;
 	}
 
-    public XWPFDocument replaceParametersInDocument() {
-        InputStream resourceAsStream = null;
-        try {
-            resourceAsStream = new FileInputStream(new File(pathToTemplate));
-        } catch (FileNotFoundException e) {
-            log.error(e.getMessage(),e);
-        }
-        try {
-            for (Map.Entry e : parameters.entrySet()) {
-                log.info(e.getKey()+"="+e.getValue());
-            }
-            if (new File(pathToTemplate).exists()) {
-                document = WordDocumentReplaceProcessor.searchInParagraphs(new XWPFDocument(resourceAsStream), parameters);
-            } else {
-                log.error("Document template "+pathToTemplate+" does not exist or not accessible");
-            }
-		} catch (IOException e) {
-			e.printStackTrace();
+    public WordprocessingMLPackage replaceParametersInDocument(byte[] photo, int avatarLocation) {
+    	
+    	try {
+			document = WordprocessingMLPackage.load(new File(pathToTemplate));
+		} catch (Docx4JException e1) {
+			log.error(e1.getMessage(),e1);
+		}
+    	
+        for (Map.Entry e : parameters.entrySet()) {
+		    log.info(e.getKey()+"="+e.getValue());
+		}
+		if (new File(pathToTemplate).exists()) {
+		    try {
+				document = new WordDocumentReplaceProcessor(document).searchInParagraphs(parameters, photo, avatarLocation);
+			} catch (Exception e1) {
+				log.error(e1.getMessage(),e1);
+			}
+		} else {
+		    log.error("Document template "+pathToTemplate+" does not exist or not accessible");
 		}
         return document;
 	}

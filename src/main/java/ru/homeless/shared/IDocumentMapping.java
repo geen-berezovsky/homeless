@@ -7,6 +7,8 @@ import java.util.Map;
 
 import org.apache.poi.hwpf.HWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
+
 import ru.homeless.configuration.Configuration;
 import ru.homeless.entities.Client;
 import ru.homeless.mappings.FreeTravelMappingImpl;
@@ -19,6 +21,8 @@ import javax.servlet.http.HttpServletRequest;
 public interface IDocumentMapping {
 
     public static final String ORGANIZATION_INFO = "СПбБОО «Ночлежка»" + "192007, СПб, ул. Боровая, д. 112, Б" + "ИНН 7805104809 КПП 780501001";
+    public static final String SIGN_PART_1 = "Директор";
+    public static final String SIGN_PART_2 = "Свердлин Г.";
 
     /*
     Template file: DocumentSocialHelp.docx
@@ -94,17 +98,17 @@ public interface IDocumentMapping {
 
 
 
-    public XWPFDocument generateSocialHelpDocument(HttpServletRequest request, Client client, Map<String, String> map);
-    public XWPFDocument generateFreeTravelDocument(HttpServletRequest request, Client client, Map<String, String> map);
-    public XWPFDocument generateSanitationDocument(HttpServletRequest request, Client client, Map<String, String> map);
-    public XWPFDocument generateDispensaryDocument(HttpServletRequest request, Client client, Map<String, String> map);
-    public XWPFDocument generateRegistrationDocument(HttpServletRequest request, Client client, Map<String, String> map);
-    public XWPFDocument generateTransitDocument(HttpServletRequest request, Client client, Map<String, String> map);
-    public XWPFDocument generateZAGSQueryDocument(HttpServletRequest request, Client client, Map<String, String> map);
-    public XWPFDocument generateCustomDocument(HttpServletRequest request, Client client, Map<String, String> map);
+    public WordprocessingMLPackage generateSocialHelpDocument(HttpServletRequest request, Client client, Map<String, String> map);
+    public WordprocessingMLPackage generateFreeTravelDocument(HttpServletRequest request, Client client, Map<String, String> map);
+    public WordprocessingMLPackage generateSanitationDocument(HttpServletRequest request, Client client, Map<String, String> map);
+    public WordprocessingMLPackage generateDispensaryDocument(HttpServletRequest request, Client client, Map<String, String> map);
+    public WordprocessingMLPackage generateRegistrationDocument(HttpServletRequest request, Client client, Map<String, String> map);
+    public WordprocessingMLPackage generateTransitDocument(HttpServletRequest request, Client client, Map<String, String> map);
+    public WordprocessingMLPackage generateZAGSQueryDocument(HttpServletRequest request, Client client, Map<String, String> map);
+    public WordprocessingMLPackage generateCustomDocument(HttpServletRequest request, Client client, Map<String, String> map);
 
 
-    public XWPFDocument generateDefaultContract(HttpServletRequest request, Client client, Map<String, String> map);
-    public XWPFDocument generateShelterContract(HttpServletRequest request, Client client, Map<String, String> map);
+    public WordprocessingMLPackage generateDefaultContract(HttpServletRequest request, Client client, Map<String, String> map);
+    public WordprocessingMLPackage generateShelterContract(HttpServletRequest request, Client client, Map<String, String> map);
 
 }
