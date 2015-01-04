@@ -17,14 +17,14 @@ import ru.homeless.shared.IDocumentMapping;
  * Created by maxim on 30.11.14.
  */
 @Component
-public class ShelterContractMappingImpl implements ICustomMapping {
+public class ShelterContractMappingImpl implements ICustomMappingWordDocument {
 
     @Autowired
     private IContractService contractService;
 
     @Override
     public WordprocessingMLPackage getDocument(Map map) {
-        return new DocTypeProcessor(map, IDocumentMapping.DOCUMENT_SHELTER_CONTRACT_TEMPLATE_PATH).replaceParametersInDocument(null,0); //CHANGE IT WITH REAL PHOTO LOCATION!
+        return new DocTypeProcessor(IDocumentMapping.DOCUMENT_SHELTER_CONTRACT_TEMPLATE_PATH).replaceParametersInDocument(map, null,0); //CHANGE IT WITH REAL PHOTO LOCATION!
     }
 
     @Override

@@ -1,22 +1,14 @@
 package ru.homeless.shared;
 
-import java.io.UnsupportedEncodingException;
-import java.text.ParseException;
-import java.util.Date;
 import java.util.Map;
 
-import org.apache.poi.hwpf.HWPFDocument;
-import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import javax.servlet.http.HttpServletRequest;
+
+import org.docx4j.openpackaging.packages.SpreadsheetMLPackage;
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
 
 import ru.homeless.configuration.Configuration;
 import ru.homeless.entities.Client;
-import ru.homeless.mappings.FreeTravelMappingImpl;
-import ru.homeless.mappings.SanitationMappingImpl;
-import ru.homeless.mappings.SocialHelpMappingImpl;
-
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
 
 public interface IDocumentMapping {
 
@@ -97,6 +89,13 @@ public interface IDocumentMapping {
     public final String DOCUMENT_SHELTER_CONTRACT_TEMPLATE_PATH = Configuration.templatesDir+"/"+"ContractShelter.docx";
 
 
+    /*
+    Template file: Statistics.xlsx
+    Document title: Стандартный отчет по статистике
+    */
+    public final int REPORT_STATISTICS = 200;
+    public final String REPORT_STATISTICS_TEMPLATE_PATH = Configuration.templatesDir+"/"+"Statistics.xlsx";
+
 
     public WordprocessingMLPackage generateSocialHelpDocument(HttpServletRequest request, Client client, Map<String, String> map);
     public WordprocessingMLPackage generateFreeTravelDocument(HttpServletRequest request, Client client, Map<String, String> map);
@@ -111,4 +110,7 @@ public interface IDocumentMapping {
     public WordprocessingMLPackage generateDefaultContract(HttpServletRequest request, Client client, Map<String, String> map);
     public WordprocessingMLPackage generateShelterContract(HttpServletRequest request, Client client, Map<String, String> map);
 
+	public SpreadsheetMLPackage generateReportStatisticsDocument(HttpServletRequest request);
+
+    
 }

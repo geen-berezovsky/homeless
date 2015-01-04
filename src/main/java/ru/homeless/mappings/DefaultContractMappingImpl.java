@@ -1,9 +1,6 @@
 package ru.homeless.mappings;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.sql.Blob;
@@ -35,7 +32,7 @@ import ru.homeless.util.Util;
  * Created by maxim on 30.11.14.
  */
 @Component
-public class DefaultContractMappingImpl implements ICustomMapping {
+public class DefaultContractMappingImpl implements ICustomMappingWordDocument {
 
     public static final Logger log = Logger.getLogger(DefaultContractMappingImpl.class);
 
@@ -62,6 +59,7 @@ public class DefaultContractMappingImpl implements ICustomMapping {
         }
         //Saving to the worker's profile
         Worker worker = contractService.getInstanceById(Worker.class, workerId);
+        
         File workerDir = new File(contractsDir.getAbsolutePath()+System.getProperty("file.separator")+worker.getSurname()+"_"+worker.getFirstname());
         if (!workerDir.exists()) {
             workerDir.mkdirs();
@@ -142,7 +140,7 @@ public class DefaultContractMappingImpl implements ICustomMapping {
             }
             
             //generate the contract
-            finalDocumentForSaving = new DocTypeProcessor(map, IDocumentMapping.DOCUMENT_DEFAULT_CONTRACT_TEMPLATE_PATH).replaceParametersInDocument(blobAsBytes, ICustomMapping.AVATAR_LOCATION_TOP_RIGHT);
+            finalDocumentForSaving = new DocTypeProcessor(IDocumentMapping.DOCUMENT_DEFAULT_CONTRACT_TEMPLATE_PATH).replaceParametersInDocument(map, blobAsBytes, ICustomMappingWordDocument.AVATAR_LOCATION_TOP_RIGHT);
 
             
             //XWPFParagraph pictureSection = finalDocument.createParagraph();

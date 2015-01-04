@@ -11,7 +11,7 @@ import ru.homeless.entities.Client;
 /**
  * Created by maxim on 30.11.14.
  */
-public interface ICustomMapping {
+public interface ICustomMappingWordDocument {
 	
 	public static final int AVATAR_LOCATION_TOP_RIGHT = 1;
 

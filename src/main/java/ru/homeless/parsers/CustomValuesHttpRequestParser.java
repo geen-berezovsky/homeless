@@ -3,21 +3,31 @@
  */
 package ru.homeless.parsers;
 
-import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
+import org.docx4j.openpackaging.packages.SpreadsheetMLPackage;
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import ru.homeless.entities.Client;
-import ru.homeless.entities.Worker;
-import ru.homeless.mappings.*;
-import ru.homeless.services.IContractService;
+import ru.homeless.mappings.CustomMappingImpl;
+import ru.homeless.mappings.DefaultContractMappingImpl;
+import ru.homeless.mappings.DispensaryMappingImpl;
+import ru.homeless.mappings.FreeTravelMappingImpl;
+import ru.homeless.mappings.RegistrationMappingImpl;
+import ru.homeless.mappings.ReportStatisticsMappingImpl;
+import ru.homeless.mappings.SanitationMappingImpl;
+import ru.homeless.mappings.ShelterContractMappingImpl;
+import ru.homeless.mappings.SocialHelpMappingImpl;
+import ru.homeless.mappings.TransitMappingImpl;
+import ru.homeless.mappings.ZagsQueryMappingImpl;
 import ru.homeless.shared.IDocumentMapping;
 import ru.homeless.util.Util;
 
@@ -35,6 +45,10 @@ public class CustomValuesHttpRequestParser implements IDocumentMapping {
     @Autowired
     private ShelterContractMappingImpl shelterContractMapping;
 
+    @Autowired
+    private ReportStatisticsMappingImpl reportStatisticsMappingImpl;
+
+    
     //HERE WE PARSE CUSTOM VALUES LIKE travelCity
     
     
@@ -163,6 +177,16 @@ public class CustomValuesHttpRequestParser implements IDocumentMapping {
     public WordprocessingMLPackage generateShelterContract(HttpServletRequest request, Client client, Map<String, String> map) {
         return shelterContractMapping.getDocument(map, client, parseContractId(request), parseWorkerId(request), parseContext(request));
     }
+
+    @Override
+	public SpreadsheetMLPackage generateReportStatisticsDocument(HttpServletRequest request) {
+    	
+    	//HERE WE PARSE CUSTOM PARAMETERS FROM HTTP REQUEST OBJECT
+    	Map<String, String> requestParameters = new HashMap<String, String>();
+    	
+    	//put something in map
+    	return reportStatisticsMappingImpl.getDocument(requestParameters); 
+	}
 
 
 }

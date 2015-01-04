@@ -13,11 +13,11 @@ import ru.homeless.shared.IDocumentMapping;
 /**
  * Created by maxim on 30.11.14.
  */
-public class TransitMappingImpl implements ICustomMapping {
+public class TransitMappingImpl implements ICustomMappingWordDocument {
 
     @Override
     public WordprocessingMLPackage getDocument(Map map) {
-        return new DocTypeProcessor(map, IDocumentMapping.DOCUMENT_TRANSIT_TEMPLATE_PATH).replaceParametersInDocument(null,0);
+        return new DocTypeProcessor(IDocumentMapping.DOCUMENT_TRANSIT_TEMPLATE_PATH).replaceParametersInDocument(map, null,0);
     }
 
     @Override

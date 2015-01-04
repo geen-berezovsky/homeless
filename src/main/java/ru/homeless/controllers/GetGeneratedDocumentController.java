@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 import org.docx4j.openpackaging.exceptions.Docx4JException;
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
+import org.hibernate.service.spi.InjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import ru.homeless.entities.Client;
 import ru.homeless.generators.GenericGenerator;
 import ru.homeless.services.IGenericService;
 
@@ -82,7 +84,7 @@ public class GetGeneratedDocumentController {
             gg = new GenericGenerator();
         }
 
-		document = gg.generate(request);
+		document = gg.generateWordDocument(request);
 
 	
 		try {
@@ -94,6 +96,7 @@ public class GetGeneratedDocumentController {
 		} catch (Docx4JException e) {
 			e.printStackTrace();
 		}
+		
 		return "Document sent";
 	}
 
@@ -119,7 +122,8 @@ public class GetGeneratedDocumentController {
             gg = new GenericGenerator();
         }
 
-        document = gg.generate(request);
+        document = gg.generateWordDocument(request);
+        
         String fileName = String.valueOf(context.getAttribute("resultFileName"));
 
         log.info("Trying to set the result file name "+fileName);
