@@ -19,7 +19,7 @@ import ru.homeless.shared.IDocumentMapping;
  * Created by maxim on 30.11.14.
  */
 @Component
-public class ReportStatisticsMappingImpl implements ICustomMappingExcelDocument {
+public class ResultWorkReportMappingImpl implements ICustomMappingExcelDocument {
 
     @Autowired
     private IReportService reportService;
@@ -49,7 +49,7 @@ public class ReportStatisticsMappingImpl implements ICustomMappingExcelDocument 
 			
 		
 		
-		return new DocTypeProcessor(IDocumentMapping.REPORT_STATISTICS_TEMPLATE_PATH).generateReport(sheetData);
+		return new DocTypeProcessor(IDocumentMapping.REPORT_WORK_RESULT_TEMPLATE_PATH).generateReport(sheetData);
 	}
 
 

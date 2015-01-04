@@ -105,6 +105,7 @@ public class GenericGenerator {
             case IDocumentMapping.DOCUMENT_SHELTER_CONTRACT: {
                 return hrp.generateShelterContract(request, client, wordDocumentDefaultValuesMap);
             }
+        
 
             default: {
 	   			return null;
@@ -119,10 +120,15 @@ public class GenericGenerator {
 
 		switch (Integer.parseInt(request.getParameter("requestType"))) {
 		
-			case IDocumentMapping.REPORT_STATISTICS: {
-				return hrp.generateReportStatisticsDocument(request);
+			case IDocumentMapping.REPORT_WORK_RESULT: {
+				return hrp.generateWorkReportDocument(request);
 			}
-            
+			case IDocumentMapping.REPORT_OUT_OF_SHELTER: {
+				return hrp.generateOutShelterDocument(request);
+			}
+			case IDocumentMapping.REPORT_ONE_TIME_SERVICES: {
+				return hrp.generateOneTimeServicesDocument(request);
+			}
 
             default: {
 	   			return null;

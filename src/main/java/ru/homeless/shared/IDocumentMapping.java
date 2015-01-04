@@ -90,11 +90,25 @@ public interface IDocumentMapping {
 
 
     /*
-    Template file: Statistics.xlsx
-    Document title: Стандартный отчет по статистике
+    Template file: WorkResultReport.xlsx
+    Document title: Стандартный отчет по результатам работы
     */
-    public final int REPORT_STATISTICS = 200;
-    public final String REPORT_STATISTICS_TEMPLATE_PATH = Configuration.templatesDir+"/"+"Statistics.xlsx";
+    public final int REPORT_WORK_RESULT = 200;
+    public final String REPORT_WORK_RESULT_TEMPLATE_PATH = Configuration.templatesDir+"/"+"WorkResultReport.xlsx";
+    
+    /*
+    Template file: OutOfShelter.xlsx
+    Document title: Стандартный отчет по выбывшим
+    */
+    public final int REPORT_OUT_OF_SHELTER = 202;
+    public final String REPORT_OUT_OF_SHELTER_TEMPLATE_PATH = Configuration.templatesDir+"/"+"OutOfShelter.xlsx";
+    
+    /*
+    Template file: OneTimeServices.xlsx
+    Document title: Стандартный отчет по разовым услугам
+    */
+    public final int REPORT_ONE_TIME_SERVICES = 204;
+    public final String REPORT_ONE_TIME_SERVICES_PATH = Configuration.templatesDir+"/"+"OneTimeServices.xlsx";
 
 
     public WordprocessingMLPackage generateSocialHelpDocument(HttpServletRequest request, Client client, Map<String, String> map);
@@ -110,7 +124,8 @@ public interface IDocumentMapping {
     public WordprocessingMLPackage generateDefaultContract(HttpServletRequest request, Client client, Map<String, String> map);
     public WordprocessingMLPackage generateShelterContract(HttpServletRequest request, Client client, Map<String, String> map);
 
-	public SpreadsheetMLPackage generateReportStatisticsDocument(HttpServletRequest request);
-
+	public SpreadsheetMLPackage generateWorkReportDocument(HttpServletRequest request);
+	public SpreadsheetMLPackage generateOutShelterDocument(HttpServletRequest request);
+	public SpreadsheetMLPackage generateOneTimeServicesDocument(HttpServletRequest request);
     
 }

@@ -26,8 +26,10 @@ import ru.homeless.mappings.CustomMappingImpl;
 import ru.homeless.mappings.DefaultContractMappingImpl;
 import ru.homeless.mappings.DispensaryMappingImpl;
 import ru.homeless.mappings.FreeTravelMappingImpl;
+import ru.homeless.mappings.OneTimeServicesReportMappingImpl;
+import ru.homeless.mappings.OutOfShelterReportMappingImpl;
 import ru.homeless.mappings.RegistrationMappingImpl;
-import ru.homeless.mappings.ReportStatisticsMappingImpl;
+import ru.homeless.mappings.ResultWorkReportMappingImpl;
 import ru.homeless.mappings.SanitationMappingImpl;
 import ru.homeless.mappings.ShelterContractMappingImpl;
 import ru.homeless.mappings.SocialHelpMappingImpl;
@@ -51,8 +53,13 @@ public class CustomValuesHttpRequestParser implements IDocumentMapping {
     private ShelterContractMappingImpl shelterContractMapping;
 
     @Autowired
-    private ReportStatisticsMappingImpl reportStatisticsMappingImpl;
-
+    private ResultWorkReportMappingImpl resultWorkReportMappingImpl;
+    
+    @Autowired
+    private OutOfShelterReportMappingImpl outOfShelterReportMappimgImpl;
+    
+    @Autowired
+    private OneTimeServicesReportMappingImpl oneTimeServicesReportMappingImpl;
     
     //HERE WE PARSE CUSTOM VALUES LIKE travelCity
     
@@ -185,7 +192,7 @@ public class CustomValuesHttpRequestParser implements IDocumentMapping {
 
     
     @Override
-	public SpreadsheetMLPackage generateReportStatisticsDocument(HttpServletRequest request) {
+	public SpreadsheetMLPackage generateWorkReportDocument(HttpServletRequest request) {
     	
     	//HERE WE PARSE CUSTOM PARAMETERS FROM HTTP REQUEST OBJECT
     	Map<String, Date> requestParameters = new HashMap<String, Date>();
@@ -193,7 +200,31 @@ public class CustomValuesHttpRequestParser implements IDocumentMapping {
     	//put something in map
     	requestParameters.put("from", Util.parseDate(request, "from", log));
     	requestParameters.put("till", Util.parseDate(request, "till", log));
-    	return reportStatisticsMappingImpl.getDocument(requestParameters); 
+    	return resultWorkReportMappingImpl.getDocument(requestParameters); 
+	}
+
+
+	@Override
+	public SpreadsheetMLPackage generateOutShelterDocument(HttpServletRequest request) {
+		//HERE WE PARSE CUSTOM PARAMETERS FROM HTTP REQUEST OBJECT
+    	Map<String, Date> requestParameters = new HashMap<String, Date>();
+    	
+    	//put something in map
+    	requestParameters.put("from", Util.parseDate(request, "from", log));
+    	requestParameters.put("till", Util.parseDate(request, "till", log));
+		return outOfShelterReportMappimgImpl.getDocument(requestParameters);
+	}
+
+
+	@Override
+	public SpreadsheetMLPackage generateOneTimeServicesDocument(HttpServletRequest request) {
+		//HERE WE PARSE CUSTOM PARAMETERS FROM HTTP REQUEST OBJECT
+    	Map<String, Date> requestParameters = new HashMap<String, Date>();
+    	
+    	//put something in map
+    	requestParameters.put("from", Util.parseDate(request, "from", log));
+    	requestParameters.put("till", Util.parseDate(request, "till", log));
+		return oneTimeServicesReportMappingImpl.getDocument(requestParameters);
 	}
 
 
