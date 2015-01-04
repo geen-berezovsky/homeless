@@ -1,5 +1,6 @@
 package ru.homeless.mappings;
 
+import java.util.Date;
 import java.util.Map;
 
 import org.docx4j.openpackaging.packages.SpreadsheetMLPackage;
@@ -9,6 +10,6 @@ import org.docx4j.openpackaging.packages.SpreadsheetMLPackage;
  */
 public interface ICustomMappingExcelDocument {
 	
-    public SpreadsheetMLPackage getDocument(Map<String, String> requestParameters);
+    public SpreadsheetMLPackage getDocument(Map<String, Date> requestParameters);
 
 }

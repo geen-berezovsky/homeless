@@ -1,9 +1,14 @@
 package ru.homeless.util;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.log4j.Logger;
 
 import ru.homeless.entities.Worker;
 
@@ -33,6 +38,29 @@ public class Util {
     	return workerData;
     }
 
+    
+    public static Date parseDate(HttpServletRequest request, String param, Logger log) {
+        Date parsedDate = null;
+        DateFormat df = new SimpleDateFormat("dd.MM.yyyy", Locale.ENGLISH);
+        String sDate = request.getParameter(param);
+        if (sDate!=null && !sDate.trim().equals(""))
+            try {
+                parsedDate = df.parse(sDate);
+            } catch (ParseException e) {
+                log.warn("Date "+sDate+" does not match the template dd.MM.yyyy, using the current date", e);
+                parsedDate = new Date();
+            }
+        return parsedDate;
+    }
+
+    public static String parseDateForMySql(Date sDate) {
+        SimpleDateFormat mySQLFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String reformattedStr = mySQLFormat.format(sDate);
+        return "'" + reformattedStr + "'";
+    }
+    
+
+    
 
 
 }

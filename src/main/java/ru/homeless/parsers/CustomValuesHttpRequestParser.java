@@ -3,8 +3,13 @@
  */
 package ru.homeless.parsers;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
@@ -178,13 +183,16 @@ public class CustomValuesHttpRequestParser implements IDocumentMapping {
         return shelterContractMapping.getDocument(map, client, parseContractId(request), parseWorkerId(request), parseContext(request));
     }
 
+    
     @Override
 	public SpreadsheetMLPackage generateReportStatisticsDocument(HttpServletRequest request) {
     	
     	//HERE WE PARSE CUSTOM PARAMETERS FROM HTTP REQUEST OBJECT
-    	Map<String, String> requestParameters = new HashMap<String, String>();
+    	Map<String, Date> requestParameters = new HashMap<String, Date>();
     	
     	//put something in map
+    	requestParameters.put("from", Util.parseDate(request, "from", log));
+    	requestParameters.put("till", Util.parseDate(request, "till", log));
     	return reportStatisticsMappingImpl.getDocument(requestParameters); 
 	}
 

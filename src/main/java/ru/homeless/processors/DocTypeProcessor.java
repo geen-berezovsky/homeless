@@ -59,11 +59,13 @@ public class DocTypeProcessor {
 		} catch (Docx4JException e1) {
 			log.error(e1.getMessage(),e1);
 		}
-    	/*
-        for (Map.Entry<String, String> e : sheetData.entrySet()) {
-		    log.info(e.getKey()+"="+e.getValue());
+        for (Map.Entry<Integer, List<String>> e : sheetData.entrySet()) {
+        	String res = "";
+        	for (String s : e.getValue()) {
+        		res += s+", ";
+        	}
+		    log.info(e.getKey()+"="+res);
 		}
-		*/
         
 		if (new File(pathToTemplate).exists()) {
 		    try {

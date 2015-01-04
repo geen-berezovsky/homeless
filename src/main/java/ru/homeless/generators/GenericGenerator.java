@@ -54,22 +54,6 @@ public class GenericGenerator {
 
     }
 
-    private Date parseIssueDate(HttpServletRequest request) {
-        Date issueDate = null;
-        DateFormat df = new SimpleDateFormat("dd.MM.yyyy", Locale.ENGLISH);
-        String sDate = request.getParameter("issueDate");
-        if (sDate!=null && !sDate.trim().equals(""))
-            try {
-                issueDate = df.parse(sDate);
-            } catch (ParseException e) {
-                log.warn("Date "+sDate+" does not match the template dd.MM.yyyy, using the current date");
-                issueDate = new Date();
-                e.printStackTrace();
-            }
-        return issueDate;
-    }
-
-
     public WordprocessingMLPackage generateWordDocument(HttpServletRequest request) throws UnsupportedEncodingException {
         if (hrp == null ) {
             hrp = new CustomValuesHttpRequestParser();
@@ -84,7 +68,7 @@ public class GenericGenerator {
 
 
         //Make global preparations
-        putDefaultValuesInMap(client, "000000000000", parseIssueDate(request));
+        putDefaultValuesInMap(client, "000000000000", Util.parseDate(request, "issueDate", log));
 
 		switch (Integer.parseInt(request.getParameter("requestType"))) {
 		
