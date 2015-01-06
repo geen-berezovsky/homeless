@@ -109,6 +109,27 @@ public interface IDocumentMapping {
     */
     public final int REPORT_ONE_TIME_SERVICES = 204;
     public final String REPORT_ONE_TIME_SERVICES_PATH = Configuration.templatesDir+"/"+"OneTimeServices.xlsx";
+    
+    /*
+    Template file: OverVac.xlsx
+    Document title: Стандартный отчет на охрану и в поликлинику
+    */
+    public final int REPORT_OVERVAC = 206;
+    public final String REPORT_OVERVAC_PATH = Configuration.templatesDir+"/"+"OverVac.xlsx";
+    
+    /*
+    Template file: OuterReport.xlsx
+    Document title: Стандартный отчет по клиентам на сопровождении, не проживающим в приюте
+    */
+    public final int REPORT_OUTER = 208;
+    public final String REPORT_OUTER_PATH = Configuration.templatesDir+"/"+"OuterReport.xlsx";
+    
+    /*
+    Template file: InnerReport.xlsx
+    Document title: Стандартный отчет по клиентам на сопровождении, не проживающим в приюте
+    */
+    public final int REPORT_INNER = 210;
+    public final String REPORT_INNER_PATH = Configuration.templatesDir+"/"+"OuterReport.xlsx";
 
 
     public WordprocessingMLPackage generateSocialHelpDocument(HttpServletRequest request, Client client, Map<String, String> map);
@@ -127,5 +148,7 @@ public interface IDocumentMapping {
 	public SpreadsheetMLPackage generateWorkReportDocument(HttpServletRequest request);
 	public SpreadsheetMLPackage generateOutShelterDocument(HttpServletRequest request);
 	public SpreadsheetMLPackage generateOneTimeServicesDocument(HttpServletRequest request);
+	public SpreadsheetMLPackage generateOverVacDocument(HttpServletRequest request);
+	public SpreadsheetMLPackage generateOuterDocument(HttpServletRequest request);
     
 }

@@ -129,6 +129,12 @@ public class GenericGenerator {
 			case IDocumentMapping.REPORT_ONE_TIME_SERVICES: {
 				return hrp.generateOneTimeServicesDocument(request);
 			}
+			case IDocumentMapping.REPORT_OVERVAC: {
+				return hrp.generateOverVacDocument(request);
+			}
+			case IDocumentMapping.REPORT_OUTER: {
+				return hrp.generateOuterDocument(request);
+			}
 
             default: {
 	   			return null;

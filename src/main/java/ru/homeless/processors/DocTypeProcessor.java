@@ -59,6 +59,7 @@ public class DocTypeProcessor {
 		} catch (Docx4JException e1) {
 			log.error(e1.getMessage(),e1);
 		}
+    	/*
         for (Map.Entry<Integer, List<String>> e : sheetData.entrySet()) {
         	String res = "";
         	for (String s : e.getValue()) {
@@ -66,7 +67,7 @@ public class DocTypeProcessor {
         	}
 		    log.info(e.getKey()+"="+res);
 		}
-        
+        */
 		if (new File(pathToTemplate).exists()) {
 		    try {
 		    	//ADD PREPARATED SHEET DATA INTO TEMPLATE

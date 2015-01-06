@@ -10,6 +10,8 @@ import org.springframework.stereotype.Repository;
 
 import ru.homeless.report.entities.OneTimeServicesReportEntity;
 import ru.homeless.report.entities.OutOfShelterReportEntity;
+import ru.homeless.report.entities.OuterReportEntity;
+import ru.homeless.report.entities.OverVacReportEntity;
 import ru.homeless.report.entities.ResultWorkReportEntity;
 import ru.homeless.util.Util;
 
@@ -35,7 +37,12 @@ public class ReportDAO extends GenericDAO implements IReportDAO {
 		List<ResultWorkReportEntity> result = new ArrayList<ResultWorkReportEntity>();
 		
 		 for (Object o : res) {
-			Object[] xy = (Object[])o;
+			 Object[] xy = (Object[])o;
+			 for (int i=0; i<=3; i++) {
+					if (xy[i] == null) {
+						xy[i] = new String("-");
+					}
+			 }
 			result.add(new ResultWorkReportEntity(xy[0].toString(), xy[1].toString(), Integer.parseInt(xy[2].toString()), Integer.parseInt(xy[3].toString())));
 		 }
 		return result;
@@ -65,8 +72,14 @@ public class ReportDAO extends GenericDAO implements IReportDAO {
 		
 		for (Object o : res) {
 			Object[] xy = (Object[])o;
-			result.add(new OutOfShelterReportEntity(xy[0].toString(), xy[1].toString(), xy[2].toString(), xy[3].toString(),
-					xy[4].toString(), xy[5].toString(), xy[6].toString(), xy[7].toString(),
+			
+			for (int i=0; i<=10; i++) {
+				if (xy[i] == null) {
+					xy[i] = new String("-");
+				}
+			}
+			result.add(new OutOfShelterReportEntity(xy[0].toString(), xy[1].toString(), Util.parseDateForReport((Date)xy[2]), Util.html2text(xy[3].toString()),
+					Util.html2text(xy[4].toString()), xy[5].toString(), Util.parseDateForReport((Date)xy[6]), Util.parseDateForReport((Date)xy[7]),
 					xy[8].toString(), xy[9].toString(), xy[10].toString()));
 		 }
 		return result;
@@ -82,6 +95,11 @@ public class ReportDAO extends GenericDAO implements IReportDAO {
 				.addScalar("S_TYPE").list();
 		for (Object o : res) {
 			Object[] xy = (Object[])o;
+			for (int i=0; i<=1; i++) {
+				if (xy[i] == null) {
+					xy[i] = new String("-");
+				}
+			}
 			comb.add(new OneTimeServicesReportEntity(xy[0].toString(), xy[1].toString()));
 		}
 		List<?> res2 = getSessionFactory().getCurrentSession().createSQLQuery("SELECT CONCAT(w.firstname, ' ', w.surname) as S_NAME, s.caption as S_TYPE  FROM Tranzit t LEFT JOIN  Worker w ON(t.n_worker=w.id) LEFT JOIN ServicesType s ON(s.id=IF(t.id IS NOT NULL, '100', t.id) )  WHERE (t.servdate > " 
@@ -90,6 +108,11 @@ public class ReportDAO extends GenericDAO implements IReportDAO {
 				.addScalar("S_TYPE").list();
 		for (Object o : res2) {
 			Object[] xy = (Object[])o;
+			for (int i=0; i<=1; i++) {
+				if (xy[i] == null) {
+					xy[i] = new String("-");
+				}
+			}
 			comb.add(new OneTimeServicesReportEntity(xy[0].toString(), xy[1].toString()));
 		}
 		List<?> res3 = getSessionFactory().getCurrentSession().createSQLQuery("SELECT CONCAT(w.firstname, ' ', w.surname) as S_NAME, s.caption as S_TYPE FROM RecievedService r LEFT JOIN Worker w ON(r.worker=w.id) LEFT JOIN ServicesType s" +
@@ -99,9 +122,84 @@ public class ReportDAO extends GenericDAO implements IReportDAO {
 				.addScalar("S_TYPE").list();
 		for (Object o : res3) {
 			Object[] xy = (Object[])o;
+			
+			for (int i=0; i<=1; i++) {
+				if (xy[i] == null) {
+					xy[i] = new String("-");
+				}
+			}
 			comb.add(new OneTimeServicesReportEntity(xy[0].toString(), xy[1].toString()));
 		}
 		return comb;
+	}
+
+	@Override
+	public List<OverVacReportEntity> getOverVacReport() {
+		List<OverVacReportEntity> result = new ArrayList<OverVacReportEntity>();
+		
+		List<?> res = getSessionFactory().getCurrentSession().createSQLQuery("SELECT c.id, CONCAT(c.surname, ' ', c.firstname, ' ', c.middlename), c.date, sh.roomId, sh.inShelter, sh.outShelter, w.surname, sh.fluorogr, " +
+				"sh.typhVac, sh.dipthVac, sh.hepotitsVac FROM (SELECT * FROM ShelterHistory WHERE roomId<>0) sh LEFT JOIN Client c " +
+				"ON (sh.client = c.id) LEFT JOIN (SELECT * FROM ServContract WHERE contractresult=1) sc ON (c.id=sc.client) LEFT JOIN Worker w " +
+				"ON (sc.worker = w.id)")
+					.addScalar("c.id")
+					.addScalar("CONCAT(c.surname, ' ', c.firstname, ' ', c.middlename)")
+					.addScalar("c.date")
+					.addScalar("sh.roomId")
+					.addScalar("sh.inShelter")
+					.addScalar("sh.outShelter")
+					.addScalar("w.surname")
+					.addScalar("sh.fluorogr")
+					.addScalar("sh.typhVac")
+					.addScalar("sh.dipthVac")
+					.addScalar("sh.hepotitsVac").list();
+		
+		for (Object o : res) {
+			Object[] xy = (Object[])o;
+			
+			for (int i=0; i<=10; i++) {
+				if (xy[i] == null) {
+					xy[i] = new String("-");
+				}
+			}
+			
+			result.add(new OverVacReportEntity(xy[0].toString(), xy[1].toString(), Util.parseDateForReport((Date)xy[2]), xy[3].toString(),
+					Util.parseDateForReport((Date)xy[4]), Util.parseDateForReport((Date)xy[5]), xy[6].toString(), Util.parseDateForReport((Date)xy[7]),
+					Util.parseDateForReport((Date)xy[8]), Util.parseDateForReport((Date)xy[9]), Util.parseDateForReport((Date)xy[10])));
+		 }
+		return result;
+	}
+
+	@Override
+	public List<OuterReportEntity> getOuterReport() {
+		List<OuterReportEntity> result = new ArrayList<OuterReportEntity>();
+		List<?> res = getSessionFactory().getCurrentSession().createSQLQuery("SELECT c.id, CONCAT(c.surname, '\n', c.firstname, '\n', c.middlename) as clName, c.date, sc.startDate, cp.caption,"+
+				" cc.endDate, sc.stopDate, IFNULL(cc.comments, '-'), IFNULL(c.memo, '-'), w.surname, sh.id FROM"+
+				" ServContract sc INNER JOIN Client c ON(sc.client = c.id) INNER JOIN Worker w ON(sc.worker = w.id)"+
+				" INNER JOIN ContractControl cc ON(cc.ServContract=sc.id) INNER JOIN ContractPoints cp ON(cp.id = cc.contractpoints)"+
+				" LEFT JOIN ShelterHistory sh ON(c.id = sh.client) WHERE (sc.contractresult='1' AND (sh.id is null OR sh.outShelter < CURDATE()))")
+					.addScalar("c.id")
+					.addScalar("clName")
+					.addScalar("c.date")
+					.addScalar("sc.startDate")
+					.addScalar("cp.caption")
+					.addScalar("cc.endDate")
+					.addScalar("sc.stopDate")
+					.addScalar("IFNULL(cc.comments, '-')")
+					.addScalar("IFNULL(c.memo, '-')")
+					.addScalar("w.surname").list();
+		for (Object o : res) {
+			Object[] xy = (Object[])o;
+			
+			for (int i=0; i<=9; i++) {
+				if (xy[i] == null && i!=2 && i!=3 && i!=5 && i!=6) {
+					xy[i] = new String("");
+				}
+			}
+			result.add(new OuterReportEntity(xy[0].toString(), xy[1].toString(), Util.parseDateForReport((Date)xy[2]), Util.parseDateForReport((Date)xy[3]),
+					xy[4].toString(), Util.parseDateForReport((Date)xy[5]), Util.parseDateForReport((Date)xy[6]),
+					Util.html2text(xy[7].toString()), Util.html2text(xy[8].toString()), xy[9].toString()));
+		 }
+		return result;
 	}
 
 }

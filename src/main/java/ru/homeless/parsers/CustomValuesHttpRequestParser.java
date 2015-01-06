@@ -28,6 +28,8 @@ import ru.homeless.mappings.DispensaryMappingImpl;
 import ru.homeless.mappings.FreeTravelMappingImpl;
 import ru.homeless.mappings.OneTimeServicesReportMappingImpl;
 import ru.homeless.mappings.OutOfShelterReportMappingImpl;
+import ru.homeless.mappings.OuterReportMappingImpl;
+import ru.homeless.mappings.OverVacReportMappingImpl;
 import ru.homeless.mappings.RegistrationMappingImpl;
 import ru.homeless.mappings.ResultWorkReportMappingImpl;
 import ru.homeless.mappings.SanitationMappingImpl;
@@ -60,6 +62,12 @@ public class CustomValuesHttpRequestParser implements IDocumentMapping {
     
     @Autowired
     private OneTimeServicesReportMappingImpl oneTimeServicesReportMappingImpl;
+    
+    @Autowired
+    private OverVacReportMappingImpl overVacReportMappingImpl;
+    
+    @Autowired
+    OuterReportMappingImpl outerReportMappingImpl;
     
     //HERE WE PARSE CUSTOM VALUES LIKE travelCity
     
@@ -193,11 +201,7 @@ public class CustomValuesHttpRequestParser implements IDocumentMapping {
     
     @Override
 	public SpreadsheetMLPackage generateWorkReportDocument(HttpServletRequest request) {
-    	
-    	//HERE WE PARSE CUSTOM PARAMETERS FROM HTTP REQUEST OBJECT
     	Map<String, Date> requestParameters = new HashMap<String, Date>();
-    	
-    	//put something in map
     	requestParameters.put("from", Util.parseDate(request, "from", log));
     	requestParameters.put("till", Util.parseDate(request, "till", log));
     	return resultWorkReportMappingImpl.getDocument(requestParameters); 
@@ -206,10 +210,7 @@ public class CustomValuesHttpRequestParser implements IDocumentMapping {
 
 	@Override
 	public SpreadsheetMLPackage generateOutShelterDocument(HttpServletRequest request) {
-		//HERE WE PARSE CUSTOM PARAMETERS FROM HTTP REQUEST OBJECT
     	Map<String, Date> requestParameters = new HashMap<String, Date>();
-    	
-    	//put something in map
     	requestParameters.put("from", Util.parseDate(request, "from", log));
     	requestParameters.put("till", Util.parseDate(request, "till", log));
 		return outOfShelterReportMappimgImpl.getDocument(requestParameters);
@@ -218,13 +219,24 @@ public class CustomValuesHttpRequestParser implements IDocumentMapping {
 
 	@Override
 	public SpreadsheetMLPackage generateOneTimeServicesDocument(HttpServletRequest request) {
-		//HERE WE PARSE CUSTOM PARAMETERS FROM HTTP REQUEST OBJECT
     	Map<String, Date> requestParameters = new HashMap<String, Date>();
-    	
-    	//put something in map
     	requestParameters.put("from", Util.parseDate(request, "from", log));
     	requestParameters.put("till", Util.parseDate(request, "till", log));
 		return oneTimeServicesReportMappingImpl.getDocument(requestParameters);
+	}
+
+
+	@Override
+	public SpreadsheetMLPackage generateOverVacDocument(HttpServletRequest request) {
+		Map<String, Date> requestParameters = new HashMap<String, Date>();
+		return overVacReportMappingImpl.getDocument(requestParameters);
+	}
+
+
+	@Override
+	public SpreadsheetMLPackage generateOuterDocument(HttpServletRequest request) {
+		Map<String, Date> requestParameters = new HashMap<String, Date>();
+		return outerReportMappingImpl.getDocument(requestParameters);
 	}
 
 

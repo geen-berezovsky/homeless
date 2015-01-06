@@ -9,6 +9,8 @@ import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 
 import ru.homeless.entities.Worker;
 
@@ -54,13 +56,30 @@ public class Util {
     }
 
     public static String parseDateForMySql(Date sDate) {
+    	if(sDate==null) {
+    		sDate = new Date();
+    	}
         SimpleDateFormat mySQLFormat = new SimpleDateFormat("yyyy-MM-dd");
         String reformattedStr = mySQLFormat.format(sDate);
         return "'" + reformattedStr + "'";
     }
     
 
+    public static String parseDateForReport(Date sDate) {
+    	if(sDate!=null) {
+	    	SimpleDateFormat mySQLFormat = new SimpleDateFormat("dd.MM.yyyy");
+	        String reformattedStr = mySQLFormat.format(sDate);
+	        return reformattedStr;
+    	} else {
+    		return "";
+    	}
+    }
     
-
+    public static String html2text(String html) {
+	    Document document = Jsoup.parse(html);
+	    document.select("br").append("\\n");
+	    document.select("p").prepend("\\n");
+	    return document.text().replaceAll("\\\\n", "\n");
+	}
 
 }
