@@ -1,343 +1,344 @@
 <?xml version = "1.0" encoding = "UTF-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui">
 
 <h:head>
     <title>Добро пожаловать, #{user.name}!</title>
-	<link href="css/default.css" rel="stylesheet" type="text/css" />
-	<script type="text/javascript">
-		function openSearchResult() {
-			searchByNameDlg.hide();
-			searchByIdDlg.hide();
-			displayFoundByName.show()
-		}
+    <link href="css/default.css" rel="stylesheet" type="text/css"/>
+    <script type="text/javascript">
+        function openSearchResult() {
+            searchByNameDlg.hide();
+            searchByIdDlg.hide();
+            displayFoundByName.show()
+        }
 
-		function reload() {
-			location.reload();
-		}
+        function reload() {
+            location.reload();
+        }
 
-	</script>
+    </script>
 
 </h:head>
 
 <h:body onload="#{clientform.refreshTabs()}" styleClass="body_style">
 
 
-	<p:layout id="basePageLayout" fullPage="true">
-		<p:layoutUnit position="north" id="topMenu" size="50">
-			<ui:include src="clientform/mainmenu.xhtml" />
-		</p:layoutUnit>
-		<p:layoutUnit position="center" resizable="true" collapsible="true">
-			<p:tabView effect="fade" effectDuration="normal" id="m_tabview" style="#{clientform.mainPanelVisibility}" styleClass="topLayoutMainForm" scrollable="false">
-				<p:ajax event="tabChange" listener="#{clientform.tabChangeListener}" update="base_form documents_form contracts_form shelter_form" />
-				<p:tab title="Базовая информация">
-					<!-- *** Basic Client Form *** -->
+<p:layout id="basePageLayout" fullPage="true">
+<p:layoutUnit position="north" id="topMenu" size="50">
+    <ui:include src="clientform/mainmenu.xhtml"/>
+</p:layoutUnit>
+<p:layoutUnit position="center" resizable="true" collapsible="true">
+<p:tabView effect="fade" effectDuration="normal" id="m_tabview" style="#{clientform.mainPanelVisibility}" styleClass="topLayoutMainForm" scrollable="false">
+<p:ajax event="tabChange" listener="#{clientform.tabChangeListener}" update="base_form documents_form contracts_form shelter_form"/>
+<p:tab title="Базовая информация">
+    <!-- *** Basic Client Form *** -->
 
-					<h:form id="base_form">
+    <h:form id="base_form">
 
-						<p:growl id="growl" showDetail="true" life="5000" />
-						<p:layout id="base_client" style="min-width:400px;min-height:750px;" styleClass="topLayoutMainForm">
-							<p:layoutUnit position="north" size="5" header="#{clientform.surname} #{clientform.firstname} #{clientform.middlename} (ID = #{clientform.id})" style="min-height:26px" styleClass="topLayoutMainForm"/>
-							<p:layoutUnit position="west" size="210" style="max-height:300px;" header="Фотография">
-                                <p:imageSwitch id="photo_main_avatar" effect="scrollRight">
-                                    <ui:repeat value="photoCamBean.photos" var="photo_main_avatar_var">
-                                        <p:commandLink actionListener="#{clientform.openPhotoDlg}">
-                                            <p:graphicImage id="main_avatar" value="#{clientform.clientFormAvatar}" cache="false" styleClass="avatar_block1"/>
-                                        </p:commandLink>
-                                    </ui:repeat>
-                                </p:imageSwitch>
-                                <p:menu styleClass="avatar_block2">
-                                    <p:menuitem value="Камера" actionListener="#{photoCamBean.showDlg()}" ajax="true" icon="ui-icon-star" />
-                                    <p:menuitem value="Загрузить" actionListener="#{photoCamBean.showOpenDlg()}" ajax="true" icon="ui-icon-disk" />
-                                    <p:menuitem value="Удалить" actionListener="#{photoCamBean.deletePhoto()}" ajax="true" icon="ui-icon-close" />
-                                </p:menu>
-							</p:layoutUnit>
-							<p:layoutUnit position="center" style="max-height:300px;" header="Персональная информация">
-								<ui:include src="clientform/maininfo.xhtml" />
-							</p:layoutUnit>
-							<p:layoutUnit position="east" size="500" style="max-height:300px;" header="Оказанные услуги">
-								<ui:include src="clientform/providedservices.xhtml" />
-							</p:layoutUnit>
-							<p:layoutUnit position="south" size="200" styleClass="bottomLayoutMainForm">
+        <p:growl id="growl" showDetail="true" life="5000"/>
+        <p:layout id="base_client" style="min-width:400px;min-height:750px;" styleClass="topLayoutMainForm">
+            <p:layoutUnit position="north" size="5" header="#{clientform.surname} #{clientform.firstname} #{clientform.middlename} (ID = #{clientform.id})" style="min-height:26px" styleClass="topLayoutMainForm"/>
+            <p:layoutUnit position="west" size="210" style="max-height:300px;" header="Фотография">
+                <p:imageSwitch id="photo_main_avatar" effect="scrollRight">
+                    <ui:repeat value="photoCamBean.photos" var="photo_main_avatar_var">
+                        <p:commandLink actionListener="#{clientform.openPhotoDlg}">
+                            <p:graphicImage id="main_avatar" value="#{clientform.clientFormAvatar}" cache="false" styleClass="avatar_block1"/>
+                        </p:commandLink>
+                    </ui:repeat>
+                </p:imageSwitch>
+                <p:menu styleClass="avatar_block2">
+                    <p:menuitem value="Камера" actionListener="#{photoCamBean.showDlg()}" ajax="true" icon="ui-icon-star"/>
+                    <p:menuitem value="Загрузить" actionListener="#{photoCamBean.showOpenDlg()}" ajax="true" icon="ui-icon-disk"/>
+                    <p:menuitem value="Удалить" actionListener="#{photoCamBean.deletePhoto()}" ajax="true" icon="ui-icon-close"/>
+                </p:menu>
+            </p:layoutUnit>
+            <p:layoutUnit position="center" style="max-height:300px;" header="Персональная информация">
+                <ui:include src="clientform/maininfo.xhtml"/>
+            </p:layoutUnit>
+            <p:layoutUnit position="east" size="500" style="max-height:300px;" header="Оказанные услуги">
+                <ui:include src="clientform/providedservices.xhtml"/>
+            </p:layoutUnit>
+            <p:layoutUnit position="south" size="200" styleClass="bottomLayoutMainForm">
 
-								<p:layout styleClass="photoOperationButtons">
-									<p:layoutUnit position="west" size="350" header="Дополнительная информация">
-										<ui:include src="clientform/personalinfo.xhtml" />
-									</p:layoutUnit>
-									<p:layoutUnit position="center" styleClass="bottomLayoutMainForm">
-										<p:layout>
-											<p:layoutUnit position="west" size="33%" header="Причины бездомности">
-												<ui:include src="clientform/homelessreasons.xhtml" />
-											</p:layoutUnit>
-											<p:layoutUnit position="center" size="33%" header="Источники существования">
-												<ui:include src="clientform/breadwinner.xhtml" />
-											</p:layoutUnit>
-											<p:layoutUnit position="east" size="33%" header="Хронические болезни">
-												<ui:include src="clientform/chronicaldisasters.xhtml" />
-											</p:layoutUnit>
-										</p:layout>
-									</p:layoutUnit>
-									<p:layoutUnit position="south" size="100" style="min-height: 45px; max-height: 45px" styleClass="bottomLayoutMainForm">
-										<center>
-											<p:commandButton value="Сохранить" actionListener="#{clientform.saveClientForm(clientform)}" id="saveClientForm" update="@this :m_tabview:base_form base_form_panel_grid growl"
-												icon="ui-icon-check" />
-										</center>
-									</p:layoutUnit>
+                <p:layout styleClass="photoOperationButtons">
+                    <p:layoutUnit position="west" size="350" header="Дополнительная информация">
+                        <ui:include src="clientform/personalinfo.xhtml"/>
+                    </p:layoutUnit>
+                    <p:layoutUnit position="center" styleClass="bottomLayoutMainForm">
+                        <p:layout>
+                            <p:layoutUnit position="west" size="33%" header="Причины бездомности">
+                                <ui:include src="clientform/homelessreasons.xhtml"/>
+                            </p:layoutUnit>
+                            <p:layoutUnit position="center" size="33%" header="Источники существования">
+                                <ui:include src="clientform/breadwinner.xhtml"/>
+                            </p:layoutUnit>
+                            <p:layoutUnit position="east" size="33%" header="Хронические болезни">
+                                <ui:include src="clientform/chronicaldisasters.xhtml"/>
+                            </p:layoutUnit>
+                        </p:layout>
+                    </p:layoutUnit>
+                    <p:layoutUnit position="south" size="100" style="min-height: 45px; max-height: 45px" styleClass="bottomLayoutMainForm">
+                        <center>
+                            <p:commandButton value="Сохранить" actionListener="#{clientform.saveClientForm(clientform)}" id="saveClientForm" update="@this :m_tabview:base_form base_form_panel_grid growl"
+                                             icon="ui-icon-check"/>
+                        </center>
+                    </p:layoutUnit>
 
-								</p:layout>
-
-
-
-							</p:layoutUnit>
+                </p:layout>
 
 
-						</p:layout>
-
-						<!--
- 
- -->
-					</h:form>
-					<!-- *** End Of Basic Client Form *** -->
-					<!--
-										
-										
-										
-										
- 
- -->
-
-				</p:tab>
-				<p:tab title="Документы">
-					<!-- *** Client Documents Form *** -->
-					<h:form id="documents_form">
-						<p:panel id="documents_main_panel">
-							<div id="client_documents_panel_div">
-
-								<p:contextMenu for="doclistId">
-									<p:menuitem value="Удалить" update="doclistId" icon="ui-icon-close" actionListener="#{clientdocuments.deleteDocument()}" action="#{clientdocuments.reload()}" ajax="true" />
-									<p:menuitem value="Редактировать" update="doclistId" icon="ui-icon-pencil" actionListener="#{clientdocuments.editDocument()}" ajax="true" oncomplete="addDocumentWv.show();" />
-								</p:contextMenu>
+            </p:layoutUnit>
 
 
-								<p:dataTable id="doclistId" var="doclist" value="#{clientdocuments.documentsList}" paginator="true" rows="15"
-									paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15"
-									rowKey="#{doclist.id}" selection="#{clientdocuments.selectedDocument}" selectionMode="single" paginatorPosition="bottom" styleClass="default_datatable">
+        </p:layout>
 
-									<p:column headerText="ID">
-										<h:outputText value="#{doclist.id}" />
-									</p:column>
+        <!--
 
-									<p:column headerText="Тип">
-										<h:outputText value="#{doclist.doctype}" />
-									</p:column>
-									<p:column headerText="Серия">
-										<h:outputText value="#{doclist.docPrefix}" />
-									</p:column>
-									<p:column headerText="Номер">
-										<h:outputText value="#{doclist.docNum}" />
-									</p:column>
-									<p:column headerText="Орган выдачи">
-										<h:outputText value="#{doclist.whereAndWhom}" />
-									</p:column>
-									<p:column headerText="Дата выдачи">
-										<h:outputText value="#{clientdocuments.formatDate(doclist.date)}" />
-									</p:column>
-									<p:column headerText="Регистрация">
-										<h:outputText value="#{clientdocuments.getStringRegistrationConfirmation(doclist.registration)}" />
-									</p:column>
-									<p:column headerText="Регистрация: город">
-										<h:outputText value="#{doclist.city}" />
-									</p:column>
-									<p:column headerText="Регистрация: адрес">
-										<h:outputText value="#{doclist.address}" />
-									</p:column>
-
-								</p:dataTable>
-								<center>
-									<p:commandButton value="Добавить документ" icon="ui-icon-circle-plus" process="@this" actionListener="#{clientdocuments.resetForm}"/>
-								</center>
+-->
+    </h:form>
+    <!-- *** End Of Basic Client Form *** -->
+    <!--
 
 
-							</div>
-						</p:panel>
-					</h:form>
-				</p:tab>
-				<p:tab title="Социальное сопровождение">
-
-					<h:form id="contracts_form">
-						<p:panel id="contracts_main_panel">
-							<div id="client_contracts_panel_div">
-
-								<p:contextMenu for="conlistId">
-									<p:menuitem value="Редактировать" update="conlistId" icon="ui-icon-pencil" actionListener="#{clientcontracts.editContract()}" ajax="true" oncomplete="editContractWv.show();" />
-									<p:menuitem value="Удалить" update="conlistId" icon="ui-icon-close" actionListener="#{clientcontracts.deleteContract()}" action="#{clientcontracts.reload()}" ajax="true" />
-								</p:contextMenu>
-
-								<p:dataTable id="conlistId" var="conlist" value="#{clientcontracts.contractsList}" paginator="true" rows="15"
-									paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15"
-									rowKey="#{conlist.id}" selection="#{clientcontracts.selectedContract}" selectionMode="single" styleClass="default_datatable" paginatorPosition="bottom">
-
-									<p:column headerText="ID">
-										<h:outputText value="#{conlist.id}" />
-									</p:column>
-
-									<p:column headerText="Номер">
-										<h:outputText value="#{conlist.docNum}" />
-									</p:column>
-									<p:column headerText="Дата начала">
-										<h:outputText value="#{clientcontracts.formatDate(conlist.startDate)}" />
-									</p:column>
-									<p:column headerText="Плановая дата окончания">
-										<h:outputText value="#{clientcontracts.formatDate(conlist.stopDate)}" />
-									</p:column>
-									<p:column headerText="Статус">
-										<h:outputText value="#{conlist.result}" />
-									</p:column>
-									<p:column headerText="Работник">
-										<h:outputText value="#{conlist.worker}" />
-									</p:column>
-									<p:column headerText="Комментарии">
-										<h:outputText value="#{conlist.commentResult}" />
-									</p:column>
-
-									<p:column headerText="Договор">
-										<center>
-                                            <p:commandButton value="Открыть" ajax="true" actionListener="#{clientcontracts.downloadContract(conlist.id)}"/>
-                                        </center>
-									</p:column>
-
-								</p:dataTable>
-								<p:panel>
-									<p:growl id="addcontract_button_growl" showDetail="true" life="3000" />
-									<center>
-										<p:commandButton value="Добавить договор" icon="ui-icon-circle-plus" actionListener="#{clientcontracts.showAddContractDialog}" update="@this contracts_form addcontract_button_growl" />
-									</center>
-								</p:panel>
-
-							</div>
-						</p:panel>
-					</h:form>
-
-					<h:form id="shelter_form">
-						<p:panel id="shelter_main_panel">
-							<div id="client_shelter_panel_div">
-
-								<p:contextMenu for="shelterlistId">
-									<p:menuitem value="Удалить" update="shelterlistId" icon="ui-icon-close" actionListener="#{clientshelter.deleteShelter()}" action="#{clientshelter.reload()}" ajax="true" />
-									<p:menuitem value="Редактировать" update="shelterlistId" icon="ui-icon-pencil" actionListener="#{clientshelter.editShelter()}" ajax="true" />
-								</p:contextMenu>
-
-								<p:dataTable id="shelterlistId" widgetVar="shelterlistWv" var="shelterlist" value="#{clientshelter.shelterList}" paginator="true" rows="15"
-									paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15"
-									rowKey="#{shelterlist.id}" selection="#{clientshelter.selectedShelter}" selectionMode="single" styleClass="default_datatable" paginatorPosition="bottom">
-
-									<p:column headerText="ID">
-										<h:outputText value="#{shelterlist.id}" />
-									</p:column>
-
-									<p:column headerText="Дата заселения">
-										<h:outputText value="#{clientshelter.formatDate(shelterlist.inShelter)}" />
-									</p:column>
-									<p:column headerText="Дата выселения">
-										<h:outputText value="#{clientshelter.formatDate(shelterlist.outShelter)}" />
-									</p:column>
-									<p:column headerText="Комната">
-										<h:outputText value="#{clientshelter.formatRoomValue(shelterlist.roomId)}" />
-									</p:column>
-									<p:column headerText="ФЛГ">
-										<h:outputText value="#{clientshelter.formatDate(shelterlist.fluorogr)}" />
-									</p:column>
-									<p:column headerText="Дифтерия">
-										<h:outputText value="#{clientshelter.formatDate(shelterlist.dipthVac)}" />
-									</p:column>
-									<p:column headerText="Гепатит">
-										<h:outputText value="#{clientshelter.formatDate(shelterlist.hepotitsVac)}" />
-									</p:column>
-									<p:column headerText="Тиф">
-										<h:outputText value="#{clientshelter.formatDate(shelterlist.typhVac)}" />
-									</p:column>
-									<p:column headerText="Статус">
-										<h:outputText value="#{clientshelter.shelterStatus(shelterlist.shelterresult)}" />
-									</p:column>
-
-								</p:dataTable>
-								<p:panel>
-									<center>
-                                        <!-- This remote command are necessary for direct lazy loading data to the specified dialog/form -->
-                                        <p:commandButton value="Добавить сведения о проживании" actionListener="#{clientshelter.addNewShelter}" icon="ui-icon-circle-plus" />
-									</center>
-								</p:panel>
-
-							</div>
-						</p:panel>
-					</h:form>
 
 
-				</p:tab>
-				<p:tab title="Контакты">
-					<h:form id="client_contacts">
-						<p:panel id="add_contacts_panel_grid">
-							<p:editor id="contacts_editor" value="#{clientform.contacts}" />
-							<p:growl id="growl_client_contacts" showDetail="true" life="3000" />
-							<center>
-								<p:commandButton value="Сохранить" actionListener="#{clientform.saveClientForm(clientform)}" id="saveClientFormContacts"
-									update="@this :m_tabview:client_contacts add_contacts_panel_grid growl_client_contacts" icon="ui-icon-check" />
-							</center>
-						</p:panel>
-					</h:form>
-				</p:tab>
-				<p:tab title="Примечания">
-					<h:form id="client_memo">
-						<p:panel id="add_memo_panel_grid">
-							<p:editor id="memo_editor" value="#{clientform.memo}" />
-							<p:growl id="growl_client_memo" showDetail="true" life="3000" />
-							<center>
-								<p:commandButton value="Сохранить" actionListener="#{clientform.saveClientForm(clientform)}" id="saveClientFormComments" update="@this :m_tabview:client_memo add_memo_panel_grid growl_client_memo"
-									icon="ui-icon-check" />
-							</center>
-						</p:panel>
-					</h:form>
 
-				</p:tab>
-				<p:tab title="Построить документ">
-				</p:tab>
-				<p:tab title="Выдать справку">
-				</p:tab>
-				<p:tab title="Удалить клиента">
-				</p:tab>
+-->
 
-			</p:tabView>
+</p:tab>
+<p:tab title="Документы">
+    <!-- *** Client Documents Form *** -->
+    <h:form id="documents_form">
+        <p:panel id="documents_main_panel">
+            <div id="client_documents_panel_div">
 
-		</p:layoutUnit>
-		<p:layoutUnit id="right" position="east" size="300" resizable="true" closable="true" collapsible="true" header="Reminders" minSize="200" collapsed="true">
-				Schedule
-		</p:layoutUnit>
+                <p:contextMenu for="doclistId">
+                    <p:menuitem value="Удалить" update="doclistId" icon="ui-icon-close" actionListener="#{clientdocuments.deleteDocument()}" action="#{clientdocuments.reload()}" ajax="true"/>
+                    <p:menuitem value="Редактировать" update="doclistId" icon="ui-icon-pencil" actionListener="#{clientdocuments.editDocument()}" ajax="true" oncomplete="addDocumentWv.show();"/>
+                </p:contextMenu>
 
 
-	</p:layout>
+                <p:dataTable id="doclistId" var="doclist" value="#{clientdocuments.documentsList}" paginator="true" rows="15"
+                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15"
+                             rowKey="#{doclist.id}" selection="#{clientdocuments.selectedDocument}" selectionMode="single" paginatorPosition="bottom" styleClass="default_datatable">
 
-	<p:panel id="base_panel" widgetVar="base_panelWv" style="#{clientform.mainPanelVisibility}">
-	</p:panel>
-	<!-- Include Dialogs -->
-	<ui:include src="dialogs/search.xhtml" />
-    <ui:include src="dialogs/webcamera.xhtml" />
-	<ui:include src="dialogs/addservices.xhtml" />
-	<ui:include src="dialogs/adddocument.xhtml" />
-	<ui:include src="dialogs/addcontract.xhtml" />
-    <ui:include src="dialogs/addshelter.xhtml" />
-	<ui:include src="dialogs/editcontract.xhtml" />
-	<ui:include src="dialogs/mysettings.xhtml" />
-    <ui:include src="dialogs/roomsettings.xhtml" />
-    <ui:include src="dialogs/editroom.xhtml" />
-	<ui:include src="dialogs/addserviceplanitem.xhtml" />
-    <ui:include src="dialogs/realphoto.xhtml" />
-    <ui:include src="dialogs/photoupload.xhtml" />
+                    <p:column headerText="ID">
+                        <h:outputText value="#{doclist.id}"/>
+                    </p:column>
 
-    <p:dialog id="notImplementedDlg" header="Этот раздел еще не имплементирован" widgetVar="notImplementedDlgWv" resizable="false" closable="true" modal="true" showEffect="fade" hideEffect="explode" closeOnEscape="true">
-        <p:panel>
-            <p:outputLabel value="Этот раздел находится в разработке" />
+                    <p:column headerText="Тип">
+                        <h:outputText value="#{doclist.doctype}"/>
+                    </p:column>
+                    <p:column headerText="Серия">
+                        <h:outputText value="#{doclist.docPrefix}"/>
+                    </p:column>
+                    <p:column headerText="Номер">
+                        <h:outputText value="#{doclist.docNum}"/>
+                    </p:column>
+                    <p:column headerText="Орган выдачи">
+                        <h:outputText value="#{doclist.whereAndWhom}"/>
+                    </p:column>
+                    <p:column headerText="Дата выдачи">
+                        <h:outputText value="#{clientdocuments.formatDate(doclist.date)}"/>
+                    </p:column>
+                    <p:column headerText="Регистрация">
+                        <h:outputText value="#{clientdocuments.getStringRegistrationConfirmation(doclist.registration)}"/>
+                    </p:column>
+                    <p:column headerText="Регистрация: город">
+                        <h:outputText value="#{doclist.city}"/>
+                    </p:column>
+                    <p:column headerText="Регистрация: адрес">
+                        <h:outputText value="#{doclist.address}"/>
+                    </p:column>
+
+                </p:dataTable>
+                <center>
+                    <p:commandButton value="Добавить документ" icon="ui-icon-circle-plus" process="@this" actionListener="#{clientdocuments.resetForm}"/>
+                </center>
+
+
+            </div>
         </p:panel>
-    </p:dialog>
+    </h:form>
+</p:tab>
+<p:tab title="Социальное сопровождение">
+
+    <h:form id="contracts_form">
+        <p:panel id="contracts_main_panel">
+            <div id="client_contracts_panel_div">
+
+                <p:contextMenu for="conlistId">
+                    <p:menuitem value="Редактировать" update="conlistId" icon="ui-icon-pencil" actionListener="#{clientcontracts.editContract()}" ajax="true" oncomplete="editContractWv.show();"/>
+                    <p:menuitem value="Удалить" update="conlistId" icon="ui-icon-close" actionListener="#{clientcontracts.deleteContract()}" action="#{clientcontracts.reload()}" ajax="true"/>
+                </p:contextMenu>
+
+                <p:dataTable id="conlistId" var="conlist" value="#{clientcontracts.contractsList}" paginator="true" rows="15"
+                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15"
+                             rowKey="#{conlist.id}" selection="#{clientcontracts.selectedContract}" selectionMode="single" styleClass="default_datatable" paginatorPosition="bottom">
+
+                    <p:column headerText="ID">
+                        <h:outputText value="#{conlist.id}"/>
+                    </p:column>
+
+                    <p:column headerText="Номер">
+                        <h:outputText value="#{conlist.docNum}"/>
+                    </p:column>
+                    <p:column headerText="Дата начала">
+                        <h:outputText value="#{clientcontracts.formatDate(conlist.startDate)}"/>
+                    </p:column>
+                    <p:column headerText="Плановая дата окончания">
+                        <h:outputText value="#{clientcontracts.formatDate(conlist.stopDate)}"/>
+                    </p:column>
+                    <p:column headerText="Статус">
+                        <h:outputText value="#{conlist.result}"/>
+                    </p:column>
+                    <p:column headerText="Работник">
+                        <h:outputText value="#{conlist.worker}"/>
+                    </p:column>
+                    <p:column headerText="Комментарии">
+                        <h:outputText value="#{conlist.commentResult}"/>
+                    </p:column>
+
+                    <p:column headerText="Договор">
+                        <center>
+                            <p:commandButton value="Открыть" ajax="true" actionListener="#{clientcontracts.downloadContract(conlist.id)}"/>
+                        </center>
+                    </p:column>
+
+                </p:dataTable>
+                <p:panel>
+                    <p:growl id="addcontract_button_growl" showDetail="true" life="3000"/>
+                    <center>
+                        <p:commandButton value="Добавить договор" icon="ui-icon-circle-plus" actionListener="#{clientcontracts.showAddContractDialog}" update="@this contracts_form addcontract_button_growl"/>
+                    </center>
+                </p:panel>
+
+            </div>
+        </p:panel>
+    </h:form>
+
+    <h:form id="shelter_form">
+        <p:panel id="shelter_main_panel">
+            <div id="client_shelter_panel_div">
+
+                <p:contextMenu for="shelterlistId">
+                    <p:menuitem value="Удалить" update="shelterlistId" icon="ui-icon-close" actionListener="#{clientshelter.deleteShelter()}" action="#{clientshelter.reload()}" ajax="true"/>
+                    <p:menuitem value="Редактировать" update="shelterlistId" icon="ui-icon-pencil" actionListener="#{clientshelter.editShelter()}" ajax="true"/>
+                </p:contextMenu>
+
+                <p:dataTable id="shelterlistId" widgetVar="shelterlistWv" var="shelterlist" value="#{clientshelter.shelterList}" paginator="true" rows="15"
+                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15"
+                             rowKey="#{shelterlist.id}" selection="#{clientshelter.selectedShelter}" selectionMode="single" styleClass="default_datatable" paginatorPosition="bottom">
+
+                    <p:column headerText="ID">
+                        <h:outputText value="#{shelterlist.id}"/>
+                    </p:column>
+
+                    <p:column headerText="Дата заселения">
+                        <h:outputText value="#{clientshelter.formatDate(shelterlist.inShelter)}"/>
+                    </p:column>
+                    <p:column headerText="Дата выселения">
+                        <h:outputText value="#{clientshelter.formatDate(shelterlist.outShelter)}"/>
+                    </p:column>
+                    <p:column headerText="Комната">
+                        <h:outputText value="#{clientshelter.formatRoomValue(shelterlist.roomId)}"/>
+                    </p:column>
+                    <p:column headerText="ФЛГ">
+                        <h:outputText value="#{clientshelter.formatDate(shelterlist.fluorogr)}"/>
+                    </p:column>
+                    <p:column headerText="Дифтерия">
+                        <h:outputText value="#{clientshelter.formatDate(shelterlist.dipthVac)}"/>
+                    </p:column>
+                    <p:column headerText="Гепатит">
+                        <h:outputText value="#{clientshelter.formatDate(shelterlist.hepotitsVac)}"/>
+                    </p:column>
+                    <p:column headerText="Тиф">
+                        <h:outputText value="#{clientshelter.formatDate(shelterlist.typhVac)}"/>
+                    </p:column>
+                    <p:column headerText="Статус">
+                        <h:outputText value="#{clientshelter.shelterStatus(shelterlist.shelterresult)}"/>
+                    </p:column>
+
+                </p:dataTable>
+                <p:panel>
+                    <center>
+                        <!-- This remote command are necessary for direct lazy loading data to the specified dialog/form -->
+                        <p:commandButton value="Добавить сведения о проживании" actionListener="#{clientshelter.addNewShelter}" icon="ui-icon-circle-plus"/>
+                    </center>
+                </p:panel>
+
+            </div>
+        </p:panel>
+    </h:form>
+
+
+</p:tab>
+<p:tab title="Контакты">
+    <h:form id="client_contacts">
+        <p:panel id="add_contacts_panel_grid">
+            <p:editor id="contacts_editor" value="#{clientform.contacts}"/>
+            <p:growl id="growl_client_contacts" showDetail="true" life="3000"/>
+            <center>
+                <p:commandButton value="Сохранить" actionListener="#{clientform.saveClientForm(clientform)}" id="saveClientFormContacts"
+                                 update="@this :m_tabview:client_contacts add_contacts_panel_grid growl_client_contacts" icon="ui-icon-check"/>
+            </center>
+        </p:panel>
+    </h:form>
+</p:tab>
+<p:tab title="Примечания">
+    <h:form id="client_memo">
+        <p:panel id="add_memo_panel_grid">
+            <p:editor id="memo_editor" value="#{clientform.memo}"/>
+            <p:growl id="growl_client_memo" showDetail="true" life="3000"/>
+            <center>
+                <p:commandButton value="Сохранить" actionListener="#{clientform.saveClientForm(clientform)}" id="saveClientFormComments" update="@this :m_tabview:client_memo add_memo_panel_grid growl_client_memo"
+                                 icon="ui-icon-check"/>
+            </center>
+        </p:panel>
+    </h:form>
+
+</p:tab>
+<p:tab title="Построить документ">
+    <p:commandButton value="Стандартный документ" actionListener="#{standardDocument.openDlg()}" icon="ui-icon-circle-plus"/>
+</p:tab>
+<p:tab title="Выдать справку">
+</p:tab>
+<p:tab title="Удалить клиента">
+</p:tab>
+
+</p:tabView>
+
+</p:layoutUnit>
+<p:layoutUnit id="right" position="east" size="300" resizable="true" closable="true" collapsible="true" header="Reminders" minSize="200" collapsed="true">
+    Schedule
+</p:layoutUnit>
+
+
+</p:layout>
+
+<p:panel id="base_panel" widgetVar="base_panelWv" style="#{clientform.mainPanelVisibility}">
+</p:panel>
+<!-- Include Dialogs -->
+<ui:include src="dialogs/search.xhtml"/>
+<ui:include src="dialogs/webcamera.xhtml"/>
+<ui:include src="dialogs/addservices.xhtml"/>
+<ui:include src="dialogs/adddocument.xhtml"/>
+<ui:include src="dialogs/addcontract.xhtml"/>
+<ui:include src="dialogs/addshelter.xhtml"/>
+<ui:include src="dialogs/editcontract.xhtml"/>
+<ui:include src="dialogs/mysettings.xhtml"/>
+<ui:include src="dialogs/roomsettings.xhtml"/>
+<ui:include src="dialogs/editroom.xhtml"/>
+<ui:include src="dialogs/addserviceplanitem.xhtml"/>
+<ui:include src="dialogs/realphoto.xhtml"/>
+<ui:include src="dialogs/photoupload.xhtml"/>
+<ui:include src="dialogs/standardDocument.xhtml"/>
+
+<p:dialog id="notImplementedDlg" header="Этот раздел еще не имплементирован" widgetVar="notImplementedDlgWv" resizable="false" closable="true" modal="true" showEffect="fade" hideEffect="explode" closeOnEscape="true">
+    <p:panel>
+        <p:outputLabel value="Этот раздел находится в разработке"/>
+    </p:panel>
+</p:dialog>
 
 
 </h:body>

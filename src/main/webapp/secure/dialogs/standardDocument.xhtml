@@ -1,0 +1,106 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui">
+<ui:composition>
+    <h:form id="standard_document">
+        <p:dialog id="standardDocument"
+                  header="Стандартный документ: #{clientform.surname} #{clientform.firstname} #{clientform.middlename}"
+                  widgetVar="standardDocumentWv" resizable="false" closable="true" modal="true" showEffect="fade"
+                  hideEffect="explode" dynamic="true" closeOnEscape="true">
+
+            <p:panelGrid id="standard_document_panel_grid">
+                <p:row>
+                    <p:column>
+                        <p:outputLabel value="Заголовок:" for="standardDocumentTypeId" styleClass="base_form_caption_text"/>
+                    </p:column>
+                    <p:column>
+                        <p:selectOneMenu id="standardDocumentTypeId" value="#{standardDocument.type}" style="width:150px;" styleClass="base_form_value_text">
+                            <f:selectItem itemLabel="Заявление" itemValue="Заявление"/>
+                            <f:selectItem itemLabel="Жалоба" itemValue="Жалоба"/>
+                            <f:selectItem itemLabel="Запрос" itemValue="Запрос"/>
+                            <f:selectItem itemLabel="Благодарность" itemValue="Благодарность"/>
+                        </p:selectOneMenu>
+                    </p:column>
+                </p:row>
+                <p:row>
+                    <p:column>
+                        <p:outputLabel value="Номер документа:" for="standardDocumentNumberId" styleClass="base_form_caption_text"/>
+                    </p:column>
+                    <p:column>
+                        <p:inputText value="#{standardDocument.number}" id="standardDocumentNumberId" styleClass="base_form_value_text" required="true"/>
+                    </p:column>
+                </p:row>
+                <p:row>
+                    <p:column>
+                        <p:outputLabel value="Кому:" for="standardDocumentForWhomId" styleClass="base_form_caption_text"/>
+                    </p:column>
+                    <p:column>
+                        <p:inputTextarea id="standardDocumentForWhomId" rows="6" cols="50" value="#{standardDocument.forWhom}" styleClass="base_form_value_text" required="true"/>
+                    </p:column>
+                </p:row>
+                <p:row>
+                    <p:column>
+                        <p:outputLabel value="Преамбула:" for="standardDocumentPreambleId" styleClass="base_form_caption_text"/>
+                    </p:column>
+                    <p:column>
+                        <p:selectOneRadio id="standardDocumentPreambleId" value="#{standardDocument.preamble}" layout="grid" columns="1" styleClass="base_form_value_text" required="true">
+                            <f:selectItem id="preambleHelp1" itemLabel="...социально-юридическая помощь..." itemValue="СПб БОО &quot;Ночлежка&quot; занимается оказанием социально-юридической помощи лицам БОМЖ." itemDescription="СПб БОО &quot;Ночлежка&quot; занимается оказанием социально-юридической помощи лицам БОМЖ."/>
+                            <f:selectItem id="preambleHelp2" itemLabel="...медико-социальная и юридическая помощь..." itemValue="СПб БОО &quot;Ночлежка&quot; занимается оказанием медико-социальной и юридической помощи лицам без определенного места жительства, а также гражданам, оказавшимся в сложной жизненной ситуации." itemDescription="СПб БОО &quot;Ночлежка&quot; занимается оказанием медико-социальной и юридической помощи лицам без определенного места жительства, а также гражданам, оказавшимся в сложной жизненной ситуации."/>
+                        </p:selectOneRadio>
+                    </p:column>
+                </p:row>
+                <p:row>
+                    <p:column>
+                        <p:outputLabel value="Основная часть:" for="standardDocumentMainPartId" styleClass="base_form_caption_text"/>
+                    </p:column>
+                    <p:column>
+                        <p:inputTextarea rows="6" cols="50" value="#{standardDocument.mainPart}" id="standardDocumentMainPartId" styleClass="base_form_value_text" required="true"/>
+                    </p:column>
+                </p:row>
+                <p:row>
+                    <p:column>
+                        <p:outputLabel value="Заключение:" for="standardDocumentFinalPartId" styleClass="base_form_caption_text"/>
+                    </p:column>
+                    <p:column>
+                        <p:selectManyCheckbox id="standardDocumentFinalPartId" value="#{standardDocument.finalPart}" layout="grid" columns="1" styleClass="base_form_value_text" required="true">
+                            <f:selectItem id="finalPart1" itemLabel="...не будьте безучастными..." itemValue="Убедительно просим Вас не остаться безучастным к человеку, оказавшемуся в сложной жизненной ситуации." itemDescription="Убедительно просим Вас не остаться безучастным к человеку, оказавшемуся в сложной жизненной ситуации."/>
+                            <f:selectItem id="finalPart2" itemLabel="...сообщите как получить информацию..." itemValue="В случае невозможности предоставить данную информацию, просим сообщить о порядке ее получения." itemDescription="В случае невозможности предоставить данную информацию, просим сообщить о порядке ее получения."/>
+                            <f:selectItem id="finalPart3" itemLabel="...ответ по факсу..." itemValue="Ответ просим дополнительно направить по факсу." itemDescription="Ответ просим дополнительно направить по факсу."/>
+                            <f:selectItem id="finalPart4" itemLabel="...благодарим за понимание..." itemValue="Благодарим за сотрудничество и понимание." itemDescription="Благодарим за сотрудничество и понимание."/>
+                        </p:selectManyCheckbox>
+                    </p:column>
+                </p:row>
+                <p:row>
+                    <p:column>
+                        <p:outputLabel value="Подпись:" for="standardDocumentSignatureId" styleClass="base_form_caption_text"/>
+                    </p:column>
+                    <p:column>
+                        <p:inputTextarea rows="6" cols="50" value="#{standardDocument.signature}" id="standardDocumentSignatureId" styleClass="base_form_value_text" required="true"/>
+                    </p:column>
+                </p:row>
+                <p:row>
+                    <p:column>
+                        <p:outputLabel value="Исполнитель:" for="standardDocumentPerformerId" styleClass="base_form_caption_text"/>
+                    </p:column>
+                    <p:column>
+                        <p:inputTextarea rows="6" cols="50" value="#{standardDocument.performer}" id="standardDocumentPerformerId" styleClass="base_form_value_text" required="true"/>
+                    </p:column>
+                </p:row>
+
+                <p:row>
+                    <p:column colspan="2">
+                        <p:growl id="growl" showDetail="true" life="5000"/>
+                        <p:commandButton value="Экспорт в Word" actionListener="#{standardDocument.export}" update="@this growl" icon="ui-icon-check"/>
+                    </p:column>
+                </p:row>
+
+
+            </p:panelGrid>
+        </p:dialog>
+    </h:form>
+
+
+</ui:composition>
+</html>
