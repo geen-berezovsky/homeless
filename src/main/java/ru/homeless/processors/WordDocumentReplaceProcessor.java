@@ -36,22 +36,23 @@ public class WordDocumentReplaceProcessor {
 
     	final String XPATH_TO_SELECT_TEXT_NODES = "//w:t";
     	
-    	//IF PHOTO NOT NULL AND WE KNOW WHERE TO INSERT IT, DO IT!
-    	//get current factory
-    	factory = Context.getWmlObjectFactory();
-    	//init new paragraph and insert into it the avatar
-    	P paragraphWithImage = addInlineImageToParagraph(createInlineImage(photo));
+		if (photo != null) {
+        	    //IF PHOTO NOT NULL AND WE KNOW WHERE TO INSERT IT, DO IT!
+		    //get current factory
+    		    factory = Context.getWmlObjectFactory();
+        	    //init new paragraph and insert into it the avatar
+		    P paragraphWithImage = addInlineImageToParagraph(createInlineImage(photo));
     	
-		//SET ALIGNMENT TO THE RIGHT
-		PPr paragraphProperties = factory.createPPr();
-		Jc justification = factory.createJc();
-		justification.setVal(JcEnumeration.RIGHT);
-		paragraphProperties.setJc(justification);
-		paragraphWithImage.setPPr(paragraphProperties);
+		    //SET ALIGNMENT TO THE RIGHT
+		    PPr paragraphProperties = factory.createPPr();
+		    Jc justification = factory.createJc();
+		    justification.setVal(JcEnumeration.RIGHT);
+		    paragraphProperties.setJc(justification);
+		    paragraphWithImage.setPPr(paragraphProperties);
 		
-		//add new paragraph to the start of document (0th position)
-		document.getMainDocumentPart().getContent().add(0, paragraphWithImage);
-
+		    //add new paragraph to the start of document (0th position)
+		    document.getMainDocumentPart().getContent().add(0, paragraphWithImage);
+		}
     	
 		List<?> texts = document.getMainDocumentPart().getJAXBNodesViaXPath(XPATH_TO_SELECT_TEXT_NODES, true);
 		for (Object obj : texts) {

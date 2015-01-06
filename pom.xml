@@ -59,6 +59,7 @@
 				</executions>
 			</plugin>
 		</plugins>
+	    <finalName>homeless-report-engine</finalName>
 	</build>
 
 	<dependencies>
