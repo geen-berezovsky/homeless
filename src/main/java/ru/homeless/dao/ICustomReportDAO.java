@@ -9,6 +9,6 @@ public interface ICustomReportDAO extends IGenericDAO {
 
 	public OldSchoolReportEntity getReportDataByGender(Date from, Date till);
 	
-	
+	public OldSchoolReportEntity getReportDataByMartialStatus(Date from, Date till);
 	
 }

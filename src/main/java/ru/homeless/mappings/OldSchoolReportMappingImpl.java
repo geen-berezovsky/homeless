@@ -27,8 +27,10 @@ public class OldSchoolReportMappingImpl implements ICustomMappingExcelDocument{
 	public SpreadsheetMLPackage getDocument(Map<String, Date> requestParameters) {
 		
 		List<OldSchoolReportEntity> list = new ArrayList<>();
-		list.add(customReportService.getReportDataByGender(requestParameters.get("from"), requestParameters.get("till")));
-		
+		Date from = requestParameters.get("from");
+		Date till = requestParameters.get("till");
+		list.add(customReportService.getReportDataByGender(from, till));
+		list.add(customReportService.getReportDataByMartialStatus(from, till));
 		//1. Add Gender Report Data
 		//2. Add ... Data
 		//3. Add ... Data

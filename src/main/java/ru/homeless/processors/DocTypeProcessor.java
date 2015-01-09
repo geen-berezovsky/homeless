@@ -92,14 +92,11 @@ public class DocTypeProcessor {
 		} catch (Docx4JException e1) {
 			log.error(e1.getMessage(),e1);
 		}
-/*
     	for (int i=0; i<sheetData.size(); i++) {
 	        for (Map.Entry<String, Integer> e : sheetData.get(i).getValueAndQuantity().entrySet()) {
 			    log.info(e.getKey()+"="+e.getValue());
 			}
 	    }
-*/
-    	
     	if (new File(pathToTemplate).exists()) {
 		    try {
 		    	//ADD PREPARATED SHEET DATA INTO TEMPLATE

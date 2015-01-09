@@ -10,4 +10,8 @@ public interface ICustomReportService extends IGenericService {
 
 	public OldSchoolReportEntity getReportDataByGender(Date from, Date till);
 	
+	public OldSchoolReportEntity getReportDataByMartialStatus(Date from, Date till);
+	
+	
+	
 }

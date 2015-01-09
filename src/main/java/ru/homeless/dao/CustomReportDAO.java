@@ -18,15 +18,10 @@ public class CustomReportDAO extends GenericDAO implements ICustomReportDAO {
 	private static final long serialVersionUID = 1L;
 	public static Logger log = Logger.getLogger(CustomReportDAO.class);
 
-	@Override
-	public OldSchoolReportEntity getReportDataByGender(Date from, Date till) {
-
-		List<?> res = getSessionFactory().getCurrentSession()
-				.createSQLQuery("select case WHEN gender=0 THEN 'Женщины' ELSE 'Мужчины' END as 'Пол', count(*) as 'Количество' from Client where date(regdate) BETWEEN " + Util.parseDateForMySql(from) + " AND " + Util.parseDateForMySql(till) + " group by gender").addScalar("Пол")
-				.addScalar("Количество").list();
-
+	public OldSchoolReportEntity prepareEntity(List<?> res, int queryType) {
+		
 		OldSchoolReportEntity oldSchoolReportEntity = new OldSchoolReportEntity();
-		oldSchoolReportEntity.setQueryType(IOldSchoolReport.QUERY_XXX_TYPE);
+		oldSchoolReportEntity.setQueryType(queryType);
 		Map<String, Integer> map = new HashMap<String, Integer>();
 
 		for (Object o : res) {
@@ -35,5 +30,26 @@ public class CustomReportDAO extends GenericDAO implements ICustomReportDAO {
 		}
 		oldSchoolReportEntity.setValueAndQuantity(map);
 		return oldSchoolReportEntity;
+	}
+	
+	@Override
+	public OldSchoolReportEntity getReportDataByGender(Date from, Date till) {
+
+		List<?> res = getSessionFactory().getCurrentSession()
+				.createSQLQuery("select case WHEN gender=0 THEN 'Женщины' ELSE 'Мужчины' END as 'Пол', count(*) as 'Количество' from Client where date(regdate) BETWEEN " + Util.parseDateForMySql(from) + " AND " + Util.parseDateForMySql(till) + " group by gender").addScalar("Пол")
+				.addScalar("Количество").list();
+
+		return prepareEntity(res, IOldSchoolReport.QUERY_GENDER_TYPE);
+	}
+
+	@Override
+	public OldSchoolReportEntity getReportDataByMartialStatus(Date from, Date till) {
+		List<?> res = getSessionFactory().getCurrentSession()
+				.createSQLQuery("select case when martialStatus=0 then 'Неизвестно' " +
+						"when martialStatus=1 then 'Состоит в браке' else 'Не состоит в браке' end as 'Семейное положение', count(*) 'Количество' " +   
+						"from Client where date(date)<DATE_ADD(sysdate(), INTERVAL -14 YEAR) and date(regdate) BETWEEN " + Util.parseDateForMySql(from) + " AND " + Util.parseDateForMySql(till) + " group by martialStatus")
+						.addScalar("Семейное положение")
+						.addScalar("Количество").list();
+		return prepareEntity(res, IOldSchoolReport.QUERY_MARTIAL_STATUS_TYPE); 
 	}
 }

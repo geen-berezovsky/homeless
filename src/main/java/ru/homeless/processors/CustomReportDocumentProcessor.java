@@ -35,28 +35,42 @@ public class CustomReportDocumentProcessor {
     	for (OldSchoolReportEntity o : extSheetData) {
     		
     		switch (o.getQueryType()) {
-    			case IOldSchoolReport.QUERY_XXX_TYPE: addGenderReportData(sheetData, o);
-    												  break;
+    			case IOldSchoolReport.QUERY_GENDER_TYPE: { addGenderReportData(sheetData, o); break; }
+
+    			case IOldSchoolReport.QUERY_MARTIAL_STATUS_TYPE: { addMartialReportData(sheetData, o); break;}
+				  
+    												  
     			default:
     					break;
     		}
     		
     	}
     	
-    	SaveToZipFile saver = new SaveToZipFile(document);
-		saver.save("C:/tmp/out.xlsm");
-    	
         return document;
     }
     
     
-    private void addGenderReportData(SheetData sheetData, OldSchoolReportEntity o) {
-    	setText(sheetData, 5, 6, "Мужчины");
-    	setText(sheetData, 6, 6, o.getValueAndQuantity().get("Мужчины").toString());
-    	setText(sheetData, 5, 7, "Женщины");
-    	setText(sheetData, 6, 7, o.getValueAndQuantity().get("Женщины").toString());
-    	
+    private void addMartialReportData(SheetData sheetData, OldSchoolReportEntity o) {
+    	preProcessorSetText(sheetData, 2, 35, "Неизвестно");
+    	preProcessorSetText(sheetData, 3, 35, o.getValueAndQuantity().get("Неизвестно").toString());
+    	preProcessorSetText(sheetData, 2, 36, "Состоит в браке");
+    	preProcessorSetText(sheetData, 3, 36, o.getValueAndQuantity().get("Состоит в браке").toString());
+    	preProcessorSetText(sheetData, 2, 37, "Не состоит в браке");
+    	preProcessorSetText(sheetData, 3, 36, o.getValueAndQuantity().get("Не состоит в браке").toString());
+		
 	}
+
+	private void addGenderReportData(SheetData sheetData, OldSchoolReportEntity o) {
+    	preProcessorSetText(sheetData, 5, 6, "Мужчины");
+    	preProcessorSetText(sheetData, 6, 6, o.getValueAndQuantity().get("Мужчины").toString());
+    	preProcessorSetText(sheetData, 5, 7, "Женщины");
+    	preProcessorSetText(sheetData, 6, 7, o.getValueAndQuantity().get("Женщины").toString());
+	}
+    
+    
+    private void preProcessorSetText(SheetData sheetData, int column, int row, String value) {
+    	setText(sheetData, column-1, row-3, value);    	
+    }
 
 	public void setText(SheetData sheetData, int column, int row, String value) {
 
@@ -74,7 +88,20 @@ public class CustomReportDocumentProcessor {
             }
         }
 
-        sheetData.getRow().get(row-1).getC().get(column-1).setT(STCellType.STR); //set the type TEXT
+        Integer intValue = null;
+        try {
+        	intValue = Integer.parseInt(value);
+        } catch (Exception e) {
+        	//do nothing
+        }
+        
+        if (intValue != null) {
+        	sheetData.getRow().get(row-1).getC().get(column-1).setT(STCellType.N); //set the type NUMBER
+        } else {
+        	sheetData.getRow().get(row-1).getC().get(column-1).setT(STCellType.STR); //set the type TEXT
+        }
+        
+        
         sheetData.getRow().get(row-1).getC().get(column-1).setV(value); //set the value
 
     }

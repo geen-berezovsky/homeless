@@ -21,5 +21,10 @@ public class CustomReportService extends GenericService implements ICustomReport
 		return customReportDAO.getReportDataByGender(from, till);
 	}
 
+	@Override
+	public OldSchoolReportEntity getReportDataByMartialStatus(Date from, Date till) {
+		return customReportDAO.getReportDataByMartialStatus(from, till);
+	}
+
 	
 }
