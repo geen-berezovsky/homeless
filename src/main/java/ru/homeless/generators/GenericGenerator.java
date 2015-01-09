@@ -42,12 +42,18 @@ public class GenericGenerator {
     }
     
     private void putDefaultValuesInMap(Client client, String documentNumber, Date issueDate)  {
+
+        if (issueDate == null) {
+            issueDate = new Date();
+        }
+
         wordDocumentDefaultValuesMap.put("[t:client:name]", client.getSurname()+" "+client.getFirstname()+" "+client.getMiddlename());
         wordDocumentDefaultValuesMap.put("[t:num]", documentNumber);
         wordDocumentDefaultValuesMap.put("[t:client:birth]", Util.convertDate(client.getDate()));
         wordDocumentDefaultValuesMap.put("clientWhereWasBorn", client.getWhereWasBorn());
         wordDocumentDefaultValuesMap.put("clientId", String.valueOf(client.getId()));
-        wordDocumentDefaultValuesMap.put("[t:today]", Util.convertDate(issueDate)); wordDocumentDefaultValuesMap.put("[t:date]", Util.convertDate(issueDate)); //synonym
+        wordDocumentDefaultValuesMap.put("[t:today]", Util.convertDate(issueDate));
+        wordDocumentDefaultValuesMap.put("[t:date]", Util.convertDate(issueDate)); //synonym
 
         wordDocumentDefaultValuesMap.put("[t:signatory1]", IDocumentMapping.SIGN_PART_1);
         wordDocumentDefaultValuesMap.put("[t:signatory2]", IDocumentMapping.SIGN_PART_2);

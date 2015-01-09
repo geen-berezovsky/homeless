@@ -60,6 +60,7 @@ public class WordDocumentReplaceProcessor {
 			String textValue = text.getValue();
 			for (Entry<String, String> entry : replacedMap.entrySet()) {
 				if (textValue != null && textValue.contains(entry.getKey())) {
+                    log.info("textValue="+textValue+" and entry.getKey()="+entry.getKey());
 					textValue = textValue.replace(entry.getKey(), entry.getValue());
 				}
 			}

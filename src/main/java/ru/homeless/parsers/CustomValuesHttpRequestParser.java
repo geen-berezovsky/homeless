@@ -49,6 +49,10 @@ public class CustomValuesHttpRequestParser implements IDocumentMapping {
     //Class should be annotated as @Component and child dependencies should be injected with @Autowires annotation
     //If you need use Services for woriking with database in child classes (re-inject service)
 
+
+    @Autowired
+    private CustomMappingImpl customMappingImpl;
+
     @Autowired
     private DefaultContractMappingImpl defaultContractMappingImpl;
 
@@ -68,10 +72,13 @@ public class CustomValuesHttpRequestParser implements IDocumentMapping {
     private OverVacReportMappingImpl overVacReportMappingImpl;
     
     @Autowired
-    OuterReportMappingImpl outerReportMappingImpl;
-    
+    private OuterReportMappingImpl outerReportMappingImpl;
+
     @Autowired
-    OldSchoolReportMappingImpl oldSchoolReportMappingImpl;
+    private OuterReportMappingImpl oldSchoolReportMappingImpl;
+
+    @Autowired
+    private ZagsQueryMappingImpl zagsQueryMapping;
     
     //HERE WE PARSE CUSTOM VALUES LIKE travelCity
     
@@ -157,11 +164,8 @@ public class CustomValuesHttpRequestParser implements IDocumentMapping {
      * @return XWPFDocument
      */
     public WordprocessingMLPackage generateZAGSQueryDocument(HttpServletRequest request, Client client, Map<String, String> map) {
-    	map.put("[m]", parseCustomParams(request, "m", "ИМЯ МАТЕРИ!!!"));
-    	map.put("[f]", parseCustomParams(request, "f", "ИМЯ ОТЦА!!!"));
-    	map.put("[to:send]", parseCustomParams(request, "toSend", "АДРЕС!!!"));
-    	map.put("[address]", parseCustomParams(request, "address", "АДРЕС!!!"));
-        return new ZagsQueryMappingImpl().getDocument(map);
+        map.put("[input:docId]", parseCustomParams(request, "docId", ""));
+        return zagsQueryMapping.getDocument(map);
     }
 
     @Override
@@ -181,15 +185,8 @@ public class CustomValuesHttpRequestParser implements IDocumentMapping {
      * @return XWPFDocument
      */
     public WordprocessingMLPackage generateCustomDocument(HttpServletRequest request, Client client, Map<String, String> map) {
-    	map.put("[input:num]", parseCustomParams(request, "inputNum", "Входящий номер!!!"));
-    	map.put("[enter:address]", parseCustomParams(request, "address", "Адрес!!!"));
-    	map.put("[doc:cap]", parseCustomParams(request, "docCap", "Название!!!"));
-    	map.put("[enter:intro]", parseCustomParams(request, "enterIntro", "Вводная часть!!!"));
-    	map.put("[enter:base]", parseCustomParams(request, "enterBase", "Основная часть!!!"));
-    	map.put("[enter:fin]", parseCustomParams(request, "enterFin", "Заключительная часть!!!"));
-    	map.put("[director:signature]", IDocumentMapping.SIGN_PART_1 + " " + IDocumentMapping.SIGN_PART_2);
-    	map.put("[worker:info]", Util.getWorkersBio(null)); //WORKER ID OR OBJECT!!!
-        return new CustomMappingImpl().getDocument(map);
+        map.put("[input:docId]", parseCustomParams(request, "docId", ""));
+        return customMappingImpl.getDocument(map);
     }
 
 
