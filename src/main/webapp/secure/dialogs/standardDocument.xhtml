@@ -92,7 +92,9 @@
                 <p:row>
                     <p:column colspan="2">
                         <p:growl id="growl" showDetail="true" life="5000"/>
-                        <p:commandButton value="Экспорт в Word" actionListener="#{standardDocument.export}" update="@this growl" icon="ui-icon-check"/>
+                        <center>
+                            <p:commandButton value="Экспорт в Word" actionListener="#{standardDocument.export()}" update="@this @form growl" icon="ui-icon-check"/>
+                        </center>
                     </p:column>
                 </p:row>
 

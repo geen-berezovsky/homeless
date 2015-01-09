@@ -2,9 +2,8 @@ package ru.homeless.beans;
 
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
-import ru.homeless.entities.Client;
-import ru.homeless.entities.Document;
-import ru.homeless.entities.Worker;
+import ru.homeless.configuration.Configuration;
+import ru.homeless.entities.*;
 import ru.homeless.services.WorkerService;
 import ru.homeless.util.Util;
 
@@ -17,6 +16,7 @@ import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import java.util.TimeZone;
 
 @ManagedBean (name = "standardDocument")
@@ -29,15 +29,18 @@ public class StandardDocumentBean implements Serializable {
 	private Worker worker;
     private Client client;
 
-    private String type = "Заявление";
+    private String origType = "Заявление";
+    private String type = origType;
 	private String number = "";
 	private String forWhom = "";
 
     private String preamble = "";
     private String mainPart;
-    private String finalPart;
 
-    private String signature = "С уважением\nДиректор СПб БОО \'Ночлежка\"\nСвердлин Григорий";
+    private List<String> finalPart;
+
+    private String origSignature = "С уважением\nДиректор СПб БОО \"Ночлежка\"\nСвердлин Григорий";
+    private String signature = origSignature;
     private String performer;
 
 
@@ -46,7 +49,6 @@ public class StandardDocumentBean implements Serializable {
 
 
     public void openDlg() {
-
         HttpSession session = Util.getSession();
         worker = (Worker) session.getAttribute("worker");
         String cids = session.getAttribute("cid").toString();
@@ -55,11 +57,70 @@ public class StandardDocumentBean implements Serializable {
             this.client = getWorkerService().getInstanceById(Client.class, Integer.parseInt(cids));
         }
 
-        this.mainPart = "К нам обратился за помощью "+client.getSurname()+" "+client.getFirstname()+" "+client.getMiddlename()+" "+client.getDate() +" г.р.";
-        this.performer = "Исполнитель: "+worker.getSurname()+" "+worker.getFirstname().substring(0,1)+". "+worker.getMiddlename()+".";
+        this.mainPart = "К нам обратился за помощью "+client.getSurname()+" "+client.getFirstname()+" "+client.getMiddlename()+" "+Util.formatDate(client.getDate()) +" г.р.";
+        this.performer = "Исполнитель: "+worker.getSurname()+" "+worker.getFirstname().substring(0,1)+". "+worker.getMiddlename().substring(0, 1)+".";
 
         RequestContext rc = RequestContext.getCurrentInstance();
         rc.execute("standardDocumentWv.show();");
+    }
+
+    public void downloadContract(int id) {
+        RequestContext rc = RequestContext.getCurrentInstance();
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("window.location.href = \"");
+        sb.append(Configuration.reportEngineUrl);
+        sb.append("/getGeneratedWordDocument?");
+        sb.append("requestType=16");
+        sb.append("&clientId=" + client.getId());
+        sb.append("&docId=" + id);
+        sb.append("\"");
+
+        log.info("Executing " + sb.toString());
+
+        rc.execute(sb.toString());
+
+    }
+
+
+    public void export() {
+        log.debug("Preparing new custom document with:");
+        log.debug("\tЗаголовок = "+type);
+        log.debug("\tНомер документа = "+number);
+        log.debug("\tКому = "+forWhom);
+        log.debug("\tПреамбула = "+preamble);
+        log.debug("\tОсновная часть = "+mainPart);
+        log.debug("\tЗаключение = "+finalPart);
+        log.debug("\tПодпись = "+signature);
+        log.debug("\tИсполнитель = "+performer);
+
+        //Prepare new entity and add it to the database
+        String finalPartText = "";
+        for (String s : finalPart) {
+            finalPartText += s + " ";
+        }
+
+        CustomDocumentRegistry customDocumentRegistry = new CustomDocumentRegistry(client.getId(), number, type, preamble, mainPart, finalPartText, forWhom, signature, performer, worker.getId());
+
+        workerService.addInstance(customDocumentRegistry);
+        log.debug("Inserted object with ID="+customDocumentRegistry.getId());
+
+        downloadContract(customDocumentRegistry.getId());
+
+
+        //RESET ALL FIELDS
+        type = origType;
+        number = "";
+        forWhom = "";
+        preamble = "";
+        mainPart = "";
+        finalPart = null;
+        signature = origSignature;
+        performer = "";
+
+        RequestContext rc = RequestContext.getCurrentInstance();
+        rc.execute("standardDocumentWv.hide();");
+
     }
 
 /*
@@ -244,14 +305,6 @@ public class StandardDocumentBean implements Serializable {
         this.mainPart = mainPart;
     }
 
-    public String getFinalPart() {
-        return finalPart;
-    }
-
-    public void setFinalPart(String finalPart) {
-        this.finalPart = finalPart;
-    }
-
     public String getSignature() {
         return signature;
     }
@@ -273,6 +326,14 @@ public class StandardDocumentBean implements Serializable {
     }
     public void setWorker(Worker worker) {
         this.worker = worker;
+    }
+
+    public List<String> getFinalPart() {
+        return finalPart;
+    }
+
+    public void setFinalPart(List<String> finalPart) {
+        this.finalPart = finalPart;
     }
 
 
