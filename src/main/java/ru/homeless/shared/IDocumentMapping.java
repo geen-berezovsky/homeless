@@ -126,10 +126,17 @@ public interface IDocumentMapping {
     
     /*
     Template file: InnerReport.xlsx
-    Document title: Стандартный отчет по клиентам на сопровождении, не проживающим в приюте
+    Document title: Стандартный отчет по клиентам на сопровождении, проживающим в приюте
     */
     public final int REPORT_INNER = 210;
-    public final String REPORT_INNER_PATH = Configuration.templatesDir+"/"+"OuterReport.xlsx";
+    public final String REPORT_INNER_PATH = Configuration.templatesDir+"/"+"InnerReport.xlsx";
+    
+    /*
+    Template file: OldSchoolReport.xlsx
+    Document title: Статистика как в старой базе
+    */
+    public final int REPORT_OLD_SCHOOL = 212;
+    public final String REPORT_OLD_SCHOOL_PATH = Configuration.templatesDir+"/"+"OldSchoolReport.xlsm";
 
 
     public WordprocessingMLPackage generateSocialHelpDocument(HttpServletRequest request, Client client, Map<String, String> map);
@@ -150,5 +157,7 @@ public interface IDocumentMapping {
 	public SpreadsheetMLPackage generateOneTimeServicesDocument(HttpServletRequest request);
 	public SpreadsheetMLPackage generateOverVacDocument(HttpServletRequest request);
 	public SpreadsheetMLPackage generateOuterDocument(HttpServletRequest request);
+	
+	public SpreadsheetMLPackage generateOldSchoolDocument(HttpServletRequest request);
     
 }

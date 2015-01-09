@@ -135,6 +135,9 @@ public class GenericGenerator {
 			case IDocumentMapping.REPORT_OUTER: {
 				return hrp.generateOuterDocument(request);
 			}
+			case IDocumentMapping.REPORT_OLD_SCHOOL: {
+				return hrp.generateOldSchoolDocument(request);
+			}
 
             default: {
 	   			return null;

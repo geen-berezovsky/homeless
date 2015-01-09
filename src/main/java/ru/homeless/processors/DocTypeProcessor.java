@@ -13,6 +13,8 @@ import org.docx4j.openpackaging.exceptions.Docx4JException;
 import org.docx4j.openpackaging.packages.SpreadsheetMLPackage;
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
 
+import ru.homeless.report.entities.OldSchoolReportEntity;
+
 /*
  * This class load template from disk, insert/replace necessary data and return the complete generated document 
  */
@@ -83,4 +85,34 @@ public class DocTypeProcessor {
     }
 	
 
+    public SpreadsheetMLPackage generateReport(List<OldSchoolReportEntity> sheetData) {
+    	
+    	try {
+			excelDocument = SpreadsheetMLPackage.load(new File(pathToTemplate)); 
+		} catch (Docx4JException e1) {
+			log.error(e1.getMessage(),e1);
+		}
+/*
+    	for (int i=0; i<sheetData.size(); i++) {
+	        for (Map.Entry<String, Integer> e : sheetData.get(i).getValueAndQuantity().entrySet()) {
+			    log.info(e.getKey()+"="+e.getValue());
+			}
+	    }
+*/
+    	
+    	if (new File(pathToTemplate).exists()) {
+		    try {
+		    	//ADD PREPARATED SHEET DATA INTO TEMPLATE
+		    	excelDocument = new CustomReportDocumentProcessor(excelDocument).createSheet(sheetData);
+			} catch (Exception e1) {
+				log.error(e1.getMessage(),e1);
+			}
+		} else {
+		    log.error("Document template "+pathToTemplate+" does not exist or not accessible");
+		}
+        return excelDocument;
+    	
+    }
+
+    
 }

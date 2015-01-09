@@ -31,6 +31,9 @@ public class GetReportsController {
 	@Autowired
     private GenericGenerator gg;
 	
+	//application/vnd.ms-excel.sheet.macroEnabled.12
+	
+	
 	@RequestMapping(value = "/getReport", method = RequestMethod.GET)
 	public @ResponseBody 
 	String getReport (HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
@@ -38,6 +41,44 @@ public class GetReportsController {
 		response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         String headerResponse = "attachment; filename*=UTF-8''";
 		headerResponse = headerResponse.concat("NewReport.xlsx");
+		response.addHeader("Content-disposition", headerResponse);
+
+		ServletOutputStream out = null;
+		try {
+			out = response.getOutputStream();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		
+		SpreadsheetMLPackage document = null;
+
+        if (gg == null) {
+            gg = new GenericGenerator();
+        }
+
+		document = gg.generateExcelDocument(request);
+
+	
+		try {
+			out.flush();
+			document.save(out);
+			out.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (Docx4JException e) {
+			e.printStackTrace();
+		}
+		
+		return "Report sent";
+	}
+	
+	@RequestMapping(value = "/getMacroReport", method = RequestMethod.GET)
+	public @ResponseBody 
+	String getMacroReport (HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
+		
+		response.setContentType("application/vnd.ms-excel.sheet.macroEnabled.12");
+        String headerResponse = "attachment; filename*=UTF-8''";
+		headerResponse = headerResponse.concat("NewReport.xlsm");
 		response.addHeader("Content-disposition", headerResponse);
 
 		ServletOutputStream out = null;
