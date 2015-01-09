@@ -61,6 +61,7 @@
 			  <value>ru.homeless.entities.ContractPoints</value>
 			  <value>ru.homeless.entities.ContractControl</value>
               <value>ru.homeless.entities.CustomDocumentRegistry</value>
+              <value>ru.homeless.entities.ZAGSRequestDocumentRegistry</value>
 			</list>
   </property>
   <property name="hibernateProperties">

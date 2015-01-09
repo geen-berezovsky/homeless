@@ -76,6 +76,9 @@ public class CustomValuesHttpRequestParser implements IDocumentMapping {
 
     @Autowired
     private OuterReportMappingImpl oldSchoolReportMappingImpl;
+
+    @Autowired
+    private ZagsQueryMappingImpl zagsQueryMapping;
     
     //HERE WE PARSE CUSTOM VALUES LIKE travelCity
     
@@ -161,11 +164,8 @@ public class CustomValuesHttpRequestParser implements IDocumentMapping {
      * @return XWPFDocument
      */
     public WordprocessingMLPackage generateZAGSQueryDocument(HttpServletRequest request, Client client, Map<String, String> map) {
-    	map.put("[m]", parseCustomParams(request, "m", "ИМЯ МАТЕРИ!!!"));
-    	map.put("[f]", parseCustomParams(request, "f", "ИМЯ ОТЦА!!!"));
-    	map.put("[to:send]", parseCustomParams(request, "toSend", "АДРЕС!!!"));
-    	map.put("[address]", parseCustomParams(request, "address", "АДРЕС!!!"));
-        return new ZagsQueryMappingImpl().getDocument(map);
+        map.put("[input:docId]", parseCustomParams(request, "docId", ""));
+        return zagsQueryMapping.getDocument(map);
     }
 
     @Override
