@@ -3,13 +3,8 @@
  */
 package ru.homeless.parsers;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
@@ -26,7 +21,6 @@ import ru.homeless.mappings.CustomMappingImpl;
 import ru.homeless.mappings.DefaultContractMappingImpl;
 import ru.homeless.mappings.DispensaryMappingImpl;
 import ru.homeless.mappings.FreeTravelMappingImpl;
-import ru.homeless.mappings.OldSchoolReportMappingImpl;
 import ru.homeless.mappings.OneTimeServicesReportMappingImpl;
 import ru.homeless.mappings.OutOfShelterReportMappingImpl;
 import ru.homeless.mappings.OuterReportMappingImpl;
@@ -78,7 +72,10 @@ public class CustomValuesHttpRequestParser implements IDocumentMapping {
     private OuterReportMappingImpl oldSchoolReportMappingImpl;
 
     @Autowired
-    private ZagsQueryMappingImpl zagsQueryMapping;
+    private ZagsQueryMappingImpl zagsQueryMappingImpl;
+
+    @Autowired
+    private RegistrationMappingImpl registrationMappingImpl;
     
     //HERE WE PARSE CUSTOM VALUES LIKE travelCity
     
@@ -141,7 +138,7 @@ public class CustomValuesHttpRequestParser implements IDocumentMapping {
 
     @Override
     public WordprocessingMLPackage generateRegistrationDocument(HttpServletRequest request, Client client, Map<String, String> map) {
-        return new RegistrationMappingImpl().getDocument(map);
+        return registrationMappingImpl.getDocument(map);
     }
 
     @Override
@@ -165,7 +162,7 @@ public class CustomValuesHttpRequestParser implements IDocumentMapping {
      */
     public WordprocessingMLPackage generateZAGSQueryDocument(HttpServletRequest request, Client client, Map<String, String> map) {
         map.put("[input:docId]", parseCustomParams(request, "docId", ""));
-        return zagsQueryMapping.getDocument(map);
+        return zagsQueryMappingImpl.getDocument(map);
     }
 
     @Override

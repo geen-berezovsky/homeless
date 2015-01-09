@@ -46,8 +46,8 @@ public class ZagsQueryMappingImpl implements ICustomMappingWordDocument {
         map.put("[tosend]", zagsRequestDocumentRegistry.getForWhom());
         map.put("[address]", zagsRequestDocumentRegistry.getAddress());
 
-        map.put("[t:client:name]", zagsRequestDocumentRegistry.getName());
-        map.put("[t:city]", zagsRequestDocumentRegistry.getWhereWasBorn());
+        map.put("[t:custom:client:name]", zagsRequestDocumentRegistry.getName());
+        map.put("[t:custom_city]", zagsRequestDocumentRegistry.getWhereWasBorn());
 
         return new DocTypeProcessor(IDocumentMapping.DOCUMENT_ZAGS_QUERY_TEMPLATE_PATH).replaceParametersInDocument(map, null,0);
     }
