@@ -299,9 +299,11 @@
 
 </p:tab>
 <p:tab title="Построить документ">
-    <p:commandButton value="Стандартный документ" actionListener="#{standardDocument.openDlg()}" icon="ui-icon-circle-plus"/>
+    <p:commandButton value="Стандартный документ" actionListener="#{customDocument.openDlg()}" icon="ui-icon-circle-plus"/>
+    <p:commandButton value="Запрос в ЗАГС" actionListener="#{zagsrequest.openDlg()}" icon="ui-icon-circle-plus"/>
 </p:tab>
 <p:tab title="Выдать справку">
+    <p:commandButton value="Справка о регистрации" actionListener="#{regdocument.showSelectDocumentDialog()}" icon="ui-icon-circle-plus"/>
 </p:tab>
 <p:tab title="Удалить клиента">
 </p:tab>
@@ -332,7 +334,10 @@
 <ui:include src="dialogs/addserviceplanitem.xhtml"/>
 <ui:include src="dialogs/realphoto.xhtml"/>
 <ui:include src="dialogs/photoupload.xhtml"/>
-<ui:include src="dialogs/standardDocument.xhtml"/>
+<ui:include src="dialogs/customDocument.xhtml"/>
+<ui:include src="dialogs/zagsRequest.xhtml"/>
+<ui:include src="dialogs/regdocument.xhtml"/>
+
 
 <p:dialog id="notImplementedDlg" header="Этот раздел еще не имплементирован" widgetVar="notImplementedDlgWv" resizable="false" closable="true" modal="true" showEffect="fade" hideEffect="explode" closeOnEscape="true">
     <p:panel>

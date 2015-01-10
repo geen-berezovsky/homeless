@@ -16,7 +16,7 @@
                         <p:outputLabel value="Заголовок:" for="standardDocumentTypeId" styleClass="base_form_caption_text"/>
                     </p:column>
                     <p:column>
-                        <p:selectOneMenu id="standardDocumentTypeId" value="#{standardDocument.type}" style="width:150px;" styleClass="base_form_value_text">
+                        <p:selectOneMenu id="standardDocumentTypeId" value="#{customDocument.type}" style="width:150px;" styleClass="base_form_value_text">
                             <f:selectItem itemLabel="Заявление" itemValue="Заявление"/>
                             <f:selectItem itemLabel="Жалоба" itemValue="Жалоба"/>
                             <f:selectItem itemLabel="Запрос" itemValue="Запрос"/>
@@ -29,7 +29,7 @@
                         <p:outputLabel value="Номер документа:" for="standardDocumentNumberId" styleClass="base_form_caption_text"/>
                     </p:column>
                     <p:column>
-                        <p:inputText value="#{standardDocument.number}" id="standardDocumentNumberId" styleClass="base_form_value_text" required="true"/>
+                        <p:inputText value="#{customDocument.number}" id="standardDocumentNumberId" styleClass="base_form_value_text" required="true"/>
                     </p:column>
                 </p:row>
                 <p:row>
@@ -37,7 +37,7 @@
                         <p:outputLabel value="Кому:" for="standardDocumentForWhomId" styleClass="base_form_caption_text"/>
                     </p:column>
                     <p:column>
-                        <p:inputTextarea id="standardDocumentForWhomId" rows="6" cols="50" value="#{standardDocument.forWhom}" styleClass="base_form_value_text" required="true"/>
+                        <p:inputTextarea id="standardDocumentForWhomId" rows="6" cols="50" value="#{customDocument.forWhom}" styleClass="base_form_value_text" required="true"/>
                     </p:column>
                 </p:row>
                 <p:row>
@@ -45,7 +45,7 @@
                         <p:outputLabel value="Преамбула:" for="standardDocumentPreambleId" styleClass="base_form_caption_text"/>
                     </p:column>
                     <p:column>
-                        <p:selectOneRadio id="standardDocumentPreambleId" value="#{standardDocument.preamble}" layout="grid" columns="1" styleClass="base_form_value_text" required="true">
+                        <p:selectOneRadio id="standardDocumentPreambleId" value="#{customDocument.preamble}" layout="grid" columns="1" styleClass="base_form_value_text" required="true">
                             <f:selectItem id="preambleHelp1" itemLabel="...социально-юридическая помощь..." itemValue="СПб БОО &quot;Ночлежка&quot; занимается оказанием социально-юридической помощи лицам БОМЖ." itemDescription="СПб БОО &quot;Ночлежка&quot; занимается оказанием социально-юридической помощи лицам БОМЖ."/>
                             <f:selectItem id="preambleHelp2" itemLabel="...медико-социальная и юридическая помощь..." itemValue="СПб БОО &quot;Ночлежка&quot; занимается оказанием медико-социальной и юридической помощи лицам без определенного места жительства, а также гражданам, оказавшимся в сложной жизненной ситуации." itemDescription="СПб БОО &quot;Ночлежка&quot; занимается оказанием медико-социальной и юридической помощи лицам без определенного места жительства, а также гражданам, оказавшимся в сложной жизненной ситуации."/>
                         </p:selectOneRadio>
@@ -56,7 +56,7 @@
                         <p:outputLabel value="Основная часть:" for="standardDocumentMainPartId" styleClass="base_form_caption_text"/>
                     </p:column>
                     <p:column>
-                        <p:inputTextarea rows="6" cols="50" value="#{standardDocument.mainPart}" id="standardDocumentMainPartId" styleClass="base_form_value_text" required="true"/>
+                        <p:inputTextarea rows="6" cols="50" value="#{customDocument.mainPart}" id="standardDocumentMainPartId" styleClass="base_form_value_text" required="true"/>
                     </p:column>
                 </p:row>
                 <p:row>
@@ -64,7 +64,7 @@
                         <p:outputLabel value="Заключение:" for="standardDocumentFinalPartId" styleClass="base_form_caption_text"/>
                     </p:column>
                     <p:column>
-                        <p:selectManyCheckbox id="standardDocumentFinalPartId" value="#{standardDocument.finalPart}" layout="grid" columns="1" styleClass="base_form_value_text" required="true">
+                        <p:selectManyCheckbox id="standardDocumentFinalPartId" value="#{customDocument.finalPart}" layout="grid" columns="1" styleClass="base_form_value_text" required="true">
                             <f:selectItem id="finalPart1" itemLabel="...не будьте безучастными..." itemValue="Убедительно просим Вас не остаться безучастным к человеку, оказавшемуся в сложной жизненной ситуации." itemDescription="Убедительно просим Вас не остаться безучастным к человеку, оказавшемуся в сложной жизненной ситуации."/>
                             <f:selectItem id="finalPart2" itemLabel="...сообщите как получить информацию..." itemValue="В случае невозможности предоставить данную информацию, просим сообщить о порядке ее получения." itemDescription="В случае невозможности предоставить данную информацию, просим сообщить о порядке ее получения."/>
                             <f:selectItem id="finalPart3" itemLabel="...ответ по факсу..." itemValue="Ответ просим дополнительно направить по факсу." itemDescription="Ответ просим дополнительно направить по факсу."/>
@@ -77,7 +77,7 @@
                         <p:outputLabel value="Подпись:" for="standardDocumentSignatureId" styleClass="base_form_caption_text"/>
                     </p:column>
                     <p:column>
-                        <p:inputTextarea rows="6" cols="50" value="#{standardDocument.signature}" id="standardDocumentSignatureId" styleClass="base_form_value_text" required="true"/>
+                        <p:inputTextarea rows="6" cols="50" value="#{customDocument.signature}" id="standardDocumentSignatureId" styleClass="base_form_value_text" required="true"/>
                     </p:column>
                 </p:row>
                 <p:row>
@@ -85,7 +85,7 @@
                         <p:outputLabel value="Исполнитель:" for="standardDocumentPerformerId" styleClass="base_form_caption_text"/>
                     </p:column>
                     <p:column>
-                        <p:inputTextarea rows="6" cols="50" value="#{standardDocument.performer}" id="standardDocumentPerformerId" styleClass="base_form_value_text" required="true"/>
+                        <p:inputTextarea rows="6" cols="50" value="#{customDocument.performer}" id="standardDocumentPerformerId" styleClass="base_form_value_text" required="true"/>
                     </p:column>
                 </p:row>
 
@@ -93,7 +93,7 @@
                     <p:column colspan="2">
                         <p:growl id="growl" showDetail="true" life="5000"/>
                         <center>
-                            <p:commandButton value="Экспорт в Word" actionListener="#{standardDocument.export()}" update="@this @form growl" icon="ui-icon-check"/>
+                            <p:commandButton value="Экспорт в Word" actionListener="#{customDocument.export()}" update="@this @form growl" icon="ui-icon-check"/>
                         </center>
                     </p:column>
                 </p:row>

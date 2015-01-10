@@ -24,7 +24,38 @@ CREATE TABLE `homeless`.`CustomDocumentRegistry` (
   `signature` TEXT NULL,
   `performerText` TEXT NULL,
   `performerId` INT(11) NULL,
+  `date` DATETIME NULL,
   PRIMARY KEY (`id`))
-ENGINE = MyISAM
+  ENGINE=InnoDB
 DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_general_ci;
+
+CREATE TABLE `homeless`.`ZAGSRequestDocumentRegistry` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `client` INT(11) NULL,
+  `forWhom` TEXT NULL,
+  `name` TEXT NULL,
+  `whereWasBorn` TEXT NULL,
+  `address` TEXT NULL,
+  `mother` TEXT NULL,
+  `father` TEXT NULL,
+  `performerId` INT(11) NULL,
+  `date` DATETIME NULL,
+  PRIMARY KEY (`id`))
+  ENGINE=InnoDB
+DEFAULT CHARACTER SET = utf8
+COLLATE = utf8_general_ci;
+
+CREATE TABLE `homeless`.`RegistrationDocumentRegistry` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `client` INT(11) NULL,
+  `documentId` INT(11) NULL,
+  `dateFrom` DATETIME NULL,
+  `dateTill` DATETIME NULL,
+  `performerId` INT(11) NULL,
+  `date` DATETIME NULL,
+  PRIMARY KEY (`id`))
+  ENGINE=InnoDB
+  DEFAULT CHARACTER SET = utf8
+  COLLATE = utf8_general_ci;
+

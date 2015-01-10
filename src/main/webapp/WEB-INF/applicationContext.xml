@@ -74,6 +74,8 @@ http://www.springframework.org/schema/tx/spring-tx-4.0.xsd http://www.springfram
 			  <value>ru.homeless.entities.ContractControl</value>
               <value>ru.homeless.entities.Room</value>
               <value>ru.homeless.entities.CustomDocumentRegistry</value>
+              <value>ru.homeless.entities.ZAGSRequestDocumentRegistry</value>
+              <value>ru.homeless.entities.RegistrationDocumentRegistry</value>
 			</list>
 		</property>
 		<property name="hibernateProperties">

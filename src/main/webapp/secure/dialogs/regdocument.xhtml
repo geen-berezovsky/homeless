@@ -1,0 +1,90 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui">
+<ui:composition>
+	<h:form id="reg_select_document">
+		<p:messages />
+
+		<p:dialog id="regSelectDocument" header="Выберите документ, на основе которого будет создан договор" widgetVar="regDocumentSelectWv" resizable="false" closable="true" modal="true" showEffect="fade"
+			hideEffect="explode" dynamic="true" closeOnEscape="true">
+    <p:dataTable id="regDoclistId" var="regDoclist" value="#{clientdocuments.documentsList}" paginator="true" rows="15"
+        paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15" rowKey="#{regDoclist.id}"
+        selection="#{regdocument.selectedDocument}" selectionMode="single" paginatorPosition="bottom" styleClass="default_datatable">
+
+        <p:column headerText="ID" style="width:0px;">
+            <h:outputText value="#{regDoclist.id}" />
+        </p:column>
+        <p:column headerText="Тип">
+            <h:outputText value="#{regDoclist.doctype}" />
+        </p:column>
+        <p:column headerText="Серия">
+            <h:outputText value="#{regDoclist.docPrefix}" />
+        </p:column>
+        <p:column headerText="Номер">
+            <h:outputText value="#{regDoclist.docNum}" />
+        </p:column>
+        <p:column headerText="Орган выдачи">
+            <h:outputText value="#{regDoclist.whereAndWhom}" />
+        </p:column>
+        <p:column headerText="Дата выдачи">
+            <h:outputText value="#{clientdocuments.formatDate(regDoclist.date)}" />
+        </p:column>
+        <p:column headerText="Регистрация">
+            <h:outputText value="#{clientdocuments.getStringRegistrationConfirmation(regDoclist.registration)}" />
+        </p:column>
+        <p:column headerText="Регистрация: город">
+            <h:outputText value="#{regDoclist.city}" />
+        </p:column>
+        <p:column headerText="Регистрация: адрес">
+            <h:outputText value="#{regDoclist.address}" />
+        </p:column>
+
+        <p:ajax event="rowSelect" listener="#{regdocument.onRowSelect}" update=":reg_document" />
+    </p:dataTable>
+		</p:dialog>
+	</h:form>
+
+	<h:form id="reg_document">
+		<p:messages />
+		<p:dialog id="regDocumentDlg" header="Справка о регистрации" widgetVar="regDocumentWv" resizable="false" closable="true" modal="false" showEffect="fade" hideEffect="explode" dynamic="true"
+			closeOnEscape="true">
+					<h:panelGrid columns="2" id="reg_doc_panel_grid">
+						<p:row>
+							<p:outputLabel value="Дата выдачи:" styleClass="base_form_caption_text"  />
+						</p:row>
+						<p:row>
+                            <p:calendar value="#{regdocument.dateFrom}" id="regDocumentFromDate" showOn="button" pattern="dd.MM.yyyy" styleClass="base_form_value_text"/>
+						</p:row>
+                        <p:row>
+                            <p:outputLabel value="Дата окончания:" styleClass="base_form_caption_text"  />
+                        </p:row>
+                        <p:row>
+                            <p:calendar value="#{regdocument.dateTill}" id="regDocumentTillDate" showOn="button" pattern="dd.MM.yyyy" styleClass="base_form_value_text"/>
+                        </p:row>
+				</h:panelGrid>
+					<p:separator />
+					<center>
+                        <p:commandButton value="Создать справку" ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);" icon="ui-icon-arrowthick-1-s" update="@this @form reg_doc_panel_grid" actionListener="#{regdocument.export()}">
+                            <p:fileDownload value="#{regdocument.file}" />
+                        </p:commandButton>
+					</center>
+		</p:dialog>
+        <p:dialog modal="true" widgetVar="statusRegDocDialogWv" header="Ждите" draggable="false" closable="false" resizable="false">
+            <p:graphicImage value="/images/loading.gif" />
+        </p:dialog>
+	</h:form>
+
+    <script type="text/javascript">
+        function start() {
+            PF('statusRegDocDialogWv').show();
+        }
+
+        function stop() {
+            PF('statusRegDocDialogWv').hide();
+            PF('regDocumentWv').hide();
+
+        }
+    </script>
+
+</ui:composition>
+</html>

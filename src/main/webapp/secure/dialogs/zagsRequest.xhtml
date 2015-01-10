@@ -1,0 +1,86 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui">
+<ui:composition>
+    <h:form id="zags_request">
+        <p:dialog id="zagsRequest"
+                  header="Запрос в ЗАГС: #{clientform.surname} #{clientform.firstname} #{clientform.middlename}"
+                  widgetVar="zagsRequestWv" resizable="false" closable="true" modal="true" showEffect="fade"
+                  hideEffect="explode" dynamic="true" closeOnEscape="true">
+
+            <p:panelGrid id="zags_request_panel_grid">
+                <p:row>
+                    <p:column>
+                        <p:outputLabel value="Кому:" for="zagsRequestForWhomId" styleClass="base_form_caption_text"/>
+                    </p:column>
+                    <p:column>
+                        <p:inputTextarea id="zagsRequestForWhomId" rows="6" cols="50" value="#{zagsrequest.forWhom}" styleClass="base_form_value_text"  required="true"/>
+                    </p:column>
+                </p:row>
+                <p:row>
+                    <p:column>
+                        <p:outputLabel value="Имя:" for="zagsRequestNameId" styleClass="base_form_caption_text"/>
+                    </p:column>
+                    <p:column>
+                        <p:inputTextarea rows="6" cols="50" value="#{zagsrequest.name}" id="zagsRequestNameId" styleClass="base_form_value_text" required="true"/>
+                    </p:column>
+                </p:row>
+                <p:row>
+                    <p:column>
+                        <p:outputLabel value="Место рождения:" for="zagsRequestWhereWasBornId" styleClass="base_form_caption_text"/>
+                    </p:column>
+                    <p:column>
+                        <p:inputTextarea rows="6" cols="50" value="#{zagsrequest.whereWasBorn}" id="zagsRequestWhereWasBornId" styleClass="base_form_value_text"  required="true"/>
+                    </p:column>
+                </p:row>
+                <p:row>
+                    <p:column>
+                        <p:outputLabel value="Адрес для ответа:" for="zagsRequestAddressId" styleClass="base_form_caption_text"/>
+                    </p:column>
+                    <p:column>
+                        <p:inputTextarea rows="6" cols="50" value="#{zagsrequest.address}" id="zagsRequestAddressId" styleClass="base_form_value_text" required="true"/>
+                    </p:column>
+                </p:row>
+                <p:row>
+                    <p:column>
+                        <p:outputLabel value="Мать:" for="zagsRequestMotherId" styleClass="base_form_caption_text"/>
+                    </p:column>
+                    <p:column>
+                        <p:inputTextarea rows="6" cols="50" value="#{zagsrequest.mother}" id="zagsRequestMotherId" styleClass="base_form_value_text"  required="true"/>
+                    </p:column>
+                </p:row>
+                <p:row>
+                    <p:column>
+                        <p:outputLabel value="Отец:" for="zagsRequestFatherId" styleClass="base_form_caption_text"/>
+                    </p:column>
+                    <p:column>
+                        <p:inputTextarea rows="6" cols="50" value="#{zagsrequest.father}" id="zagsRequestFatherId" styleClass="base_form_value_text"  required="true"/>
+                    </p:column>
+                </p:row>
+                <p:row>
+                    <p:column>
+                        <p:outputLabel value="Дата:" for="zagsRequestDateId" styleClass="base_form_caption_text"/>
+                    </p:column>
+                    <p:column>
+                        <p:calendar value="#{zagsrequest.date}" id="zagsRequestDateId" showOn="button" pattern="dd.MM.yyyy" styleClass="base_form_value_text"/>
+                    </p:column>
+                </p:row>
+                <p:row>
+                    <p:column colspan="2">
+                        <p:growl id="growl" showDetail="true" life="5000"/>
+                        <center>
+                            <p:commandButton value="Экспорт в Word" actionListener="#{zagsrequest.export()}" update="@this @form growl" icon="ui-icon-check"/>
+                        </center>
+                    </p:column>
+                </p:row>
+
+
+            </p:panelGrid>
+        </p:dialog>
+    </h:form>
+
+
+</ui:composition>
+</html>

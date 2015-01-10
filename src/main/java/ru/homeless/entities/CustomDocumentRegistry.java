@@ -2,6 +2,7 @@ package ru.homeless.entities;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
@@ -41,7 +42,17 @@ public class CustomDocumentRegistry implements Serializable {
 
     private Integer performerId;
 
-    public CustomDocumentRegistry(Integer client, String docNum, String type, String preamble, String mainPart, String finalPart, String forWhom, String signature, String performerText, Integer performerId) {
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    private Date date;
+
+    public CustomDocumentRegistry(Integer client, String docNum, String type, String preamble, String mainPart, String finalPart, String forWhom, String signature, String performerText, Integer performerId, Date date) {
         this.client = client;
         this.docNum = docNum;
         this.type = type;
@@ -52,6 +63,7 @@ public class CustomDocumentRegistry implements Serializable {
         this.signature = signature;
         this.performerText = performerText;
         this.performerId = performerId;
+        this.date = date;
     }
 
     @Id
