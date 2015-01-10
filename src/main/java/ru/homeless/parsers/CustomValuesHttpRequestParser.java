@@ -138,6 +138,7 @@ public class CustomValuesHttpRequestParser implements IDocumentMapping {
 
     @Override
     public WordprocessingMLPackage generateRegistrationDocument(HttpServletRequest request, Client client, Map<String, String> map) {
+        map.put("[input:docId]", parseCustomParams(request, "docId", ""));
         return registrationMappingImpl.getDocument(map);
     }
 

@@ -4,6 +4,7 @@ import java.util.Map;
 
 import javax.servlet.ServletContext;
 
+import org.apache.log4j.Logger;
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,8 @@ import ru.homeless.shared.IDocumentMapping;
  */
 @Component
 public class ZagsQueryMappingImpl implements ICustomMappingWordDocument {
+
+    public static final Logger log = Logger.getLogger(ZagsQueryMappingImpl.class);
 
     @Qualifier("GenericService")
     @Autowired

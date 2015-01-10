@@ -4,6 +4,7 @@ import java.util.Map;
 
 import javax.servlet.ServletContext;
 
+import org.apache.log4j.Logger;
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,8 @@ import ru.homeless.util.Util;
 @Component
 public class RegistrationMappingImpl implements ICustomMappingWordDocument {
 
+    public static final Logger log = Logger.getLogger(RegistrationMappingImpl.class);
+
     @Qualifier("GenericService")
     @Autowired
     private IGenericService genericService;
@@ -39,10 +42,15 @@ public class RegistrationMappingImpl implements ICustomMappingWordDocument {
             return null;
         }
 
+        log.info("docId="+docId);
+
         RegistrationDocumentRegistry registrationDocumentRegistry = genericService.getInstanceById(RegistrationDocumentRegistry.class, docId);
 
-        map.put("[t:dateFrom]", registrationDocumentRegistry.getDateFrom());
-        map.put("[t:dateTill]", registrationDocumentRegistry.getDateTill());
+        log.info("registrationDocumentRegistry="+registrationDocumentRegistry);
+
+        map.put("[t:reg]", String.valueOf(registrationDocumentRegistry.getClient()));
+        map.put("[t:dateFrom]", Util.convertDate(registrationDocumentRegistry.getDateFrom()));
+        map.put("[t:dateTill]", Util.convertDate(registrationDocumentRegistry.getDateTill()));
 
         Document document = genericService.getInstanceById(Document.class, registrationDocumentRegistry.getDocumentId());
 
