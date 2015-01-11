@@ -21,6 +21,7 @@ import ru.homeless.mappings.CustomMappingImpl;
 import ru.homeless.mappings.DefaultContractMappingImpl;
 import ru.homeless.mappings.DispensaryMappingImpl;
 import ru.homeless.mappings.FreeTravelMappingImpl;
+import ru.homeless.mappings.OldSchoolReportMappingImpl;
 import ru.homeless.mappings.OneTimeServicesReportMappingImpl;
 import ru.homeless.mappings.OutOfShelterReportMappingImpl;
 import ru.homeless.mappings.OuterReportMappingImpl;
@@ -69,7 +70,7 @@ public class CustomValuesHttpRequestParser implements IDocumentMapping {
     private OuterReportMappingImpl outerReportMappingImpl;
 
     @Autowired
-    private OuterReportMappingImpl oldSchoolReportMappingImpl;
+    private OldSchoolReportMappingImpl oldSchoolReportMappingImpl;
 
     @Autowired
     private ZagsQueryMappingImpl zagsQueryMappingImpl;

@@ -1,34 +1,56 @@
 package ru.homeless.mappings;
 
+import java.io.File;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
 
+import org.docx4j.openpackaging.exceptions.Docx4JException;
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import ru.homeless.entities.Client;
 import ru.homeless.processors.DocTypeProcessor;
-import ru.homeless.services.IContractService;
 import ru.homeless.shared.IDocumentMapping;
 
 /**
  * Created by maxim on 30.11.14.
  */
 @Component
-public class ShelterContractMappingImpl implements ICustomMappingWordDocument {
-
-    @Autowired
-    private IContractService contractService;
+public class ShelterContractMappingImpl extends ContractMappingImpl implements ICustomMappingWordDocument {
 
     @Override
     public WordprocessingMLPackage getDocument(Map map) {
-        return new DocTypeProcessor(IDocumentMapping.DOCUMENT_SHELTER_CONTRACT_TEMPLATE_PATH).replaceParametersInDocument(map, null,0); //CHANGE IT WITH REAL PHOTO LOCATION!
+    	return null;
     }
 
     @Override
     public WordprocessingMLPackage getDocument(Map<String, String> map, Client client, int contractId, int workerId, ServletContext context) {
-        return null;
+    	
+
+    	init(map, client,contractId, workerId, context); //init of generic variables
+		if (new File(contractPath).exists()) {          //the contract is already generated, return the document from disk
+            log.info("The contract for client ID="+client.getId()+" already exist, taking it from the storage");
+            try {
+                finalDocumentForSaving = WordprocessingMLPackage.load(new java.io.File(contractPath));
+			} catch (Docx4JException e) {
+				log.error(e.getMessage(),e);
+			}
+        } else { //otherwise, generate it
+        	preparePlaceholdersMap(client, contractId);
+
+        	//difference
+    		placeholdersAndValues.put("[contr:num]", String.valueOf(contractId));
+    		placeholdersAndValues.put("[contr:date]", contractDate);
+
+    		finalDocumentForSaving = new DocTypeProcessor(IDocumentMapping.DOCUMENT_SHELTER_CONTRACT_TEMPLATE_PATH).replaceParametersInDocument(placeholdersAndValues, attachPhoto(client), ICustomMappingWordDocument.AVATAR_LOCATION_TOP_RIGHT);
+            try {
+    			finalDocumentForSaving.save(new File(contractPath));
+    		} catch (Docx4JException e) {
+    			log.error(e.getMessage(),e);
+    		}
+        }
+
+		return finalDocumentForSaving;
     }
 }

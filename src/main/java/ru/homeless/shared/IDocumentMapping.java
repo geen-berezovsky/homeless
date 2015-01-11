@@ -136,7 +136,7 @@ public interface IDocumentMapping {
     Document title: Статистика как в старой базе
     */
     public final int REPORT_OLD_SCHOOL = 212;
-    public final String REPORT_OLD_SCHOOL_PATH = Configuration.templatesDir+"/"+"OldSchoolReport.xlsm";
+    public final String REPORT_OLD_SCHOOL_PATH = Configuration.templatesDir+"/"+"OldSchoolReport.xlsx";
 
 
     public WordprocessingMLPackage generateSocialHelpDocument(HttpServletRequest request, Client client, Map<String, String> map);
