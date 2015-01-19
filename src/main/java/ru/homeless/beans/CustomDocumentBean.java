@@ -2,6 +2,7 @@ package ru.homeless.beans;
 
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
+import org.primefaces.model.StreamedContent;
 import ru.homeless.configuration.Configuration;
 import ru.homeless.entities.*;
 import ru.homeless.services.WorkerService;
@@ -11,6 +12,8 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.servlet.http.HttpSession;
+import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -39,6 +42,15 @@ public class CustomDocumentBean implements Serializable {
     private String signature = origSignature;
     private String performer;
 
+    private StreamedContent file;
+
+    public StreamedContent getFile() {
+        return file;
+    }
+
+    public void setFile(StreamedContent file) {
+        this.file = file;
+    }
 
     @ManagedProperty(value = "#{WorkerService}")
 	private WorkerService workerService;
@@ -60,26 +72,7 @@ public class CustomDocumentBean implements Serializable {
         rc.execute("standardDocumentWv.show();");
     }
 
-    public void downloadDocument(int id) {
-        RequestContext rc = RequestContext.getCurrentInstance();
-
-        StringBuilder sb = new StringBuilder();
-        sb.append("window.location.href = \"");
-        sb.append(Configuration.reportEngineUrl);
-        sb.append("/getGeneratedWordDocument?");
-        sb.append("requestType=16");
-        sb.append("&clientId=" + client.getId());
-        sb.append("&docId=" + id);
-        sb.append("\"");
-
-        log.info("Executing " + sb.toString());
-
-        rc.execute(sb.toString());
-
-    }
-
-
-    public void export() {
+    public void export() throws IOException {
         //Prepare new entity and add it to the database
         String finalPartText = "";
         for (String s : finalPart) {
@@ -91,7 +84,10 @@ public class CustomDocumentBean implements Serializable {
         workerService.addInstance(customDocumentRegistry);
         log.debug("Inserted object with ID=" + customDocumentRegistry.getId());
 
-        downloadDocument(customDocumentRegistry.getId());
+        String requestSuffix = "/getGeneratedWordDocument?requestType=16&clientId="+ client.getId() + "&docId=" + customDocumentRegistry.getId();
+        String saveFilePath = "/tmp" + File.separator + "StandardDocument.docx";
+        String docType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+        String docName = "StandardDocument.docx";
 
 
         //RESET ALL FIELDS
@@ -104,8 +100,7 @@ public class CustomDocumentBean implements Serializable {
         signature = origSignature;
         performer = "";
 
-        RequestContext rc = RequestContext.getCurrentInstance();
-        rc.execute("standardDocumentWv.hide();");
+        file = Util.downloadDocument(requestSuffix, saveFilePath, docType, docName);
 
     }
 

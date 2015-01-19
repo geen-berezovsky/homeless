@@ -79,30 +79,12 @@ public class RegDocumentBean implements Serializable {
         workerService.addInstance(registrationDocumentRegistry);
         log.debug("Inserted object with ID=" + registrationDocumentRegistry.getId());
 
-        URL url = new URL(Configuration.reportEngineUrl + "/getGeneratedWordDocument?requestType=10&clientId="+ client.getId() + "&docId=" + registrationDocumentRegistry.getId());
-        HttpURLConnection httpConn = (HttpURLConnection) url.openConnection();
-        InputStream inputStream = httpConn.getInputStream();
+        String requestSuffix = "/getGeneratedWordDocument?requestType=10&clientId="+ client.getId() + "&docId=" + registrationDocumentRegistry.getId();
         String saveFilePath = "/tmp" + File.separator + "RegistrationDocument.docx";
-        FileOutputStream outputStream = new FileOutputStream(saveFilePath);
+        String docType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+        String docName = "RegistrationDocument.docx";
 
-        int bytesRead = -1;
-        byte[] buffer = new byte[4096];
-        while ((bytesRead = inputStream.read(buffer)) != -1) {
-            outputStream.write(buffer, 0, bytesRead);
-        }
-
-        outputStream.close();
-        inputStream.close();
-
-
-        //InputStream stream = ((ServletContext)FacesContext.getCurrentInstance().getExternalContext().getContext()).getResourceAsStream(saveFilePath);
-        InputStream stream = new FileInputStream(new File(saveFilePath));
-        file = new DefaultStreamedContent(stream, "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "RegistrationDocument.docx");
-
-        //RESET ALL FIELDS
-
-        RequestContext rc = RequestContext.getCurrentInstance();
-        rc.execute("regDocumentWv.hide();");
+        file = Util.downloadDocument(requestSuffix, saveFilePath, docType, docName);
 
     }
 

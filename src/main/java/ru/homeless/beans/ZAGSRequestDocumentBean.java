@@ -2,6 +2,7 @@ package ru.homeless.beans;
 
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
+import org.primefaces.model.StreamedContent;
 import ru.homeless.configuration.Configuration;
 import ru.homeless.entities.Client;
 import ru.homeless.entities.Worker;
@@ -13,6 +14,8 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.servlet.http.HttpSession;
+import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -33,6 +36,16 @@ public class ZAGSRequestDocumentBean implements Serializable {
     private String address = "";
     private String mother = "";
     private String father = "";
+
+    public StreamedContent getFile() {
+        return file;
+    }
+
+    public void setFile(StreamedContent file) {
+        this.file = file;
+    }
+
+    private StreamedContent file;
 
     private Date date;
 
@@ -56,26 +69,7 @@ public class ZAGSRequestDocumentBean implements Serializable {
         rc.execute("zagsRequestWv.show();");
     }
 
-    public void downloadDocument(int id) {
-        RequestContext rc = RequestContext.getCurrentInstance();
-
-        StringBuilder sb = new StringBuilder();
-        sb.append("window.location.href = \"");
-        sb.append(Configuration.reportEngineUrl);
-        sb.append("/getGeneratedWordDocument?");
-        sb.append("requestType=14");
-        sb.append("&clientId=" + client.getId());
-        sb.append("&docId=" + id);
-        sb.append("\"");
-
-        log.info("Executing " + sb.toString());
-
-        rc.execute(sb.toString());
-
-    }
-
-
-    public void export() {
+    public void export() throws IOException {
 
         //Prepare new entity and add it to the database
         ZAGSRequestDocumentRegistry zagsRequestDocumentRegistry = new ZAGSRequestDocumentRegistry(client.getId(), forWhom, name, whereWasBorn, address, mother, father, date, worker.getId());
@@ -83,8 +77,11 @@ public class ZAGSRequestDocumentBean implements Serializable {
         workerService.addInstance(zagsRequestDocumentRegistry);
         log.debug("Inserted object with ID=" + zagsRequestDocumentRegistry.getId());
 
-        downloadDocument(zagsRequestDocumentRegistry.getId());
 
+        String requestSuffix = "/getGeneratedWordDocument?requestType=14&clientId="+ client.getId() + "&docId=" + zagsRequestDocumentRegistry.getId();
+        String saveFilePath = "/tmp" + File.separator + "ZAGSRequestDocument.docx";
+        String docType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+        String docName = "ZAGSRequestDocument.docx";
 
         //RESET ALL FIELDS
         forWhom = "";
@@ -95,8 +92,10 @@ public class ZAGSRequestDocumentBean implements Serializable {
         father = "";
         date = new Date();
 
-        RequestContext rc = RequestContext.getCurrentInstance();
-        rc.execute("zagsRequestWv.hide();");
+        file = Util.downloadDocument(requestSuffix, saveFilePath, docType, docName);
+    }
+
+    public void updateForm() {
     }
 
     public WorkerService getWorkerService() {

@@ -16,7 +16,7 @@
                         <p:outputLabel value="Кому:" for="zagsRequestForWhomId" styleClass="base_form_caption_text"/>
                     </p:column>
                     <p:column>
-                        <p:inputTextarea id="zagsRequestForWhomId" rows="6" cols="50" value="#{zagsrequest.forWhom}" styleClass="base_form_value_text"  required="true"/>
+                        <p:inputTextarea id="zagsRequestForWhomId" rows="6" cols="50" value="#{zagsrequest.forWhom}" styleClass="base_form_value_text" />
                     </p:column>
                 </p:row>
                 <p:row>
@@ -24,7 +24,7 @@
                         <p:outputLabel value="Имя:" for="zagsRequestNameId" styleClass="base_form_caption_text"/>
                     </p:column>
                     <p:column>
-                        <p:inputTextarea rows="6" cols="50" value="#{zagsrequest.name}" id="zagsRequestNameId" styleClass="base_form_value_text" required="true"/>
+                        <p:inputTextarea rows="6" cols="50" value="#{zagsrequest.name}" id="zagsRequestNameId" styleClass="base_form_value_text" />
                     </p:column>
                 </p:row>
                 <p:row>
@@ -32,7 +32,7 @@
                         <p:outputLabel value="Место рождения:" for="zagsRequestWhereWasBornId" styleClass="base_form_caption_text"/>
                     </p:column>
                     <p:column>
-                        <p:inputTextarea rows="6" cols="50" value="#{zagsrequest.whereWasBorn}" id="zagsRequestWhereWasBornId" styleClass="base_form_value_text"  required="true"/>
+                        <p:inputTextarea rows="6" cols="50" value="#{zagsrequest.whereWasBorn}" id="zagsRequestWhereWasBornId" styleClass="base_form_value_text"  />
                     </p:column>
                 </p:row>
                 <p:row>
@@ -40,7 +40,7 @@
                         <p:outputLabel value="Адрес для ответа:" for="zagsRequestAddressId" styleClass="base_form_caption_text"/>
                     </p:column>
                     <p:column>
-                        <p:inputTextarea rows="6" cols="50" value="#{zagsrequest.address}" id="zagsRequestAddressId" styleClass="base_form_value_text" required="true"/>
+                        <p:inputTextarea rows="6" cols="50" value="#{zagsrequest.address}" id="zagsRequestAddressId" styleClass="base_form_value_text" />
                     </p:column>
                 </p:row>
                 <p:row>
@@ -48,7 +48,7 @@
                         <p:outputLabel value="Мать:" for="zagsRequestMotherId" styleClass="base_form_caption_text"/>
                     </p:column>
                     <p:column>
-                        <p:inputTextarea rows="6" cols="50" value="#{zagsrequest.mother}" id="zagsRequestMotherId" styleClass="base_form_value_text"  required="true"/>
+                        <p:inputTextarea rows="6" cols="50" value="#{zagsrequest.mother}" id="zagsRequestMotherId" styleClass="base_form_value_text"  />
                     </p:column>
                 </p:row>
                 <p:row>
@@ -56,7 +56,7 @@
                         <p:outputLabel value="Отец:" for="zagsRequestFatherId" styleClass="base_form_caption_text"/>
                     </p:column>
                     <p:column>
-                        <p:inputTextarea rows="6" cols="50" value="#{zagsrequest.father}" id="zagsRequestFatherId" styleClass="base_form_value_text"  required="true"/>
+                        <p:inputTextarea rows="6" cols="50" value="#{zagsrequest.father}" id="zagsRequestFatherId" styleClass="base_form_value_text"  />
                     </p:column>
                 </p:row>
                 <p:row>
@@ -71,15 +71,33 @@
                     <p:column colspan="2">
                         <p:growl id="growl" showDetail="true" life="5000"/>
                         <center>
-                            <p:commandButton value="Экспорт в Word" actionListener="#{zagsrequest.export()}" update="@this @form growl" icon="ui-icon-check"/>
+                            <p:commandButton value="Экспорт в Word" ajax="false" onclick="PrimeFaces.monitorDownload(zagsRequestStart, zagsRequestStop);" icon="ui-icon-arrowthick-1-s" update="@this @form growl" actionListener="#{zagsrequest.export()}">
+                                <p:fileDownload value="#{zagsrequest.file}" />
+                            </p:commandButton>
                         </center>
+
                     </p:column>
                 </p:row>
 
 
             </p:panelGrid>
         </p:dialog>
+        <p:dialog modal="true" widgetVar="statusZagsRequestDialogWv" header="Ждите" draggable="false" closable="false" resizable="false">
+            <p:graphicImage value="/images/loading.gif" />
+            <p:ajax update=":zags_request" />
+        </p:dialog>
     </h:form>
+
+    <script type="text/javascript">
+        function zagsRequestStart() {
+            PF('statusZagsRequestDialogWv').show();
+        }
+
+        function zagsRequestStop() {
+            PF('statusZagsRequestDialogWv').hide();
+            PF('zagsRequestWv').hide();
+        }
+    </script>
 
 
 </ui:composition>

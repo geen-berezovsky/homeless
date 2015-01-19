@@ -11,6 +11,8 @@ import ru.homeless.services.ClientService;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -263,4 +265,24 @@ public class Util {
         }
 
     }
+
+    public static StreamedContent downloadDocument(String requestSuffix, String saveFilePath, String docType,
+                                                   String docName) throws IOException {
+        URL url = new URL(Configuration.reportEngineUrl + requestSuffix);
+        HttpURLConnection httpConn = (HttpURLConnection) url.openConnection();
+        InputStream inputStream = httpConn.getInputStream();
+        FileOutputStream outputStream = new FileOutputStream(saveFilePath);
+        int bytesRead = -1;
+        byte[] buffer = new byte[4096];
+        while ((bytesRead = inputStream.read(buffer)) != -1) {
+            outputStream.write(buffer, 0, bytesRead);
+        }
+        outputStream.close();
+        inputStream.close();
+        InputStream stream = new FileInputStream(new File(saveFilePath));
+        return new DefaultStreamedContent(stream, docType, docName);
+    }
+
+
+
 }

@@ -3,6 +3,7 @@ package ru.homeless.beans;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.SelectEvent;
+import org.primefaces.model.StreamedContent;
 import ru.homeless.configuration.Configuration;
 import ru.homeless.converters.ContractPointsTypeConverter;
 import ru.homeless.converters.ContractResultTypeConverter;
@@ -22,6 +23,8 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.validator.ValidatorException;
 import javax.servlet.http.HttpSession;
+import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.*;
 
@@ -50,6 +53,16 @@ public class ClientContractsBean implements Serializable {
     private String workerPassportData;
     private String warrantData;
 
+    public StreamedContent getFile() {
+        return file;
+    }
+
+    public void setFile(StreamedContent file) {
+        this.file = file;
+    }
+
+    private StreamedContent file;
+
     @ManagedProperty(value = "#{GenericService}")
     private GenericService genericService;
 
@@ -60,24 +73,18 @@ public class ClientContractsBean implements Serializable {
         timeZone = TimeZone.getDefault();
     }
 
-    public void downloadContract(int id) {
+    public void downloadContract(int id) throws IOException {
         RequestContext rc = RequestContext.getCurrentInstance();
 
         selectedContract = getGenericService().getInstanceById(ServContract.class, id);
 
-        StringBuilder sb = new StringBuilder();
-        sb.append("window.location.href = \"");
-        sb.append(Configuration.reportEngineUrl);
-        sb.append("/getGeneratedContract?");
-        sb.append("requestType=100");
-        sb.append("&clientId=" + this.cid);
-        sb.append("&contractId=" + selectedContract.getId());
-        sb.append("&workerId=" + selectedContract.getWorker().getId());
-        sb.append("\"");
+        String requestSuffix = "/getGeneratedContract?requestType=100&clientId="+ this.cid + "&contractId=" + selectedContract.getId() + "&workerId=" + selectedContract.getWorker().getId();
+        String saveFilePath = "/tmp" + File.separator + "ClientContract.docx";
+        String docType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+        String docName = "ClientContract.docx";
 
-        log.info("Executing " + sb.toString());
 
-        rc.execute(sb.toString());
+        file = Util.downloadDocument(requestSuffix, saveFilePath, docType, docName);
 
     }
 

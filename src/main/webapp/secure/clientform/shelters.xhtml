@@ -1,0 +1,60 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui">
+<ui:composition>
+    <h:form id="shelter_form">
+        <p:panel id="shelter_main_panel">
+            <div id="client_shelter_panel_div">
+
+                <p:contextMenu for="shelterlistId">
+                    <p:menuitem value="Удалить" update="shelterlistId" icon="ui-icon-close" actionListener="#{clientshelter.deleteShelter()}" action="#{clientshelter.reload()}" ajax="true"/>
+                    <p:menuitem value="Редактировать" update="shelterlistId" icon="ui-icon-pencil" actionListener="#{clientshelter.editShelter()}" ajax="true"/>
+                </p:contextMenu>
+
+                <p:dataTable id="shelterlistId" widgetVar="shelterlistWv" var="shelterlist" value="#{clientshelter.shelterList}" paginator="true" rows="15"
+                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15"
+                             rowKey="#{shelterlist.id}" selection="#{clientshelter.selectedShelter}" selectionMode="single" styleClass="default_datatable" paginatorPosition="bottom">
+
+                    <p:column headerText="ID">
+                        <h:outputText value="#{shelterlist.id}"/>
+                    </p:column>
+
+                    <p:column headerText="Дата заселения">
+                        <h:outputText value="#{clientshelter.formatDate(shelterlist.inShelter)}"/>
+                    </p:column>
+                    <p:column headerText="Дата выселения">
+                        <h:outputText value="#{clientshelter.formatDate(shelterlist.outShelter)}"/>
+                    </p:column>
+                    <p:column headerText="Комната">
+                        <h:outputText value="#{clientshelter.formatRoomValue(shelterlist.roomId)}"/>
+                    </p:column>
+                    <p:column headerText="ФЛГ">
+                        <h:outputText value="#{clientshelter.formatDate(shelterlist.fluorogr)}"/>
+                    </p:column>
+                    <p:column headerText="Дифтерия">
+                        <h:outputText value="#{clientshelter.formatDate(shelterlist.dipthVac)}"/>
+                    </p:column>
+                    <p:column headerText="Гепатит">
+                        <h:outputText value="#{clientshelter.formatDate(shelterlist.hepotitsVac)}"/>
+                    </p:column>
+                    <p:column headerText="Тиф">
+                        <h:outputText value="#{clientshelter.formatDate(shelterlist.typhVac)}"/>
+                    </p:column>
+                    <p:column headerText="Статус">
+                        <h:outputText value="#{clientshelter.shelterStatus(shelterlist.shelterresult)}"/>
+                    </p:column>
+
+                </p:dataTable>
+                <p:panel>
+                    <center>
+                        <!-- This remote command are necessary for direct lazy loading data to the specified dialog/form -->
+                        <p:commandButton value="Добавить сведения о проживании" actionListener="#{clientshelter.addNewShelter}" icon="ui-icon-circle-plus"/>
+                    </center>
+                </p:panel>
+
+            </div>
+        </p:panel>
+    </h:form>
+
+</ui:composition>
+</html>

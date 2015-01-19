@@ -1,0 +1,77 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui">
+<ui:composition>
+    <h:form id="contracts_form">
+        <p:panel id="contracts_main_panel">
+            <div id="client_contracts_panel_div">
+
+                <p:contextMenu for="conlistId">
+                    <p:menuitem value="Редактировать" update="conlistId" icon="ui-icon-pencil" actionListener="#{clientcontracts.editContract()}" ajax="true" oncomplete="editContractWv.show();"/>
+                    <p:menuitem value="Удалить" update="conlistId" icon="ui-icon-close" actionListener="#{clientcontracts.deleteContract()}" action="#{clientcontracts.reload()}" ajax="true"/>
+                </p:contextMenu>
+
+                <p:dataTable id="conlistId" var="conlist" value="#{clientcontracts.contractsList}" paginator="true" rows="15"
+                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15"
+                             rowKey="#{conlist.id}" selection="#{clientcontracts.selectedContract}" selectionMode="single" styleClass="default_datatable" paginatorPosition="bottom">
+
+                    <p:column headerText="ID">
+                        <h:outputText value="#{conlist.id}"/>
+                    </p:column>
+
+                    <p:column headerText="Номер">
+                        <h:outputText value="#{conlist.docNum}"/>
+                    </p:column>
+                    <p:column headerText="Дата начала">
+                        <h:outputText value="#{clientcontracts.formatDate(conlist.startDate)}"/>
+                    </p:column>
+                    <p:column headerText="Плановая дата окончания">
+                        <h:outputText value="#{clientcontracts.formatDate(conlist.stopDate)}"/>
+                    </p:column>
+                    <p:column headerText="Статус">
+                        <h:outputText value="#{conlist.result}"/>
+                    </p:column>
+                    <p:column headerText="Работник">
+                        <h:outputText value="#{conlist.worker}"/>
+                    </p:column>
+                    <p:column headerText="Комментарии">
+                        <h:outputText value="#{conlist.commentResult}"/>
+                    </p:column>
+
+                    <p:column headerText="Договор">
+                        <center>
+                            <p:growl id="growl" showDetail="true" life="5000"/>
+                            <p:commandButton value="Открыть" ajax="false" onclick="PrimeFaces.monitorDownload(clientContractStart, clientContractStop);" icon="ui-icon-arrowthick-1-s" update="@this @form growl" actionListener="#{clientcontracts.downloadContract(conlist.id)}">
+                                <p:fileDownload value="#{clientcontracts.file}" />
+                            </p:commandButton>
+                        </center>
+                    </p:column>
+
+                </p:dataTable>
+                <p:panel>
+                    <p:growl id="addcontract_button_growl" showDetail="true" life="3000"/>
+                    <center>
+                        <p:commandButton value="Добавить договор" icon="ui-icon-circle-plus" actionListener="#{clientcontracts.showAddContractDialog}" update="@this contracts_form addcontract_button_growl"/>
+                    </center>
+                </p:panel>
+
+            </div>
+        </p:panel>
+        <p:dialog modal="true" widgetVar="statusClientContractDialogWv" header="Ждите" draggable="false" closable="false" resizable="false">
+            <p:graphicImage value="/images/loading.gif" />
+        </p:dialog>
+    </h:form>
+
+
+    <script type="text/javascript">
+        function clientContractStart() {
+            PF('statusClientContractDialogWv').show();
+        }
+
+        function clientContractStop() {
+            PF('statusClientContractDialogWv').hide();
+        }
+    </script>
+
+</ui:composition>
+</html>

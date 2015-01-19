@@ -64,22 +64,23 @@
 				</h:panelGrid>
 					<p:separator />
 					<center>
-                        <p:commandButton value="Создать справку" ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);" icon="ui-icon-arrowthick-1-s" update="@this @form reg_doc_panel_grid" actionListener="#{regdocument.export()}">
+                        <p:commandButton value="Создать справку" ajax="false" onclick="PrimeFaces.monitorDownload(regDocStart, regDocStop);" icon="ui-icon-arrowthick-1-s" update="@this @form reg_doc_panel_grid" actionListener="#{regdocument.export()}">
                             <p:fileDownload value="#{regdocument.file}" />
                         </p:commandButton>
 					</center>
 		</p:dialog>
         <p:dialog modal="true" widgetVar="statusRegDocDialogWv" header="Ждите" draggable="false" closable="false" resizable="false">
             <p:graphicImage value="/images/loading.gif" />
+            <p:ajax update=":reg_select_document" />
         </p:dialog>
 	</h:form>
 
     <script type="text/javascript">
-        function start() {
+        function regDocStart() {
             PF('statusRegDocDialogWv').show();
         }
 
-        function stop() {
+        function regDocStop() {
             PF('statusRegDocDialogWv').hide();
             PF('regDocumentWv').hide();
 
