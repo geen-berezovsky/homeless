@@ -10,9 +10,9 @@ import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
+import ru.homeless.entities.BasicDocumentRegistry;
 import ru.homeless.entities.Client;
 import ru.homeless.entities.Document;
-import ru.homeless.entities.RegistrationDocumentRegistry;
 import ru.homeless.entities.ZAGSRequestDocumentRegistry;
 import ru.homeless.processors.DocTypeProcessor;
 import ru.homeless.services.IGenericService;
@@ -44,7 +44,7 @@ public class RegistrationMappingImpl implements ICustomMappingWordDocument {
 
         log.info("docId="+docId);
 
-        RegistrationDocumentRegistry registrationDocumentRegistry = genericService.getInstanceById(RegistrationDocumentRegistry.class, docId);
+        BasicDocumentRegistry registrationDocumentRegistry = genericService.getInstanceById(BasicDocumentRegistry.class, docId);
 
         log.info("registrationDocumentRegistry="+registrationDocumentRegistry);
 
