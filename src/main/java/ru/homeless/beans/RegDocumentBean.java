@@ -3,26 +3,17 @@ package ru.homeless.beans;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.SelectEvent;
-import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
-import ru.homeless.configuration.Configuration;
 import ru.homeless.entities.*;
 import ru.homeless.services.WorkerService;
 import ru.homeless.util.Util;
 
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
 import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Date;
-import java.util.List;
 
 @ManagedBean (name = "regdocument")
 @ViewScoped
@@ -71,15 +62,18 @@ public class RegDocumentBean implements Serializable {
         rc.execute("regDocumentSelectWv.show()");
     }
 
-    public void export() throws IOException {
+    public void export(int basicDocumentRegistryTypeId) throws IOException {
         //Prepare new entity and add it to the database
 
-        RegistrationDocumentRegistry registrationDocumentRegistry = new RegistrationDocumentRegistry(client.getId(), selectedDocument.getId(), dateFrom, dateTill, worker.getId(), new Date());
+        BasicDocumentRegistryType type = workerService.getInstanceById(BasicDocumentRegistryType.class, basicDocumentRegistryTypeId);
+        log.info("LOG TYPE = "+type.getId()+" -> "+type.getCaption());
 
-        workerService.addInstance(registrationDocumentRegistry);
-        log.debug("Inserted object with ID=" + registrationDocumentRegistry.getId());
+        BasicDocumentRegistry basicDocumentRegistry = new BasicDocumentRegistry(client.getId(), type, selectedDocument.getId(), dateFrom, dateTill, worker.getId(), new Date());
 
-        String requestSuffix = "/getGeneratedWordDocument?requestType=10&clientId="+ client.getId() + "&docId=" + registrationDocumentRegistry.getId();
+        workerService.addInstance(basicDocumentRegistry);
+        log.debug("Inserted object with ID=" + basicDocumentRegistry.getId());
+
+        String requestSuffix = "/getGeneratedWordDocument?requestType=10&clientId="+ client.getId() + "&docId=" + basicDocumentRegistry.getId();
         String saveFilePath = "/tmp" + File.separator + "RegistrationDocument.docx";
         String docType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
         String docName = "RegistrationDocument.docx";

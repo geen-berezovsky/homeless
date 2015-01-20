@@ -64,7 +64,7 @@
 				</h:panelGrid>
 					<p:separator />
 					<center>
-                        <p:commandButton value="Создать справку" ajax="false" onclick="PrimeFaces.monitorDownload(regDocStart, regDocStop);" icon="ui-icon-arrowthick-1-s" update="@this @form reg_doc_panel_grid" actionListener="#{regdocument.export()}">
+                        <p:commandButton value="Создать справку" ajax="false" onclick="PrimeFaces.monitorDownload(regDocStart, regDocStop);" icon="ui-icon-arrowthick-1-s" update="@this @form reg_doc_panel_grid" actionListener="#{regdocument.export(1)}">
                             <p:fileDownload value="#{regdocument.file}" />
                         </p:commandButton>
 					</center>

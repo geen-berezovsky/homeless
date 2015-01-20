@@ -10,10 +10,12 @@ import static javax.persistence.GenerationType.IDENTITY;
  * Created by maxim on 28.06.14.
  */
 @Entity
-@Table(name = "RegistrationDocumentRegistry")
-public class RegistrationDocumentRegistry implements Serializable {
+@Table(name = "BasicDocumentRegistry")
+public class BasicDocumentRegistry implements Serializable {
 
     private Integer id;
+
+    private BasicDocumentRegistryType type;
 
     private Integer client;
 
@@ -27,8 +29,10 @@ public class RegistrationDocumentRegistry implements Serializable {
 
     private Date date;
 
-    public RegistrationDocumentRegistry(Integer client, Integer documentId, Date dateFrom, Date dateTill, Integer performerId, Date date) {
+    public BasicDocumentRegistry(Integer client, BasicDocumentRegistryType type, Integer documentId, Date dateFrom, Date dateTill, Integer performerId,
+                                 Date date) {
         this.client = client;
+        this.type = type;
         this.documentId = documentId;
         this.dateFrom = dateFrom;
         this.dateTill = dateTill;
@@ -47,7 +51,7 @@ public class RegistrationDocumentRegistry implements Serializable {
     }
 
 
-    public RegistrationDocumentRegistry() {
+    public BasicDocumentRegistry() {
 
     }
 
@@ -97,6 +101,16 @@ public class RegistrationDocumentRegistry implements Serializable {
 
     public void setDocumentId(Integer documentId) {
         this.documentId = documentId;
+    }
+
+    @ManyToOne(fetch = FetchType.EAGER, targetEntity = BasicDocumentRegistryType.class)
+    @JoinColumn(name = "type")
+    public BasicDocumentRegistryType getType() {
+        return type;
+    }
+
+    public void setType(BasicDocumentRegistryType type) {
+        this.type = type;
     }
 
 

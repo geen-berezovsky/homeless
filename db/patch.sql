@@ -46,8 +46,20 @@ CREATE TABLE `homeless`.`ZAGSRequestDocumentRegistry` (
 DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_general_ci;
 
-CREATE TABLE `homeless`.`RegistrationDocumentRegistry` (
+
+CREATE TABLE `homeless`.`BasicDocumentRegistryType` (
   `id` INT NOT NULL AUTO_INCREMENT,
+  `caption` VARCHAR(255) NULL,
+  PRIMARY KEY (`id`))
+  ENGINE=InnoDB
+  DEFAULT CHARACTER SET = utf8
+  COLLATE = utf8_general_ci;
+
+
+
+CREATE TABLE `homeless`.`BasicDocumentRegistry` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `type` INT(11) NULL,
   `client` INT(11) NULL,
   `documentId` INT(11) NULL,
   `dateFrom` DATETIME NULL,
@@ -59,3 +71,16 @@ CREATE TABLE `homeless`.`RegistrationDocumentRegistry` (
   DEFAULT CHARACTER SET = utf8
   COLLATE = utf8_general_ci;
 
+alter table BasicDocumentRegistry add
+constraint FK_BasicDocumentRegistry_type
+foreign key (`type`)
+references `BasicDocumentRegistryType`(`id`);
+
+ALTER TABLE BasicDocumentRegistryType AUTO_INCREMENT = 1;
+
+insert into BasicDocumentRegistryType (`caption`) values ('Справка о регистрации');
+insert into BasicDocumentRegistryType (`caption`) values ('Направление в диспансер');
+insert into BasicDocumentRegistryType (`caption`) values ('Справка о социальной помощи');
+insert into BasicDocumentRegistryType (`caption`) values ('Направление на санобработку');
+insert into BasicDocumentRegistryType (`caption`) values ('Справка для проезда');
+insert into BasicDocumentRegistryType (`caption`) values ('Транзит');
