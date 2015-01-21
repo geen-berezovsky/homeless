@@ -13,20 +13,23 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.servlet.http.HttpSession;
 import java.io.*;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
-@ManagedBean (name = "regdocument")
+@ManagedBean (name = "basicdocument")
 @ViewScoped
-public class RegDocumentBean implements Serializable {
+public class BasicDocumentBean implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	public static Logger log = Logger.getLogger(RegDocumentBean.class);
+	public static Logger log = Logger.getLogger(BasicDocumentBean.class);
 
 	private Worker worker;
     private Client client;
 
     private Date dateFrom;
     private Date dateTill;
+
+    private String city;
 
     private StreamedContent file;
 
@@ -37,46 +40,80 @@ public class RegDocumentBean implements Serializable {
 
     public void onRowSelect(SelectEvent event) {
         selectedDocument = (Document) event.getObject();
-        openDlg();
+        String strings = "regDocumentSelectWv.hide()" + "-" + "regDocumentWv.show()";
+        openDlg(strings);
     }
 
-    public void openDlg() {
+    public void openDlg(String strings) {
+        log.info("openDLG");
         HttpSession session = Util.getSession();
         worker = (Worker) session.getAttribute("worker");
         String cids = session.getAttribute("cid").toString();
 
         dateFrom = new Date();
         dateTill = new Date();
+        city = "";
 
         if (cids != null && !cids.trim().equals("")) {
             this.client = getWorkerService().getInstanceById(Client.class, Integer.parseInt(cids));
         }
 
         RequestContext rc = RequestContext.getCurrentInstance();
-        rc.execute("regDocumentSelectWv.hide();");
-        rc.execute("regDocumentWv.show();");
-    }
-
-    public void showSelectDocumentDialog() {
-        RequestContext rc = RequestContext.getCurrentInstance();
-        rc.execute("regDocumentSelectWv.show()");
+        for (String s : strings.split("-")) {
+            log.info("Executing "+s);
+            rc.execute(s);
+        }
     }
 
     public void export(int basicDocumentRegistryTypeId) throws IOException {
         //Prepare new entity and add it to the database
+        int requestType = 0;
+        String filename = "";
+        int selectedDocumentId = 0;
+
+        switch (basicDocumentRegistryTypeId) {
+            case 1: {
+                requestType = 10;
+                filename = "RegistrationDocument.docx";
+                selectedDocumentId = selectedDocument.getId();
+                break;
+            }
+            case 2: {
+                requestType = 8;
+                filename = "DispensaryDocument.docx";
+                selectedDocumentId = 0;
+                break;
+            }
+            case 3: {
+                requestType = 2;
+                filename = "SocHelpDocument.docx";
+                selectedDocumentId = 0;
+                break;
+            }
+            case 4: {
+                requestType = 6;
+                filename = "SanDocument.docx";
+                selectedDocumentId = 0;
+                break;
+            }
+        }
 
         BasicDocumentRegistryType type = workerService.getInstanceById(BasicDocumentRegistryType.class, basicDocumentRegistryTypeId);
         log.info("LOG TYPE = "+type.getId()+" -> "+type.getCaption());
 
-        BasicDocumentRegistry basicDocumentRegistry = new BasicDocumentRegistry(client.getId(), type, selectedDocument.getId(), dateFrom, dateTill, worker.getId(), new Date());
+        BasicDocumentRegistry basicDocumentRegistry = new BasicDocumentRegistry(client.getId(), type, selectedDocumentId, dateFrom, dateTill, worker.getId(), new Date());
 
         workerService.addInstance(basicDocumentRegistry);
         log.debug("Inserted object with ID=" + basicDocumentRegistry.getId());
 
-        String requestSuffix = "/getGeneratedWordDocument?requestType=10&clientId="+ client.getId() + "&docId=" + basicDocumentRegistry.getId();
-        String saveFilePath = "/tmp" + File.separator + "RegistrationDocument.docx";
+        SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
+        String issueDateStr = format.format(dateFrom);
+
+
+        String requestSuffix = "/getGeneratedWordDocument?requestType="+requestType+"&clientId="+ client.getId() + "&docId=" + basicDocumentRegistry.getId() + "&issueDate="+issueDateStr;
+        String saveFilePath = "/tmp" + File.separator + filename;
         String docType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
-        String docName = "RegistrationDocument.docx";
+        String docName = filename;
 
         file = Util.downloadDocument(requestSuffix, saveFilePath, docType, docName);
 
@@ -140,6 +177,15 @@ public class RegDocumentBean implements Serializable {
     public void setFile(StreamedContent file) {
         this.file = file;
     }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
 
 
 }

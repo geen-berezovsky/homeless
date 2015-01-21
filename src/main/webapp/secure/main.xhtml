@@ -146,9 +146,14 @@
     <p:commandButton value="Запрос в ЗАГС" actionListener="#{zagsrequest.openDlg()}" icon="ui-icon-circle-plus"/>
 </p:tab>
 <p:tab title="Выдать справку">
-    <p:commandButton value="Справка о регистрации" actionListener="#{regdocument.showSelectDocumentDialog()}" icon="ui-icon-circle-plus"/>
+    <p:commandButton value="Справка о регистрации" onclick="regDocumentSelectWv.show()" icon="ui-icon-circle-plus"/>
     <p:separator />
-    <p:commandButton value="Направление в диспансер" actionListener="#{regdocument.showSelectDocumentDialog()}" icon="ui-icon-circle-plus"/>
+    <p:commandButton value="Направление в диспансер" actionListener="#{basicdocument.openDlg('dispensaryDocumentWv.show()')}" icon="ui-icon-circle-plus"/>
+    <p:separator />
+    <p:commandButton value="Справка о социальной помощи" actionListener="#{basicdocument.openDlg('sochelpDocumentWv.show()')}" icon="ui-icon-circle-plus"/>
+    <p:separator />
+    <p:commandButton value="Направление на санобработку" actionListener="#{basicdocument.openDlg('sanDocumentWv.show()')}" icon="ui-icon-circle-plus"/>
+
 </p:tab>
 <p:tab title="Удалить клиента">
 </p:tab>
@@ -182,6 +187,7 @@
 <ui:include src="dialogs/customDocument.xhtml"/>
 <ui:include src="dialogs/zagsRequest.xhtml"/>
 <ui:include src="dialogs/regdocument.xhtml"/>
+<ui:include src="dialogs/basicdocument.xhtml"/>
 
 
 <p:dialog id="notImplementedDlg" header="Этот раздел еще не имплементирован" widgetVar="notImplementedDlgWv" resizable="false" closable="true" modal="true" showEffect="fade" hideEffect="explode" closeOnEscape="true">

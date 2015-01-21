@@ -1,0 +1,116 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui">
+<ui:composition>
+	<h:form id="dispensary_document">
+		<p:messages />
+		<p:dialog id="dispensaryDocumentDlg" header="Направление в диспансер" widgetVar="dispensaryDocumentWv" resizable="false" closable="true" modal="false" showEffect="fade" hideEffect="explode" dynamic="true" closeOnEscape="true">
+					<h:panelGrid columns="2" id="dispensary_doc_panel_grid">
+						<p:row>
+							<p:outputLabel value="Дата выдачи:" styleClass="base_form_caption_text"  />
+						</p:row>
+						<p:row>
+                            <p:calendar value="#{basicdocument.dateFrom}" id="dispensaryDocumentFromDate" showOn="button" pattern="dd.MM.yyyy" styleClass="base_form_value_text"/>
+						</p:row>
+				</h:panelGrid>
+					<p:separator />
+					<center>
+                        <p:commandButton value="Создать справку" ajax="false" onclick="PrimeFaces.monitorDownload(dispensaryDocStart, dispensaryDocStop);" icon="ui-icon-arrowthick-1-s" update="@this @form dispensary_doc_panel_grid" actionListener="#{basicdocument.export(2)}">
+                            <p:fileDownload value="#{basicdocument.file}" />
+                        </p:commandButton>
+					</center>
+		</p:dialog>
+        <p:dialog modal="true" widgetVar="statusDispensaryDocDialogWv" header="Ждите" draggable="false" closable="false" resizable="false">
+            <p:graphicImage value="/images/loading.gif" />
+            <p:ajax update=":dispensary_document" />
+        </p:dialog>
+	</h:form>
+
+    <script type="text/javascript">
+        function dispensaryDocStart() {
+            PF('statusDispensaryDocDialogWv').show();
+        }
+
+        function dispensaryDocStop() {
+            PF('statusDispensaryDocDialogWv').hide();
+            PF('dispensaryDocumentWv').hide();
+
+        }
+    </script>
+
+
+    <h:form id="sochelp_document">
+        <p:messages />
+        <p:dialog id="sochelpDocumentDlg" header="Справка о социальной помощи" widgetVar="sochelpDocumentWv" resizable="false" closable="true" modal="false" showEffect="fade" hideEffect="explode" dynamic="true" closeOnEscape="true">
+            <h:panelGrid columns="2" id="sochelp_doc_panel_grid">
+                <p:row>
+                    <p:outputLabel value="Дата выдачи:" styleClass="base_form_caption_text"  />
+                </p:row>
+                <p:row>
+                    <p:calendar value="#{basicdocument.dateFrom}" id="sochelpDocumentFromDate" showOn="button" pattern="dd.MM.yyyy" styleClass="base_form_value_text"/>
+                </p:row>
+            </h:panelGrid>
+            <p:separator />
+            <center>
+                <p:commandButton value="Создать справку" ajax="false" onclick="PrimeFaces.monitorDownload(sochelpDocStart, sochelpDocStop);" icon="ui-icon-arrowthick-1-s" update="@this @form sochelp_doc_panel_grid" actionListener="#{basicdocument.export(3)}">
+                    <p:fileDownload value="#{basicdocument.file}" />
+                </p:commandButton>
+            </center>
+        </p:dialog>
+        <p:dialog modal="true" widgetVar="statusSochelpDocDialogWv" header="Ждите" draggable="false" closable="false" resizable="false">
+            <p:graphicImage value="/images/loading.gif" />
+            <p:ajax update=":sochelp_document" />
+        </p:dialog>
+    </h:form>
+
+    <script type="text/javascript">
+        function sochelpDocStart() {
+            PF('statusSochelpDocDialogWv').show();
+        }
+
+        function sochelpDocStop() {
+            PF('statusSochelpDocDialogWv').hide();
+            PF('sochelpDocumentWv').hide();
+
+        }
+    </script>
+
+    <h:form id="san_document">
+        <p:messages />
+        <p:dialog id="sanDocumentDlg" header="Направление на санобработку" widgetVar="sanDocumentWv" resizable="false" closable="true" modal="false" showEffect="fade" hideEffect="explode" dynamic="true" closeOnEscape="true">
+            <h:panelGrid columns="2" id="san_doc_panel_grid">
+                <p:row>
+                    <p:outputLabel value="Дата выдачи:" styleClass="base_form_caption_text"  />
+                </p:row>
+                <p:row>
+                    <p:calendar value="#{basicdocument.dateFrom}" id="sanDocumentFromDate" showOn="button" pattern="dd.MM.yyyy" styleClass="base_form_value_text"/>
+                </p:row>
+            </h:panelGrid>
+            <p:separator />
+            <center>
+                <p:commandButton value="Создать справку" ajax="false" onclick="PrimeFaces.monitorDownload(sanDocStart, sanDocStop);" icon="ui-icon-arrowthick-1-s" update="@this @form san_doc_panel_grid" actionListener="#{basicdocument.export(4)}">
+                    <p:fileDownload value="#{basicdocument.file}" />
+                </p:commandButton>
+            </center>
+        </p:dialog>
+        <p:dialog modal="true" widgetVar="statusSanDocDialogWv" header="Ждите" draggable="false" closable="false" resizable="false">
+            <p:graphicImage value="/images/loading.gif" />
+            <p:ajax update=":san_document" />
+        </p:dialog>
+    </h:form>
+
+    <script type="text/javascript">
+        function sanDocStart() {
+            PF('statusSanDocDialogWv').show();
+        }
+
+        function sanDocStop() {
+            PF('statusSanDocDialogWv').hide();
+            PF('sanDocumentWv').hide();
+
+        }
+    </script>
+
+
+</ui:composition>
+</html>
