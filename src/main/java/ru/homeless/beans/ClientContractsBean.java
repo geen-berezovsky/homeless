@@ -138,16 +138,18 @@ public class ClientContractsBean implements Serializable {
 
     public void showAddContractDialog() {
         RequestContext rc = RequestContext.getCurrentInstance();
+        rc.execute("selectDocumentWv.show()");
+        /* DEPRECATED
         if (isClientHasNoOpenedContracts()) {
-            rc.execute("selectDocumentWv.show()");
         } else {
             FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Невозможно добавить новый договор, пока не закрыт существующий!",
                     "Пожалуйста, закройте существующий открытый договор с этим клиентом сначала.");
             FacesContext.getCurrentInstance().addMessage(null, msg);
         }
+        */
 
     }
-
+/* DEPRECATED
     private boolean isClientHasNoOpenedContracts() {
         log.info("Testing available contract results (possible encoding issues): ");
         for (ContractResult c : getGenericService().getInstances(ContractResult.class)) {
@@ -168,7 +170,7 @@ public class ClientContractsBean implements Serializable {
         log.info("No uncompleted contracts found");
         return true; // all contracts are completed partially or fully
     }
-
+*/
     public int getCid() {
         return cid;
     }

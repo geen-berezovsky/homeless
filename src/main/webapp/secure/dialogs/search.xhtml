@@ -5,7 +5,7 @@
 	<!-- *********************          Search Dialog          ********************* -->
 	<h:form id="searchForm">
 		<p:dialog id="searchByNameDlg" header="Поиск клиента" widgetVar="searchByNameDlg" resizable="false" closable="true" modal="true" showEffect="fade" hideEffect="explode" closeOnEscape="true">
-			<h:panelGrid columns="2" id="pGridSearchByName">
+            <h:panelGrid columns="2" id="pGridSearchByName">
 				<p:outputLabel for="surname" value="Фамилия:" styleClass="base_form_caption_text"/>
 				<p:inputText value="#{clientsearch.surname}" id="surname" required="false" label="surname" styleClass="base_form_value_text"/>
 				<p:outputLabel for="firstname" value="Имя:" styleClass="base_form_caption_text"/>
@@ -36,20 +36,21 @@
 		<!-- *********************          Search Details Dialog          ********************* -->
 		<p:dialog id="displayFoundByName" header="Список найденных клиентов" widgetVar="displayFoundByName" resizable="false" closable="true" modal="true" showEffect="fade" hideEffect="explode" closeOnEscape="true">
 			<p:dataTable var="client" value="#{clientsearch.foundList}" paginator="true" rows="15"
-				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15" paginatorPosition="bottom" styleClass="default_datatable">
-				<p:column headerText="ID">
+				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15" paginatorPosition="bottom" styleClass="default_datatable"
+                rowKey="#{client.id}" selectionMode="single" sortMode="multiple">
+				<p:column headerText="ID" sortBy="#{client.id}">
 					<h:outputText value="#{client.id}" />
 				</p:column>
-				<p:column headerText="Фамилия">
+				<p:column headerText="Фамилия" sortBy="#{client.surname}">
 					<h:outputText value="#{client.surname}" />
 				</p:column>
-				<p:column headerText="Имя">
+				<p:column headerText="Имя" sortBy="#{client.firstname}">
 					<h:outputText value="#{client.firstname}" />
 				</p:column>
-				<p:column headerText="Отчество">
+				<p:column headerText="Отчество" sortBy="#{client.middlename}">
 					<h:outputText value="#{client.middlename}" />
 				</p:column>
-				<p:column headerText="Дата рождения">
+				<p:column headerText="Дата рождения" sortBy="#{clientsearch.formattedDate(client.date)}">
 					<h:outputText value="#{clientsearch.formattedDate(client.date)}" />
 					<!-- here are no errors! -->
 				</p:column>

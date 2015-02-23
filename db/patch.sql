@@ -84,3 +84,12 @@ insert into BasicDocumentRegistryType (`caption`) values ('Справка о с�
 insert into BasicDocumentRegistryType (`caption`) values ('Направление на санобработку');
 insert into BasicDocumentRegistryType (`caption`) values ('Справка для проезда');
 insert into BasicDocumentRegistryType (`caption`) values ('Транзит');
+
+-- remove паспорт1, паспорт2 etc
+update Document set doctype = 1 where ((doctype = 15) OR (doctype = 16) OR (doctype = 17) OR (doctype = 18) OR (doctype = 19));
+delete from DocType where ((id = 15) or (id = 16) or (id = 17) or (id = 18) or (id = 19));
+
+-- remove 'Неизвестно' from ServicesType
+set foreign_key_checks = 0;
+delete from ServicesType where id = 20;
+set foreign_key_checks = 1;
