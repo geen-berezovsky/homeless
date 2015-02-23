@@ -66,9 +66,10 @@
 				<p:menuitem value="Редактировать" update=":add_seriveplanitem contractItemsListId" icon="ui-icon-pencil" actionListener="#{clientcontracts.editServicePlanItem()}" ajax="true" oncomplete="addServiceItemWv.show();" />
 				<p:menuitem value="Удалить" update=":add_seriveplanitem contractItemsListId" icon="ui-icon-close" actionListener="#{clientcontracts.deleteServicePlanItem()}" action="#{clientcontracts.reload()}" ajax="true" />
 			</p:contextMenu>
-			<p:dataTable id="contractItemsListId" var="contractItemsList" value="#{clientcontracts.contractItems}" paginator="true" rows="15"
+			<p:dataTable id="contractItemsListId" var="contractItemsList" value="#{clientcontracts.contractItems}" paginator="true" rows="5"
 				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15"
-				rowKey="#{contractItemsList.id}" selection="#{clientcontracts.selectedContractControl}" selectionMode="single" widgetVar="contractItemsListWv" styleClass="default_datatable" paginatorPosition="bottom">
+				rowKey="#{contractItemsList.id}" selection="#{clientcontracts.selectedContractControl}" selectionMode="single" widgetVar="contractItemsListWv" styleClass="default_datatable" paginatorPosition="bottom"
+                 scrollable="true" scrollHeight="400">
 				<p:column headerText="ID">
 					<h:outputText value="#{contractItemsList.id}" />
 				</p:column>
