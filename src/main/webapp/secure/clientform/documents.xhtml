@@ -6,8 +6,16 @@
         <p:panel id="documents_main_panel">
             <div id="client_documents_panel_div">
 
+                <p:dialog header="Подтвердите удаление" appendTo="@form" widgetVar="deleteDocument" resizable="false" closable="true" showEffect="fade" hideEffect="explode" dynamic="true" closeOnEscape="true" style="font-size: 200%;" draggable="false">
+                    <p:panelGrid columns="2" style="margin: 0 auto;">
+                        <p:commandButton id="docConfirm" value="Да" update=":m_tabview:documents_form:doclistId" oncomplete="deleteDocument.hide()" actionListener="#{clientdocuments.deleteDocument()}" action="#{clientdocuments.reload()}"/>
+                        <p:commandButton id="docDecline" value="Нет" update=":m_tabview:documents_form:doclistId" oncomplete="deleteDocument.hide()"/>
+                    </p:panelGrid>
+                </p:dialog>
+
+
                 <p:contextMenu for="doclistId">
-                    <p:menuitem value="Удалить" update="doclistId" icon="ui-icon-close" actionListener="#{clientdocuments.deleteDocument()}" action="#{clientdocuments.reload()}" ajax="true"/>
+                    <p:menuitem value="Удалить" oncomplete="deleteDocument.show()" icon="ui-icon-trash" ajax="true" />
                     <p:menuitem value="Редактировать" update="doclistId" icon="ui-icon-pencil" actionListener="#{clientdocuments.editDocument()}" ajax="true" oncomplete="addDocumentWv.show();"/>
                 </p:contextMenu>
 

@@ -24,14 +24,7 @@ import org.primefaces.event.TabChangeEvent;
 import org.primefaces.model.StreamedContent;
 import ru.homeless.comparators.RecievedServiceSortingComparator;
 import ru.homeless.configuration.Configuration;
-import ru.homeless.entities.Breadwinner;
-import ru.homeless.entities.ChronicDisease;
-import ru.homeless.entities.Client;
-import ru.homeless.entities.Education;
-import ru.homeless.entities.FamilyCommunication;
-import ru.homeless.entities.NightStay;
-import ru.homeless.entities.Reasonofhomeless;
-import ru.homeless.entities.RecievedService;
+import ru.homeless.entities.*;
 import ru.homeless.services.GenericService;
 import ru.homeless.util.Util;
 
@@ -72,6 +65,12 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
     private List<String> nightStayTypes;
     private List<String> familyCommunicationTypes;
     private List<String> breadwinnerTypes;
+
+
+    private String header;
+
+    private String contactsHeaderInline;
+    private String commentsHeaderInline;
 
     public ClientFormBean()  {
         this.mainPanelVisibility = "display: none;";
@@ -124,6 +123,22 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
             toggleAnotherHomelessReasonStyle(false); //hide input "Another" for homeless reasons
         }
 
+        RequestContext rc = RequestContext.getCurrentInstance();
+        header = client.getSurname() + " " + client.getFirstname() + " " + client.getMiddlename() + getClientActualStatus(client);
+        rc.update("header");
+
+        if (client.getContacts() == null || client.getContacts().trim().replaceAll("\\<.*?>","").equals("")) {
+            contactsHeaderInline = "<u>Контакты</u>";
+        } else {
+            contactsHeaderInline = "Контакты";
+        }
+
+        if (client.getMemo() == null || client.getMemo().trim().replaceAll("\\<.*?>","").equals("")) {
+            commentsHeaderInline = "<u>Примечания</u>";
+        } else {
+            commentsHeaderInline = "Примечания";
+        }
+
         //set actual client id to session for using in another applications
         HttpSession session = Util.getSession();
         session.setAttribute("cid", cid);
@@ -132,6 +147,31 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
         We are setting model values only for drop down lists manually (hope their value is small :-) )
          */
         log.info("Successfully loaded data for client id=" + this.cid + ", " + client.getSurname() + " " + client.getFirstname() + " " + client.getMiddlename());
+    }
+
+    private String getClientActualStatus(Client client) {
+        //Client may live in shelter, lived in shelter earlier, not lived in shelter at all or stored under calculation
+        String result = "(ID = " + client.getId() ;
+        List<ShelterHistory> shelters = getGenericService().getInstancesByClientId(ShelterHistory.class, client);
+        if (shelters.size() == 0) {
+            result += ", в приюте ранее не проживал";
+            if (! client.isGender()) {
+                result += "а";
+            }
+            return result + ")";
+        }
+
+        for (ShelterHistory sh : shelters) {
+            if (sh.getOutShelter().getTime() >= new Date().getTime()) {
+                return result + ", в приюте проживает)";
+            }
+        }
+        result += ", в приюте ранее проживал";
+        if (! client.isGender()) {
+            result += "а";
+        }
+
+        return result + ")";
     }
 
     public void reloadClientData() {
@@ -568,6 +608,29 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
         this.mainPanelVisibility = mainPanelVisibility;
     }
 
+
+    public String getHeader() {
+        return header;
+    }
+
+    public void setHeader(String header) {
+        this.header = header;
+    }
+    public String getContactsHeaderInline() {
+        return contactsHeaderInline;
+    }
+
+    public void setContactsHeaderInline(String contactsHeaderInline) {
+        this.contactsHeaderInline = contactsHeaderInline;
+    }
+
+    public String getCommentsHeaderInline() {
+        return commentsHeaderInline;
+    }
+
+    public void setCommentsHeaderInline(String commentsHeaderInline) {
+        this.commentsHeaderInline = commentsHeaderInline;
+    }
 
     @PostConstruct
     public void postConstructExample() {

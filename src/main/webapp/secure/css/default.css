@@ -36,6 +36,10 @@
     font-size: 75% !important;
 }
 
+.original-dialog-header {
+    font-size: 100% !important;
+}
+
 .base_form_panel_grid_class td, .base_form_panel_grid_class tr
 {
     border-style: none !important
@@ -88,6 +92,7 @@
 .default_datatable {
 	font-size: 12px !important;
 }
+
 
 .ui-datepicker {
     font-size: 75% !important;

@@ -2,9 +2,18 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui">
 <ui:composition>
+
+        <p:dialog header="Подтвердите удаление" appendTo="@form" widgetVar="deleteReceivedService" resizable="false" closable="true" showEffect="fade" hideEffect="explode" dynamic="true" closeOnEscape="true" style="font-size: 200%;" draggable="false">
+            <p:panelGrid columns="2" style="margin: 0 auto;">
+                <p:commandButton id="rcConfirm" value="Да" update=":m_tabview:base_form:recievedservice" oncomplete="deleteReceivedService.hide()" actionListener="#{services.deleteService}" action="#{clientform.reloadAll()}"/>
+                <p:commandButton id="rcDecline" value="Нет" update=":m_tabview:base_form:recievedservice" oncomplete="deleteReceivedService.hide()"/>
+            </p:panelGrid>
+        </p:dialog>
+
+
 	<!-- Include operations with datatables -->
 	<p:contextMenu for="recievedservice">
-		<p:menuitem value="Удалить" update="recievedservice" icon="ui-icon-close" actionListener="#{services.deleteService}" action="#{clientform.reloadAll()}" ajax="true" />
+		<p:menuitem value="Удалить" oncomplete="deleteReceivedService.show()" icon="ui-icon-trash" ajax="true" />
 	</p:contextMenu>
 
 	<p:dataTable id="recievedservice" var="recievedservice" value="#{clientform.servicesList}" paginator="true" rows="7"

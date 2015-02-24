@@ -100,7 +100,6 @@ public class ClientDataBean implements Serializable {
 	protected int selectedMonth;
 	private int selectedYear;
 
-	
 	public ClientDataBean() {
 		
 	}
@@ -592,4 +591,6 @@ public class ClientDataBean implements Serializable {
     public void setOriginalPhotoFilePath(String originalPhotoFilePath) {
         this.originalPhotoFilePath = originalPhotoFilePath;
     }
+
+
 }

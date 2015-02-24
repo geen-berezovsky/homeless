@@ -6,8 +6,17 @@
         <p:panel id="shelter_main_panel">
             <div id="client_shelter_panel_div">
 
+
+                <p:dialog header="Подтвердите удаление" appendTo="@form" widgetVar="deleteShelter" resizable="false" closable="true" showEffect="fade" hideEffect="explode" dynamic="true" closeOnEscape="true" style="font-size: 200%;" draggable="false">
+                    <p:panelGrid columns="2" style="margin: 0 auto;">
+                        <p:commandButton id="shConfirm" value="Да" update=":m_tabview:shelter_form:shelterlistId" oncomplete="deleteShelter.hide()" actionListener="#{clientshelter.deleteShelter()}" action="#{clientshelter.reload()}"/>
+                        <p:commandButton id="shDecline" value="Нет" update=":m_tabview:shelter_form:shelterlistId" oncomplete="deleteShelter.hide()"/>
+                    </p:panelGrid>
+                </p:dialog>
+
+
                 <p:contextMenu for="shelterlistId">
-                    <p:menuitem value="Удалить" update="shelterlistId" icon="ui-icon-close" actionListener="#{clientshelter.deleteShelter()}" action="#{clientshelter.reload()}" ajax="true"/>
+                    <p:menuitem value="Удалить" oncomplete="deleteShelter.show()" icon="ui-icon-trash" ajax="true" />
                     <p:menuitem value="Редактировать" update="shelterlistId" icon="ui-icon-pencil" actionListener="#{clientshelter.editShelter()}" ajax="true"/>
                 </p:contextMenu>
 

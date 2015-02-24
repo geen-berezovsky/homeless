@@ -6,9 +6,19 @@
         <p:panel id="contracts_main_panel">
             <div id="client_contracts_panel_div">
 
+
+                <p:dialog header="Подтвердите удаление" appendTo="@form" widgetVar="deleteContract" resizable="false" closable="true" showEffect="fade" hideEffect="explode" dynamic="true" closeOnEscape="true" style="font-size: 200%;" draggable="false">
+                    <p:panelGrid columns="2" style="margin: 0 auto;">
+                        <p:commandButton id="conConfirm" value="Да" update=":m_tabview:contracts_form:conlistId" oncomplete="deleteContract.hide()" actionListener="#{clientcontracts.deleteContract()}" action="#{clientcontracts.reload()}"/>
+                        <p:commandButton id="conDecline" value="Нет" update=":m_tabview:contracts_form:conlistId" oncomplete="deleteContract.hide()"/>
+                    </p:panelGrid>
+                </p:dialog>
+
+
+
                 <p:contextMenu for="conlistId">
                     <p:menuitem value="Редактировать" update="conlistId" icon="ui-icon-pencil" actionListener="#{clientcontracts.editContract()}" ajax="true" oncomplete="editContractWv.show();"/>
-                    <p:menuitem value="Удалить" update="conlistId" icon="ui-icon-close" actionListener="#{clientcontracts.deleteContract()}" action="#{clientcontracts.reload()}" ajax="true"/>
+                    <p:menuitem value="Удалить" oncomplete="deleteContract.show()" icon="ui-icon-trash" ajax="true" />
                 </p:contextMenu>
 
                 <p:dataTable id="conlistId" var="conlist" value="#{clientcontracts.contractsList}" paginator="true" rows="15"
