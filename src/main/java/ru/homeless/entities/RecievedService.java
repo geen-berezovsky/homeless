@@ -19,8 +19,12 @@ public class RecievedService implements Serializable {
 	private ServicesType serviceType;
 	private Date date;
 	private Client client;
-	
-	public RecievedService() {
+
+    private Integer cash;
+    private String comment;
+
+
+    public RecievedService() {
 		
 	}
 	
@@ -79,6 +83,20 @@ public class RecievedService implements Serializable {
 		this.client = client;
 	}
 
-	
-	
+    public Integer getCash() {
+        return cash;
+    }
+
+    public void setCash(Integer cash) {
+        this.cash = cash;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
 }

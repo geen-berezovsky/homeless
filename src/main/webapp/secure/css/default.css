@@ -20,6 +20,11 @@
     font-size: 75% !important;
 }
 
+
+.servicesPanel td {
+    vertical-align: top;
+}
+
 .updatedAt {
     font-size: 12px !important;
 }

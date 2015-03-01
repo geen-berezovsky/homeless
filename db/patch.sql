@@ -93,3 +93,19 @@ delete from DocType where ((id = 15) or (id = 16) or (id = 17) or (id = 18) or (
 set foreign_key_checks = 0;
 delete from ServicesType where id = 20;
 set foreign_key_checks = 1;
+
+ALTER TABLE `homeless`.`RecievedService`
+ADD COLUMN `cash` INT(11) NULL AFTER `worker`,
+ADD COLUMN `comment` TEXT NULL AFTER `cash`;
+
+ALTER TABLE `homeless`.`ServicesType`
+ADD COLUMN `money` TINYINT(1) NULL DEFAULT 0 AFTER `caption`,
+ADD COLUMN `document` TINYINT(1) NULL DEFAULT 0 AFTER `money`;
+
+update ServicesType set document = 1 where id = 11 or id =12 or id =13 or id = 14 or id =15 or id=100;
+
+update ServicesType set money = 1 where id = 6;
+insert into ServicesType (id, caption, money) values (16, 'Изготовление фотографий', 0);
+insert into ServicesType (id, caption, money) values (17, 'Написание заявлений/запросов', 0);
+insert into ServicesType (id, caption, money) values (18, 'Выдача денег на проезд', 1);
+
