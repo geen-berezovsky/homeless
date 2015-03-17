@@ -13,6 +13,7 @@
 
 	<!-- Include operations with datatables -->
 	<p:contextMenu for="recievedservice">
+        <p:menuitem value="Редактировать" oncomplete="addServiceWv.show()" actionListener="#{services.updateValue}" icon="ui-icon-trash" ajax="true" />
 		<p:menuitem value="Удалить" oncomplete="deleteReceivedService.show()" icon="ui-icon-trash" ajax="true" />
 	</p:contextMenu>
 

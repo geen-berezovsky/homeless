@@ -108,4 +108,5 @@ update ServicesType set money = 1 where id = 6;
 insert into ServicesType (id, caption, money) values (16, 'Изготовление фотографий', 0);
 insert into ServicesType (id, caption, money) values (17, 'Написание заявлений/запросов', 0);
 insert into ServicesType (id, caption, money) values (18, 'Выдача денег на проезд', 1);
+insert into ServicesType (id, caption, money) values (19, 'Консультация психолога', 0);
 

@@ -4,64 +4,37 @@
 <ui:composition>
 	<h:form id="add_services">
 		<p:messages />
-		<p:dialog id="addService" header="Добавить оказанные услуги" widgetVar="addServiceWv" resizable="false" closable="true" modal="true" showEffect="fade" hideEffect="explode" dynamic="true" closeOnEscape="true">
-			<h:panelGrid columns="2">
+		<p:dialog id="addService" header="Добавить/Редактировать оказанные услуги" widgetVar="addServiceWv" resizable="false" closable="true" modal="true" showEffect="fade" hideEffect="explode" dynamic="true" closeOnEscape="true">
+			<h:panelGrid columns="2" id="additionalServiceValues">
 				<p:outputLabel value="Клиент:" styleClass="base_form_caption_text"/>
 				<p:outputLabel value="#{clientform.client.surname} #{clientform.client.firstname} #{clientform.client.middlename}" styleClass="base_form_value_text"/>
 
 				<p:outputLabel value="Дата:" styleClass="base_form_caption_text"/>
 				<p:calendar value="#{services.date}" id="popupButtonCal" showOn="button" pattern="dd.MM.yyyy" styleClass="base_form_value_text"/>
-			</h:panelGrid>
 
-			<p:separator />
-
-            <h:panelGrid columns="2" styleClass="servicesPanel">
-
-            <p:panel>
-                <p:outputLabel value="Услуга" styleClass="base_form_caption_text"/>
-                <p:separator/>
-			<p:selectManyCheckbox id="as_services" value="#{services.selectedItems}" layout="pageDirection" styleClass="base_form_value_text" valueChangeListener="#{services.selectedItemsChanged}">
-				<f:selectItems value="#{services.getAvailableServices()}" var="serviceTypes" itemValue="#{serviceTypes}" />
-                <f:ajax listener="#{services.itemSelected}"/>
-			</p:selectManyCheckbox>
-            </p:panel>
-
-            <p:panel>
-                <p:outputLabel value="Дополнительно" styleClass="base_form_caption_text"/>
-                <p:separator/>
-
-                <p:panelGrid columns="2" id="additionalServiceValues">
-
-                <p:outputLabel value="Выбрано:" styleClass="base_form_caption_text" />
-                <p:inputText id="selectedServiceValue" value="#{services.selectedItem}" disabled="true" styleClass="base_form_value_text"/>
+                <p:outputLabel value="Услуга:" styleClass="base_form_caption_text"/>
+                <p:selectOneMenu id="aServiceId" value="#{services.selectedItem}" style="width:250px;" styleClass="base_form_value_text" >
+                    <p:ajax event="change" listener="#{services.itemSelected}" />
+                    <f:selectItems value="#{services.getAvailableServices()}" var="aService" itemValue="#{aService}" />
+                </p:selectOneMenu>
 
                 <p:outputLabel for="cashInfoValue" value="Сумма (только цифры):" styleClass="base_form_caption_text" style="#{services.cashValueVisibility}"/>
                 <p:inputText value="#{services.selectedItemCash}" id="cashInfoValue" required="false" styleClass="base_form_value_text" style="#{services.cashValueVisibility}"/>
 
-
                 <p:outputLabel value="Комментарии:" styleClass="base_form_caption_text" />
-                <p:inputTextarea rows="10" cols="30" id="servicesComment" value="#{services.selectedItemComment}" styleClass="base_form_value_text"/>
-
-                </p:panelGrid>
-                <p:separator />
-                <p:panel>
-                    <center>
-                        <p:commandButton value="Сохранить подробности" id="addMetadataServiceButton" actionListener="#{services.saveMetadataForService()}" ajax="true" />
-                    </center>
-                </p:panel>
-
-            </p:panel>
+                <p:inputTextarea rows="10" cols="30" id="servicesComment" value="#{services.selectedItemComment}" style="width:250px;" styleClass="base_form_value_text"/>
 
             </h:panelGrid>
-			<p:separator />
+            <p:panel>
+                <center>
+                    <p:commandButton value="Добавить/Обновить" id="addNewServices" actionListener="#{services.addSelectedServices(clientform)}" ajax="true" oncomplete="addServiceWv.hide()"
+                                     update=":m_tabview:base_form :m_tabview:base_form:recievedservice addService @this" />
+                </center>
+            </p:panel>
 
-			<p:panel>
-				<center>
-					<p:commandButton value="Добавить отмеченное" id="addNewServices" actionListener="#{services.addSelectedServices(clientform)}" ajax="true" oncomplete="addServiceWv.hide()"
-						update=":m_tabview:base_form addService @this" />
-				</center>
-			</p:panel>
-		</p:dialog>
+
+
+        </p:dialog>
 
 
 	</h:form>
