@@ -8,7 +8,9 @@ import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import ru.homeless.configuration.Configuration;
 import ru.homeless.entities.Client;
+import ru.homeless.entities.Worker;
 import ru.homeless.parsers.CustomValuesHttpRequestParser;
 import ru.homeless.services.IContractService;
 import ru.homeless.shared.IDocumentMapping;
@@ -41,7 +43,7 @@ public class GenericGenerator {
     	wordDocumentDefaultValuesMap = new HashMap<String, String>();
     }
     
-    private void putDefaultValuesInMap(Client client, String documentNumber, Date issueDate)  {
+    private void putDefaultValuesInMap(Client client, String documentNumber, Date issueDate, Worker worker)  {
 
         if (issueDate == null) {
             issueDate = new Date();
@@ -56,8 +58,11 @@ public class GenericGenerator {
         wordDocumentDefaultValuesMap.put("[t:today]", Util.convertDate(issueDate));
         wordDocumentDefaultValuesMap.put("[t:date]", Util.convertDate(issueDate)); //synonym
 
-        wordDocumentDefaultValuesMap.put("[t:signatory1]", IDocumentMapping.SIGN_PART_1);
-        wordDocumentDefaultValuesMap.put("[t:signatory2]", IDocumentMapping.SIGN_PART_2);
+        if (Boolean.parseBoolean(Configuration.useSingleSignature)) {
+            worker = contractService.getInstanceById(Worker.class, 1);
+        }
+        wordDocumentDefaultValuesMap.put("[t:signatory1]", worker.getRules().getCaption()+ " СПбБОО \"Ночлежка\"");
+        wordDocumentDefaultValuesMap.put("[t:signatory2]", worker.getSurname()+" "+worker.getFirstname()+" "+worker.getMiddlename());
 
     }
 
@@ -73,9 +78,16 @@ public class GenericGenerator {
         }
         log.info("Working with client "+client.getId());
 
+        Worker w = contractService.getInstanceById(Worker.class, Integer.parseInt(request.getParameter("workerId")));
+        if (w == null) {
+            log.error("Worker is null (does not parsed properly)");
+            return null;
+        }
+        log.info("Worker is "+w.getId());
+
 
         //Make global preparations
-        putDefaultValuesInMap(client, "000000000000", Util.parseDate(request, "issueDate", log));
+        putDefaultValuesInMap(client, "000000000000", Util.parseDate(request, "issueDate", log), w);
 
 		switch (Integer.parseInt(request.getParameter("requestType"))) {
 		

@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import ru.homeless.entities.Client;
 import ru.homeless.processors.DocTypeProcessor;
 import ru.homeless.shared.IDocumentMapping;
+import ru.homeless.util.Util;
 
 /**
  * Created by maxim on 30.11.14.
@@ -23,7 +24,7 @@ public class DefaultContractMappingImpl extends ContractMappingImpl implements I
 	public static final Logger log = Logger.getLogger(DefaultContractMappingImpl.class);
 
     @Override
-    public WordprocessingMLPackage getDocument(Map<String, String> map) {
+    public WordprocessingMLPackage getDocument(Map<String, String> map, Client client) {
         return null;
     }
 
@@ -39,7 +40,7 @@ public class DefaultContractMappingImpl extends ContractMappingImpl implements I
 			}
         } else { //otherwise, generate it
         	preparePlaceholdersMap(client, contractId);
-    		finalDocumentForSaving = new DocTypeProcessor(IDocumentMapping.DOCUMENT_DEFAULT_CONTRACT_TEMPLATE_PATH).replaceParametersInDocument(placeholdersAndValues, attachPhoto(client), ICustomMappingWordDocument.AVATAR_LOCATION_TOP_RIGHT);
+    		finalDocumentForSaving = new DocTypeProcessor(IDocumentMapping.DOCUMENT_DEFAULT_CONTRACT_TEMPLATE_PATH).replaceParametersInDocument(placeholdersAndValues, Util.attachPhoto(client, log), ICustomMappingWordDocument.AVATAR_LOCATION_TOP_RIGHT);
             try {
     			finalDocumentForSaving.save(new File(contractPath));
     		} catch (Docx4JException e) {

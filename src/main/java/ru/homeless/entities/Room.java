@@ -3,6 +3,7 @@ package ru.homeless.entities;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 import java.io.Serializable;
 
@@ -12,10 +13,10 @@ import static javax.persistence.GenerationType.IDENTITY;
  * Created by maxim on 28.06.14.
  */
 @Entity
+@Table(name = "Room")
 public class Room implements Serializable {
 
-	private static final long serialVersionUID = 1L;
-	private Integer id;
+    private Integer id;
 
     public String getRoomnumber() {
         return roomnumber;

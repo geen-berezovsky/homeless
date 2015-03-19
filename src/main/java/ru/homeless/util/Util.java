@@ -1,5 +1,7 @@
 package ru.homeless.util;
 
+import java.sql.Blob;
+import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -12,6 +14,7 @@ import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
+import ru.homeless.entities.Client;
 import ru.homeless.entities.Worker;
 
 /**
@@ -40,7 +43,27 @@ public class Util {
     	return workerData;
     }
 
-    
+    public static byte[] attachPhoto(Client client, Logger log) {
+        //INSERT PHOTO
+        byte[] blobAsBytes = null;
+        if (client.getAvatar() != null) {
+            Blob blob = client.getAvatar();
+
+            int blobLength;
+            try {
+                blobLength = (int) blob.length();
+                blobAsBytes = blob.getBytes(1, blobLength);
+
+                //release the blob and free up memory. (since JDBC 4.0)
+                blob.free();
+            } catch (SQLException e) {
+                log.error(e.getMessage(),e);
+            }
+        }
+        return blobAsBytes;
+    }
+
+
     public static Date parseDate(HttpServletRequest request, String param, Logger log) {
         Date parsedDate = null;
         DateFormat df = new SimpleDateFormat("dd.MM.yyyy", Locale.ENGLISH);

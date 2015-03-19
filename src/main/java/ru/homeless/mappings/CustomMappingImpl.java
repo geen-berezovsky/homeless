@@ -30,7 +30,7 @@ public class CustomMappingImpl implements ICustomMappingWordDocument {
     private IGenericService genericService;
 
     @Override
-    public WordprocessingMLPackage getDocument(Map map) {
+    public WordprocessingMLPackage getDocument(Map map, Client client) {
 
         //Here we need to get all missing data from the database
 

@@ -360,8 +360,4 @@ public class Client implements Serializable {
 		this.recievedservices = recievedservices;
 	}
 
-	public String toString() {
-		return surname+" "+middlename+" "+firstname;
-		
-	}
 }

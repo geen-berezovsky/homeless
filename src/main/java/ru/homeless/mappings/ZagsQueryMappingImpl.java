@@ -31,7 +31,7 @@ public class ZagsQueryMappingImpl implements ICustomMappingWordDocument {
 
 
     @Override
-    public WordprocessingMLPackage getDocument(Map map) {
+    public WordprocessingMLPackage getDocument(Map map, Client client) {
 
 
         //Here we need to get all missing data from the database

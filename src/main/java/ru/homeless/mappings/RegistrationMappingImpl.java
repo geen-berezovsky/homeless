@@ -32,7 +32,7 @@ public class RegistrationMappingImpl implements ICustomMappingWordDocument {
     private IGenericService genericService;
 
     @Override
-    public WordprocessingMLPackage getDocument(Map map) {
+    public WordprocessingMLPackage getDocument(Map map, Client client) {
 
         //Here we need to get all missing data from the database
 
@@ -59,7 +59,7 @@ public class RegistrationMappingImpl implements ICustomMappingWordDocument {
         map.put("[t:client:document]", documentData);
         map.put("[t:reg:date]", "??????????????");
 
-        return new DocTypeProcessor(IDocumentMapping.DOCUMENT_REGISTRATION_TEMPLATE_PATH).replaceParametersInDocument(map, null,0);
+        return new DocTypeProcessor(IDocumentMapping.DOCUMENT_REGISTRATION_TEMPLATE_PATH).replaceParametersInDocument(map, Util.attachPhoto(client, log), ICustomMappingWordDocument.AVATAR_LOCATION_BOTTOM_CENTER);
     }
 
     @Override

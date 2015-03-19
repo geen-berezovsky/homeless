@@ -29,7 +29,7 @@ import ru.homeless.shared.IDocumentMapping;
 import ru.homeless.util.Util;
 
 @Component
-public class ContractMappingImpl {
+public class ContractMappingImpl  {
 
 	public static final Logger log = Logger.getLogger(ContractMappingImpl.class);
 	public WordprocessingMLPackage finalDocumentForSaving;
@@ -101,7 +101,7 @@ public class ContractMappingImpl {
 				+" выдан "+Util.convertDate(clientDocument.getDate()) + " "+clientDocument.getWhereAndWhom();
 		String workerInfo = workerShortInfo + ". "+workerDocument.getDoctype().getCaption()+" "+workerDocument.getDocPrefix()+" "+workerDocument.getDocNum()
 				+" выдан "+Util.convertDate(workerDocument.getDate()) + " "+workerDocument.getWhereAndWhom();
-		String orgInfo = IDocumentMapping.ORGANIZATION_INFO;
+		String orgInfo = Configuration.organizationInfo;
 		String contractControlReplacement = String.valueOf((char)10);
         for (ContractControl cc : contractControls) {
             contractControlReplacement += "- "+cc.getContractpoints().getCaption() + ";"+String.valueOf((char)13);
@@ -121,25 +121,6 @@ public class ContractMappingImpl {
         log.info("The contract for client ID="+client.getId()+" does not exist, creating, saving it to the storage and return to the requestor");
 	}
 	
-	public byte[] attachPhoto(Client client) {
-        //INSERT PHOTO
-        byte[] blobAsBytes = null;
-        if (client.getAvatar() != null) {
-        	Blob blob = client.getAvatar();
 
-        	int blobLength;
-			try {
-				blobLength = (int) blob.length();
-            	blobAsBytes = blob.getBytes(1, blobLength);
-
-            	//release the blob and free up memory. (since JDBC 4.0)
-            	blob.free();
-			} catch (SQLException e) {
-				log.error(e.getMessage(),e);
-			}  
-        }
-        return blobAsBytes;
-	}
-	
 
 }

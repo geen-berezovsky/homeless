@@ -5,6 +5,7 @@ import java.util.Map;
 
 import javax.servlet.ServletContext;
 
+import org.apache.log4j.Logger;
 import org.docx4j.openpackaging.exceptions.Docx4JException;
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
 import org.springframework.stereotype.Component;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Component;
 import ru.homeless.entities.Client;
 import ru.homeless.processors.DocTypeProcessor;
 import ru.homeless.shared.IDocumentMapping;
+import ru.homeless.util.Util;
 
 /**
  * Created by maxim on 30.11.14.
@@ -19,8 +21,10 @@ import ru.homeless.shared.IDocumentMapping;
 @Component
 public class ShelterContractMappingImpl extends ContractMappingImpl implements ICustomMappingWordDocument {
 
+    public static final Logger log = Logger.getLogger(ShelterContractMappingImpl.class);
+
     @Override
-    public WordprocessingMLPackage getDocument(Map map) {
+    public WordprocessingMLPackage getDocument(Map map, Client client) {
     	return null;
     }
 
@@ -43,7 +47,7 @@ public class ShelterContractMappingImpl extends ContractMappingImpl implements I
     		placeholdersAndValues.put("[contr:num]", String.valueOf(contractId));
     		placeholdersAndValues.put("[contr:date]", contractDate);
 
-    		finalDocumentForSaving = new DocTypeProcessor(IDocumentMapping.DOCUMENT_SHELTER_CONTRACT_TEMPLATE_PATH).replaceParametersInDocument(placeholdersAndValues, attachPhoto(client), ICustomMappingWordDocument.AVATAR_LOCATION_TOP_RIGHT);
+    		finalDocumentForSaving = new DocTypeProcessor(IDocumentMapping.DOCUMENT_SHELTER_CONTRACT_TEMPLATE_PATH).replaceParametersInDocument(placeholdersAndValues, Util.attachPhoto(client, log), ICustomMappingWordDocument.AVATAR_LOCATION_TOP_RIGHT);
             try {
     			finalDocumentForSaving.save(new File(contractPath));
     		} catch (Docx4JException e) {

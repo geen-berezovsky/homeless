@@ -12,10 +12,6 @@ import ru.homeless.entities.Client;
 
 public interface IDocumentMapping {
 
-    public static final String ORGANIZATION_INFO = "СПбБОО «Ночлежка»" + "192007, СПб, ул. Боровая, д. 112, Б" + "ИНН 7805104809 КПП 780501001";
-    public static final String SIGN_PART_1 = "Директор";
-    public static final String SIGN_PART_2 = "Свердлин Г.";
-
     /*
     Template file: DocumentSocialHelp.docx
     Document title: Справка о социальной помощи

@@ -14,8 +14,9 @@ import ru.homeless.entities.Client;
 public interface ICustomMappingWordDocument {
 	
 	public static final int AVATAR_LOCATION_TOP_RIGHT = 1;
+    public static final int AVATAR_LOCATION_BOTTOM_CENTER = 2;
 
-    public WordprocessingMLPackage getDocument(Map<String, String> map);
+    public WordprocessingMLPackage getDocument(Map<String, String> map, Client client);
     public WordprocessingMLPackage getDocument(Map<String, String> map, Client client, int contractId, int workerId, ServletContext context);
 
 }

@@ -4,15 +4,27 @@ import static javax.persistence.GenerationType.IDENTITY;
 
 import java.io.Serializable;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class ServicesType implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private int id;
 	private String caption;
+
+    @Basic
+    @Column(columnDefinition = "BIT")
+    public Boolean getMoney() {
+        return money;
+    }
+
+    public void setMoney(Boolean money) {
+        this.money = money;
+    }
+
+    private Boolean money;
+
+    private Boolean document;
 	
 	public ServicesType() {
 		
@@ -40,4 +52,16 @@ public class ServicesType implements Serializable {
 	public String toString() {
 		return caption;
 	}
+
+    @Basic
+    @Column(columnDefinition = "BIT")
+    public Boolean getDocument() {
+        return document;
+    }
+
+    public void setDocument(Boolean document) {
+        this.document = document;
+    }
+
+
 }

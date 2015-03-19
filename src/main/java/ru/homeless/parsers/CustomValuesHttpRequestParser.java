@@ -119,33 +119,33 @@ public class CustomValuesHttpRequestParser implements IDocumentMapping {
     }
 
 	public WordprocessingMLPackage generateSocialHelpDocument(HttpServletRequest request, Client client, Map<String, String> map) {
-        return new SocialHelpMappingImpl().getDocument(map);
+        return new SocialHelpMappingImpl().getDocument(map, client);
 	}
 
 	public WordprocessingMLPackage generateFreeTravelDocument(HttpServletRequest request, Client client, Map<String, String> map) {
         //Adding custom values
         map.put("[t:city]", parseTravelCity(request));
-        return new FreeTravelMappingImpl().getDocument(map);
+        return new FreeTravelMappingImpl().getDocument(map, client);
 	}
 
     public WordprocessingMLPackage generateSanitationDocument(HttpServletRequest request, Client client, Map<String, String> map) {
-        return new SanitationMappingImpl().getDocument(map);
+        return new SanitationMappingImpl().getDocument(map, client);
     }
 
     @Override
     public WordprocessingMLPackage generateDispensaryDocument(HttpServletRequest request, Client client, Map<String, String> map) {
-        return new DispensaryMappingImpl().getDocument(map);
+        return new DispensaryMappingImpl().getDocument(map, client);
     }
 
     @Override
     public WordprocessingMLPackage generateRegistrationDocument(HttpServletRequest request, Client client, Map<String, String> map) {
         map.put("[input:docId]", parseCustomParams(request, "docId", ""));
-        return registrationMappingImpl.getDocument(map);
+        return registrationMappingImpl.getDocument(map, client);
     }
 
     @Override
     public WordprocessingMLPackage generateTransitDocument(HttpServletRequest request, Client client, Map<String, String> map) {
-        return new TransitMappingImpl().getDocument(map);
+        return new TransitMappingImpl().getDocument(map, client);
     }
 
     @Override
@@ -164,7 +164,7 @@ public class CustomValuesHttpRequestParser implements IDocumentMapping {
      */
     public WordprocessingMLPackage generateZAGSQueryDocument(HttpServletRequest request, Client client, Map<String, String> map) {
         map.put("[input:docId]", parseCustomParams(request, "docId", ""));
-        return zagsQueryMappingImpl.getDocument(map);
+        return zagsQueryMappingImpl.getDocument(map, client);
     }
 
     @Override
@@ -185,7 +185,7 @@ public class CustomValuesHttpRequestParser implements IDocumentMapping {
      */
     public WordprocessingMLPackage generateCustomDocument(HttpServletRequest request, Client client, Map<String, String> map) {
         map.put("[input:docId]", parseCustomParams(request, "docId", ""));
-        return customMappingImpl.getDocument(map);
+        return customMappingImpl.getDocument(map, client);
     }
 
 
