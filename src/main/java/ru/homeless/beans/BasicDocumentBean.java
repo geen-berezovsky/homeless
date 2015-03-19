@@ -110,7 +110,7 @@ public class BasicDocumentBean implements Serializable {
         String issueDateStr = format.format(dateFrom);
 
 
-        String requestSuffix = "/getGeneratedWordDocument?requestType="+requestType+"&clientId="+ client.getId() + "&docId=" + basicDocumentRegistry.getId() + "&issueDate="+issueDateStr;
+        String requestSuffix = "/getGeneratedWordDocument?requestType="+requestType+"&clientId="+ client.getId() + "&docId=" + basicDocumentRegistry.getId() + "&issueDate="+issueDateStr + "&workerId="+worker.getId();
         String saveFilePath = "/tmp" + File.separator + filename;
         String docType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
         String docName = filename;
