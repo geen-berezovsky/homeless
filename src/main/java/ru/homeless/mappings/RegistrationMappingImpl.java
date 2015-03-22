@@ -57,7 +57,7 @@ public class RegistrationMappingImpl implements ICustomMappingWordDocument {
         String documentData = document.getDoctype().getCaption()+" "+document.getDocPrefix()+" "+document.getDocNum()+" выдан "+ Util.convertDate(document.getDate()) + " "+document.getWhereAndWhom();
 
         map.put("[t:client:document]", documentData);
-        map.put("[t:reg:date]", "??????????????");
+        map.put("[t:reg:date]", Util.convertDate(client.getRegDate()));
 
         return new DocTypeProcessor(IDocumentMapping.DOCUMENT_REGISTRATION_TEMPLATE_PATH).replaceParametersInDocument(map, Util.attachPhoto(client, log), ICustomMappingWordDocument.AVATAR_LOCATION_BOTTOM_CENTER);
     }

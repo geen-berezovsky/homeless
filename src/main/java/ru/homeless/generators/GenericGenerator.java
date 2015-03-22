@@ -85,9 +85,12 @@ public class GenericGenerator {
         }
         log.info("Worker is "+w.getId());
 
+        String docNum = request.getParameter("docNum");
+        log.info("Document number is "+docNum);
+
 
         //Make global preparations
-        putDefaultValuesInMap(client, "000000000000", Util.parseDate(request, "issueDate", log), w);
+        putDefaultValuesInMap(client, docNum, Util.parseDate(request, "issueDate", log), w);
 
 		switch (Integer.parseInt(request.getParameter("requestType"))) {
 		

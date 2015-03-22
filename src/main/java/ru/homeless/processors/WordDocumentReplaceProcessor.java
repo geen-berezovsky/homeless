@@ -77,10 +77,8 @@ public class WordDocumentReplaceProcessor {
                                 tc.getContent().add(paragraphWithImage);
                             }
                         }
-                        System.out.println("here");
                     }
                 }
-                System.out.println("here");
             }
         }
 
