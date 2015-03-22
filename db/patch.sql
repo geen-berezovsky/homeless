@@ -60,6 +60,7 @@ CREATE TABLE `homeless`.`BasicDocumentRegistryType` (
 CREATE TABLE `homeless`.`BasicDocumentRegistry` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `type` INT(11) NULL,
+  `docNum` VARCHAR(45) NULL,
   `client` INT(11) NULL,
   `documentId` INT(11) NULL,
   `dateFrom` DATETIME NULL,
@@ -78,12 +79,13 @@ references `BasicDocumentRegistryType`(`id`);
 
 ALTER TABLE BasicDocumentRegistryType AUTO_INCREMENT = 1;
 
-insert into BasicDocumentRegistryType (`caption`) values ('Справка о регистрации');
-insert into BasicDocumentRegistryType (`caption`) values ('Направление в диспансер');
-insert into BasicDocumentRegistryType (`caption`) values ('Справка о социальной помощи');
-insert into BasicDocumentRegistryType (`caption`) values ('Направление на санобработку');
-insert into BasicDocumentRegistryType (`caption`) values ('Справка для проезда');
-insert into BasicDocumentRegistryType (`caption`) values ('Транзит');
+insert into BasicDocumentRegistryType (`id`, `caption`) values (11, 'Справка о регистрации');
+insert into BasicDocumentRegistryType (`id`, `caption`) values (14,'Направление в диспансер');
+insert into BasicDocumentRegistryType (`id`, `caption`) values (15, 'Справка о социальной помощи');
+insert into BasicDocumentRegistryType (`id`, `caption`) values (12, 'Направление на санобработку');
+insert into BasicDocumentRegistryType (`id`, `caption`) values (13, 'Справка для проезда');
+insert into BasicDocumentRegistryType (`id`, `caption`) values (16, 'Транзит');
+insert into BasicDocumentRegistryType (`id`, `caption`) values (20, 'Неизвестно');
 
 -- remove паспорт1, паспорт2 etc
 update Document set doctype = 1 where ((doctype = 15) OR (doctype = 16) OR (doctype = 17) OR (doctype = 18) OR (doctype = 19));
@@ -110,3 +112,4 @@ insert into ServicesType (id, caption, money) values (17, 'Написание з
 insert into ServicesType (id, caption, money) values (18, 'Выдача денег на проезд', 1);
 insert into ServicesType (id, caption, money) values (19, 'Консультация психолога', 0);
 
+-- NOTE!!! DELETE THE TABLE GivenCertificate after its migration

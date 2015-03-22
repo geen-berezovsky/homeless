@@ -15,7 +15,7 @@
 				</h:panelGrid>
 					<p:separator />
 					<center>
-                        <p:commandButton value="Создать справку" ajax="false" onclick="PrimeFaces.monitorDownload(dispensaryDocStart, dispensaryDocStop);" icon="ui-icon-arrowthick-1-s" update="@this @form dispensary_doc_panel_grid" actionListener="#{basicdocument.export(2)}">
+                        <p:commandButton value="Создать справку" ajax="false" onclick="PrimeFaces.monitorDownload(dispensaryDocStart, dispensaryDocStop);" icon="ui-icon-arrowthick-1-s" update="@this @form dispensary_doc_panel_grid" actionListener="#{basicdocument.export(14)}">
                             <p:fileDownload value="#{basicdocument.file}" />
                         </p:commandButton>
 					</center>
@@ -52,7 +52,7 @@
             </h:panelGrid>
             <p:separator />
             <center>
-                <p:commandButton value="Создать справку" ajax="false" onclick="PrimeFaces.monitorDownload(sochelpDocStart, sochelpDocStop);" icon="ui-icon-arrowthick-1-s" update="@this @form sochelp_doc_panel_grid" actionListener="#{basicdocument.export(3)}">
+                <p:commandButton value="Создать справку" ajax="false" onclick="PrimeFaces.monitorDownload(sochelpDocStart, sochelpDocStop);" icon="ui-icon-arrowthick-1-s" update="@this @form sochelp_doc_panel_grid" actionListener="#{basicdocument.export(15)}">
                     <p:fileDownload value="#{basicdocument.file}" />
                 </p:commandButton>
             </center>
@@ -88,7 +88,7 @@
             </h:panelGrid>
             <p:separator />
             <center>
-                <p:commandButton value="Создать справку" ajax="false" onclick="PrimeFaces.monitorDownload(sanDocStart, sanDocStop);" icon="ui-icon-arrowthick-1-s" update="@this @form san_doc_panel_grid" actionListener="#{basicdocument.export(4)}">
+                <p:commandButton value="Создать справку" ajax="false" onclick="PrimeFaces.monitorDownload(sanDocStart, sanDocStop);" icon="ui-icon-arrowthick-1-s" update="@this @form san_doc_panel_grid" actionListener="#{basicdocument.export(12)}">
                     <p:fileDownload value="#{basicdocument.file}" />
                 </p:commandButton>
             </center>

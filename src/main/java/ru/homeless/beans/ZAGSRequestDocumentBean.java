@@ -78,7 +78,7 @@ public class ZAGSRequestDocumentBean implements Serializable {
         log.debug("Inserted object with ID=" + zagsRequestDocumentRegistry.getId());
 
 
-        String requestSuffix = "/getGeneratedWordDocument?requestType=14&clientId="+ client.getId() + "&docId=" + zagsRequestDocumentRegistry.getId();
+        String requestSuffix = "/getGeneratedWordDocument?requestType=14&clientId="+ client.getId() + "&docId=" + zagsRequestDocumentRegistry.getId() + "&workerId="+worker.getId();
         String saveFilePath = "/tmp" + File.separator + "ZAGSRequestDocument.docx";
         String docType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
         String docName = "ZAGSRequestDocument.docx";

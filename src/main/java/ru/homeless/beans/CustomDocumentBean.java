@@ -84,7 +84,7 @@ public class CustomDocumentBean implements Serializable {
         workerService.addInstance(customDocumentRegistry);
         log.debug("Inserted object with ID=" + customDocumentRegistry.getId());
 
-        String requestSuffix = "/getGeneratedWordDocument?requestType=16&clientId="+ client.getId() + "&docId=" + customDocumentRegistry.getId();
+        String requestSuffix = "/getGeneratedWordDocument?requestType=16&clientId="+ client.getId() + "&docId=" + customDocumentRegistry.getId() + "&workerId="+worker.getId();
         String saveFilePath = "/tmp" + File.separator + "StandardDocument.docx";
         String docType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
         String docName = "StandardDocument.docx";

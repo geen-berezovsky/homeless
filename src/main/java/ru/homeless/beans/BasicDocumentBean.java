@@ -14,6 +14,7 @@ import javax.faces.bean.ViewScoped;
 import javax.servlet.http.HttpSession;
 import java.io.*;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 @ManagedBean (name = "basicdocument")
@@ -50,8 +51,11 @@ public class BasicDocumentBean implements Serializable {
         worker = (Worker) session.getAttribute("worker");
         String cids = session.getAttribute("cid").toString();
 
-        dateFrom = new Date();
-        dateTill = new Date();
+        Calendar cal = Calendar.getInstance();
+        dateFrom = cal.getTime();
+        cal.add(Calendar.YEAR, 1);
+        dateTill = cal.getTime();
+
         city = "";
 
         if (cids != null && !cids.trim().equals("")) {
@@ -71,37 +75,51 @@ public class BasicDocumentBean implements Serializable {
         String filename = "";
         int selectedDocumentId = 0;
 
+        log.info("basicDocumentRegistryTypeId = "+basicDocumentRegistryTypeId);
+
         switch (basicDocumentRegistryTypeId) {
-            case 1: {
+            case 11: {
                 requestType = 10;
                 filename = "RegistrationDocument.docx";
                 selectedDocumentId = selectedDocument.getId();
                 break;
             }
-            case 2: {
+            case 14: {
                 requestType = 8;
                 filename = "DispensaryDocument.docx";
                 selectedDocumentId = 0;
+                dateTill = null;
                 break;
             }
-            case 3: {
+            case 15: {
                 requestType = 2;
                 filename = "SocHelpDocument.docx";
                 selectedDocumentId = 0;
+                dateTill = null;
                 break;
             }
-            case 4: {
+            case 12: {
                 requestType = 6;
                 filename = "SanDocument.docx";
                 selectedDocumentId = 0;
+                dateTill = null;
+                break;
+            }
+
+            default: {
+                requestType = 0;
+                filename = "Unknown.docx";
+                selectedDocumentId = 0;
+                dateTill = null;
                 break;
             }
         }
 
         BasicDocumentRegistryType type = workerService.getInstanceById(BasicDocumentRegistryType.class, basicDocumentRegistryTypeId);
-        log.info("LOG TYPE = "+type.getId()+" -> "+type.getCaption());
 
-        BasicDocumentRegistry basicDocumentRegistry = new BasicDocumentRegistry(client.getId(), type, selectedDocumentId, dateFrom, dateTill, worker.getId(), new Date());
+        String docNum = String.valueOf(workerService.getMaxBaseDocumentRegistryId() + 1)+"/" + String.valueOf(Calendar.getInstance().get(Calendar.YEAR));
+
+        BasicDocumentRegistry basicDocumentRegistry = new BasicDocumentRegistry(client.getId(), docNum, type, selectedDocumentId, dateFrom, dateTill, worker.getId(), new Date());
 
         workerService.addInstance(basicDocumentRegistry);
         log.debug("Inserted object with ID=" + basicDocumentRegistry.getId());
@@ -110,15 +128,15 @@ public class BasicDocumentBean implements Serializable {
         String issueDateStr = format.format(dateFrom);
 
 
-        String requestSuffix = "/getGeneratedWordDocument?requestType="+requestType+"&clientId="+ client.getId() + "&docId=" + basicDocumentRegistry.getId() + "&issueDate="+issueDateStr + "&workerId="+worker.getId();
-        String saveFilePath = "/tmp" + File.separator + filename;
+        String requestSuffix = "/getGeneratedWordDocument?requestType="+requestType+"&clientId="+ client.getId() + "&docId=" + basicDocumentRegistry.getId() + "&issueDate="+issueDateStr + "&workerId="+worker.getId() + "&docNum="+docNum;
+        String saveFilePath = System.getProperty("java.io.tmpdir") + File.separator + filename;
+        log.info("Temp path = "+saveFilePath);
         String docType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
         String docName = filename;
 
         file = Util.downloadDocument(requestSuffix, saveFilePath, docType, docName);
 
     }
-
 
     //Getters and setters
 

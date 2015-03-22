@@ -46,4 +46,8 @@ public class WorkerService extends GenericService implements Serializable {
 		return null;
 	}
 
+    public int getMaxBaseDocumentRegistryId() {
+        return workerDAO.getMaxBaseDocumentRegistryId();
+    }
+
 }

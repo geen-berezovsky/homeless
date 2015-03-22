@@ -17,6 +17,8 @@ public class BasicDocumentRegistry implements Serializable {
 
     private BasicDocumentRegistryType type;
 
+    private String docNum;
+
     private Integer client;
 
     private Integer documentId;
@@ -29,9 +31,10 @@ public class BasicDocumentRegistry implements Serializable {
 
     private Date date;
 
-    public BasicDocumentRegistry(Integer client, BasicDocumentRegistryType type, Integer documentId, Date dateFrom, Date dateTill, Integer performerId,
+    public BasicDocumentRegistry(Integer client, String docNum, BasicDocumentRegistryType type, Integer documentId, Date dateFrom, Date dateTill, Integer performerId,
                                  Date date) {
         this.client = client;
+        this.docNum = docNum;
         this.type = type;
         this.documentId = documentId;
         this.dateFrom = dateFrom;
@@ -93,6 +96,14 @@ public class BasicDocumentRegistry implements Serializable {
 
     public void setDateTill(Date dateTill) {
         this.dateTill = dateTill;
+    }
+
+    public String getDocNum() {
+        return docNum;
+    }
+
+    public void setDocNum(String docNum) {
+        this.docNum = docNum;
     }
 
     public Integer getDocumentId() {
