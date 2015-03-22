@@ -25,7 +25,7 @@ public class Main {
             int type = resultSet.getInt("type");
             int client = resultSet.getInt("client");
             int worker = resultSet.getInt("worker");
-            System.out.println(id);
+            //System.out.println(id);
 
             preparedStatement = connect.prepareStatement("insert into BasicDocumentRegistry values (?, ?, ?, ?, ? , ?, ?, ?, ?)");
             preparedStatement.setInt(1, id);
