@@ -103,6 +103,11 @@
     font-size: 75% !important;
 }
 
+.documentsMenuCss {
+    font-size: 100% !important;
+    width: auto;
+}
+
 /*
 .ui-widget,.ui-widget .ui-widget {
 	font-size: 90% !important;
