@@ -3,6 +3,8 @@
  */
 package ru.homeless.parsers;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -85,15 +87,26 @@ public class CustomValuesHttpRequestParser implements IDocumentMapping {
      * Parses the travel city.
      *
      * @param request the request
+     * BECAUSE OF ISSUES WITH GETTING RUSSIAN TEXT FROM REQUEST, WE ARE DOING SOME HACK
      * @return the string
      */
     private String parseTravelCity(HttpServletRequest request) {
-        String travelCity = request.getParameter("travelCity");
+        String travelCity = null;
+        try {
+            travelCity = URLDecoder.decode(request.getQueryString(), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            log.info(e);
+            e.printStackTrace();
+        }
+
         if (travelCity == null || travelCity.equals("")) {
             return "ГОРОД НЕ УКАЗАН!";
         } else {
+            travelCity = travelCity.replaceAll("^.*travelCity=","");
+            travelCity = travelCity.replaceAll("&.*$","");
             return travelCity;
         }
+
     }
     
     
@@ -145,6 +158,8 @@ public class CustomValuesHttpRequestParser implements IDocumentMapping {
 
     @Override
     public WordprocessingMLPackage generateTransitDocument(HttpServletRequest request, Client client, Map<String, String> map) {
+        //Adding custom values
+        map.put("[t:city]", parseTravelCity(request));
         return new TransitMappingImpl().getDocument(map, client);
     }
 

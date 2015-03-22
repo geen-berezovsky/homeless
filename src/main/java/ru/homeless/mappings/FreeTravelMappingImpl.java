@@ -10,6 +10,7 @@ import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
 import ru.homeless.entities.Client;
 import ru.homeless.processors.DocTypeProcessor;
 import ru.homeless.shared.IDocumentMapping;
+import ru.homeless.util.Util;
 
 /**
  * Created by maxim on 30.11.14.
@@ -20,7 +21,7 @@ public class FreeTravelMappingImpl implements ICustomMappingWordDocument {
 
     @Override
     public WordprocessingMLPackage getDocument(Map map, Client client) {
-        return new DocTypeProcessor(IDocumentMapping.DOCUMENT_FREE_TRAVEL_TEMPLATE_PATH).replaceParametersInDocument(map, null,0);
+        return new DocTypeProcessor(IDocumentMapping.DOCUMENT_FREE_TRAVEL_TEMPLATE_PATH).replaceParametersInDocument(map, Util.attachPhoto(client, log), ICustomMappingWordDocument.AVATAR_LOCATION_BOTTOM_CENTER);
     }
 
     @Override

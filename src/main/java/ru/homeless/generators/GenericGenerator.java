@@ -53,7 +53,6 @@ public class GenericGenerator {
         wordDocumentDefaultValuesMap.put("[t:num]", documentNumber);
         wordDocumentDefaultValuesMap.put("[t:client:birth]", Util.convertDate(client.getDate()));
         wordDocumentDefaultValuesMap.put("clientWhereWasBorn", client.getWhereWasBorn());
-        wordDocumentDefaultValuesMap.put("[t:city]", client.getWhereWasBorn());
         wordDocumentDefaultValuesMap.put("clientId", String.valueOf(client.getId()));
         wordDocumentDefaultValuesMap.put("[t:today]", Util.convertDate(issueDate));
         wordDocumentDefaultValuesMap.put("[t:date]", Util.convertDate(issueDate)); //synonym

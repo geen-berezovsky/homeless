@@ -17,6 +17,8 @@ public class BasicDocumentRegistry implements Serializable {
 
     private BasicDocumentRegistryType type;
 
+    private String docNum;
+
     private Integer client;
 
     private Integer documentId;
@@ -29,15 +31,19 @@ public class BasicDocumentRegistry implements Serializable {
 
     private Date date;
 
-    public BasicDocumentRegistry(Integer client, BasicDocumentRegistryType type, Integer documentId, Date dateFrom, Date dateTill, Integer performerId,
-                                 Date date) {
+    private String travelCity;
+
+    public BasicDocumentRegistry(Integer client, String docNum, BasicDocumentRegistryType type, Integer documentId, Date dateFrom, Date dateTill, Integer performerId,
+                                 Date date, String travelCity) {
         this.client = client;
+        this.docNum = docNum;
         this.type = type;
         this.documentId = documentId;
         this.dateFrom = dateFrom;
         this.dateTill = dateTill;
         this.performerId = performerId;
         this.date = date;
+        this.travelCity = travelCity;
     }
 
     @Id
@@ -95,12 +101,28 @@ public class BasicDocumentRegistry implements Serializable {
         this.dateTill = dateTill;
     }
 
+    public String getDocNum() {
+        return docNum;
+    }
+
+    public void setDocNum(String docNum) {
+        this.docNum = docNum;
+    }
+
     public Integer getDocumentId() {
         return documentId;
     }
 
     public void setDocumentId(Integer documentId) {
         this.documentId = documentId;
+    }
+
+    public String getTravelCity() {
+        return travelCity;
+    }
+
+    public void setTravelCity(String travelCity) {
+        this.travelCity = travelCity;
     }
 
     @ManyToOne(fetch = FetchType.EAGER, targetEntity = BasicDocumentRegistryType.class)
