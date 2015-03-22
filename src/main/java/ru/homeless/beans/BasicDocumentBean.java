@@ -13,6 +13,7 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.servlet.http.HttpSession;
 import java.io.*;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -106,6 +107,23 @@ public class BasicDocumentBean implements Serializable {
                 break;
             }
 
+            case 13: {
+                requestType = 4;
+                filename = "TravelDocument.docx";
+                selectedDocumentId = 0;
+                dateTill = null;
+                break;
+            }
+
+            case 16: {
+                requestType = 12;
+                filename = "TranzitDocument.docx";
+                selectedDocumentId = 0;
+                dateTill = null;
+                break;
+            }
+
+
             default: {
                 requestType = 0;
                 filename = "Unknown.docx";
@@ -117,9 +135,17 @@ public class BasicDocumentBean implements Serializable {
 
         BasicDocumentRegistryType type = workerService.getInstanceById(BasicDocumentRegistryType.class, basicDocumentRegistryTypeId);
 
-        String docNum = String.valueOf(workerService.getMaxBaseDocumentRegistryId() + 1)+"/" + String.valueOf(Calendar.getInstance().get(Calendar.YEAR));
+        String docNum= "";
 
-        BasicDocumentRegistry basicDocumentRegistry = new BasicDocumentRegistry(client.getId(), docNum, type, selectedDocumentId, dateFrom, dateTill, worker.getId(), new Date());
+        if (basicDocumentRegistryTypeId != 16) {
+            docNum = String.valueOf(workerService.getMaxBaseDocumentRegistryId() + 1)+"/" + String.valueOf(Calendar.getInstance().get(Calendar.YEAR));
+        } else {
+            docNum = String.valueOf(workerService.getMaxBaseDocumentRegistryDocNumForTranzit() + 1);
+        }
+
+        log.info("NEW VALUE = "+docNum);
+
+        BasicDocumentRegistry basicDocumentRegistry = new BasicDocumentRegistry(client.getId(), docNum, type, selectedDocumentId, dateFrom, dateTill, worker.getId(), new Date(), city);
 
         workerService.addInstance(basicDocumentRegistry);
         log.debug("Inserted object with ID=" + basicDocumentRegistry.getId());
@@ -128,9 +154,9 @@ public class BasicDocumentBean implements Serializable {
         String issueDateStr = format.format(dateFrom);
 
 
-        String requestSuffix = "/getGeneratedWordDocument?requestType="+requestType+"&clientId="+ client.getId() + "&docId=" + basicDocumentRegistry.getId() + "&issueDate="+issueDateStr + "&workerId="+worker.getId() + "&docNum="+docNum;
+        String requestSuffix = "/getGeneratedWordDocument?requestType="+requestType+"&clientId="+ client.getId() + "&docId=" + basicDocumentRegistry.getId() + "&issueDate="+issueDateStr + "&workerId="+worker.getId() + "&docNum="+docNum + "&travelCity="+ URLEncoder.encode(city, "UTF-8");
         String saveFilePath = System.getProperty("java.io.tmpdir") + File.separator + filename;
-        log.info("Temp path = "+saveFilePath);
+        log.info("requestSuffix = "+requestSuffix);
         String docType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
         String docName = filename;
 

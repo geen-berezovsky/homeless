@@ -50,4 +50,8 @@ public class WorkerService extends GenericService implements Serializable {
         return workerDAO.getMaxBaseDocumentRegistryId();
     }
 
+    public int getMaxBaseDocumentRegistryDocNumForTranzit() {
+        return workerDAO.getMaxBaseDocumentRegistryDocNumForTranzit();
+    }
+
 }

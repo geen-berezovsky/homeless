@@ -67,6 +67,7 @@ CREATE TABLE `homeless`.`BasicDocumentRegistry` (
   `dateTill` DATETIME NULL,
   `performerId` INT(11) NULL,
   `date` DATETIME NULL,
+  `travelCity` VARCHAR(255) NULL,
   PRIMARY KEY (`id`))
   ENGINE=InnoDB
   DEFAULT CHARACTER SET = utf8

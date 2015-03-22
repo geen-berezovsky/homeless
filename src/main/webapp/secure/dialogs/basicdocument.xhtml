@@ -111,6 +111,90 @@
         }
     </script>
 
+    <h:form id="travel_document">
+        <p:messages />
+        <p:dialog id="travelDocumentDlg" header="Справка для проезда" widgetVar="travelDocumentWv" resizable="false" closable="true" modal="false" showEffect="fade" hideEffect="explode" dynamic="true" closeOnEscape="true">
+            <h:panelGrid columns="2" id="travel_doc_panel_grid">
+                <p:row>
+                    <p:outputLabel value="Дата выдачи:" styleClass="base_form_caption_text"  />
+                </p:row>
+                <p:row>
+                    <p:calendar value="#{basicdocument.dateFrom}" id="travelDocumentFromDate" showOn="button" pattern="dd.MM.yyyy" styleClass="base_form_value_text"/>
+                </p:row>
+                <p:row>
+                    <p:outputLabel value="Город:" styleClass="base_form_caption_text"  />
+                </p:row>
+                <p:row>
+                    <p:inputText value="#{basicdocument.city}" id="travelDocCity" styleClass="base_form_value_text"/>
+                </p:row>
+            </h:panelGrid>
+            <p:separator />
+            <center>
+                <p:commandButton value="Создать справку" ajax="false" onclick="PrimeFaces.monitorDownload(travelDocStart, travelDocStop);" icon="ui-icon-arrowthick-1-s" update="@this @form san_doc_panel_grid" actionListener="#{basicdocument.export(13)}">
+                    <p:fileDownload value="#{basicdocument.file}" />
+                </p:commandButton>
+            </center>
+        </p:dialog>
+        <p:dialog modal="true" widgetVar="statusTravelDocDialogWv" header="Ждите" draggable="false" closable="false" resizable="false">
+            <p:graphicImage value="/images/loading.gif" />
+            <p:ajax update=":travel_document" />
+        </p:dialog>
+    </h:form>
+
+    <script type="text/javascript">
+        function travelDocStart() {
+            PF('statusTravelDocDialogWv').show();
+        }
+
+        function travelDocStop() {
+            PF('statusTravelDocDialogWv').hide();
+            PF('travelDocumentWv').hide();
+
+        }
+    </script>
+
+    <h:form id="tranzit_document">
+        <p:messages />
+        <p:dialog id="tranzitDocumentDlg" header="Транзит" widgetVar="tranzitDocumentWv" resizable="false" closable="true" modal="false" showEffect="fade" hideEffect="explode" dynamic="true" closeOnEscape="true">
+            <h:panelGrid columns="2" id="tranzit_doc_panel_grid">
+                <p:row>
+                    <p:outputLabel value="Дата выдачи:" styleClass="base_form_caption_text"  />
+                </p:row>
+                <p:row>
+                    <p:calendar value="#{basicdocument.dateFrom}" id="tranzitDocumentFromDate" showOn="button" pattern="dd.MM.yyyy" styleClass="base_form_value_text"/>
+                </p:row>
+                <p:row>
+                    <p:outputLabel value="Город:" styleClass="base_form_caption_text"  />
+                </p:row>
+                <p:row>
+                    <p:inputText value="#{basicdocument.city}" id="tranzitDocCity" styleClass="base_form_value_text"/>
+                </p:row>
+            </h:panelGrid>
+            <p:separator />
+            <center>
+                <p:commandButton value="Создать справку" ajax="false" onclick="PrimeFaces.monitorDownload(tranzitDocStart, tranzitDocStop);" icon="ui-icon-arrowthick-1-s" update="@this @form san_doc_panel_grid" actionListener="#{basicdocument.export(16)}">
+                    <p:fileDownload value="#{basicdocument.file}" />
+                </p:commandButton>
+            </center>
+        </p:dialog>
+        <p:dialog modal="true" widgetVar="statusTranzitDocDialogWv" header="Ждите" draggable="false" closable="false" resizable="false">
+            <p:graphicImage value="/images/loading.gif" />
+            <p:ajax update=":tranzit_document" />
+        </p:dialog>
+    </h:form>
+
+    <script type="text/javascript">
+        function tranzitDocStart() {
+            PF('statusTranzitDocDialogWv').show();
+        }
+
+        function tranzitDocStop() {
+            PF('statusTranzitDocDialogWv').hide();
+            PF('tranzitDocumentWv').hide();
+
+        }
+    </script>
+
 
 </ui:composition>
 </html>

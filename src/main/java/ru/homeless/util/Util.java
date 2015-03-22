@@ -13,6 +13,7 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -268,8 +269,10 @@ public class Util {
 
     public static StreamedContent downloadDocument(String requestSuffix, String saveFilePath, String docType,
                                                    String docName) throws IOException {
+
         URL url = new URL(Configuration.reportEngineUrl + requestSuffix);
         HttpURLConnection httpConn = (HttpURLConnection) url.openConnection();
+        httpConn.setRequestProperty("Accept-Charset", "UTF-8");
         InputStream inputStream = httpConn.getInputStream();
         FileOutputStream outputStream = new FileOutputStream(saveFilePath);
         int bytesRead = -1;
