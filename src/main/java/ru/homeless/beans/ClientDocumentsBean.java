@@ -23,6 +23,7 @@ import org.primefaces.context.RequestContext;
 import ru.homeless.converters.DocTypeConverter;
 import ru.homeless.entities.DocType;
 import ru.homeless.entities.Document;
+import ru.homeless.entities.ServicesType;
 import ru.homeless.services.GenericService;
 import ru.homeless.util.Util;
 
@@ -40,10 +41,36 @@ public class ClientDocumentsBean implements Serializable {
 	@ManagedProperty(value = "#{GenericService}")
 	private GenericService genericService;
 
+    private String tempRegVisibility;
+
 	public ClientDocumentsBean() {
 	}
 
-	public void reload() {
+    private void toggleTempRegVisibility(boolean value) {
+        if (value)
+            this.tempRegVisibility = "display: block;";
+        else this.tempRegVisibility = "display: none;";
+    }
+
+    public void itemSelected() {
+        RequestContext rc = RequestContext.getCurrentInstance();
+
+        if (selectedDocument.getRegistration() == 3) {
+            toggleTempRegVisibility(true);
+        } else {
+            toggleTempRegVisibility(false);
+            selectedDocument.setTempRegDateFrom(null);
+            selectedDocument.setTempRegDateTo(null);
+        }
+
+        rc.update("add_document:tempRegDateFrom");
+        rc.update("add_document:tempRegDateFrom_l");
+        rc.update("add_document:tempRegDateTo");
+        rc.update("add_document:tempRegDateTo_l");
+    }
+
+
+    public void reload() {
 		HttpSession session = Util.getSession();
 		String cids = session.getAttribute("cid").toString();
 
@@ -52,6 +79,7 @@ public class ClientDocumentsBean implements Serializable {
 			documentsList = getGenericService().getInstancesByClientId(Document.class, cid);
 		}
 		newSelectedDocument(); // set new document
+        this.tempRegVisibility = "display: none;";
 		RequestContext rc = RequestContext.getCurrentInstance();
 		rc.update("doclistId");	
 	}
@@ -80,19 +108,19 @@ public class ClientDocumentsBean implements Serializable {
 		}
 	}
 
-	public String getStringRegistrationConfirmation(int i) {
-		if (i == 0) {
-			return "Не указано";
-		} else {
-			if (i == 1) {
-				return "Нет";
-			} else {
-				if (i == 2) {
-					return "Да";
-				}
-			}
-		}
-		return "";
+	public String getStringRegistrationConfirmation(int i, int j) {
+        String result = "";
+        switch (i) {
+            case 0: { result = "Не указано"; break; }
+            case 1: { result = "Нет"; break; }
+            case 2: { result = "Да"; break; }
+            case 3: {
+                Document td = getGenericService().getInstanceById(Document.class, j);
+                result = "Временная (c "+Util.formatDate(td.getTempRegDateFrom()) + " по "+Util.formatDate(td.getTempRegDateTo())+")";
+                break;
+            }
+        }
+		return result;
 	}
 
 	public Document getSelectedDocument() {
@@ -110,6 +138,7 @@ public class ClientDocumentsBean implements Serializable {
 
 	public void editDocument() {
 		selectedDocument = getGenericService().getInstanceById(Document.class, selectedDocument.getId());
+        itemSelected();
 		RequestContext rc = RequestContext.getCurrentInstance();
 		rc.update("add_document");	//force updating the add document form	
 	}
@@ -178,6 +207,16 @@ public class ClientDocumentsBean implements Serializable {
 	public void init() {
 		docTypes = new ArrayList<DocType>();
 		docTypes.addAll(getGenericService().getInstances(DocType.class));
+        //remove from the list of document types the type with caption "???" - HS-4
+        int a = 0;
+        for (DocType dt : docTypes) {
+            if (dt.getCaption().equals("???")) {
+                break;
+            } else {
+                a++;
+            }
+        }
+        docTypes.remove(a);// avoiding ConcurrencyModificationException - removing when the list is not in use
 		DocTypeConverter.docTypesDB = new ArrayList<DocType>();
 		DocTypeConverter.docTypesDB.addAll(docTypes);
 	}
@@ -197,6 +236,15 @@ public class ClientDocumentsBean implements Serializable {
         //rc.update("addDocumentWv");
         rc.execute("addDocumentWv.show()");
     }
+
+    public String getTempRegVisibility() {
+        return tempRegVisibility;
+    }
+
+    public void setTempRegVisibility(String tempRegVisibility) {
+        this.tempRegVisibility = tempRegVisibility;
+    }
+
 
 }
 

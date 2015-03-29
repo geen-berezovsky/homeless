@@ -110,7 +110,23 @@ update ServicesType set document = 1 where id = 11 or id =12 or id =13 or id = 1
 update ServicesType set money = 1 where id = 6;
 insert into ServicesType (id, caption, money) values (16, 'Изготовление фотографий', 0);
 insert into ServicesType (id, caption, money) values (17, 'Написание заявлений/запросов', 0);
-insert into ServicesType (id, caption, money) values (18, 'Выдача денег на проезд', 1);
+insert into ServicesType (id, caption, money) values (18, 'Оплата проезда', 1);
 insert into ServicesType (id, caption, money) values (19, 'Консультация психолога', 0);
+insert into ServicesType (id, caption, money) values (20, 'Оплата пошлины', 1);
 
 -- NOTE!!! DELETE THE TABLE GivenCertificate after its migration
+
+-- HS-4
+update document set doctype = 13 where doctype=25;
+delete from DocType where id=25;
+
+update document set doctype = 13 where doctype=26;
+delete from DocType where id=26;
+
+update document set doctype = 8 where doctype=22;
+delete from DocType where id=22;
+
+-- HS-10
+ALTER TABLE `homeless`.`Document`
+ADD COLUMN `tempRegDateFrom` DATETIME NULL DEFAULT NULL AFTER `worker`,
+ADD COLUMN `tempRegDateTo` DATETIME NULL DEFAULT NULL AFTER `tempRegDateFrom`;

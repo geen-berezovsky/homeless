@@ -72,8 +72,12 @@ public class Util {
 
 
     public static String formatDate(Date query) {
-		SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy");
-		return formatter.format(query);
+        if (query == null) {
+            return "??.??.????";
+        } else {
+            SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy");
+            return formatter.format(query);
+        }
 	}
 
 	public static String getImagesStorageLocation() {

@@ -72,13 +72,40 @@
 				<p:row>
 					<p:column>
 						<p:selectOneMenu id="docRegistrationId" value="#{clientdocuments.selectedDocument.registration}"  styleClass="base_form_value_text">
-							<f:selectItem itemLabel="Нет ответа" itemValue="0" />
+                            <p:ajax event="change" listener="#{clientdocuments.itemSelected}" />
+                            <f:selectItem itemLabel="Нет ответа" itemValue="0" />
 							<f:selectItem itemLabel="Нет" itemValue="1" />
 							<f:selectItem itemLabel="Да" itemValue="2" />
+                            <f:selectItem itemLabel="Временная" itemValue="3" />
 						</p:selectOneMenu>
 					</p:column>
 				</p:row>
-				<p:row>
+                <p:row>
+                    <p:column>
+                        <p:outputLabel id="tempRegDateFrom_l" for="tempRegDateFrom" value="Временная регистрация с:" styleClass="base_form_caption_text" style="#{clientdocuments.tempRegVisibility}"/>
+                    </p:column>
+                </p:row>
+                <p:row>
+                    <p:column>
+                        <p:calendar value="#{clientdocuments.selectedDocument.tempRegDateFrom}" id="tempRegDateFrom" showOn="button" pattern="dd.MM.yyyy" validator="#{clientdocuments.validateDate}"  styleClass="base_form_value_text" style="#{clientdocuments.tempRegVisibility}"/>
+                    </p:column>
+                </p:row>
+                <p:row>
+                    <p:column>
+                        <p:outputLabel id="tempRegDateTo_l" for="tempRegDateTo" value="Временная регистрация по:" styleClass="base_form_caption_text" style="#{clientdocuments.tempRegVisibility}"/>
+                    </p:column>
+                </p:row>
+                <p:row>
+                    <p:column>
+                        <p:calendar value="#{clientdocuments.selectedDocument.tempRegDateTo}" id="tempRegDateTo" showOn="button" pattern="dd.MM.yyyy" validator="#{clientdocuments.validateDate}"  styleClass="base_form_value_text" style="#{clientdocuments.tempRegVisibility}"/>
+                    </p:column>
+                </p:row>
+
+
+
+
+
+                <p:row>
 					<p:column>
 						<p:outputLabel value="Регистрация (город):" styleClass="base_form_caption_text"/>
 					</p:column>
