@@ -130,3 +130,5 @@ delete from DocType where id=22;
 ALTER TABLE `homeless`.`Document`
 ADD COLUMN `tempRegDateFrom` DATETIME NULL DEFAULT NULL AFTER `worker`,
 ADD COLUMN `tempRegDateTo` DATETIME NULL DEFAULT NULL AFTER `tempRegDateFrom`;
+
+
