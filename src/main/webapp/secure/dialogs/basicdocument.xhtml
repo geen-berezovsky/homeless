@@ -22,7 +22,7 @@
 		</p:dialog>
         <p:dialog modal="true" widgetVar="statusDispensaryDocDialogWv" header="Ждите" draggable="false" closable="false" resizable="false">
             <p:graphicImage value="/images/loading.gif" />
-            <p:ajax update=":dispensary_document" />
+            <p:ajax update=":dispensary_document :m_tabview:documentsMenu:stdDocListId" />
         </p:dialog>
 	</h:form>
 
@@ -59,7 +59,7 @@
         </p:dialog>
         <p:dialog modal="true" widgetVar="statusSochelpDocDialogWv" header="Ждите" draggable="false" closable="false" resizable="false">
             <p:graphicImage value="/images/loading.gif" />
-            <p:ajax update=":sochelp_document" />
+            <p:ajax update=":sochelp_document :m_tabview:documentsMenu:stdDocListId" />
         </p:dialog>
     </h:form>
 
@@ -95,7 +95,7 @@
         </p:dialog>
         <p:dialog modal="true" widgetVar="statusSanDocDialogWv" header="Ждите" draggable="false" closable="false" resizable="false">
             <p:graphicImage value="/images/loading.gif" />
-            <p:ajax update=":san_document" />
+            <p:ajax update=":san_document :m_tabview:documentsMenu:stdDocListId" />
         </p:dialog>
     </h:form>
 
@@ -137,7 +137,7 @@
         </p:dialog>
         <p:dialog modal="true" widgetVar="statusTravelDocDialogWv" header="Ждите" draggable="false" closable="false" resizable="false">
             <p:graphicImage value="/images/loading.gif" />
-            <p:ajax update=":travel_document" />
+            <p:ajax update=":travel_document :m_tabview:documentsMenu:stdDocListId" />
         </p:dialog>
     </h:form>
 
@@ -179,7 +179,7 @@
         </p:dialog>
         <p:dialog modal="true" widgetVar="statusTranzitDocDialogWv" header="Ждите" draggable="false" closable="false" resizable="false">
             <p:graphicImage value="/images/loading.gif" />
-            <p:ajax update=":tranzit_document" />
+            <p:ajax update=":tranzit_document :m_tabview:documentsMenu:trDocListId" />
         </p:dialog>
     </h:form>
 

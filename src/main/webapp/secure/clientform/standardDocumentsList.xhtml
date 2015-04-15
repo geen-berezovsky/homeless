@@ -1,0 +1,57 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui">
+<ui:composition>
+        <p:dialog header="Подтвердите удаление" appendTo="@form" widgetVar="deleteStandardDocument" resizable="false" closable="true" showEffect="fade" hideEffect="explode" dynamic="true" closeOnEscape="true" style="font-size: 200%;" draggable="false">
+            <p:panelGrid columns="2" style="margin: 0 auto;">
+                <p:commandButton id="stdRcConfirm" value="Да" update=":m_tabview:documentsMenu:stdDocListId" oncomplete="deleteStandardDocument.hide()" actionListener="#{stddoc.deleteSelectedDocument}"/>
+                <p:commandButton id="stdRcDecline" value="Нет" update=":m_tabview:documentsMenu:stdDocListId" oncomplete="deleteStandardDocument.hide()"/>
+            </p:panelGrid>
+        </p:dialog>
+
+
+        <p:contextMenu for="stdDocListId">
+            <p:menuitem value="Удалить" oncomplete="deleteStandardDocument.show()" icon="ui-icon-trash" ajax="true" />
+        </p:contextMenu>
+
+
+        <p:scrollPanel id="standardDocumentsList_main_panel">
+            <div id="standardDocumentsList_panel_div">
+                <p:dataTable id="stdDocListId" var="stdDocList" value="#{stddoc.standardDocumentList}" paginator="true" rows="10"
+                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15"
+                             rowKey="#{stdDocList.id}" selection="#{stddoc.selectedStdDoc}" selectionMode="single" styleClass="default_datatable" paginatorPosition="bottom">
+                    <f:facet name="header">
+                        Выданные справки
+                    </f:facet>
+                    <p:column headerText="ID" style="display:none;">
+                        <h:outputText value="#{stdDocList.id}"/>
+                    </p:column>
+                    <p:column headerText="Номер">
+                        <h:outputText value="#{stdDocList.docNum}"/>
+                    </p:column>
+                    <p:column headerText="Дата &quot;от&quot;">
+                        <h:outputText value="#{stddoc.formatDate(stdDocList.dateFrom)}"/>
+                    </p:column>
+                    <p:column headerText="Дата &quot;по&quot;">
+                        <h:outputText value="#{stddoc.formatDate(stdDocList.dateTill)}"/>
+                    </p:column>
+                    <p:column headerText="ID документа">
+                        <h:outputText value="#{stddoc.getDocumentIdStr(stdDocList.documentId)}"/>
+                    </p:column>
+                    <p:column headerText="Тип">
+                        <h:outputText value="#{stdDocList.type.caption}"/>
+                    </p:column>
+                    <p:column headerText="Работник">
+                        <h:outputText value="#{stddoc.getWorkerName(stdDocList.performerId)}"/>
+                    </p:column>
+                    <p:column headerText="Дата формирования">
+                        <h:outputText value="#{stddoc.formatDate(stdDocList.date)}"/>
+                    </p:column>
+                    <p:column headerText="Город следования">
+                        <h:outputText value="#{stdDocList.travelCity}"/>
+                    </p:column>
+         </p:dataTable>
+            </div>
+        </p:scrollPanel>
+</ui:composition>
+</html>

@@ -11,6 +11,7 @@ import ru.homeless.util.Util;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
 import java.io.*;
 import java.net.URLEncoder;
@@ -152,7 +153,6 @@ public class BasicDocumentBean implements Serializable {
 
         SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
         String issueDateStr = format.format(dateFrom);
-
 
         String requestSuffix = "/getGeneratedWordDocument?requestType="+requestType+"&clientId="+ client.getId() + "&docId=" + basicDocumentRegistry.getId() + "&issueDate="+issueDateStr + "&workerId="+worker.getId() + "&docNum="+docNum + "&travelCity="+ URLEncoder.encode(city, "UTF-8");
         String saveFilePath = System.getProperty("java.io.tmpdir") + File.separator + filename;

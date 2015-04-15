@@ -1,0 +1,48 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui">
+<ui:composition>
+        <p:dialog header="Подтвердите удаление" appendTo="@form" widgetVar="deleteTranzitDocument" resizable="false" closable="true" showEffect="fade" hideEffect="explode" dynamic="true" closeOnEscape="true" style="font-size: 200%;" draggable="false">
+            <p:panelGrid columns="2" style="margin: 0 auto;">
+                <p:commandButton id="trRcConfirm" value="Да" update=":m_tabview:documentsMenu:trDocListId" oncomplete="deleteTranzitDocument.hide()" actionListener="#{stddoc.deleteSelectedTranzitDocument}"/>
+                <p:commandButton id="trRcDecline" value="Нет" update=":m_tabview:documentsMenu:trDocListId" oncomplete="deleteTranzitDocument.hide()"/>
+            </p:panelGrid>
+        </p:dialog>
+
+
+        <p:contextMenu for="trDocListId">
+            <p:menuitem value="Удалить" oncomplete="deleteTranzitDocument.show()" icon="ui-icon-trash" ajax="true" />
+        </p:contextMenu>
+
+
+        <p:scrollPanel id="tranzitDocumentsList_main_panel">
+            <div id="tranzitDocumentsList_panel_div">
+                <p:dataTable id="trDocListId" var="trDocList" value="#{stddoc.tranzitDocumentList}" paginator="true" rows="10"
+                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15"
+                             rowKey="#{trDocList.id}" selection="#{stddoc.selectedTrDoc}" selectionMode="single" styleClass="default_datatable" paginatorPosition="bottom">
+                    <f:facet name="header">
+                        Выданные справки "Транзит"
+                    </f:facet>
+                    <p:column headerText="ID" style="display:none;">
+                        <h:outputText value="#{trDocList.id}"/>
+                    </p:column>
+                    <p:column headerText="Номер">
+                        <h:outputText value="#{trDocList.docNum}"/>
+                    </p:column>
+                    <p:column headerText="Дата &quot;от&quot;">
+                        <h:outputText value="#{stddoc.formatDate(trDocList.dateFrom)}"/>
+                    </p:column>
+                    <p:column headerText="Работник">
+                        <h:outputText value="#{stddoc.getWorkerName(trDocList.performerId)}"/>
+                    </p:column>
+                    <p:column headerText="Дата формирования">
+                        <h:outputText value="#{stddoc.formatDate(trDocList.date)}"/>
+                    </p:column>
+                    <p:column headerText="Город следования">
+                        <h:outputText value="#{trDocList.travelCity}"/>
+                    </p:column>
+         </p:dataTable>
+            </div>
+        </p:scrollPanel>
+</ui:composition>
+</html>

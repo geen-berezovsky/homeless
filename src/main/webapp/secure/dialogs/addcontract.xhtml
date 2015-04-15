@@ -31,7 +31,7 @@
 					<h:outputText value="#{clientdocuments.formatDate(cdoclist.date)}" />
 				</p:column>
 				<p:column headerText="Регистрация">
-					<h:outputText value="#{clientdocuments.getStringRegistrationConfirmation(cdoclist.registration)}" />
+					<h:outputText value="#{clientdocuments.getStringRegistrationConfirmation(cdoclist.registration, cdoclist.id)}" />
 				</p:column>
 				<p:column headerText="Регистрация: город">
 					<h:outputText value="#{cdoclist.city}" />

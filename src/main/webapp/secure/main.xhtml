@@ -148,12 +148,11 @@
 <p:tab title="Выдать справку">
 
     <h:form id="documentsMenu">
-
+    <p:scrollPanel>
     <p:menu styleClass="documentsMenuCss">
         <p:submenu label="Выберите тип справки">
-            <p:menuitem value="Справка о регистрации" onclick="regDocumentSelectWv.show()" icon="ui-icon-circle-plus" />
+            <p:menuitem value="Справка о регистрации" onclick="regDocumentSelectWv.show()" icon="ui-icon-circle-plus"/>
             <p:menuitem value="Направление в диспансер" actionListener="#{basicdocument.openDlg('dispensaryDocumentWv.show()')}" icon="ui-icon-circle-plus"/>
-
             <p:menuitem value="Справка о социальной помощи" actionListener="#{basicdocument.openDlg('sochelpDocumentWv.show()')}" icon="ui-icon-circle-plus"/>
             <p:menuitem value="Направление на санобработку" actionListener="#{basicdocument.openDlg('sanDocumentWv.show()')}" icon="ui-icon-circle-plus"/>
             <p:menuitem value="Справка для проезда" actionListener="#{basicdocument.openDlg('travelDocumentWv.show()')}" icon="ui-icon-circle-plus"/>
@@ -161,6 +160,9 @@
         </p:submenu>
     </p:menu>
         <p:separator />
+        <ui:include src="clientform/standardDocumentsList.xhtml" />
+        <ui:include src="clientform/tranzitDocumentsList.xhtml" />
+    </p:scrollPanel>
     </h:form>
 
 </p:tab>

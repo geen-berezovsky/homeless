@@ -30,7 +30,7 @@
             <h:outputText value="#{clientdocuments.formatDate(regDoclist.date)}" />
         </p:column>
         <p:column headerText="Регистрация">
-            <h:outputText value="#{clientdocuments.getStringRegistrationConfirmation(regDoclist.registration)}" />
+            <h:outputText value="#{clientdocuments.getStringRegistrationConfirmation(regDoclist.registration, regDoclist.id)}" />
         </p:column>
         <p:column headerText="Регистрация: город">
             <h:outputText value="#{regDoclist.city}" />
@@ -70,7 +70,7 @@
 		</p:dialog>
         <p:dialog modal="true" widgetVar="statusRegDocDialogWv" header="Ждите" draggable="false" closable="false" resizable="false">
             <p:graphicImage value="/images/loading.gif" />
-            <p:ajax update=":reg_select_document :reg_document" />
+            <p:ajax update=":reg_select_document :reg_document :m_tabview:documentsMenu:stdDocListId" />
         </p:dialog>
 	</h:form>
 
