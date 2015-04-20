@@ -2,31 +2,29 @@ package ru.homeless.mappings;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.docx4j.openpackaging.packages.SpreadsheetMLPackage;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import ru.homeless.processors.DocTypeProcessor;
-import ru.homeless.report.entities.OldSchoolReportEntity;
-import ru.homeless.report.entities.OneTimeServicesReportEntity;
+import ru.homeless.report.entities.CustomStatisticsReportEntity;
 import ru.homeless.services.ICustomReportService;
 import ru.homeless.shared.IDocumentMapping;
 
 @Component
-public class OldSchoolReportMappingImpl implements ICustomMappingExcelDocument{
+public class CustomStatisticsReportMappingImpl implements ICustomMappingExcelDocument{
 
 	@Autowired
 	public ICustomReportService customReportService;
 	
 	
 	@Override
-	public SpreadsheetMLPackage getDocument(Map<String, Date> requestParameters) {
+	public XSSFWorkbook getDocument(Map<String, Date> requestParameters) {
 		
-		List<OldSchoolReportEntity> list = new ArrayList<>();
+		List<CustomStatisticsReportEntity> list = new ArrayList<>();
 		Date from = requestParameters.get("from");
 		Date till = requestParameters.get("till");
 		list.add(customReportService.getReportDataByGender(from, till));
@@ -37,7 +35,7 @@ public class OldSchoolReportMappingImpl implements ICustomMappingExcelDocument{
 		//N. TBD
 		
 		
-		return new DocTypeProcessor(IDocumentMapping.REPORT_OLD_SCHOOL_PATH).generateReport(list);
+		return new DocTypeProcessor(IDocumentMapping.REPORT_CUSTOM_STATISTICS_PATH).generateReport(list);
 	}
 
 }

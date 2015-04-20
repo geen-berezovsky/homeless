@@ -2,7 +2,7 @@ package ru.homeless.report.entities;
 
 import java.util.Map;
 
-public class OldSchoolReportEntity implements IOldSchoolReport {
+public class CustomStatisticsReportEntity implements ICustomStatisticsReport {
 	private int queryType;
 	private Map<String, Integer> valueAndQuantity;
 	

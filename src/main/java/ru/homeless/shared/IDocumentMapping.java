@@ -4,6 +4,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.docx4j.openpackaging.packages.SpreadsheetMLPackage;
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
 
@@ -128,11 +129,11 @@ public interface IDocumentMapping {
     public final String REPORT_INNER_PATH = Configuration.templatesDir+"/"+"InnerReport.xlsx";
     
     /*
-    Template file: OldSchoolReport.xlsx
+    Template file: CustomStatistics.xlsm (OldSchoolReport.xlsm)
     Document title: Статистика как в старой базе
     */
-    public final int REPORT_OLD_SCHOOL = 212;
-    public final String REPORT_OLD_SCHOOL_PATH = Configuration.templatesDir+"/"+"OldSchoolReport.xlsx";
+    public final int REPORT_CUSTOM_STATISTICS = 212;
+    public final String REPORT_CUSTOM_STATISTICS_PATH = Configuration.templatesDir+"/"+"CustomStatistics.xlsm";
 
 
     public WordprocessingMLPackage generateSocialHelpDocument(HttpServletRequest request, Client client, Map<String, String> map);
@@ -148,12 +149,11 @@ public interface IDocumentMapping {
     public WordprocessingMLPackage generateDefaultContract(HttpServletRequest request, Client client, Map<String, String> map);
     public WordprocessingMLPackage generateShelterContract(HttpServletRequest request, Client client, Map<String, String> map);
 
-	public SpreadsheetMLPackage generateWorkReportDocument(HttpServletRequest request);
-	public SpreadsheetMLPackage generateOutShelterDocument(HttpServletRequest request);
-	public SpreadsheetMLPackage generateOneTimeServicesDocument(HttpServletRequest request);
-	public SpreadsheetMLPackage generateOverVacDocument(HttpServletRequest request);
-	public SpreadsheetMLPackage generateOuterDocument(HttpServletRequest request);
-	
-	public SpreadsheetMLPackage generateOldSchoolDocument(HttpServletRequest request);
+	public XSSFWorkbook generateWorkReportDocument(HttpServletRequest request);
+	public XSSFWorkbook generateOutShelterDocument(HttpServletRequest request);
+	public XSSFWorkbook generateOneTimeServicesDocument(HttpServletRequest request);
+	public XSSFWorkbook generateOverVacDocument(HttpServletRequest request);
+	public XSSFWorkbook generateOuterDocument(HttpServletRequest request);
+	public XSSFWorkbook generateCustomStatisticsDocument(HttpServletRequest request);
     
 }

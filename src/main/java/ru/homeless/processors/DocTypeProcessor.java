@@ -1,19 +1,21 @@
 package ru.homeless.processors;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
-import javax.xml.bind.JAXBException;
 
 import org.apache.log4j.Logger;
-import org.docx4j.jaxb.XPathBinderAssociationIsPartialException;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.openxml4j.opc.OPCPackage;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.docx4j.openpackaging.exceptions.Docx4JException;
-import org.docx4j.openpackaging.packages.SpreadsheetMLPackage;
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
 
-import ru.homeless.report.entities.OldSchoolReportEntity;
+import ru.homeless.report.entities.CustomStatisticsReportEntity;
 
 /*
  * This class load template from disk, insert/replace necessary data and return the complete generated document 
@@ -22,8 +24,8 @@ public class DocTypeProcessor {
 	protected String pathToTemplate = null;
     public static final Logger log = Logger.getLogger(DocTypeProcessor.class);
 
-    WordprocessingMLPackage wordDocument = null;
-    SpreadsheetMLPackage excelDocument = null;
+    private WordprocessingMLPackage wordDocument = null;
+    private XSSFWorkbook excelDocument = null;
 
 	private ServletContext context;
 
@@ -40,7 +42,9 @@ public class DocTypeProcessor {
 		}
     	
         for (Map.Entry<String, String> e : parameters.entrySet()) {
-		    log.info(e.getKey()+"="+e.getValue());
+            if (e != null) {
+                log.info(e.getKey() + "=" + e.getValue());
+            }
 		}
 		if (new File(pathToTemplate).exists()) {
 		    try {
@@ -54,61 +58,65 @@ public class DocTypeProcessor {
         return wordDocument;
 	}
     
-    public SpreadsheetMLPackage generateReport(Map<Integer, List<String>> sheetData) {
-    	
-    	try {
-			excelDocument = SpreadsheetMLPackage.load(new File(pathToTemplate)); 
-		} catch (Docx4JException e1) {
-			log.error(e1.getMessage(),e1);
-		}
-    	/*
-        for (Map.Entry<Integer, List<String>> e : sheetData.entrySet()) {
-        	String res = "";
-        	for (String s : e.getValue()) {
-        		res += s+", ";
-        	}
-		    log.info(e.getKey()+"="+res);
-		}
-        */
-		if (new File(pathToTemplate).exists()) {
-		    try {
-		    	//ADD PREPARATED SHEET DATA INTO TEMPLATE
-		    	excelDocument = new ReportDocumentProcessor(excelDocument).createSheet(sheetData);
-			} catch (Exception e1) {
-				log.error(e1.getMessage(),e1);
-			}
-		} else {
-		    log.error("Document template "+pathToTemplate+" does not exist or not accessible");
-		}
+    public XSSFWorkbook generateReport(Map<Integer, List<String>> sheetData) {
+        if (new File(pathToTemplate).exists()) {
+            log.info("Using template " + pathToTemplate);
+            try {
+                excelDocument = new XSSFWorkbook(OPCPackage.open(pathToTemplate));
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (InvalidFormatException e) {
+                e.printStackTrace();
+            }
+            for (Map.Entry<Integer, List<String>> e : sheetData.entrySet()) {
+                String res = "";
+                if (e != null) {
+                    for (String s : e.getValue()) {
+                        res += s + ", ";
+                    }
+                }
+                log.info(e.getKey() + "=" + res);
+            }
+            try {
+                //INSERT NEW DATA TO THE CREATED COPY OF ORIGINAL TEMPLATE
+                excelDocument = new ReportDocumentProcessor(excelDocument).createSheet(sheetData);
+            } catch (Exception e1) {
+                log.error(e1.getMessage(), e1);
+            }
+        } else {
+            log.error("Document template " + pathToTemplate + " does not exist or not accessible");
+        }
         return excelDocument;
-    	
     }
 	
 
-    public SpreadsheetMLPackage generateReport(List<OldSchoolReportEntity> sheetData) {
-    	
-    	try {
-			excelDocument = SpreadsheetMLPackage.load(new File(pathToTemplate)); 
-		} catch (Docx4JException e1) {
-			log.error(e1.getMessage(),e1);
-		}
-    	for (int i=0; i<sheetData.size(); i++) {
-	        for (Map.Entry<String, Integer> e : sheetData.get(i).getValueAndQuantity().entrySet()) {
-			    log.info(e.getKey()+"="+e.getValue());
-			}
-	    }
-    	if (new File(pathToTemplate).exists()) {
-		    try {
-		    	//ADD PREPARATED SHEET DATA INTO TEMPLATE
-		    	excelDocument = new CustomReportDocumentProcessor(excelDocument).createSheet(sheetData);
-			} catch (Exception e1) {
-				log.error(e1.getMessage(),e1);
-			}
-		} else {
-		    log.error("Document template "+pathToTemplate+" does not exist or not accessible");
-		}
+    public XSSFWorkbook generateReport(List<CustomStatisticsReportEntity> sheetData) {
+        if (new File(pathToTemplate).exists()) {
+            log.info("Using template " + pathToTemplate);
+            try {
+                excelDocument = new XSSFWorkbook(OPCPackage.open(pathToTemplate));
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (InvalidFormatException e) {
+                e.printStackTrace();
+            }
+            for (int i=0; i<sheetData.size(); i++) {
+                for (Map.Entry<String, Integer> e : sheetData.get(i).getValueAndQuantity().entrySet()) {
+                    if (e!=null) {
+                        log.info(e.getKey() + "=" + e.getValue());
+                    }
+                }
+            }
+            try {
+                //INSERT NEW DATA TO THE CREATED COPY OF ORIGINAL TEMPLATE
+                excelDocument = new CustomReportDocumentProcessor(excelDocument).createSheet(sheetData);
+            } catch (Exception e1) {
+                log.error(e1.getMessage(), e1);
+            }
+        } else {
+            log.error("Document template " + pathToTemplate + " does not exist or not accessible");
+        }
         return excelDocument;
-    	
     }
 
     

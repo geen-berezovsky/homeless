@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.docx4j.openpackaging.exceptions.Docx4JException;
 import org.docx4j.openpackaging.packages.SpreadsheetMLPackage;
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
@@ -37,7 +38,7 @@ public class GetReportsController {
 	@RequestMapping(value = "/getReport", method = RequestMethod.GET)
 	public @ResponseBody 
 	String getReport (HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
-		
+		log.info("Called R");
 		response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         String headerResponse = "attachment; filename*=UTF-8''";
 		headerResponse = headerResponse.concat("NewReport.xlsx");
@@ -49,23 +50,22 @@ public class GetReportsController {
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
-		
-		SpreadsheetMLPackage document = null;
+
+        XSSFWorkbook document = null;
 
         if (gg == null) {
             gg = new GenericGenerator();
         }
 
+        log.info("Called Report\n"+request);
 		document = gg.generateExcelDocument(request);
 
 	
 		try {
 			out.flush();
-			document.save(out);
+            document.write(out);
 			out.close();
 		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (Docx4JException e) {
 			e.printStackTrace();
 		}
 		
@@ -75,7 +75,7 @@ public class GetReportsController {
 	@RequestMapping(value = "/getMacroReport", method = RequestMethod.GET)
 	public @ResponseBody 
 	String getMacroReport (HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
-		
+        log.info("Called MR");
 		response.setContentType("application/vnd.ms-excel.sheet.macroEnabled.12");
         String headerResponse = "attachment; filename*=UTF-8''";
 		headerResponse = headerResponse.concat("NewReport.xlsm");
@@ -87,26 +87,24 @@ public class GetReportsController {
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
-		
-		SpreadsheetMLPackage document = null;
+
+        XSSFWorkbook document = null;
 
         if (gg == null) {
             gg = new GenericGenerator();
         }
-
+        log.info("Called Macro Report\n"+request);
 		document = gg.generateExcelDocument(request);
-
+        log.info("Document: "+document);
 	
 		try {
-			out.flush();
-			document.save(out);
+            document.write(out);
+            out.flush();
 			out.close();
 		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (Docx4JException e) {
-			e.printStackTrace();
-		}
-		
+            e.printStackTrace();
+        }
+
 		return "Report sent";
 	}
 }

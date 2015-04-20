@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.docx4j.openpackaging.packages.SpreadsheetMLPackage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -25,7 +26,7 @@ public class ResultWorkReportMappingImpl implements ICustomMappingExcelDocument 
     private IReportService reportService;
 
 	@Override
-	public SpreadsheetMLPackage getDocument(Map<String, Date> requestParameters) {
+	public XSSFWorkbook getDocument(Map<String, Date> requestParameters) {
 		
 		//HERE WE ASK DATABASE FOR ALL PARAMETERS AND POPULATE THE MAP
 		//THEN WE CALL DOCTYPEPROCESSOR WHICH SHOULD LOAD TEMPLATE, ATTACH THE DATA FROM MAP AND RETURN FINISHED DOCUMENT

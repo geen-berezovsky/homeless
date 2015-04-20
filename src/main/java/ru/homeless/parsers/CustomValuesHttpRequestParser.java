@@ -13,7 +13,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
-import org.docx4j.openpackaging.packages.SpreadsheetMLPackage;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -23,7 +23,7 @@ import ru.homeless.mappings.CustomMappingImpl;
 import ru.homeless.mappings.DefaultContractMappingImpl;
 import ru.homeless.mappings.DispensaryMappingImpl;
 import ru.homeless.mappings.FreeTravelMappingImpl;
-import ru.homeless.mappings.OldSchoolReportMappingImpl;
+import ru.homeless.mappings.CustomStatisticsReportMappingImpl;
 import ru.homeless.mappings.OneTimeServicesReportMappingImpl;
 import ru.homeless.mappings.OutOfShelterReportMappingImpl;
 import ru.homeless.mappings.OuterReportMappingImpl;
@@ -72,7 +72,7 @@ public class CustomValuesHttpRequestParser implements IDocumentMapping {
     private OuterReportMappingImpl outerReportMappingImpl;
 
     @Autowired
-    private OldSchoolReportMappingImpl oldSchoolReportMappingImpl;
+    private CustomStatisticsReportMappingImpl customStatisticsReportMappingImpl;
 
     @Autowired
     private ZagsQueryMappingImpl zagsQueryMappingImpl;
@@ -215,7 +215,7 @@ public class CustomValuesHttpRequestParser implements IDocumentMapping {
 
     
     @Override
-	public SpreadsheetMLPackage generateWorkReportDocument(HttpServletRequest request) {
+	public XSSFWorkbook generateWorkReportDocument(HttpServletRequest request) {
     	Map<String, Date> requestParameters = new HashMap<String, Date>();
     	requestParameters.put("from", Util.parseDate(request, "from", log));
     	requestParameters.put("till", Util.parseDate(request, "till", log));
@@ -224,7 +224,7 @@ public class CustomValuesHttpRequestParser implements IDocumentMapping {
 
 
 	@Override
-	public SpreadsheetMLPackage generateOutShelterDocument(HttpServletRequest request) {
+	public XSSFWorkbook generateOutShelterDocument(HttpServletRequest request) {
     	Map<String, Date> requestParameters = new HashMap<String, Date>();
     	requestParameters.put("from", Util.parseDate(request, "from", log));
     	requestParameters.put("till", Util.parseDate(request, "till", log));
@@ -233,7 +233,7 @@ public class CustomValuesHttpRequestParser implements IDocumentMapping {
 
 
 	@Override
-	public SpreadsheetMLPackage generateOneTimeServicesDocument(HttpServletRequest request) {
+	public XSSFWorkbook generateOneTimeServicesDocument(HttpServletRequest request) {
     	Map<String, Date> requestParameters = new HashMap<String, Date>();
     	requestParameters.put("from", Util.parseDate(request, "from", log));
     	requestParameters.put("till", Util.parseDate(request, "till", log));
@@ -242,25 +242,25 @@ public class CustomValuesHttpRequestParser implements IDocumentMapping {
 
 
 	@Override
-	public SpreadsheetMLPackage generateOverVacDocument(HttpServletRequest request) {
+	public XSSFWorkbook generateOverVacDocument(HttpServletRequest request) {
 		Map<String, Date> requestParameters = new HashMap<String, Date>();
 		return overVacReportMappingImpl.getDocument(requestParameters);
 	}
 
 
 	@Override
-	public SpreadsheetMLPackage generateOuterDocument(HttpServletRequest request) {
+	public XSSFWorkbook generateOuterDocument(HttpServletRequest request) {
 		Map<String, Date> requestParameters = new HashMap<String, Date>();
 		return outerReportMappingImpl.getDocument(requestParameters);
 	}
 
 
 	@Override
-	public SpreadsheetMLPackage generateOldSchoolDocument(HttpServletRequest request) {
+	public XSSFWorkbook generateCustomStatisticsDocument(HttpServletRequest request) {
 		Map<String, Date> requestParameters = new HashMap<String, Date>();
     	requestParameters.put("from", Util.parseDate(request, "from", log));
     	requestParameters.put("till", Util.parseDate(request, "till", log));
-		return oldSchoolReportMappingImpl.getDocument(requestParameters);
+		return customStatisticsReportMappingImpl.getDocument(requestParameters);
 	}
 
 

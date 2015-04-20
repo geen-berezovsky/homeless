@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.docx4j.openpackaging.packages.SpreadsheetMLPackage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -23,7 +24,7 @@ public class OuterReportMappingImpl implements ICustomMappingExcelDocument {
     private IReportService reportService;
 
 	@Override
-	public SpreadsheetMLPackage getDocument(Map<String, Date> requestParameters) {
+	public XSSFWorkbook getDocument(Map<String, Date> requestParameters) {
 		Map<Integer, List<String>> sheetData = new HashMap<Integer, List<String>>();
 		List<OuterReportEntity> reportResult = reportService.getOuterReportEntity();
 		int i=0;

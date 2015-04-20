@@ -3,7 +3,7 @@ package ru.homeless.generators;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
-import org.docx4j.openpackaging.packages.SpreadsheetMLPackage;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -17,13 +17,8 @@ import ru.homeless.shared.IDocumentMapping;
 import ru.homeless.util.Util;
 
 import java.io.UnsupportedEncodingException;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 @Component
@@ -77,6 +72,12 @@ public class GenericGenerator {
         }
         log.info("Working with client "+client.getId());
 
+        String workerId = "";
+        workerId = request.getParameter("workerId");
+        if (workerId.equals("")) {
+            log.info("Unknown workerId");
+            return null;
+        }
         Worker w = contractService.getInstanceById(Worker.class, Integer.parseInt(request.getParameter("workerId")));
         if (w == null) {
             log.error("Worker is null (does not parsed properly)");
@@ -134,7 +135,7 @@ public class GenericGenerator {
 		}
 	}
 
-    public SpreadsheetMLPackage generateExcelDocument(HttpServletRequest request) throws UnsupportedEncodingException {
+    public XSSFWorkbook generateExcelDocument(HttpServletRequest request) throws UnsupportedEncodingException {
         if (hrp == null ) {
             hrp = new CustomValuesHttpRequestParser();
         }
@@ -156,8 +157,8 @@ public class GenericGenerator {
 			case IDocumentMapping.REPORT_OUTER: {
 				return hrp.generateOuterDocument(request);
 			}
-			case IDocumentMapping.REPORT_OLD_SCHOOL: {
-				return hrp.generateOldSchoolDocument(request);
+			case IDocumentMapping.REPORT_CUSTOM_STATISTICS: {
+				return hrp.generateCustomStatisticsDocument(request);
 			}
 
             default: {

@@ -2,49 +2,43 @@ package ru.homeless.processors;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.docx4j.openpackaging.io.SaveToZipFile;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.xssf.usermodel.XSSFFormulaEvaluator;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.docx4j.openpackaging.packages.SpreadsheetMLPackage;
 import org.docx4j.openpackaging.parts.PartName;
 import org.docx4j.openpackaging.parts.SpreadsheetML.JaxbSmlPart;
 import org.docx4j.openpackaging.parts.SpreadsheetML.WorksheetPart;
 import org.docx4j.wml.ObjectFactory;
-import org.xlsx4j.jaxb.Context;
-import org.xlsx4j.sml.Row;
-import org.xlsx4j.sml.STCellType;
-import org.xlsx4j.sml.SheetData;
 
-import ru.homeless.report.entities.IOldSchoolReport;
-import ru.homeless.report.entities.OldSchoolReportEntity;
+import ru.homeless.report.entities.ICustomStatisticsReport;
+import ru.homeless.report.entities.CustomStatisticsReportEntity;
 
 /*
- * This class inserts sheetData into template and returns complete generated report
+ * This class inserts sheetData into template in custom fields and returns complete generated report
  */
 public class CustomReportDocumentProcessor {
     public static final Logger log = Logger.getLogger(CustomReportDocumentProcessor.class);
     private ObjectFactory factory;
-    private SpreadsheetMLPackage document;
+    private XSSFWorkbook document;
     private HashMap<String, String> mappings;
 
-    public CustomReportDocumentProcessor(SpreadsheetMLPackage document) {
+    public CustomReportDocumentProcessor(XSSFWorkbook document) {
     	this.document = document;
     }
     
-    public SpreadsheetMLPackage createSheet(List<OldSchoolReportEntity> extSheetData) throws Exception {
-    	//HERE WE ONLY INSERT ALREADY PREPARED DATA INTO TEMPLATE
-    	WorksheetPart sheet = (WorksheetPart) document.getParts().get(new PartName("/xl/worksheets/sheet1.xml"));
-    	SheetData sheetData = sheet.getContents().getSheetData();
-    	
+    public XSSFWorkbook createSheet(List<CustomStatisticsReportEntity> extSheetData) throws Exception {
+        Sheet sheet = document.getSheetAt(0);
     	mappings = new HashMap<String, String>();
     	
-    	for (OldSchoolReportEntity o : extSheetData) {
+    	for (CustomStatisticsReportEntity o : extSheetData) {
     		
     		switch (o.getQueryType()) {
-    			case IOldSchoolReport.QUERY_GENDER_TYPE: { addGenderReportData(sheetData, o); break; }
+    			case ICustomStatisticsReport.QUERY_GENDER_TYPE: { addGenderReportData(sheet, o); break;}
 
-    			case IOldSchoolReport.QUERY_MARTIAL_STATUS_TYPE: { addMartialReportData(sheetData, o); break;}
+    			case ICustomStatisticsReport.QUERY_MARTIAL_STATUS_TYPE: { addMartialReportData(sheet, o); break;}
 				  
     												  
     			default:
@@ -52,34 +46,36 @@ public class CustomReportDocumentProcessor {
     		}
     		
     	}
-    	
-    	JaxbSmlPart smlPart = (JaxbSmlPart)document.getParts().get(new PartName("/xl/sharedStrings.xml"));
-    	System.out.println("\n\nBEFORE\n\n:" + smlPart.getXML());
-		smlPart.variableReplace(mappings);
-    	System.out.println("\n\nAFTER\n\n:" + smlPart.getXML());
+        XSSFFormulaEvaluator.evaluateAllFormulaCells(document);
         return document;
     }
     
-    
-    private void addMartialReportData(SheetData sheetData, OldSchoolReportEntity o) {
 
-    	mappings.put("[marriage:1]", "Неизвестно");
- 	    mappings.put("[marriage:1]", "Состоит в браке");
- 	    mappings.put("[marriage:1]", "Не состоит в браке");
- 	    
- 	    mappings.put("[marriage:1:value]", o.getValueAndQuantity().get("Неизвестно").toString());
- 	    mappings.put("[marriage:2:value]", o.getValueAndQuantity().get("Состоит в браке").toString());
- 	    mappings.put("[marriage:3:value]", o.getValueAndQuantity().get("Не состоит в браке").toString());
-		
+    private Integer getIntValue(CustomStatisticsReportEntity o, String s) {
+        Integer value = o.getValueAndQuantity().get(s);
+        if (value!=null) {
+            return value;
+        } else {
+            return 0;
+        }
+    }
+
+    private void addMartialReportData(Sheet sheet, CustomStatisticsReportEntity o) {
+        sheet.getRow(34).getCell(1).setCellValue("Неизвестно");
+        sheet.getRow(35).getCell(1).setCellValue("Состоит в браке");
+        sheet.getRow(36).getCell(1).setCellValue("Не состоит в браке");
+
+        sheet.getRow(34).getCell(2).setCellValue(getIntValue(o, "Неизвестно"));
+        sheet.getRow(35).getCell(2).setCellValue(getIntValue(o, "Состоит в браке"));
+        sheet.getRow(36).getCell(2).setCellValue(getIntValue(o, "Не состоит в браке"));
 	}
 
-	private void addGenderReportData(SheetData sheetData, OldSchoolReportEntity o) {
-	
-		mappings.put("[gender:1]", "Мужчины");
-		mappings.put("[gender:2]", "Женщины");
-		mappings.put("[gender:1:value]", o.getValueAndQuantity().get("Мужчины").toString());
-		mappings.put("[gender:2:value]", o.getValueAndQuantity().get("Женщины").toString());
-		
+	private void addGenderReportData(Sheet sheet, CustomStatisticsReportEntity o) {
+        sheet.getRow(4).getCell(5).setCellValue("Мужчины");
+        sheet.getRow(5).getCell(5).setCellValue("Женщины");
+
+        sheet.getRow(4).getCell(6).setCellValue(getIntValue(o, "Мужчины"));
+        sheet.getRow(5).getCell(6).setCellValue(getIntValue(o, "Женщины"));
 	}
     
     

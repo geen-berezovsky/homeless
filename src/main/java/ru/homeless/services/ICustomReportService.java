@@ -2,15 +2,15 @@ package ru.homeless.services;
 
 import java.util.Date;
 
-import ru.homeless.report.entities.OldSchoolReportEntity;
+import ru.homeless.report.entities.CustomStatisticsReportEntity;
 
 
 
 public interface ICustomReportService extends IGenericService {
 
-	public OldSchoolReportEntity getReportDataByGender(Date from, Date till);
+	public CustomStatisticsReportEntity getReportDataByGender(Date from, Date till);
 	
-	public OldSchoolReportEntity getReportDataByMartialStatus(Date from, Date till);
+	public CustomStatisticsReportEntity getReportDataByMartialStatus(Date from, Date till);
 	
 	
 	

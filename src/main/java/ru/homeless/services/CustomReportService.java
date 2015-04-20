@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ru.homeless.dao.ICustomReportDAO;
-import ru.homeless.report.entities.OldSchoolReportEntity;
+import ru.homeless.report.entities.CustomStatisticsReportEntity;
 
 @Service("CustomReportService")
 @Transactional(readOnly = false)
@@ -17,12 +17,12 @@ public class CustomReportService extends GenericService implements ICustomReport
 	private ICustomReportDAO customReportDAO;
 
 	@Override
-	public OldSchoolReportEntity getReportDataByGender(Date from, Date till) {
+	public CustomStatisticsReportEntity getReportDataByGender(Date from, Date till) {
 		return customReportDAO.getReportDataByGender(from, till);
 	}
 
 	@Override
-	public OldSchoolReportEntity getReportDataByMartialStatus(Date from, Date till) {
+	public CustomStatisticsReportEntity getReportDataByMartialStatus(Date from, Date till) {
 		return customReportDAO.getReportDataByMartialStatus(from, till);
 	}
 
