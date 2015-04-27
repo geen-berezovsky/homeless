@@ -1,5 +1,6 @@
 package ru.homeless.dao;
 
+import java.math.BigInteger;
 import java.util.*;
 
 import org.apache.log4j.Logger;
@@ -15,10 +16,29 @@ public class CustomReportDAO extends GenericDAO implements ICustomReportDAO {
 	private static final long serialVersionUID = 1L;
 	public static Logger log = Logger.getLogger(CustomReportDAO.class);
 
+    private GregorianCalendar calen;
+    private String checker;
+    private String schooler;
+    private String schoolerDates;
+
+    private void updateDates() {
+        calen = (GregorianCalendar) GregorianCalendar.getInstance();
+        calen.roll(Calendar.YEAR, -14);
+        int m = calen.get(Calendar.MONTH) + 1;
+        String m_str = String.valueOf(m);
+        if (m < 10) {
+            m_str = "0"+m;
+        }
+        checker = "'" + calen.get(Calendar.YEAR) + "-" + m_str + "-" + calen.get(Calendar.DATE)+"'";
+        calen.roll(Calendar.YEAR, 7);
+        schooler = "'" + calen.get(Calendar.YEAR) + "-" + m_str + "-" + calen.get(Calendar.DATE)+"'";
+        schoolerDates = "date(date) BETWEEN " + checker+ " AND " + schooler;
+    }
+
 	public CustomStatisticsReportEntity prepareEntity(List<?> res, int queryType) {
 		CustomStatisticsReportEntity customStatisticsReportEntity = new CustomStatisticsReportEntity();
 		customStatisticsReportEntity.setQueryType(queryType);
-		Map<String, Integer> map = new HashMap<String, Integer>();
+		Map<String, Integer> map = new TreeMap<>();
 		for (Object o : res) {
 			Object[] xy = (Object[]) o;
 			map.put(xy[0].toString(), Integer.parseInt(xy[1].toString()));
@@ -27,81 +47,131 @@ public class CustomReportDAO extends GenericDAO implements ICustomReportDAO {
 		return customStatisticsReportEntity;
 	}
 
+    public CustomStatisticsReportEntity prepareEntity(Map<String, Integer> res, int queryType) {
+        CustomStatisticsReportEntity customStatisticsReportEntity = new CustomStatisticsReportEntity();
+        customStatisticsReportEntity.setQueryType(queryType);
+        customStatisticsReportEntity.setValueAndQuantity(res);
+        return customStatisticsReportEntity;
+    }
+
+
     @Override
 	public CustomStatisticsReportEntity getReportDataByGender(Date from, Date till) {
 
-		List<?> res = getSessionFactory().getCurrentSession()
-				.createSQLQuery("select case WHEN gender=0 THEN 'Женщины' ELSE 'Мужчины' END as 'Пол', count(*) as 'Количество' from Client where date(regdate) BETWEEN " + Util.parseDateForMySql(from) + " AND " + Util.parseDateForMySql(till) + " group by gender").addScalar("Пол")
-				.addScalar("Количество").list();
+        long people = ((BigInteger) getSessionFactory().getCurrentSession().createSQLQuery("select count(*) from Client where date(regdate) BETWEEN " + Util.parseDateForMySql(from) + " AND " + Util.parseDateForMySql(till)).uniqueResult()).longValue();
+        long women = ((BigInteger) getSessionFactory().getCurrentSession().createSQLQuery("select count(*) from Client where gender='0' AND date(regdate) BETWEEN " + Util.parseDateForMySql(from) + " AND " + Util.parseDateForMySql(till)).uniqueResult()).longValue();
+        long men = people - women;
 
-		return prepareEntity(res, ICustomStatisticsReport.QUERY_GENDER_TYPE);
+        Map<String, Integer> map = new HashMap();
+        map.put("Мужчины", Util.safeLongToInt(men));
+        map.put("Женщины", Util.safeLongToInt(women));
+
+        return prepareEntity(map, ICustomStatisticsReport.QUERY_GENDER_TYPE);
 	}
 
 	@Override
 	public CustomStatisticsReportEntity getReportDataByMartialStatus(Date from, Date till) {
-        /*
 
-		List<?> res = getSessionFactory().getCurrentSession()
-				.createSQLQuery("select case when martialStatus=0 then 'Неизвестно' " +
-						"when martialStatus=1 then 'Состоит в браке' else 'Не состоит в браке' end as 'Семейное положение', count(*) 'Количество' " +   
-						"from Client where date(date)<DATE_ADD(sysdate(), INTERVAL -14 YEAR) and date(regdate) BETWEEN " + Util.parseDateForMySql(from) + " AND " + Util.parseDateForMySql(till) + " group by martialStatus")
-						.addScalar("Семейное положение")
-						.addScalar("Количество").list();
-		return prepareEntity(res, ICustomStatisticsReport.QUERY_MARTIAL_STATUS_TYPE);
+        long people = ((BigInteger) getSessionFactory().getCurrentSession().createSQLQuery("select count(*) from Client where date(regdate) BETWEEN " + Util.parseDateForMySql(from) + " AND " + Util.parseDateForMySql(till)).uniqueResult()).longValue();
+        long unknown = ((BigInteger) getSessionFactory().getCurrentSession().createSQLQuery("select count(*) from Client where martialStatus='0' AND date(regdate) BETWEEN " + Util.parseDateForMySql(from) + " AND " + Util.parseDateForMySql(till)).uniqueResult()).longValue();
+        long married = ((BigInteger) getSessionFactory().getCurrentSession().createSQLQuery("select count(*) from Client where martialStatus='1' AND date(regdate) BETWEEN " + Util.parseDateForMySql(from) + " AND " + Util.parseDateForMySql(till)).uniqueResult()).longValue();
 
-		*/
-        int people = ((Integer) getSessionFactory().getCurrentSession().createSQLQuery("select count(*) from Client where date(regdate) BETWEEN " + Util.parseDateForMySql(from) + " AND " + Util.parseDateForMySql(till)).uniqueResult()).intValue();
-        int unknown = ((Integer) getSessionFactory().getCurrentSession().createSQLQuery("select count(*) from Client where martialStatus='0' AND date(regdate) BETWEEN " + Util.parseDateForMySql(from) + " AND " + Util.parseDateForMySql(till)).uniqueResult()).intValue();
-        int married = ((Integer) getSessionFactory().getCurrentSession().createSQLQuery("select count(*) from Client where martialStatus='1' AND date(regdate) BETWEEN " + Util.parseDateForMySql(from) + " AND " + Util.parseDateForMySql(till)).uniqueResult()).intValue();
-        int single = people - unknown - married;
-
-        List<Integer> abc;
-
-        return null;
+        long single = people - unknown - married;
+        Map<String, Integer> map = new HashMap();
+        map.put("Состоит в браке", Util.safeLongToInt(married));
+        map.put("Не состоит в браке", Util.safeLongToInt(single));
+        map.put("Неизвестно", Util.safeLongToInt(unknown));
+        return prepareEntity(map, ICustomStatisticsReport.QUERY_MARTIAL_STATUS_TYPE);
     }
 
     @Override
     public CustomStatisticsReportEntity getReportDataByDependencies(Date from, Date till) {
 
-        int people = ((Integer) getSessionFactory().getCurrentSession().createSQLQuery("select count(*) from Client where date(regdate) BETWEEN " + Util.parseDateForMySql(from) + " AND " + Util.parseDateForMySql(till)).uniqueResult()).intValue();
-        int hasDepends = ((Integer) getSessionFactory().getCurrentSession().createSQLQuery("select count(*) from Client where dependents='1' AND date(regdate) BETWEEN " + Util.parseDateForMySql(from) + " AND " + Util.parseDateForMySql(till)).uniqueResult()).intValue();
-        int noDepends = ((Integer) getSessionFactory().getCurrentSession().createSQLQuery("select count(*) from Client where dependents='2' AND date(regdate) BETWEEN " + Util.parseDateForMySql(from) + " AND " + Util.parseDateForMySql(till)).uniqueResult()).intValue();
-        int unknownDepends = people - hasDepends - noDepends;
+        long people = ((BigInteger) getSessionFactory().getCurrentSession().createSQLQuery("select count(*) from Client where date(regdate) BETWEEN " + Util.parseDateForMySql(from) + " AND " + Util.parseDateForMySql(till)).uniqueResult()).intValue();
+        long hasDepends = ((BigInteger) getSessionFactory().getCurrentSession().createSQLQuery("select count(*) from Client where dependents='1' AND date(regdate) BETWEEN " + Util.parseDateForMySql(from) + " AND " + Util.parseDateForMySql(till)).uniqueResult()).intValue();
+        long noDepends = ((BigInteger) getSessionFactory().getCurrentSession().createSQLQuery("select count(*) from Client where dependents='2' AND date(regdate) BETWEEN " + Util.parseDateForMySql(from) + " AND " + Util.parseDateForMySql(till)).uniqueResult()).intValue();
+        long unknownDepends = people - hasDepends - noDepends;
 
-        CustomStatisticsReportEntity customStatisticsReportEntity = new CustomStatisticsReportEntity();
-        customStatisticsReportEntity.setQueryType(ICustomStatisticsReport.QUERY_DEPENDENCIES_TYPE);
-        Map<String, Integer> map = new HashMap<String, Integer>();
-        map.put("Есть",hasDepends);
-        map.put("Нет",noDepends);
-        map.put("Неизвестно",unknownDepends);
-        customStatisticsReportEntity.setValueAndQuantity(map);
-
-        return customStatisticsReportEntity;
+        Map<String, Integer> map = new HashMap<>();
+        map.put("Есть",Util.safeLongToInt(hasDepends));
+        map.put("Нет",Util.safeLongToInt(noDepends));
+        map.put("Неизвестно",Util.safeLongToInt(unknownDepends));
+        return prepareEntity(map, ICustomStatisticsReport.QUERY_DEPENDENCIES_TYPE);
     }
 
     @Override
     public CustomStatisticsReportEntity getReportDataByEducation(Date from, Date till) {
-        return null;
+        updateDates();
+
+        List<?> res = getSessionFactory().getCurrentSession().createSQLQuery("select e.caption, count(c.id) from Education e LEFT JOIN (SELECT * FROM Client WHERE date(date) < " + checker
+                + " AND date(regdate)BETWEEN" + Util.parseDateForMySql(from) + "AND" + Util.parseDateForMySql(till) + ") c ON(e.id = c.education) group by e.caption order by e.caption")
+                .addScalar("e.caption")
+                .addScalar("count(c.id)")
+                .list();
+
+        return prepareEntity(res, ICustomStatisticsReport.QUERY_EDUCATION_TYPE);
     }
 
     @Override
     public CustomStatisticsReportEntity getReportDataByChilds(Date from, Date till) {
-        return null;
+        updateDates();
+
+        List<?> res = getSessionFactory().getCurrentSession().createSQLQuery("select e.caption, count(c.id) from (SELECT * FROM Education WHERE audience='0') e LEFT JOIN (SELECT * FROM Client WHERE (" + schoolerDates + ") AND (date(regdate)BETWEEN" + Util.parseDateForMySql(from) + "AND" + Util.parseDateForMySql(till) + ")) c ON(e.id = c.education) group by e.caption order by e.caption")
+                .addScalar("e.caption")
+                .addScalar("count(c.id)")
+                .list();
+
+
+        return prepareEntity(res, ICustomStatisticsReport.QUERY_CHILDS_TYPE);
     }
 
     @Override
     public CustomStatisticsReportEntity getReportDataByStudentsOrNot(Date from, Date till) {
-        return null;
+
+        long childs = ((BigInteger) getSessionFactory().getCurrentSession().createSQLQuery("select count(*) from Client where ((" + schoolerDates + " AND (date(regdate) BETWEEN " + Util.parseDateForMySql(from) + " AND " + Util.parseDateForMySql(till) + ")))").uniqueResult()).longValue();
+        long students = ((BigInteger) getSessionFactory().getCurrentSession().createSQLQuery("select count(*) from Client where (isStudent='1' AND (" + schoolerDates + ") AND (date(regdate) BETWEEN " + Util.parseDateForMySql(from) + " AND " + Util.parseDateForMySql(till) + "))").uniqueResult()).longValue();
+        long noStudents = ((BigInteger) getSessionFactory().getCurrentSession().createSQLQuery("select count(*) from Client where (isStudent='2' AND (" + schoolerDates + ") AND (date(regdate) BETWEEN " + Util.parseDateForMySql(from) + " AND " + Util.parseDateForMySql(till) + "))").uniqueResult()).longValue();
+
+        long uknownStud = childs - students - noStudents;
+
+        Map<String, Integer> map = new HashMap();
+        map.put("Сейчас учатся", Util.safeLongToInt(students));
+        map.put("Сейчас не учатся", Util.safeLongToInt(noStudents));
+        map.put("Неизвестно", Util.safeLongToInt(uknownStud));
+
+        return prepareEntity(map, ICustomStatisticsReport.QUERY_STUDENTS_TYPE);
     }
 
     @Override
     public CustomStatisticsReportEntity getReportDataByProfession(Date from, Date till) {
-        return null;
+
+        long people = ((BigInteger) getSessionFactory().getCurrentSession().createSQLQuery("select count(*) from Client where date(date)<" + checker + " AND date(regdate) BETWEEN " + Util.parseDateForMySql(from) + " AND " + Util.parseDateForMySql(till)).uniqueResult()).longValue();
+        long noProf = ((BigInteger) getSessionFactory().getCurrentSession().createSQLQuery("select count(*) from Client where (profession ='нет' AND (date(date)<" + checker + ") AND (date(regdate) BETWEEN " + Util.parseDateForMySql(from) + " AND " + Util.parseDateForMySql(till) + "))").uniqueResult()).longValue();
+        long uknownInfo = ((BigInteger) getSessionFactory().getCurrentSession().createSQLQuery("select count(*) from Client where (profession is null AND (date(date)<" + checker + ") AND (date(regdate) BETWEEN " + Util.parseDateForMySql(from) + " AND " + Util.parseDateForMySql(till) + "))").uniqueResult()).longValue();
+        long hasProf = people - noProf - uknownInfo;
+
+        Map<String, Integer> map = new HashMap();
+        map.put("Да", Util.safeLongToInt(hasProf));
+        map.put("Нет", Util.safeLongToInt(noProf));
+        map.put("Неизвестно", Util.safeLongToInt(uknownInfo));
+
+        return prepareEntity(map, ICustomStatisticsReport.QUERY_PROFESSION_TYPE);
+
     }
 
     @Override
     public CustomStatisticsReportEntity getReportDataByLiveInFlat(Date from, Date till) {
-        return null;
+        long people = ((BigInteger) getSessionFactory().getCurrentSession().createSQLQuery("select count(*) from Client where date(regdate) BETWEEN " + Util.parseDateForMySql(from) + " AND " + Util.parseDateForMySql(till)).uniqueResult()).longValue();
+        long inFlat = ((BigInteger) getSessionFactory().getCurrentSession().createSQLQuery("select count(*) from Client where liveInFlat='1' AND date(regdate) BETWEEN " + Util.parseDateForMySql(from) + " AND " + Util.parseDateForMySql(till)).uniqueResult()).longValue();
+        long outFlat = ((BigInteger) getSessionFactory().getCurrentSession().createSQLQuery("select count(*) from Client where liveInFlat='2' AND date(regdate) BETWEEN " + Util.parseDateForMySql(from) + " AND " + Util.parseDateForMySql(till)).uniqueResult()).longValue();
+        long uknownFlatStat = people - inFlat - outFlat;
+
+        Map<String, Integer> map = new HashMap();
+        map.put("Да", Util.safeLongToInt(inFlat));
+        map.put("Нет", Util.safeLongToInt(outFlat));
+        map.put("Неизвестно", Util.safeLongToInt(uknownFlatStat));
+
+        return prepareEntity(map, ICustomStatisticsReport.QUERY_LIVE_IN_FLAT_TYPE);
     }
 
     @Override
@@ -139,27 +209,6 @@ public class CustomReportDAO extends GenericDAO implements ICustomReportDAO {
 /*
 OLD:
 
-
-
-
-
-
-package ru.homeless.extention;
-
-import java.io.File;
-import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.List;
-
-import org.hibernate.Session;
-
-import ru.homeless.generic.ExcelCell;
-import ru.homeless.generic.Main;
-import ru.homeless.generic.Util;
-
 public class BigStatistic {
 	private String firstRegDate;
 	private String secondRegDate;
@@ -195,191 +244,6 @@ public class BigStatistic {
 		chonicDis();
 		allBw();
 		adultBw();
-	}
-
-	private void genderStat() {
-		Session session = Util.getSession();
-
-		long people = ((BigInteger) session.createSQLQuery("select count(*) from Client where " + regDates).uniqueResult()).longValue();
-		long women = ((BigInteger) session.createSQLQuery("select count(*) from Client where gender='0' AND " + regDates).uniqueResult()).longValue();
-
-		if (session != null && session.isOpen()) {
-			session.close();
-		}
-
-		long men = people - women;
-
-		cell = null;
-		cell = new ExcelCell(6, 5, "Мужчины");
-		cells.add(cell);
-		cell = new ExcelCell(7, 5, String.valueOf(men));
-		cells.add(cell);
-		cell = new ExcelCell(6, 6, "Женщины");
-		cells.add(cell);
-		cell = new ExcelCell(7, 6, String.valueOf(women));
-		cells.add(cell);
-
-	}
-
-	private void martialStat() {
-		Session session = Util.getSession();
-
-		long people = ((BigInteger) session.createSQLQuery("select count(*) from Client where date(date)<" + checker + " AND " + regDates).uniqueResult()).longValue();
-		long uknown = ((BigInteger) session.createSQLQuery("select count(*) from Client where martialStatus='0' and date(date)<" + checker + " AND " + regDates).uniqueResult()).longValue();
-		long married = ((BigInteger) session.createSQLQuery("select count(*) from Client where martialStatus='1' and date(date)<" + checker + " AND " + regDates).uniqueResult()).longValue();
-
-		if (session != null && session.isOpen()) {
-			session.close();
-		}
-
-		long single = people - uknown - married;
-		cell = null;
-		cell = new ExcelCell(2, 35, "Состоит в браке");
-		cells.add(cell);
-		cell = new ExcelCell(3, 35, String.valueOf(married));
-		cells.add(cell);
-		cell = new ExcelCell(2, 36, "Не состоит в браке");
-		cells.add(cell);
-		cell = new ExcelCell(3, 36, String.valueOf(single));
-		cells.add(cell);
-		cell = new ExcelCell(2, 37, "Неизвестно");
-		cells.add(cell);
-		cell = new ExcelCell(3, 37, String.valueOf(uknown));
-		cells.add(cell);
-
-	}
-
-	private void dependStat() {
-		Session session = Util.getSession();
-
-		long people = ((BigInteger) session.createSQLQuery("select count(*) from Client where date(date)<" + checker + " AND " + regDates).uniqueResult()).longValue();
-		long hasDepends = ((BigInteger) session.createSQLQuery("select count(*) from Client where dependents='1' AND date(date)<" + checker + " AND " + regDates).uniqueResult()).longValue();
-		long noDepends = ((BigInteger) session.createSQLQuery("select count(*) from Client where dependents='2' AND date(date)<" + checker + " AND " + regDates).uniqueResult()).longValue();
-
-		if (session != null && session.isOpen()) {
-			session.close();
-		}
-
-		long uknownDepends = people - hasDepends - noDepends;
-		cell = null;
-		cell = new ExcelCell(6, 35, "Есть");
-		cells.add(cell);
-		cell = new ExcelCell(7, 35, String.valueOf(hasDepends));
-		cells.add(cell);
-		cell = new ExcelCell(6, 36, "Нет");
-		cells.add(cell);
-		cell = new ExcelCell(7, 36, String.valueOf(noDepends));
-		cells.add(cell);
-		cell = new ExcelCell(6, 37, "Неизвестно");
-		cells.add(cell);
-		cell = new ExcelCell(7, 37, String.valueOf(uknownDepends));
-		cells.add(cell);
-
-	}
-
-	private void eduStat() {
-		Session session = Util.getSession();
-
-		List<?> res = session.createSQLQuery("select e.caption, count(c.id) from Education e LEFT JOIN (SELECT * FROM Client WHERE date(date) < " + checker
-				+ " AND " + regDates +") c ON(e.id = c.education) group by e.caption")
-				.addScalar("e.caption")
-				.addScalar("count(c.id)")
-				.list();
-
-		if (session != null && session.isOpen()) {
-			session.close();
-		}
-
-		List<Object[]> list = (List<Object []>) res;
-		cell = null;
-		int cellrow = 58;
-		for(Object[] row: list) {
-			for(int i = 2; i<4; i++) {
-				cell = new ExcelCell(i, cellrow, row[i-2].toString());
-				cells.add(cell);
-			}
-			cellrow++;
-		}
-
-	}
-
-	private void eduChildStat() {
-		Session session = Util.getSession();
-
-		List<?> res = session.createSQLQuery("select e.caption, count(c.id) from (SELECT * FROM Education WHERE audience='0') e LEFT JOIN (SELECT * FROM Client WHERE (" + schoolerDates + ") AND (" + regDates + ")) c ON(e.id = c.education) group by e.caption")
-				.addScalar("e.caption")
-				.addScalar("count(c.id)")
-				.list();
-
-		if (session != null && session.isOpen()) {
-			session.close();
-		}
-
-		List<Object[]> list = (List<Object []>) res;
-		cell = null;
-		int cellrow = 58;
-		for(Object[] row: list) {
-			for(int i = 6; i<8; i++) {
-				cell = new ExcelCell(i, cellrow, row[i-6].toString());
-				cells.add(cell);
-			}
-			cellrow++;
-		}
-	}
-
-	private void studentsOrNot() {
-		Session session = Util.getSession();
-
-		long childs = ((BigInteger) session.createSQLQuery("select count(*) from Client where ((" + schoolerDates + ") AND (" + regDates + "))").uniqueResult()).longValue();
-		long students = ((BigInteger) session.createSQLQuery("select count(*) from Client where (isStudent='1' AND (" + schoolerDates + ") AND (" + regDates + "))").uniqueResult()).longValue();
-		long noStudents = ((BigInteger) session.createSQLQuery("select count(*) from Client where (isStudent='2' AND (" + schoolerDates + ") AND (" + regDates +"))").uniqueResult()).longValue();
-
-		if (session != null && session.isOpen()) {
-			session.close();
-		}
-
-		long uknownStud = childs - students - noStudents;
-
-		cell = null;
-		cell = new ExcelCell(6, 83, "Сейчас учатся");
-		cells.add(cell);
-		cell = new ExcelCell(7, 83, String.valueOf(students));
-		cells.add(cell);
-		cell = new ExcelCell(6, 84, "Сейчас не учатся");
-		cells.add(cell);
-		cell = new ExcelCell(7, 84, String.valueOf(noStudents));
-		cells.add(cell);
-		cell = new ExcelCell(6, 85, "Неизвестно");
-		cells.add(cell);
-		cell = new ExcelCell(7, 85, String.valueOf(uknownStud));
-		cells.add(cell);
-	}
-
-	private void hasProfession() {
-		Session session = Util.getSession();
-
-		long people = ((BigInteger) session.createSQLQuery("select count(*) from Client where date(date)<" + checker + " AND " + regDates).uniqueResult()).longValue();
-		long noProf = ((BigInteger) session.createSQLQuery("select count(*) from Client where (profession ='нет' AND (date(date)<" + checker + ") AND (" + regDates + "))").uniqueResult()).longValue();
-		long uknownInfo = ((BigInteger) session.createSQLQuery("select count(*) from Client where (profession is null AND (date(date)<" + checker + ") AND (" + regDates + "))").uniqueResult()).longValue();
-
-		if (session != null && session.isOpen()) {
-			session.close();
-		}
-
-		long hasProf = people - noProf - uknownInfo;
-		cell = null;
-		cell = new ExcelCell(2, 106, "Да");
-		cells.add(cell);
-		cell = new ExcelCell(3, 106, String.valueOf(hasProf));
-		cells.add(cell);
-		cell = new ExcelCell(2, 107, "Нет");
-		cells.add(cell);
-		cell = new ExcelCell(3, 107, String.valueOf(noProf));
-		cells.add(cell);
-		cell = new ExcelCell(2, 108, "Неизвестно");
-		cells.add(cell);
-		cell = new ExcelCell(3, 108, String.valueOf(uknownInfo));
-		cells.add(cell);
 	}
 
 	private void liveInFlat() {

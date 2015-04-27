@@ -2,6 +2,7 @@ package ru.homeless.processors;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -39,7 +40,16 @@ public class CustomReportDocumentProcessor {
     			case ICustomStatisticsReport.QUERY_GENDER_TYPE: { addGenderReportData(sheet, o); break;}
 
     			case ICustomStatisticsReport.QUERY_MARTIAL_STATUS_TYPE: { addMartialReportData(sheet, o); break;}
-				  
+
+                case ICustomStatisticsReport.QUERY_EDUCATION_TYPE: { addEducationReportData(sheet, o); break; }
+
+                case ICustomStatisticsReport.QUERY_CHILDS_TYPE: { addChildsReportData(sheet, o); break; }
+
+                case ICustomStatisticsReport.QUERY_STUDENTS_TYPE: { addStudentsReportData(sheet, o); break; }
+
+                case ICustomStatisticsReport.QUERY_PROFESSION_TYPE: { addProfessionReportData(sheet, o); break; }
+
+                case ICustomStatisticsReport.QUERY_LIVE_IN_FLAT_TYPE: { addLiveInFlatReportData(sheet, o); break; }
     												  
     			default:
     					break;
@@ -49,7 +59,6 @@ public class CustomReportDocumentProcessor {
         XSSFFormulaEvaluator.evaluateAllFormulaCells(document);
         return document;
     }
-    
 
     private Integer getIntValue(CustomStatisticsReportEntity o, String s) {
         Integer value = o.getValueAndQuantity().get(s);
@@ -77,6 +86,79 @@ public class CustomReportDocumentProcessor {
         sheet.getRow(4).getCell(6).setCellValue(getIntValue(o, "Мужчины"));
         sheet.getRow(5).getCell(6).setCellValue(getIntValue(o, "Женщины"));
 	}
-    
-    
+
+    private void addEducationReportData(Sheet sheet, CustomStatisticsReportEntity o) {
+        int row_start = 57;
+        int col_start = 1;
+
+
+        for (Map.Entry<String, Integer> e : o.getValueAndQuantity().entrySet()) {
+            if (sheet.getRow(row_start) == null) {
+                sheet.createRow(row_start);
+                sheet.getRow(row_start).createCell(col_start);
+                sheet.getRow(row_start).createCell(col_start+1);
+            }
+
+            sheet.getRow(row_start).getCell(col_start).setCellValue(e.getKey());
+            sheet.getRow(row_start).getCell(col_start+1).setCellValue(e.getValue());
+            row_start++;
+        }
+
+    }
+
+    private void addChildsReportData(Sheet sheet, CustomStatisticsReportEntity o) {
+        int row_start = 57;
+        int col_start = 5;
+
+
+        for (Map.Entry<String, Integer> e : o.getValueAndQuantity().entrySet()) {
+            if (sheet.getRow(row_start) == null) {
+                sheet.createRow(row_start);
+                sheet.getRow(row_start).createCell(col_start);
+                sheet.getRow(row_start).createCell(col_start+1);
+            }
+
+            sheet.getRow(row_start).getCell(col_start).setCellValue(e.getKey());
+            sheet.getRow(row_start).getCell(col_start+1).setCellValue(e.getValue());
+            row_start++;
+        }
+    }
+
+    private void addStudentsReportData(Sheet sheet, CustomStatisticsReportEntity o) {
+        sheet.getRow(82).getCell(5).setCellValue("Сейчас учатся");
+        sheet.getRow(83).getCell(5).setCellValue("Сейчас не учатся");
+        sheet.getRow(84).getCell(5).setCellValue("Неизвестно");
+
+        sheet.getRow(82).getCell(6).setCellValue(getIntValue(o, "Сейчас учатся"));
+        sheet.getRow(83).getCell(6).setCellValue(getIntValue(o, "Сейчас не учатся"));
+        sheet.getRow(84).getCell(6).setCellValue(getIntValue(o, "Неизвестно"));
+
+    }
+
+    private void addProfessionReportData(Sheet sheet, CustomStatisticsReportEntity o) {
+
+        sheet.getRow(105).getCell(1).setCellValue("Да");
+        sheet.getRow(106).getCell(1).setCellValue("Нет");
+        sheet.getRow(107).getCell(1).setCellValue("Неизвестно");
+
+        sheet.getRow(105).getCell(2).setCellValue(getIntValue(o, "Да"));
+        sheet.getRow(106).getCell(2).setCellValue(getIntValue(o, "Нет"));
+        sheet.getRow(107).getCell(2).setCellValue(getIntValue(o, "Неизвестно"));
+
+    }
+
+
+    private void addLiveInFlatReportData(Sheet sheet, CustomStatisticsReportEntity o) {
+
+        sheet.getRow(105).getCell(5).setCellValue("Да");
+        sheet.getRow(106).getCell(5).setCellValue("Нет");
+        sheet.getRow(107).getCell(5).setCellValue("Неизвестно");
+
+        sheet.getRow(105).getCell(6).setCellValue(getIntValue(o, "Да"));
+        sheet.getRow(106).getCell(6).setCellValue(getIntValue(o, "Нет"));
+        sheet.getRow(107).getCell(6).setCellValue(getIntValue(o, "Неизвестно"));
+
+    }
+
+
 }

@@ -26,5 +26,30 @@ public class CustomReportService extends GenericService implements ICustomReport
 		return customReportDAO.getReportDataByMartialStatus(from, till);
 	}
 
-	
+    @Override
+    public CustomStatisticsReportEntity getReportDataByEducation(Date from, Date till) {
+        return customReportDAO.getReportDataByEducation(from, till);
+    }
+
+    @Override
+    public CustomStatisticsReportEntity getReportDataByChilds(Date from, Date till) {
+        return customReportDAO.getReportDataByChilds(from, till);
+    }
+
+    @Override
+    public CustomStatisticsReportEntity getReportDataByStudentsOrNot(Date from, Date till) {
+        return customReportDAO.getReportDataByStudentsOrNot(from, till);
+    }
+
+    @Override
+    public CustomStatisticsReportEntity getReportDataByProfession(Date from, Date till) {
+        return customReportDAO.getReportDataByProfession(from, till);
+    }
+
+    @Override
+    public CustomStatisticsReportEntity getReportDataByLiveInFlat(Date from, Date till) {
+        return customReportDAO.getReportDataByLiveInFlat(from, till);
+    }
+
+
 }

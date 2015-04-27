@@ -29,6 +29,12 @@ public class CustomStatisticsReportMappingImpl implements ICustomMappingExcelDoc
 		Date till = requestParameters.get("till");
 		list.add(customReportService.getReportDataByGender(from, till));
 		list.add(customReportService.getReportDataByMartialStatus(from, till));
+        list.add(customReportService.getReportDataByEducation(from, till));
+        list.add(customReportService.getReportDataByChilds(from, till));
+        list.add(customReportService.getReportDataByStudentsOrNot(from, till));
+        list.add(customReportService.getReportDataByProfession(from, till));
+        list.add(customReportService.getReportDataByLiveInFlat(from, till));
+
 		//1. Add Gender Report Data
 		//2. Add ... Data
 		//3. Add ... Data
