@@ -84,6 +84,7 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
         this.mainPanelVisibility = "display: block;";
         reloadAll();
         RequestContext rc = RequestContext.getCurrentInstance();
+        rc.update("select_document");
         rc.update("m_tabview");
         rc.update("upload_photo_form");
 

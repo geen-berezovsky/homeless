@@ -133,3 +133,9 @@ ADD COLUMN `tempRegDateTo` DATETIME NULL DEFAULT NULL AFTER `tempRegDateFrom`;
 
 ALTER TABLE `homeless`.`Worker`
 ADD COLUMN `primefacesskin` VARCHAR(60) NULL DEFAULT NULL AFTER `rules`;
+
+INSERT INTO `homeless`.`ContractPoints` (`id`, `audience`, `caption`) VALUES ('24', '0', 'Восстановление документов об образовании');
+INSERT INTO `homeless`.`ContractPoints` (`id`, `audience`, `caption`) VALUES ('25', '0', 'Получение повторного свидетельства о рождении (или получение документов ЗАГС)');
+INSERT INTO `homeless`.`ContractPoints` (`id`, `audience`, `caption`) VALUES ('26', '0', 'Получение/восстановление военного билета');
+INSERT INTO `homeless`.`ContractPoints` (`id`, `audience`, `caption`) VALUES ('27', '0', 'Получение загранпаспорта');
+INSERT INTO `homeless`.`ContractPoints` (`id`, `audience`, `caption`) VALUES ('28', '0', 'Получение технических средств реабилитации (протезно-ортопедических изделий)');

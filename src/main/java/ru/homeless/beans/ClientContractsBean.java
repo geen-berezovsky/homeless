@@ -83,8 +83,11 @@ public class ClientContractsBean implements Serializable {
         String docType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
         String docName = "ClientContract.docx";
 
-
-        file = Util.downloadDocument(requestSuffix, saveFilePath, docType, docName);
+        try {
+            file = Util.downloadDocument(requestSuffix, saveFilePath, docType, docName);
+        } catch (Exception e) {
+            log.error("Cannot download document from " +requestSuffix);
+        }
 
     }
 
@@ -139,38 +142,7 @@ public class ClientContractsBean implements Serializable {
     public void showAddContractDialog() {
         RequestContext rc = RequestContext.getCurrentInstance();
         rc.execute("selectDocumentWv.show()");
-        /* DEPRECATED
-        if (isClientHasNoOpenedContracts()) {
-        } else {
-            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Невозможно добавить новый договор, пока не закрыт существующий!",
-                    "Пожалуйста, закройте существующий открытый договор с этим клиентом сначала.");
-            FacesContext.getCurrentInstance().addMessage(null, msg);
-        }
-        */
-
     }
-/* DEPRECATED
-    private boolean isClientHasNoOpenedContracts() {
-        log.info("Testing available contract results (possible encoding issues): ");
-        for (ContractResult c : getGenericService().getInstances(ContractResult.class)) {
-            if (c.getCaption().startsWith("Выполнен ")) {
-                log.info("\t" + c.getCaption());
-            }
-        }
-        List<ServContract> contracts = getGenericService().getInstancesByClientId(ServContract.class, cid);
-        for (ServContract s : contracts) {
-            String result = s.getResult().getCaption();
-            log.info("Testing contract results for client " + cid + ": ");
-            log.info("\t" + result);
-            if (!result.startsWith("Выполнен ")) {
-                log.info("\t" + "Found, at least, one uncompleted contract");
-                return false; // there is at least one unclosed contract
-            }
-        }
-        log.info("No uncompleted contracts found");
-        return true; // all contracts are completed partially or fully
-    }
-*/
     public int getCid() {
         return cid;
     }
@@ -354,7 +326,6 @@ public class ClientContractsBean implements Serializable {
     }
 
     public void validateStartDateFormat(FacesContext ctx, UIComponent component, Object value) {
-        log.info("Val start called");
         if (value == null || value.toString().trim().equals("")) {
             FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR,
                     "Пожалуйста введите дату начала действия контракта", "Формат даты: ДД.ММ.ГГГГ");
@@ -368,7 +339,6 @@ public class ClientContractsBean implements Serializable {
     }
 
     public void validateStopDateFormat(FacesContext ctx, UIComponent component, Object value) {
-        log.info("Val stop called");
         if (value == null || value.toString().trim().equals("")) {
             FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR,
                     "Пожалуйста введите дату окончания действия контракта", "Формат даты: ДД.ММ.ГГГГ");
@@ -414,7 +384,11 @@ public class ClientContractsBean implements Serializable {
             //then add new ServContract
             selectedContract.setClient(cid);
             selectedContract.setCommentResult("");
-            selectedContract.setDocumentId(selectedDocument.getId());
+            if (selectedDocument != null) {
+                selectedContract.setDocumentId(selectedDocument.getId());
+            } else {
+                selectedContract.setDocumentId(0);
+            }
             selectedContract.setResult(getGenericService().getInstanceById(ContractResult.class, 1));
             selectedContract.setWorker(worker);
 
