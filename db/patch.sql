@@ -131,4 +131,5 @@ ALTER TABLE `homeless`.`Document`
 ADD COLUMN `tempRegDateFrom` DATETIME NULL DEFAULT NULL AFTER `worker`,
 ADD COLUMN `tempRegDateTo` DATETIME NULL DEFAULT NULL AFTER `tempRegDateFrom`;
 
-
+ALTER TABLE `homeless`.`Worker`
+ADD COLUMN `primefacesskin` VARCHAR(60) NULL DEFAULT NULL AFTER `rules`;

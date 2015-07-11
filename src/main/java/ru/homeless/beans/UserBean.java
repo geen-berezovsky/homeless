@@ -14,6 +14,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.servlet.http.HttpSession;
 
+import com.sun.jna.platform.win32.Netapi32Util;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 
@@ -111,7 +112,11 @@ public class UserBean implements Serializable {
 		Worker w = getWorkerService().login(username, password);
 		if (w != null) {
 			log.info(username + " has successfully logged in at " + new Date().toString());
-			HttpSession session = Util.getSession();
+            FacesContext fc = FacesContext.getCurrentInstance();
+            ThemeService tsb = fc.getApplication().evaluateExpressionGet(fc, "#{themeService}", ThemeService.class);
+            tsb.setTheme(w.getPrimefacesskin());
+
+            HttpSession session = Util.getSession();
 			session.setAttribute("username", username);
 			session.setAttribute("worker", w);
 			loggedIn = true;
@@ -119,6 +124,7 @@ public class UserBean implements Serializable {
 		} else {
 			msg = new FacesMessage(FacesMessage.SEVERITY_WARN, "Ошибка входа", "Неправильное имя или пароль");
 		}
+
 
 		FacesContext.getCurrentInstance().addMessage(null, msg);
 		context.addCallbackParam("loggedIn", loggedIn);

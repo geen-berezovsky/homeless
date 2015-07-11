@@ -1,6 +1,8 @@
 <?xml version = "1.0" encoding = "UTF-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
 
 <h:head>
     <title>Добро пожаловать, #{user.name}!</title>
@@ -21,8 +23,7 @@
 </h:head>
 
 <h:body onload="#{clientform.refreshTabs()}" styleClass="body_style">
-
-
+<h:outputStylesheet library="primefaces-#{themeService.theme}" name="theme.css" />
 <p:layout id="basePageLayout" fullPage="true">
 <p:layoutUnit position="north" id="topMenu" size="50">
     <ui:include src="clientform/mainmenu.xhtml"/>
@@ -163,6 +164,7 @@
         <ui:include src="clientform/standardDocumentsList.xhtml" />
         <ui:include src="clientform/tranzitDocumentsList.xhtml" />
     </p:scrollPanel>
+
     </h:form>
 
 </p:tab>
@@ -190,6 +192,7 @@
 <ui:include src="dialogs/addshelter.xhtml"/>
 <ui:include src="dialogs/editcontract.xhtml"/>
 <ui:include src="dialogs/mysettings.xhtml"/>
+<ui:include src="dialogs/changetheme.xhtml"/>
 <ui:include src="dialogs/roomsettings.xhtml"/>
 <ui:include src="dialogs/editroom.xhtml"/>
 <ui:include src="dialogs/addserviceplanitem.xhtml"/>

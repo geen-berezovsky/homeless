@@ -24,7 +24,8 @@ public class Worker implements Serializable {
 	private Rules rules;
 	private String warrantNum;
 	private Date warrantDate;
-	
+    private String primefacesskin;
+
 	public Worker() {
 		
 	}
@@ -111,4 +112,11 @@ public class Worker implements Serializable {
 		this.middlename = middlename;
 	}
 
+    public String getPrimefacesskin() {
+        return primefacesskin;
+    }
+
+    public void setPrimefacesskin(String primefacesskin) {
+        this.primefacesskin = primefacesskin;
+    }
 }

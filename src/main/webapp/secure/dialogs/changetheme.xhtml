@@ -1,0 +1,22 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui">
+<ui:composition>
+    <h:form id="change_theme">
+	<p:dialog id="changeTheme" header="Сменить тему" widgetVar="changeThemeWv" resizable="false" closable="true" modal="true" showEffect="fade" hideEffect="explode" dynamic="true" closeOnEscape="true">
+
+        <h:panelGrid columns="2" cellpadding="10">
+            <p:outputLabel for="basic" value="Basic:" />
+            <p:themeSwitcher id="basic" style="width:165px" value="#{themeService.theme}">
+                <f:selectItem itemLabel="Выберите тему" itemValue="" />
+                <f:selectItems value="#{themeService.themes}" var="theme" itemLabel="#{theme.displayName}" itemValue="#{theme.name}"/>
+                <p:ajax listener="#{themeService.saveTheme}" />
+            </p:themeSwitcher>
+        </h:panelGrid>
+
+    </p:dialog>
+</h:form>
+
+
+</ui:composition>
+</html>

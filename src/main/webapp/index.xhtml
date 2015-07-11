@@ -11,7 +11,7 @@
     <link href="secure/css/default.css" rel="stylesheet" type="text/css" />
 </h:head>
 <h:body onload="dlg.show()" styleClass="body_style">
-
+    <h:outputStylesheet library="primefaces-#{themeService.theme}" name="theme.css" />
 	<h:form id="form">
 		<p:growl id="growl" showDetail="true" life="3000" />
 
