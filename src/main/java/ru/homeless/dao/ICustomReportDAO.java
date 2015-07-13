@@ -22,16 +22,19 @@ public interface ICustomReportDAO extends IGenericDAO {
 
     public CustomStatisticsReportEntity getReportDataByLiveInFlat(Date from, Date till);
 
-    public CustomStatisticsReportEntity getReportDataBySeeFamily(Date from, Date till);
+    public CustomStatisticsReportEntity getReportDataBySeeRelatives(Date from, Date till);
 
-    public CustomStatisticsReportEntity getReportDataByNightStay(Date from, Date till);
+    public CustomStatisticsReportEntity getReportDataByWhereSleeping(Date from, Date till);
 
-    public CustomStatisticsReportEntity getReportDataByReasonOfHomeless(Date from, Date till);
+    public CustomStatisticsReportEntity getReportDataByHomelessReasons(Date from, Date till);
 
-    public CustomStatisticsReportEntity getReportDataByChronicDiseases(Date from, Date till);
+    public CustomStatisticsReportEntity getReportDataByChronicalDiseasters(Date from, Date till);
 
-    public CustomStatisticsReportEntity getReportDataByAllBw(Date from, Date till);
+    public CustomStatisticsReportEntity getReportDataByBreadwinnersAll(Date from, Date till);
 
-    public CustomStatisticsReportEntity getReportDataAdultBw(Date from, Date till);
+    public CustomStatisticsReportEntity getReportDataByBreadwinnersChilds(Date from, Date till);
+
+    public CustomStatisticsReportEntity getReportDataByAge(Date from, Date till);
+
 
 }

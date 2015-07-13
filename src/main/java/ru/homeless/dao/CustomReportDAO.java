@@ -175,239 +175,70 @@ public class CustomReportDAO extends GenericDAO implements ICustomReportDAO {
     }
 
     @Override
-    public CustomStatisticsReportEntity getReportDataBySeeFamily(Date from, Date till) {
-        return null;
+    public CustomStatisticsReportEntity getReportDataBySeeRelatives(Date from, Date till) {
+        updateDates();
+        List<?> res = getSessionFactory().getCurrentSession().createSQLQuery("select f.caption, count(c.id) FROM FamilyCommunication f LEFT JOIN (SELECT * FROM Client WHERE (date(regdate)BETWEEN" + Util.parseDateForMySql(from) + "AND" + Util.parseDateForMySql(till) + ")) c ON (f.id=c.familycommunication) group by f.caption")
+                .addScalar("f.caption")
+                .addScalar("count(c.id)")
+                .list();
+        return prepareEntity(res, ICustomStatisticsReport.QUERY_SEE_FAMILY_TYPE);
     }
 
     @Override
-    public CustomStatisticsReportEntity getReportDataByNightStay(Date from, Date till) {
-        return null;
+    public CustomStatisticsReportEntity getReportDataByWhereSleeping(Date from, Date till) {
+        updateDates();
+        List<?> res = getSessionFactory().getCurrentSession().createSQLQuery("select n.caption, count(c.id) FROM NightStay n LEFT JOIN (SELECT * FROM Client WHERE liveInFlat='2' AND date(regdate)BETWEEN" + Util.parseDateForMySql(from) + "AND" + Util.parseDateForMySql(till) + ") c ON (n.id=c.nightStay) group by n.caption")
+                .addScalar("n.caption")
+                .addScalar("count(c.id)")
+                .list();
+        return prepareEntity(res, ICustomStatisticsReport.QUERY_NIGHT_STAY_TYPE);
     }
 
     @Override
-    public CustomStatisticsReportEntity getReportDataByReasonOfHomeless(Date from, Date till) {
-        return null;
+    public CustomStatisticsReportEntity getReportDataByHomelessReasons(Date from, Date till) {
+        updateDates();
+        List<?> res = getSessionFactory().getCurrentSession().createSQLQuery("select r.caption, IFNULL(st.counts, 0) from (select l.reasonofhomeless_id, count(c.id) as counts from link_reasonofhomeless_client l inner join (select * from Client where date(regdate)BETWEEN" + Util.parseDateForMySql(from) + "AND" + Util.parseDateForMySql(till) +") c on(c.id=l.clients_id) group by l.reasonofhomeless_id) st right join ReasonOfHomeless r on(st.reasonofhomeless_id=r.id);")
+                .addScalar("r.caption")
+                .addScalar("IFNULL(st.counts, 0)")
+                .list();
+        return prepareEntity(res, ICustomStatisticsReport.QUERY_REASON_OF_HOMELESS_TYPE);
     }
 
     @Override
-    public CustomStatisticsReportEntity getReportDataByChronicDiseases(Date from, Date till) {
-        return null;
+    public CustomStatisticsReportEntity getReportDataByChronicalDiseasters(Date from, Date till) {
+        updateDates();
+        List<?> res = getSessionFactory().getCurrentSession().createSQLQuery("select r.caption, IFNULL(st.counts, 0) from (select l.diseases_id, count(c.id) as counts from link_chronicdisease_client l inner join (select * from Client where date(regdate)BETWEEN" + Util.parseDateForMySql(from) + "AND" + Util.parseDateForMySql(till) + ") c on(c.id=l.clients_id) group by l.diseases_id) st right join ChronicDisease r on(st.diseases_id=r.id);")
+                .addScalar("r.caption")
+                .addScalar("IFNULL(st.counts, 0)")
+                .list();
+        return prepareEntity(res, ICustomStatisticsReport.QUERY_CHRONIC_DIS_TYPE);
     }
 
     @Override
-    public CustomStatisticsReportEntity getReportDataByAllBw(Date from, Date till) {
-        return null;
+    public CustomStatisticsReportEntity getReportDataByBreadwinnersAll(Date from, Date till) {
+        updateDates();
+        List<?> res = getSessionFactory().getCurrentSession().createSQLQuery("select r.caption, IFNULL(st.counts, 0) from (select l.breadwinners_id, count(c.id) as counts from link_breadwinner_client l inner join (select * from Client where date(regdate)BETWEEN" + Util.parseDateForMySql(from) + "AND" + Util.parseDateForMySql(till) + ") c on(c.id=l.clients_id) group by l.breadwinners_id) st right join Breadwinner r on(st.breadwinners_id=r.id);")
+                .addScalar("r.caption")
+                .addScalar("IFNULL(st.counts, 0)")
+                .list();
+        return prepareEntity(res, ICustomStatisticsReport.QUERY_ALL_BW_TYPE);
     }
 
     @Override
-    public CustomStatisticsReportEntity getReportDataAdultBw(Date from, Date till) {
+    public CustomStatisticsReportEntity getReportDataByBreadwinnersChilds(Date from, Date till) {
+        updateDates();
+        List<?> res = getSessionFactory().getCurrentSession().createSQLQuery("select r.caption, IFNULL(st.counts, 0) from (select l.breadwinners_id, count(c.id) as counts from link_breadwinner_client l inner join (select * from Client where ((date(regdate)BETWEEN" + Util.parseDateForMySql(from) + "AND" + Util.parseDateForMySql(till) + ") AND (date(date)<" + checker + "))) c on(c.id=l.clients_id) group by l.breadwinners_id) st right join Breadwinner r on(st.breadwinners_id=r.id);")
+                .addScalar("r.caption")
+                .addScalar("IFNULL(st.counts, 0)")
+                .list();
+        return prepareEntity(res, ICustomStatisticsReport.QUERY_ADULT_BW_TYPE);
+    }
+
+    @Override
+    public CustomStatisticsReportEntity getReportDataByAge(Date from, Date till) {
         return null;
     }
-}
 
-
-/*
-OLD:
-
-public class BigStatistic {
-	private String firstRegDate;
-	private String secondRegDate;
-	private String regDates;
-	private String checker;
-	private String schooler;
-	private String schoolerDates;
-	private ArrayList<ExcelCell> cells;
-	private ExcelCell cell;
-
-	public BigStatistic(Date a, Date b) {
-		firstRegDate = "'" + (a.getYear()+1900) + "-" + (a.getMonth()+1) + "-" + a.getDate() + "'";
-		secondRegDate = "'" + (b.getYear()+1900) + "-" + (b.getMonth()+1) + "-" + b.getDate() + "'";
-		regDates = "date(regdate) BETWEEN " + firstRegDate+ " AND " + secondRegDate;
-		GregorianCalendar calen = (GregorianCalendar) GregorianCalendar.getInstance();
-		calen.roll(Calendar.YEAR, -14);
-		checker = "'" + calen.get(Calendar.YEAR) + "-" + calen.get(Calendar.MONTH)+1 + "-" + calen.get(Calendar.DATE)+"'";
-		calen.roll(Calendar.YEAR, 7);
-		schooler = "'" + calen.get(Calendar.YEAR) + "-" + calen.get(Calendar.MONTH)+1 + "-" + calen.get(Calendar.DATE)+"'";
-		schoolerDates = "date(date) BETWEEN " + checker+ " AND " + schooler;
-		cells = new ArrayList<ExcelCell>();
-		genderStat();
-		martialStat();
-		dependStat();
-		eduStat();
-		eduChildStat();
-		studentsOrNot();
-		hasProfession();
-		liveInFlat();
-		seeFamily();
-		nightStay();
-		reasonsOfHomeless();
-		chonicDis();
-		allBw();
-		adultBw();
-	}
-
-	private void liveInFlat() {
-		Session session = Util.getSession();
-
-		long people = ((BigInteger) session.createSQLQuery("select count(*) from Client where " + regDates).uniqueResult()).longValue();
-		long inFlat = ((BigInteger) session.createSQLQuery("select count(*) from Client where liveInFlat='1' AND " + regDates).uniqueResult()).longValue();
-		long outFlat = ((BigInteger) session.createSQLQuery("select count(*) from Client where liveInFlat='2' AND " + regDates).uniqueResult()).longValue();
-
-		if (session != null && session.isOpen()) {
-			session.close();
-		}
-
-		long uknownFlatStat = people - inFlat - outFlat;
-		cell = null;
-		cell = new ExcelCell(6, 106, "Да");
-		cells.add(cell);
-		cell = new ExcelCell(7, 106, String.valueOf(inFlat));
-		cells.add(cell);
-		cell = new ExcelCell(6, 107, "Нет");
-		cells.add(cell);
-		cell = new ExcelCell(7, 107, String.valueOf(outFlat));
-		cells.add(cell);
-		cell = new ExcelCell(6, 108, "Неизвестно");
-		cells.add(cell);
-		cell = new ExcelCell(7, 108, String.valueOf(uknownFlatStat));
-		cells.add(cell);
-	}
-
-	private void seeFamily() {
-		Session session = Util.getSession();
-
-		List<?> res = session.createSQLQuery("select f.caption, count(c.id) FROM FamilyCommunication f LEFT JOIN (SELECT * FROM Client WHERE (" + regDates + ")) c ON (f.id=c.familycommunication) group by f.caption")
-				.addScalar("f.caption")
-				.addScalar("count(c.id)")
-				.list();
-
-		if (session != null && session.isOpen()) {
-			session.close();
-		}
-
-		List<Object[]> list = (List<Object []>) res;
-		cell = null;
-		int cellrow = 128;
-		for(Object[] row: list) {
-			for(int i = 2; i<4; i++) {
-				cell = new ExcelCell(i, cellrow, row[i-2].toString());
-				cells.add(cell);
-			}
-			cellrow++;
-		}
-
-	}
-
-	private void nightStay() {
-		Session session = Util.getSession();
-
-		List<?> res = session.createSQLQuery("select n.caption, count(c.id) FROM NightStay n LEFT JOIN (SELECT * FROM Client WHERE liveInFlat='2' AND " + regDates + ") c ON (n.id=c.nightStay) group by n.caption")
-				.addScalar("n.caption")
-				.addScalar("count(c.id)")
-				.list();
-
-		if (session != null && session.isOpen()) {
-			session.close();
-		}
-
-		List<Object[]> list = (List<Object []>) res;
-		cell = null;
-		int cellrow = 128;
-		for(Object[] row: list) {
-			for(int i = 6; i<8; i++) {
-				cell = new ExcelCell(i, cellrow, row[i-6].toString());
-				cells.add(cell);
-			}
-			cellrow++;
-		}
-	}
-
-	private void reasonsOfHomeless() {
-		Session session = Util.getSession();
-
-		List<?> res = session.createSQLQuery("select r.caption, IFNULL(st.counts, 0) from (select l.reasonofhomeless_id, count(c.id) as counts from link_reasonofhomeless_client l inner join (select * from Client where " + regDates +") c on(c.id=l.clients_id) group by l.reasonofhomeless_id) st right join ReasonOfHomeless r on(st.reasonofhomeless_id=r.id);")
-				.addScalar("r.caption")
-				.addScalar("IFNULL(st.counts, 0)")
-				.list();
-
-		List<Object[]> list = (List<Object []>) res;
-		cell = null;
-		int cellrow = 150;
-		for(Object[] row: list) {
-			for(int i = 2; i<4; i++) {
-				cell = new ExcelCell(i, cellrow, row[i-2].toString());
-				cells.add(cell);
-			}
-			cellrow++;
-		}
-	}
-
-	private void chonicDis() {
-		Session session = Util.getSession();
-
-		List<?> res = session.createSQLQuery("select r.caption, IFNULL(st.counts, 0) from (select l.diseases_id, count(c.id) as counts from link_chronicdisease_client l inner join (select * from Client where " + regDates + ") c on(c.id=l.clients_id) group by l.diseases_id) st right join ChronicDisease r on(st.diseases_id=r.id);")
-				.addScalar("r.caption")
-				.addScalar("IFNULL(st.counts, 0)")
-				.list();
-
-		List<Object[]> list = (List<Object []>) res;
-		cell = null;
-		int cellrow = 150;
-		for(Object[] row: list) {
-			for(int i = 6; i<8; i++) {
-				cell = new ExcelCell(i, cellrow, row[i-6].toString());
-				cells.add(cell);
-			}
-			cellrow++;
-		}
-	}
-
-	private void allBw() {
-		Session session = Util.getSession();
-
-		List<?> res = session.createSQLQuery("select r.caption, IFNULL(st.counts, 0) from (select l.breadwinners_id, count(c.id) as counts from link_breadwinner_client l inner join (select * from Client where " + regDates + ") c on(c.id=l.clients_id) group by l.breadwinners_id) st right join Breadwinner r on(st.breadwinners_id=r.id);")
-				.addScalar("r.caption")
-				.addScalar("IFNULL(st.counts, 0)")
-				.list();
-
-		List<Object[]> list = (List<Object []>) res;
-		cell = null;
-		int cellrow = 177;
-		for(Object[] row: list) {
-			for(int i = 2; i<4; i++) {
-				cell = new ExcelCell(i, cellrow, row[i-2].toString());
-				cells.add(cell);
-			}
-			cellrow++;
-		}
-	}
-
-	private void adultBw() {
-		Session session = Util.getSession();
-
-		List<?> res = session.createSQLQuery("select r.caption, IFNULL(st.counts, 0) from (select l.breadwinners_id, count(c.id) as counts from link_breadwinner_client l inner join (select * from Client where ((" + regDates + ") AND (date(date)<" + checker + "))) c on(c.id=l.clients_id) group by l.breadwinners_id) st right join Breadwinner r on(st.breadwinners_id=r.id);")
-				.addScalar("r.caption")
-				.addScalar("IFNULL(st.counts, 0)")
-				.list();
-
-		List<Object[]> list = (List<Object []>) res;
-		cell = null;
-		int cellrow = 177;
-		for(Object[] row: list) {
-			for(int i = 6; i<8; i++) {
-				cell = new ExcelCell(i, cellrow, row[i-6].toString());
-				cells.add(cell);
-			}
-			cellrow++;
-		}
-	}
-
-
-	public List getCells() {
-		return cells;
-	}
 
 }
 
-
- */

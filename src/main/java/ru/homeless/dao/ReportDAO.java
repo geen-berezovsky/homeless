@@ -1,18 +1,13 @@
 package ru.homeless.dao;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 
-import ru.homeless.report.entities.OneTimeServicesReportEntity;
-import ru.homeless.report.entities.OutOfShelterReportEntity;
-import ru.homeless.report.entities.OuterReportEntity;
-import ru.homeless.report.entities.OverVacReportEntity;
-import ru.homeless.report.entities.ResultWorkReportEntity;
+import ru.homeless.report.entities.*;
+import ru.homeless.shared.IDocumentMapping;
 import ru.homeless.util.Util;
 
 @Repository
@@ -21,7 +16,7 @@ public class ReportDAO extends GenericDAO implements IReportDAO {
 	private static final long serialVersionUID = 1L;
 	public static Logger log = Logger.getLogger(ReportDAO.class);
 
-	@Override
+    @Override
 	public List<ResultWorkReportEntity> getResultWorkReport(Date from, Date till) {
 		
 		

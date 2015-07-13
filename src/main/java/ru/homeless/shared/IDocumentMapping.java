@@ -91,7 +91,7 @@ public interface IDocumentMapping {
     Document title: Стандартный отчет по результатам работы
     */
     public final int REPORT_WORK_RESULT = 200;
-    public final String REPORT_WORK_RESULT_TEMPLATE_PATH = Configuration.templatesDir+"/"+"WorkResultReport.xlsx";
+    public final String REPORT_WORK_RESULT_TEMPLATE_PATH = Configuration.templatesDir+"/"+"WorkResultReport.xlsm";
     
     /*
     Template file: OutOfShelter.xlsx

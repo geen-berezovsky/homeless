@@ -27,6 +27,11 @@ public class CustomReportService extends GenericService implements ICustomReport
 	}
 
     @Override
+    public CustomStatisticsReportEntity getReportDataByDependencies(Date from, Date till) {
+        return  customReportDAO.getReportDataByDependencies(from, till);
+    }
+
+    @Override
     public CustomStatisticsReportEntity getReportDataByEducation(Date from, Date till) {
         return customReportDAO.getReportDataByEducation(from, till);
     }
@@ -49,6 +54,41 @@ public class CustomReportService extends GenericService implements ICustomReport
     @Override
     public CustomStatisticsReportEntity getReportDataByLiveInFlat(Date from, Date till) {
         return customReportDAO.getReportDataByLiveInFlat(from, till);
+    }
+
+    @Override
+    public CustomStatisticsReportEntity getReportDataBySeeRelatives(Date from, Date till) {
+        return customReportDAO.getReportDataBySeeRelatives(from, till);
+    }
+
+    @Override
+    public CustomStatisticsReportEntity getReportDataByWhereSleeping(Date from, Date till) {
+        return customReportDAO.getReportDataByWhereSleeping(from, till);
+    }
+
+    @Override
+    public CustomStatisticsReportEntity getReportDataByHomelessReasons(Date from, Date till) {
+        return customReportDAO.getReportDataByHomelessReasons(from, till);
+    }
+
+    @Override
+    public CustomStatisticsReportEntity getReportDataByChronicalDiseasters(Date from, Date till) {
+        return customReportDAO.getReportDataByChronicalDiseasters(from, till);
+    }
+
+    @Override
+    public CustomStatisticsReportEntity getReportDataByBreadwinnersAll(Date from, Date till) {
+        return customReportDAO.getReportDataByBreadwinnersAll(from, till);
+    }
+
+    @Override
+    public CustomStatisticsReportEntity getReportDataByBreadwinnersAdults(Date from, Date till) {
+        return customReportDAO.getReportDataByBreadwinnersChilds(from, till);
+    }
+
+    @Override
+    public CustomStatisticsReportEntity getReportDataByAge(Date from, Date till) {
+        return customReportDAO.getReportDataByAge(from, till);
     }
 
 
