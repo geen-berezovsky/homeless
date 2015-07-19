@@ -8,11 +8,15 @@
         <p:tabView>
             <p:tab title="Актуальное состояние">
                 <p:panelGrid columns="1" styleClass="base_form_panel_grid_class">
-                    <p:commandButton value="Отчет по проживающим" ajax="false" onclick="PrimeFaces.monitorDownload(standardDocumentStart, standardDocumentStop);" icon="ui-icon-arrowthick-1-s" update="@this @form growl" actionListener="#{reports.downloadLivingReport}">
+                    <p:commandButton value="Отчет по проживающим" ajax="false" onclick="PrimeFaces.monitorDownload(standardDocumentStart, standardDocumentStop);" icon="ui-icon-arrowthick-1-s" update="@this @form growl" actionListener="#{reports.downloadInnerReport}">
                         <p:fileDownload value="#{reports.file}" />
                     </p:commandButton>
-                    <p:commandButton value="Отчет по сопровождаемым" disabled="true"/>
-                    <p:commandButton value="Отчет на охрану и в поликлинику" disabled="true"/>
+                    <p:commandButton value="Отчет по сопровождаемым" ajax="false" onclick="PrimeFaces.monitorDownload(standardDocumentStart, standardDocumentStop);" icon="ui-icon-arrowthick-1-s" update="@this @form growl" actionListener="#{reports.downloadOuterReport}">
+                        <p:fileDownload value="#{reports.file}" />
+                    </p:commandButton>
+                    <p:commandButton value="Отчет на охрану и в поликлинику" ajax="false" onclick="PrimeFaces.monitorDownload(standardDocumentStart, standardDocumentStop);" icon="ui-icon-arrowthick-1-s" update="@this @form growl" actionListener="#{reports.downloadOverVacReport}">
+                        <p:fileDownload value="#{reports.file}" />
+                    </p:commandButton>
                 </p:panelGrid>
             </p:tab>
             <p:tab title="По периодам">
@@ -35,11 +39,15 @@
                     <p:commandButton value="Отчет по результатам работы" ajax="false" onclick="PrimeFaces.monitorDownload(standardDocumentStart, standardDocumentStop);" icon="ui-icon-arrowthick-1-s" update="@this @form growl" actionListener="#{reports.downloadWorkResultReport}">
                         <p:fileDownload value="#{reports.file}" />
                     </p:commandButton>
-                    <p:commandButton value="Отчет по выбывшим" disabled="true"/>
+                    <p:commandButton value="Отчет по выбывшим" ajax="false" onclick="PrimeFaces.monitorDownload(standardDocumentStart, standardDocumentStop);" icon="ui-icon-arrowthick-1-s" update="@this @form growl" actionListener="#{reports.downloadEvictedReport}">
+                        <p:fileDownload value="#{reports.file}" />
+                    </p:commandButton>
                     <p:commandButton value="Статистика" ajax="false" onclick="PrimeFaces.monitorDownload(standardDocumentStart, standardDocumentStop);" icon="ui-icon-arrowthick-1-s" update="@this @form growl" actionListener="#{reports.downloadStatisticsReport}">
                         <p:fileDownload value="#{reports.file}" />
                     </p:commandButton>
-                    <p:commandButton value="Разовые услуги" disabled="true"/>
+                    <p:commandButton value="Разовые услуги" ajax="false" onclick="PrimeFaces.monitorDownload(standardDocumentStart, standardDocumentStop);" icon="ui-icon-arrowthick-1-s" update="@this @form growl" actionListener="#{reports.downloadOnceOnlyReport}">
+                        <p:fileDownload value="#{reports.file}" />
+                    </p:commandButton>
                 </p:panelGrid>
             </p:tab>
         </p:tabView>

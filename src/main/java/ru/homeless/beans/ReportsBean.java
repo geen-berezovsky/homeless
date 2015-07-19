@@ -66,9 +66,28 @@ public class ReportsBean implements Serializable {
         file = getMacroReport(212, Util.formatDate(startDate), Util.formatDate(endDate), "StatisticsReport.xlsm");
     }
 
-    public void downloadLivingReport() throws IOException {
-        file = getMacroReport(210, Util.formatDate(startDate), Util.formatDate(endDate), "StatisticsReport.xlsm");
+    public void downloadInnerReport() throws IOException {
+        file = getMacroReport(210, Util.formatDate(startDate), Util.formatDate(endDate), "InnerReport.xlsm");
     }
+
+    public void downloadOuterReport() throws IOException {
+        file = getMacroReport(208, Util.formatDate(startDate), Util.formatDate(endDate), "OuterReport.xlsm");
+    }
+
+    public void downloadOverVacReport() throws IOException {
+        file = getMacroReport(206, Util.formatDate(startDate), Util.formatDate(endDate), "OverVacReport.xlsm");
+    }
+
+    public void downloadEvictedReport() throws IOException {
+        file = getMacroReport(202, Util.formatDate(startDate), Util.formatDate(endDate), "EvictedReport.xlsm");
+    }
+
+    public void downloadOnceOnlyReport() throws IOException {
+        file = getMacroReport(204, Util.formatDate(startDate), Util.formatDate(endDate), "OnceOnlyReport.xlsm");
+    }
+
+
+
 
     public Date getStartDate() {
         return startDate;
