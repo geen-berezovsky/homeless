@@ -20,6 +20,4 @@ public interface IReportService extends IGenericService {
 
     public List<InnerReportEntity> getInnerReportEntity();
 
-    public List<OuterReportEntity> getEvictedReportEntity();
-
 }

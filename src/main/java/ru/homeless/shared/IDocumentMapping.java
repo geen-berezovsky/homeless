@@ -90,7 +90,7 @@ public interface IDocumentMapping {
     Template file: WorkResultReport.xlsx
     Document title: Стандартный отчет по результатам работы
     */
-    public final int REPORT_WORK_RESULT = 200;
+    public final int REPORT_WORK_RESULT = 200; //READY
     public final String REPORT_WORK_RESULT_TEMPLATE_PATH = Configuration.templatesDir+"/"+"WorkResultReport.xlsm";
     
     /*
@@ -98,28 +98,28 @@ public interface IDocumentMapping {
     Document title: Стандартный отчет по выбывшим
     */
     public final int REPORT_OUT_OF_SHELTER = 202;
-    public final String REPORT_OUT_OF_SHELTER_TEMPLATE_PATH = Configuration.templatesDir+"/"+"OutOfShelter.xlsx";
+    public final String REPORT_OUT_OF_SHELTER_TEMPLATE_PATH = Configuration.templatesDir+"/"+"EvictedReport.xlsm";
     
     /*
     Template file: OneTimeServices.xlsx
     Document title: Стандартный отчет по разовым услугам
     */
     public final int REPORT_ONE_TIME_SERVICES = 204;
-    public final String REPORT_ONE_TIME_SERVICES_PATH = Configuration.templatesDir+"/"+"OneTimeServices.xlsx";
+    public final String REPORT_ONE_TIME_SERVICES_PATH = Configuration.templatesDir+"/"+"OnceOnlyReport.xlsm";
     
     /*
     Template file: OverVac.xlsx
     Document title: Стандартный отчет на охрану и в поликлинику
     */
     public final int REPORT_OVERVAC = 206;
-    public final String REPORT_OVERVAC_PATH = Configuration.templatesDir+"/"+"OverVac.xlsx";
+    public final String REPORT_OVERVAC_PATH = Configuration.templatesDir+"/"+"VacReport.xlsm";
     
     /*
     Template file: OuterReport.xlsx
     Document title: Стандартный отчет по клиентам на сопровождении, не проживающим в приюте
     */
     public final int REPORT_OUTER = 208;
-    public final String REPORT_OUTER_PATH = Configuration.templatesDir+"/"+"OuterReport.xlsx";
+    public final String REPORT_OUTER_PATH = Configuration.templatesDir+"/"+"OuterReport.xlsm";
     
     /*
     Template file: InnerReport.xlsx

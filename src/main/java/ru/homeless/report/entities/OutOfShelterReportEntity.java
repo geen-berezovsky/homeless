@@ -12,7 +12,11 @@ public class OutOfShelterReportEntity {
 	private String comments;
 	private String contacts;
 	private String workerSurname;
-	
+
+    public OutOfShelterReportEntity() {
+
+    }
+
 	public OutOfShelterReportEntity(String clientId, String clientSurname, String clientDateOfBirth, String roomId, 
 			String inShelter, String contractPointCaption, String contractEndDate, String outShelterDate, String comments, 
 			String contacts, String workerSurname) {

@@ -20,6 +20,4 @@ public interface IReportDAO extends IGenericDAO {
 
     public List<InnerReportEntity> getInnerReport();
 
-    public List<OuterReportEntity> getEvictedReport();
-	
 }

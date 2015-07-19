@@ -74,9 +74,15 @@ public class ReportDAO extends GenericDAO implements IReportDAO {
 					xy[i] = new String("-");
 				}
 			}
-			result.add(new OutOfShelterReportEntity(xy[0].toString(), xy[1].toString(), Util.parseDateForReport((Date)xy[2]), Util.html2text(xy[3].toString()),
-					Util.html2text(xy[4].toString()), xy[5].toString(), Util.parseDateForReport((Date)xy[6]), Util.parseDateForReport((Date)xy[7]),
-					xy[8].toString(), xy[9].toString(), xy[10].toString()));
+
+            String releaseDate = Util.parseDateForReport(xy[9]);
+            if (releaseDate.equals("")) {
+                releaseDate = "-";
+            }
+
+			result.add(new OutOfShelterReportEntity(xy[0].toString(), xy[1].toString(), Util.parseDateForReport(xy[2]), Util.html2text(xy[3].toString()),
+					Util.html2text(xy[4].toString()), xy[5].toString(), Util.parseDateForReport(xy[6]), Util.parseDateForReport(xy[7]),
+					xy[8].toString(), releaseDate, xy[10].toString()));
 		 }
 		return result;
 	}
@@ -158,9 +164,9 @@ public class ReportDAO extends GenericDAO implements IReportDAO {
 				}
 			}
 			
-			result.add(new OverVacReportEntity(xy[0].toString(), xy[1].toString(), Util.parseDateForReport((Date)xy[2]), xy[3].toString(),
-					Util.parseDateForReport((Date)xy[4]), Util.parseDateForReport((Date)xy[5]), xy[6].toString(), Util.parseDateForReport((Date)xy[7]),
-					Util.parseDateForReport((Date)xy[8]), Util.parseDateForReport((Date)xy[9]), Util.parseDateForReport((Date)xy[10])));
+			result.add(new OverVacReportEntity(xy[0].toString(), xy[1].toString(), Util.parseDateForReport(xy[2]), xy[3].toString(),
+					Util.parseDateForReport(xy[4]), Util.parseDateForReport(xy[5]), xy[6].toString(), Util.parseDateForReport(xy[7]),
+					Util.parseDateForReport(xy[8]), Util.parseDateForReport(xy[9]), Util.parseDateForReport(xy[10])));
 		 }
 		return result;
 	}
@@ -191,8 +197,8 @@ public class ReportDAO extends GenericDAO implements IReportDAO {
 					xy[i] = new String("");
 				}
 			}
-			result.add(new OuterReportEntity(xy[0].toString(), xy[1].toString(), Util.parseDateForReport((Date)xy[2]), Util.parseDateForReport((Date)xy[3]),
-					xy[4].toString(), Util.parseDateForReport((Date)xy[5]), Util.parseDateForReport((Date)xy[6]),
+			result.add(new OuterReportEntity(xy[0].toString(), xy[1].toString(), Util.parseDateForReport(xy[2]), Util.parseDateForReport(xy[3]),
+					xy[4].toString(), Util.parseDateForReport(xy[5]), Util.parseDateForReport(xy[6]),
 					Util.html2text(xy[7].toString()), Util.html2text(xy[8].toString()), xy[9].toString()));
 		 }
 		return result;
@@ -243,11 +249,6 @@ public class ReportDAO extends GenericDAO implements IReportDAO {
 
         return result;
 
-    }
-
-    @Override
-    public List<OuterReportEntity> getEvictedReport() {
-        return null;
     }
 
 

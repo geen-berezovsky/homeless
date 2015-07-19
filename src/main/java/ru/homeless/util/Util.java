@@ -118,7 +118,7 @@ public class Util {
             try {
                 date = defaultMySQLFormat.parse(sDate.toString());
             } catch (ParseException e) {
-                e.printStackTrace();
+                //do nothing
             }
             if (date != null) {
                 return parseDateForReport(date);
@@ -127,7 +127,7 @@ public class Util {
             try {
                 date = longMySQLFormat.parse(sDate.toString());
             } catch (ParseException e) {
-                e.printStackTrace();
+                //do nothing
             }
             if (date != null) {
                 return parseDateForReport(date);

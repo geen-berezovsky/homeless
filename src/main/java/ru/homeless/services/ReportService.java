@@ -47,10 +47,5 @@ public class ReportService extends GenericService implements IReportService {
         return reportDAO.getInnerReport();
     }
 
-    @Override
-    public List<OuterReportEntity> getEvictedReportEntity() {
-        return null;
-    }
-
 
 }
