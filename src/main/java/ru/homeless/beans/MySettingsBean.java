@@ -13,6 +13,7 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.log4j.Logger;
 
 import org.primefaces.context.RequestContext;
@@ -100,14 +101,14 @@ public class MySettingsBean implements Serializable {
         boolean foundErrors = false;
 		//first, check the password
 			//it is right password?
-			if (oldPassword.trim().equals(worker.getPassword())) {
+			if (DigestUtils.sha1Hex(oldPassword.trim()).equals(worker.getPassword())) {
 				//found old password, let's check if new password fields are filled
 				if (! newPassword.trim().equals("")) {
 					//ok, let's check newPassword2
 					if (! newPassword2.trim().equals("") && newPassword2.trim().equals(newPassword.trim())) {
 						//all passwords are correct
                         log.info("Updating the password...");
-						worker.setPassword(newPassword.trim());
+						worker.setPassword(DigestUtils.sha1Hex(newPassword.trim()));
                         log.info("Password has been successfully updated");
 						msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Изменение пароля", "Пароль успешно обновлен");
 					} else {

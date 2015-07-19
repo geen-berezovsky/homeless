@@ -115,7 +115,6 @@ public class UserBean implements Serializable {
             FacesContext fc = FacesContext.getCurrentInstance();
             ThemeService tsb = fc.getApplication().evaluateExpressionGet(fc, "#{themeService}", ThemeService.class);
             tsb.setTheme(w.getPrimefacesskin());
-
             HttpSession session = Util.getSession();
 			session.setAttribute("username", username);
 			session.setAttribute("worker", w);

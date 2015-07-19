@@ -139,3 +139,5 @@ INSERT INTO `homeless`.`ContractPoints` (`id`, `audience`, `caption`) VALUES ('2
 INSERT INTO `homeless`.`ContractPoints` (`id`, `audience`, `caption`) VALUES ('26', '0', 'Получение/восстановление военного билета');
 INSERT INTO `homeless`.`ContractPoints` (`id`, `audience`, `caption`) VALUES ('27', '0', 'Получение загранпаспорта');
 INSERT INTO `homeless`.`ContractPoints` (`id`, `audience`, `caption`) VALUES ('28', '0', 'Получение технических средств реабилитации (протезно-ортопедических изделий)');
+
+update Worker set password = sha1(password);

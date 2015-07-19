@@ -1,0 +1,46 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui">
+<ui:composition>
+    <h:form id="about">
+	<p:dialog id="aboutDlg" header="О программе..." widgetVar="aboutDlgWv" resizable="false" closable="true" modal="true" showEffect="fade" hideEffect="explode" dynamic="true" closeOnEscape="true">
+        <p:panelGrid columns="2" styleClass="base_form_panel_grid_class">
+            <p:row>
+                <p:column rowspan="2" style="font-weight: bold;">
+                    <div id="petro">
+                        <p:graphicImage value="/images/petro.gif" />
+                    </div>
+                </p:column>
+            </p:row>
+            <p:row>
+                <p:column rowspan="2" style="font-weight: bold;">
+                        <p:panelGrid columns="1" styleClass="base_form_panel_grid_class">
+                        <p:row>
+                            <p:outputLabel value="Maxim Grigorov" styleClass="base_form_caption_text"/>
+                        </p:row>
+                        <p:row>
+                            <p:outputLabel value="Mr.Maxim.Grigorov@gmail.com" styleClass="base_form_value_text"/>
+                        </p:row>
+                        <p:row>
+                            <p:outputLabel value="Alina Grigorova" styleClass="base_form_caption_text"/>
+                        </p:row>
+                        <p:row>
+                            <p:outputLabel value="alina.a.andreeva@gmail.com" styleClass="base_form_value_text"/>
+                        </p:row>
+                            <p:row>
+                                <p:outputLabel value="&nbsp;" styleClass="base_form_value_text"/>
+                            </p:row>
+                            <p:row>
+                                <p:outputLabel value="2012 - 2015" styleClass="base_form_value_text"/>
+                            </p:row>
+
+                        </p:panelGrid>
+                </p:column>
+            </p:row>
+        </p:panelGrid>
+    </p:dialog>
+</h:form>
+
+
+</ui:composition>
+</html>

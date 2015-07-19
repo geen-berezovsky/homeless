@@ -3,6 +3,7 @@ package ru.homeless.services;
 import java.io.Serializable;
 import java.util.List;
 
+import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,9 +38,9 @@ public class WorkerService extends GenericService implements Serializable {
 		/*
 		 * Note: name = firstname + surname
 		 */
-		List<Worker> workers = getInstances(Worker.class);
+        List<Worker> workers = getInstances(Worker.class);
 		for (Worker w : workers) {
-			if ((w.getFirstname() + " " + w.getSurname()).equals(name) && password.equals(w.getPassword())) {
+			if ((w.getFirstname() + " " + w.getSurname()).equals(name) && DigestUtils.sha1Hex(password).equals(w.getPassword())) {
 				return w;
 			}
 		}
