@@ -117,13 +117,13 @@ insert into ServicesType (id, caption, money) values (20, 'Оплата пошл
 -- NOTE!!! DELETE THE TABLE GivenCertificate after its migration
 
 -- HS-4
-update document set doctype = 13 where doctype=25;
+update `homeless`.`Document` set doctype = 13 where doctype=25;
 delete from DocType where id=25;
 
-update document set doctype = 13 where doctype=26;
+update `homeless`.`Document` set doctype = 13 where doctype=26;
 delete from DocType where id=26;
 
-update document set doctype = 8 where doctype=22;
+update `homeless`.`Document` set doctype = 8 where doctype=22;
 delete from DocType where id=22;
 
 -- HS-10
@@ -140,4 +140,4 @@ INSERT INTO `homeless`.`ContractPoints` (`id`, `audience`, `caption`) VALUES ('2
 INSERT INTO `homeless`.`ContractPoints` (`id`, `audience`, `caption`) VALUES ('27', '0', 'Получение загранпаспорта');
 INSERT INTO `homeless`.`ContractPoints` (`id`, `audience`, `caption`) VALUES ('28', '0', 'Получение технических средств реабилитации (протезно-ортопедических изделий)');
 
-update Worker set password = sha1(password);
+update `homeless`.`Worker` set password = sha1(password);
