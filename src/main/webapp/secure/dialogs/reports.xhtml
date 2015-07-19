@@ -8,7 +8,9 @@
         <p:tabView>
             <p:tab title="Актуальное состояние">
                 <p:panelGrid columns="1" styleClass="base_form_panel_grid_class">
-                    <p:commandButton value="Отчет по проживающим" disabled="true"/>
+                    <p:commandButton value="Отчет по проживающим" ajax="false" onclick="PrimeFaces.monitorDownload(standardDocumentStart, standardDocumentStop);" icon="ui-icon-arrowthick-1-s" update="@this @form growl" actionListener="#{reports.downloadLivingReport}">
+                        <p:fileDownload value="#{reports.file}" />
+                    </p:commandButton>
                     <p:commandButton value="Отчет по сопровождаемым" disabled="true"/>
                     <p:commandButton value="Отчет на охрану и в поликлинику" disabled="true"/>
                 </p:panelGrid>
