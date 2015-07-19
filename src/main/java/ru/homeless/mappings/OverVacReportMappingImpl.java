@@ -43,7 +43,7 @@ public class OverVacReportMappingImpl implements ICustomMappingExcelDocument {
 			sheetData.put(i, row);
 			i++;
 		}
-		return new DocTypeProcessor(IDocumentMapping.REPORT_OVERVAC_PATH).generateReport(sheetData);
+		return new DocTypeProcessor(IDocumentMapping.REPORT_OVERVAC_PATH).generateReport(sheetData, IDocumentMapping.REPORT_OVERVAC);
 	}
 
 }

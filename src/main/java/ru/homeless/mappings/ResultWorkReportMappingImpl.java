@@ -50,7 +50,7 @@ public class ResultWorkReportMappingImpl implements ICustomMappingExcelDocument 
 			
 		
 		
-		return new DocTypeProcessor(IDocumentMapping.REPORT_WORK_RESULT_TEMPLATE_PATH).generateReport(sheetData);
+		return new DocTypeProcessor(IDocumentMapping.REPORT_WORK_RESULT_TEMPLATE_PATH).generateReport(sheetData, IDocumentMapping.REPORT_WORK_RESULT);
 	}
 
 

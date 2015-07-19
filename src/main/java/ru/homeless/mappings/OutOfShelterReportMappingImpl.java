@@ -44,7 +44,7 @@ public class OutOfShelterReportMappingImpl implements ICustomMappingExcelDocumen
 			sheetData.put(i, row);
 			i++;
 		}
-		return new DocTypeProcessor(IDocumentMapping.REPORT_OUT_OF_SHELTER_TEMPLATE_PATH).generateReport(sheetData);
+		return new DocTypeProcessor(IDocumentMapping.REPORT_OUT_OF_SHELTER_TEMPLATE_PATH).generateReport(sheetData, IDocumentMapping.REPORT_OUT_OF_SHELTER);
 	}
 
 }

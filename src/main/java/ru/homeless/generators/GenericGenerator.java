@@ -148,6 +148,9 @@ public class GenericGenerator {
 			case IDocumentMapping.REPORT_OUT_OF_SHELTER: {
 				return hrp.generateOutShelterDocument(request);
 			}
+            case IDocumentMapping.REPORT_INNER: {
+                return hrp.generateInnerReport(request);
+            }
 			case IDocumentMapping.REPORT_ONE_TIME_SERVICES: {
 				return hrp.generateOneTimeServicesDocument(request);
 			}

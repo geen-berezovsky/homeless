@@ -3,11 +3,7 @@ package ru.homeless.dao;
 import java.util.Date;
 import java.util.List;
 
-import ru.homeless.report.entities.OneTimeServicesReportEntity;
-import ru.homeless.report.entities.OutOfShelterReportEntity;
-import ru.homeless.report.entities.OuterReportEntity;
-import ru.homeless.report.entities.OverVacReportEntity;
-import ru.homeless.report.entities.ResultWorkReportEntity;
+import ru.homeless.report.entities.*;
 
 
 public interface IReportDAO extends IGenericDAO {
@@ -21,5 +17,9 @@ public interface IReportDAO extends IGenericDAO {
 	public List<OverVacReportEntity> getOverVacReport();
 	
 	public List<OuterReportEntity> getOuterReport();
+
+    public List<InnerReportEntity> getInnerReport();
+
+    public List<OuterReportEntity> getEvictedReport();
 	
 }

@@ -8,11 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ru.homeless.dao.IReportDAO;
-import ru.homeless.report.entities.OneTimeServicesReportEntity;
-import ru.homeless.report.entities.OutOfShelterReportEntity;
-import ru.homeless.report.entities.OuterReportEntity;
-import ru.homeless.report.entities.OverVacReportEntity;
-import ru.homeless.report.entities.ResultWorkReportEntity;
+import ru.homeless.report.entities.*;
 
 @Service("ReportService")
 @Transactional(readOnly = false)
@@ -45,6 +41,16 @@ public class ReportService extends GenericService implements IReportService {
 	public List<OuterReportEntity> getOuterReportEntity() {
 		return reportDAO.getOuterReport();
 	}
-	
-	
+
+    @Override
+    public List<InnerReportEntity> getInnerReportEntity() {
+        return reportDAO.getInnerReport();
+    }
+
+    @Override
+    public List<OuterReportEntity> getEvictedReportEntity() {
+        return null;
+    }
+
+
 }

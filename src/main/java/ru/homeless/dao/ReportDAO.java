@@ -2,6 +2,7 @@ package ru.homeless.dao;
 
 import java.util.*;
 
+import javassist.runtime.Inner;
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
@@ -196,5 +197,58 @@ public class ReportDAO extends GenericDAO implements IReportDAO {
 		 }
 		return result;
 	}
+
+    @Override
+    public List<InnerReportEntity> getInnerReport() {
+        List<InnerReportEntity> result = new ArrayList<InnerReportEntity>();
+        List<?> res = getSessionFactory().getCurrentSession().createSQLQuery("SELECT c.id, CONCAT(c.surname, '\n', c.firstname, '\n', c.middlename) as clName, c.date, sh.roomId, sh.inShelter, cp.caption, " +
+                "cc.endDate, sh.outShelter, IFNULL(cc.comments, '-'), IFNULL(c.memo, '-'), w.surname " +
+                "FROM ServContract sc INNER JOIN Client c ON(sc.client = c.id) " +
+                "INNER JOIN Worker w ON(sc.worker = w.id) INNER JOIN ContractControl cc ON(cc.servcontract=sc.id) " +
+                "INNER JOIN ContractPoints cp ON(cp.id = cc.contractpoints) LEFT JOIN ShelterHistory sh ON(c.id = sh.client) WHERE (sc.contractresult='1' AND sh.outShelter > CURDATE())")
+                .addScalar("c.id")
+                .addScalar("clName")
+                .addScalar("c.date")
+                .addScalar("IFNULL(c.memo, '-')")
+                .addScalar("sh.roomId")
+                .addScalar("sh.inShelter")
+                .addScalar("sh.outShelter")
+                .addScalar("cp.caption")
+                .addScalar("cc.endDate")
+                .addScalar("IFNULL(cc.comments, '-')")
+                .addScalar("w.surname").list();
+
+        for (Object o1 : res) {
+            Object[] row = (Object[])o1;
+            InnerReportEntity innerReportEntity = new InnerReportEntity();
+            for(int i = 0; i<11; i++) {
+                if (row[i] == null) {
+                    row[i] = new String("");
+                }
+            }
+
+            innerReportEntity.setClientId(row[0].toString());
+            innerReportEntity.setName(Util.html2text(row[1].toString()));
+            innerReportEntity.setDateOfBith(Util.parseDateForReport(row[2]));
+            innerReportEntity.setComments(Util.html2text(row[3].toString()));
+            innerReportEntity.setRoom(row[4].toString());
+            innerReportEntity.setStartDate(Util.parseDateForReport(row[5]));
+            innerReportEntity.setStopDate(Util.parseDateForReport(row[6]));
+            innerReportEntity.setPurposes(row[7].toString());
+            innerReportEntity.setReleaseDate(Util.parseDateForReport(row[8]));
+            innerReportEntity.setReleaseSteps(Util.html2text(row[9].toString()));
+            innerReportEntity.setWorkerSurname(row[10].toString());
+            result.add(innerReportEntity);
+        }
+
+        return result;
+
+    }
+
+    @Override
+    public List<OuterReportEntity> getEvictedReport() {
+        return null;
+    }
+
 
 }

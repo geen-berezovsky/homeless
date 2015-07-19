@@ -19,22 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import ru.homeless.entities.Client;
-import ru.homeless.mappings.CustomMappingImpl;
-import ru.homeless.mappings.DefaultContractMappingImpl;
-import ru.homeless.mappings.DispensaryMappingImpl;
-import ru.homeless.mappings.FreeTravelMappingImpl;
-import ru.homeless.mappings.CustomStatisticsReportMappingImpl;
-import ru.homeless.mappings.OneTimeServicesReportMappingImpl;
-import ru.homeless.mappings.OutOfShelterReportMappingImpl;
-import ru.homeless.mappings.OuterReportMappingImpl;
-import ru.homeless.mappings.OverVacReportMappingImpl;
-import ru.homeless.mappings.RegistrationMappingImpl;
-import ru.homeless.mappings.ResultWorkReportMappingImpl;
-import ru.homeless.mappings.SanitationMappingImpl;
-import ru.homeless.mappings.ShelterContractMappingImpl;
-import ru.homeless.mappings.SocialHelpMappingImpl;
-import ru.homeless.mappings.TransitMappingImpl;
-import ru.homeless.mappings.ZagsQueryMappingImpl;
+import ru.homeless.mappings.*;
 import ru.homeless.shared.IDocumentMapping;
 import ru.homeless.util.Util;
 
@@ -70,6 +55,9 @@ public class CustomValuesHttpRequestParser implements IDocumentMapping {
     
     @Autowired
     private OuterReportMappingImpl outerReportMappingImpl;
+
+    @Autowired
+    private InnerReportMappingImpl innerReportMappingImpl;
 
     @Autowired
     private CustomStatisticsReportMappingImpl customStatisticsReportMappingImpl;
@@ -254,8 +242,15 @@ public class CustomValuesHttpRequestParser implements IDocumentMapping {
 		return outerReportMappingImpl.getDocument(requestParameters);
 	}
 
+    @Override
+    public XSSFWorkbook generateInnerReport(HttpServletRequest request) {
+        log.info("Preparing document");
+        Map<String, Date> requestParameters = new HashMap<String, Date>();
+        return innerReportMappingImpl.getDocument(requestParameters);
+    }
 
-	@Override
+
+    @Override
 	public XSSFWorkbook generateCustomStatisticsDocument(HttpServletRequest request) {
 		Map<String, Date> requestParameters = new HashMap<String, Date>();
     	requestParameters.put("from", Util.parseDate(request, "from", log));

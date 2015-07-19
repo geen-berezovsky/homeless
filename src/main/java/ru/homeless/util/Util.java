@@ -97,7 +97,46 @@ public class Util {
     		return "";
     	}
     }
-    
+
+    public static String parseDateForReport(Object sDate)  {
+        System.out.println("Parsing "+sDate);
+        if(sDate!=null && !sDate.equals("")) {
+            SimpleDateFormat defaultMySQLFormat = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss", Locale.ENGLISH);
+            SimpleDateFormat longMySQLFormat = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss,S", Locale.ENGLISH);
+            Date date = null;
+            try {
+                //try to get date without parsing
+                date = (Date) sDate;
+            } catch (Exception e) {
+
+            }
+            if (date != null) {
+                return parseDateForReport(date);
+            }
+
+            //try to parse
+            try {
+                date = defaultMySQLFormat.parse(sDate.toString());
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            if (date != null) {
+                return parseDateForReport(date);
+            }
+            //if still date == null, use another format
+            try {
+                date = longMySQLFormat.parse(sDate.toString());
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            if (date != null) {
+                return parseDateForReport(date);
+            }
+        }
+        return "";
+    }
+
+
     public static String html2text(String html) {
 	    Document document = Jsoup.parse(html);
 	    document.select("br").append("\\n");
@@ -113,4 +152,5 @@ public class Util {
         }
         return (int) l;
     }
+
 }

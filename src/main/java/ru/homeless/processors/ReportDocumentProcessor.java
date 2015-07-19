@@ -22,6 +22,7 @@ import org.xlsx4j.sml.STCellType;
 import org.xlsx4j.sml.SheetData;
 import ru.homeless.report.entities.CustomStatisticsReportEntity;
 import ru.homeless.report.entities.ResultWorkReportEntity;
+import ru.homeless.shared.IDocumentMapping;
 
 /*
  * This class directly inserts sheetData into template and returns complete generated report
@@ -35,7 +36,8 @@ public class ReportDocumentProcessor {
     	this.document = document;
     }
     
-    public XSSFWorkbook createSheet(Map<Integer, List<String>> extSheetData) throws Exception {
+    public XSSFWorkbook createSheet(Map<Integer, List<String>> extSheetData, int type) throws Exception {
+        log.info("Making the sheet");
         Sheet sheet = document.getSheetAt(0);
         XSSFFormulaEvaluator.evaluateAllFormulaCells(document);
         int row_start=1;
@@ -49,7 +51,7 @@ public class ReportDocumentProcessor {
             for (String s : e.getValue()) {
                 sheet.getRow(row_start).createCell(col_start + k);
                 Integer value = null;
-                if (k > 1) {
+                if ((k > 1) && (type == IDocumentMapping.REPORT_WORK_RESULT)) {
                     value = Integer.parseInt(s);
                     sheet.getRow(row_start).getCell(col_start + k).setCellValue(value);
                 } else {

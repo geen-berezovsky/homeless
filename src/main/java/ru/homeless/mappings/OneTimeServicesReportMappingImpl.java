@@ -35,7 +35,7 @@ public class OneTimeServicesReportMappingImpl implements ICustomMappingExcelDocu
 			sheetData.put(i, row);
 			i++;
 		}
-		return new DocTypeProcessor(IDocumentMapping.REPORT_ONE_TIME_SERVICES_PATH).generateReport(sheetData);
+		return new DocTypeProcessor(IDocumentMapping.REPORT_ONE_TIME_SERVICES_PATH).generateReport(sheetData, IDocumentMapping.REPORT_ONE_TIME_SERVICES);
 	}
 	
 	

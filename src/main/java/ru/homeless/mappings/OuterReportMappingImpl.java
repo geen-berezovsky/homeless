@@ -43,7 +43,7 @@ public class OuterReportMappingImpl implements ICustomMappingExcelDocument {
 			sheetData.put(i, row);
 			i++;
 		}
-		return new DocTypeProcessor(IDocumentMapping.REPORT_OUTER_PATH).generateReport(sheetData);
+		return new DocTypeProcessor(IDocumentMapping.REPORT_OUTER_PATH).generateReport(sheetData, IDocumentMapping.REPORT_OUTER);
 	}
 
 }

@@ -126,7 +126,7 @@ public interface IDocumentMapping {
     Document title: Стандартный отчет по клиентам на сопровождении, проживающим в приюте
     */
     public final int REPORT_INNER = 210;
-    public final String REPORT_INNER_PATH = Configuration.templatesDir+"/"+"InnerReport.xlsx";
+    public final String REPORT_INNER_PATH = Configuration.templatesDir+"/"+"InnerReport.xlsm";
     
     /*
     Template file: CustomStatistics.xlsm (OldSchoolReport.xlsm)
@@ -154,6 +154,7 @@ public interface IDocumentMapping {
 	public XSSFWorkbook generateOneTimeServicesDocument(HttpServletRequest request);
 	public XSSFWorkbook generateOverVacDocument(HttpServletRequest request);
 	public XSSFWorkbook generateOuterDocument(HttpServletRequest request);
+    public XSSFWorkbook generateInnerReport(HttpServletRequest request);
 	public XSSFWorkbook generateCustomStatisticsDocument(HttpServletRequest request);
     
 }

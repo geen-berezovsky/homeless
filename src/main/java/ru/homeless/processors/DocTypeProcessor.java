@@ -58,7 +58,7 @@ public class DocTypeProcessor {
         return wordDocument;
 	}
     
-    public XSSFWorkbook generateReport(Map<Integer, List<String>> sheetData) {
+    public XSSFWorkbook generateReport(Map<Integer, List<String>> sheetData, int type) {
         if (new File(pathToTemplate).exists()) {
             log.info("Using template " + pathToTemplate);
             try {
@@ -79,7 +79,7 @@ public class DocTypeProcessor {
             }
             try {
                 //INSERT NEW DATA TO THE CREATED COPY OF ORIGINAL TEMPLATE
-                excelDocument = new ReportDocumentProcessor(excelDocument).createSheet(sheetData);
+                excelDocument = new ReportDocumentProcessor(excelDocument).createSheet(sheetData, type);
             } catch (Exception e1) {
                 log.error(e1.getMessage(), e1);
             }
