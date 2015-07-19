@@ -21,9 +21,7 @@
 			</p:submenu>
 
 			<p:submenu label="Окна"></p:submenu>
-			<p:submenu label="Отчеты">
-				<p:menuitem value="Отчет по проживающим и проч." url="#"></p:menuitem>
-			</p:submenu>
+			<p:menuitem value="Отчеты" icon="ui-icon-calculator" action="#{reports.openDlg()}"></p:menuitem>
 			<p:submenu label="Просроченные прививки и ФЛГ"></p:submenu>
 			<p:submenu label="Справка" icon="ui-icon-help"></p:submenu>
 			<p:menuitem value="Выход" actionListener="#{user.logout}" ajax="false" id="exitId" />

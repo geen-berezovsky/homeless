@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui">
 <ui:composition>
         <p:dialog header="Подтвердите удаление" appendTo="@form" widgetVar="deleteTranzitDocument" resizable="false" closable="true" showEffect="fade" hideEffect="explode" dynamic="true" closeOnEscape="true" style="font-size: 200%;" draggable="false">
-            <p:panelGrid columns="2" style="margin: 0 auto;">
+            <p:panelGrid columns="2" style="margin: 0 auto;" styleClass="base_form_panel_grid_class">
                 <p:commandButton id="trRcConfirm" value="Да" update=":m_tabview:documentsMenu:trDocListId" oncomplete="deleteTranzitDocument.hide()" actionListener="#{stddoc.deleteSelectedTranzitDocument}"/>
                 <p:commandButton id="trRcDecline" value="Нет" update=":m_tabview:documentsMenu:trDocListId" oncomplete="deleteTranzitDocument.hide()"/>
             </p:panelGrid>

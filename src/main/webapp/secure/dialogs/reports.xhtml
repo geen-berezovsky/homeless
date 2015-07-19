@@ -1,0 +1,51 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui">
+<ui:composition>
+    <h:form id="reports_form">
+	<p:dialog id="reportsFormDlg" header="Отчеты" widgetVar="reportsFormDlgWv" resizable="false" closable="true" modal="true" showEffect="fade" hideEffect="explode" dynamic="true" closeOnEscape="true">
+
+        <p:tabView>
+            <p:tab title="Актуальное состояние">
+                <p:panelGrid columns="1" styleClass="base_form_panel_grid_class">
+                    <p:commandButton value="Отчет по проживающим" disabled="true"/>
+                    <p:commandButton value="Отчет по сопровождаемым" disabled="true"/>
+                    <p:commandButton value="Отчет на охрану и в поликлинику" disabled="true"/>
+                </p:panelGrid>
+            </p:tab>
+            <p:tab title="По периодам">
+                <p:panelGrid columns="2" styleClass="base_form_panel_grid_class">
+                <p:row>
+                    <p:outputLabel for="startDate" value="Начало выборки:" styleClass="base_form_caption_text"/>
+                </p:row>
+                <p:row>
+                    <p:calendar value="#{reports.startDate}" id="startDate" showOn="button" pattern="dd.MM.yyyy" styleClass="base_form_value_text" />
+                </p:row>
+                <p:row>
+                    <p:outputLabel for="endDate" value="Конец выборки:" styleClass="base_form_caption_text"/>
+                </p:row>
+                <p:row>
+                    <p:calendar value="#{reports.endDate}" id="endDate" showOn="button" pattern="dd.MM.yyyy" styleClass="base_form_value_text"/>
+                </p:row>
+                </p:panelGrid>
+                <p:separator />
+                <p:panelGrid columns="1" styleClass="base_form_panel_grid_class">
+                    <p:commandButton value="Отчет по результатам работы" ajax="false" onclick="PrimeFaces.monitorDownload(standardDocumentStart, standardDocumentStop);" icon="ui-icon-arrowthick-1-s" update="@this @form growl" actionListener="#{reports.downloadWorkResultReport}">
+                        <p:fileDownload value="#{reports.file}" />
+                    </p:commandButton>
+                    <p:commandButton value="Отчет по выбывшим" disabled="true"/>
+                    <p:commandButton value="Статистика" ajax="false" onclick="PrimeFaces.monitorDownload(standardDocumentStart, standardDocumentStop);" icon="ui-icon-arrowthick-1-s" update="@this @form growl" actionListener="#{reports.downloadStatisticsReport}">
+                        <p:fileDownload value="#{reports.file}" />
+                    </p:commandButton>
+                    <p:commandButton value="Разовые услуги" disabled="true"/>
+                </p:panelGrid>
+            </p:tab>
+        </p:tabView>
+
+
+    </p:dialog>
+</h:form>
+
+
+</ui:composition>
+</html>

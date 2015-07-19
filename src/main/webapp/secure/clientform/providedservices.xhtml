@@ -4,7 +4,7 @@
 <ui:composition>
 
         <p:dialog header="Подтвердите удаление" appendTo="@form" widgetVar="deleteReceivedService" resizable="false" closable="true" showEffect="fade" hideEffect="explode" dynamic="true" closeOnEscape="true" style="font-size: 200%;" draggable="false">
-            <p:panelGrid columns="2" style="margin: 0 auto;">
+            <p:panelGrid columns="2" style="margin: 0 auto;" styleClass="base_form_panel_grid_class">
                 <p:commandButton id="rcConfirm" value="Да" update=":m_tabview:base_form:recievedservice" oncomplete="deleteReceivedService.hide()" actionListener="#{services.deleteService}" action="#{clientform.reloadAll()}"/>
                 <p:commandButton id="rcDecline" value="Нет" update=":m_tabview:base_form:recievedservice" oncomplete="deleteReceivedService.hide()"/>
             </p:panelGrid>

@@ -8,7 +8,7 @@
 
 
                 <p:dialog header="Подтвердите удаление" appendTo="@form" widgetVar="deleteShelter" resizable="false" closable="true" showEffect="fade" hideEffect="explode" dynamic="true" closeOnEscape="true" style="font-size: 200%;" draggable="false">
-                    <p:panelGrid columns="2" style="margin: 0 auto;">
+                    <p:panelGrid columns="2" style="margin: 0 auto;" styleClass="base_form_panel_grid_class">
                         <p:commandButton id="shConfirm" value="Да" update=":m_tabview:shelter_form:shelterlistId" oncomplete="deleteShelter.hide()" actionListener="#{clientshelter.deleteShelter()}" action="#{clientshelter.reload()}"/>
                         <p:commandButton id="shDecline" value="Нет" update=":m_tabview:shelter_form:shelterlistId" oncomplete="deleteShelter.hide()"/>
                     </p:panelGrid>
