@@ -10,7 +10,8 @@ if [ -d ~/tmp_ext ] ; then
     mkdir ~/tmp_ext
 fi
 if [ -d ~/demo ] ; then
-    rm -rf ~/demo
+    rm -rf ~/Contracts
+    rm -rf ~/Photo
     mkdir ~/demo
 fi
 
