@@ -10,7 +10,8 @@
 			<p:submenu label="Клиенты" icon="ui-icon-document">
 				<p:menuitem value="Найти клиента" onclick="searchByNameDlg.show();" url="#"></p:menuitem>
 				<p:menuitem value="Найти клиента по рег. номеру" onclick="searchByIdDlg.show()" url="#"></p:menuitem>
-				<p:menuitem value="Мои клиенты" onclick="notImplementedDlgWv.show();" url="#"></p:menuitem>
+				<p:menuitem value="Мои клиенты" action="#{myclients.findClients()}"></p:menuitem>
+                <p:menuitem value="Мои бывшие клиенты" action="#{myclients.findNotActualClients}"></p:menuitem>
 				<p:menuitem value="Оказанные мной услуги" onclick="notImplementedDlgWv.show();" url="#"></p:menuitem>
 				<p:menuitem value="Добавить клиента" action="#{clientform.addClient()}"></p:menuitem>
 			</p:submenu>

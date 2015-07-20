@@ -1,0 +1,98 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui">
+<ui:composition>
+	<h:form id="myClientsForm">
+		<p:dialog id="myClients" header="Актуальные клиенты" widgetVar="myClientsWv" resizable="false" closable="true" modal="true" showEffect="fade" hideEffect="explode" closeOnEscape="true">
+            <p:dataTable var="myContract" value="#{myclients.foundList}" paginator="true" rows="15"
+                         paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15" paginatorPosition="bottom" styleClass="default_datatable"
+                         rowKey="#{myContract.id}" selectionMode="single" sortMode="multiple">
+            <p:column headerText="ID" sortBy="#{myContract.id}">
+					<h:outputText value="#{myContract.id}" />
+				</p:column>
+				<p:column headerText="Фамилия" sortBy="#{myContract.surname}">
+					<h:outputText value="#{myContract.surname}" />
+				</p:column>
+				<p:column headerText="Имя" sortBy="#{myContract.firstname}">
+					<h:outputText value="#{myContract.firstname}" />
+				</p:column>
+				<p:column headerText="Отчество" sortBy="#{myContract.middlename}">
+					<h:outputText value="#{myContract.middlename}" />
+				</p:column>
+				<p:column headerText="Дата рождения" sortBy="#{myContract.date}">
+					<h:outputText value="#{myContract.date}" />
+				</p:column>
+
+                <p:column headerText="№ договора" sortBy="#{myContract.contractNum}">
+                    <h:outputText value="#{myContract.contractNum}" />
+                </p:column>
+
+                <p:column headerText="Дата заключ. договора" sortBy="#{myContract.createdDate}">
+                    <h:outputText value="#{myContract.createdDate}" />
+                </p:column>
+
+                <p:column headerText="Плановая дата окончания" sortBy="#{myContract.endDate}">
+                    <h:outputText value="#{myContract.endDate}" />
+                </p:column>
+                <p:ajax event="rowDblselect" listener="#{myclients.onRowDblClckSelect}"
+                        update="@all @this :m_tabview:base_form :add_services :real_photo_form" global="false" />
+			</p:dataTable>
+		</p:dialog>
+    </h:form>
+    <h:form id="myPrevClientsForm">
+        <p:dialog id="myPrevClients" header="Бывшие клиенты" widgetVar="myPrevClientsWv" resizable="false" closable="true" modal="true" showEffect="fade" hideEffect="explode" closeOnEscape="true">
+            <p:panelGrid columns="5" styleClass="base_form_panel_grid_class">
+                <p:row>
+                    <p:outputLabel for="startDate" value="Начало выборки:" styleClass="base_form_caption_text"/>
+                </p:row>
+                <p:row>
+                    <p:calendar value="#{myclients.startDate}" id="startDate" showOn="button" pattern="dd.MM.yyyy" styleClass="base_form_value_text" />
+                </p:row>
+                <p:row>
+                    <p:outputLabel for="endDate" value="Конец выборки:" styleClass="base_form_caption_text"/>
+                </p:row>
+                <p:row>
+                    <p:calendar value="#{myclients.endDate}" id="endDate" showOn="button" pattern="dd.MM.yyyy" styleClass="base_form_value_text"/>
+                </p:row>
+                <p:row>
+                    <p:commandButton value="Построить" actionListener="#{myclients.requestNotActualClients}" ajax="true" update="myPrevContract"/>
+                </p:row>
+            </p:panelGrid>
+            <p:separator />
+            <p:dataTable var="myPrevContract" id="myPrevContract" value="#{myclients.foundPrevList}" paginator="true" rows="15"
+                         paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15" paginatorPosition="bottom" styleClass="default_datatable"
+                         rowKey="#{myPrevContract.id}" selectionMode="single" sortMode="multiple">
+                <p:column headerText="ID" sortBy="#{myPrevContract.id}">
+                    <h:outputText value="#{myPrevContract.id}" />
+                </p:column>
+                <p:column headerText="Фамилия" sortBy="#{myPrevContract.surname}">
+                    <h:outputText value="#{myPrevContract.surname}" />
+                </p:column>
+                <p:column headerText="Имя" sortBy="#{myPrevContract.firstname}">
+                    <h:outputText value="#{myPrevContract.firstname}" />
+                </p:column>
+                <p:column headerText="Отчество" sortBy="#{myPrevContract.middlename}">
+                    <h:outputText value="#{myPrevContract.middlename}" />
+                </p:column>
+                <p:column headerText="Дата рождения" sortBy="#{myPrevContract.date}">
+                    <h:outputText value="#{myPrevContract.date}" />
+                </p:column>
+                <p:column headerText="№ договора" sortBy="#{myPrevContract.contractNum}">
+                    <h:outputText value="#{myPrevContract.contractNum}" />
+                </p:column>
+                <p:column headerText="Дата заключ. договора" sortBy="#{myPrevContract.createdDate}">
+                    <h:outputText value="#{myPrevContract.createdDate}" />
+                </p:column>
+                <p:column headerText="Плановая дата окончания" sortBy="#{myPrevContract.endDate}">
+                    <h:outputText value="#{myPrevContract.endDate}" />
+                </p:column>
+                <p:column headerText="Результат" sortBy="#{myPrevContract.contractResult.caption}">
+                    <h:outputText value="#{myPrevContract.contractResult.caption}" />
+                </p:column>
+                <p:ajax event="rowDblselect" listener="#{myclients.onRowDblClckSelect}"
+                        update="@all @this :m_tabview:base_form :add_services :real_photo_form" global="false" />
+            </p:dataTable>
+        </p:dialog>
+    </h:form>
+</ui:composition>
+</html>

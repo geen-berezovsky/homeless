@@ -14,17 +14,50 @@ import org.hibernate.Hibernate;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
-import ru.homeless.entities.Client;
+import ru.homeless.entities.*;
+import ru.homeless.util.Util;
 
 @Repository
 public class ClientDAO extends GenericDAO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	public static Logger log = Logger.getLogger(ClientDAO.class);
-	private List<Client> clients = null;
+
+    public List<MyClientsEntity> getMyContracts(int workerId, Date startDate, Date endDate) {
+        List<ServContract> contracts = new ArrayList<ServContract>();
+        List<MyClientsEntity> myClientsEntities = new ArrayList<MyClientsEntity>();
+        Criteria c = null;
+
+        if (startDate == null && endDate == null) {
+            c = getSessionFactory().getCurrentSession().createCriteria(ServContract.class).add(Restrictions.eq("result", getInstanceById(ContractResult.class, 1))).add(Restrictions.eq("worker", getInstanceById(Worker.class, workerId)));
+        } else {
+            c = getSessionFactory().getCurrentSession().createCriteria(ServContract.class).add(Restrictions.ne("result", getInstanceById(ContractResult.class, 1))).add(Restrictions.eq("worker", getInstanceById(Worker.class, workerId))).add(Restrictions.between("startDate",startDate, endDate));
+        }
+        c.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+        contracts  = c.list();
+
+        for (ServContract sc : contracts) {
+            MyClientsEntity myClientsEntity = new MyClientsEntity();
+            Client client = getInstanceById(Client.class, sc.getClient());
+            myClientsEntity.setId(client.getId()); //client id
+            myClientsEntity.setContractNum(sc.getId());
+            myClientsEntity.setFirstname(client.getFirstname());
+            myClientsEntity.setMiddlename(client.getMiddlename());
+            myClientsEntity.setSurname(client.getSurname());
+            myClientsEntity.setDate(Util.formatDate(client.getDate()));
+            myClientsEntity.setCreatedDate(Util.formatDate(sc.getStartDate()));
+            myClientsEntity.setEndDate(Util.formatDate(sc.getStopDate()));
+            myClientsEntity.setContractResult(sc.getResult());
+            myClientsEntities.add(myClientsEntity);
+        }
+
+        return myClientsEntities;
+    }
+
+
 	@SuppressWarnings("unchecked")
 	public List<Client> getClientsByCriteria(int id, String surname, String firstname, String middlename, String _date) {
-		clients = new ArrayList<Client>();		
+        List<Client> clients = new ArrayList<Client>();
 		if (id != 0) {
 			Client c = (Client) getSessionFactory().getCurrentSession().createCriteria(Client.class).add(Restrictions.eq("id", id)).uniqueResult();
 			clients.add(c);
