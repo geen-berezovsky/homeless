@@ -129,15 +129,15 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
         rc.update("header");
 
         if (client.getContacts() == null || client.getContacts().trim().replaceAll("\\<.*?>","").equals("")) {
-            contactsHeaderInline = "<u>Контакты</u>";
-        } else {
             contactsHeaderInline = "Контакты";
+        } else {
+            contactsHeaderInline = "<u>Контакты</u>";
         }
 
         if (client.getMemo() == null || client.getMemo().trim().replaceAll("\\<.*?>","").equals("")) {
-            commentsHeaderInline = "<u>Примечания</u>";
-        } else {
             commentsHeaderInline = "Примечания";
+        } else {
+            commentsHeaderInline = "<u>Примечания</u>";
         }
 
         //set actual client id to session for using in another applications

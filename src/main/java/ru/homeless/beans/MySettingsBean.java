@@ -100,33 +100,37 @@ public class MySettingsBean implements Serializable {
 		FacesMessage msg = null;
         boolean foundErrors = false;
 		//first, check the password
-			//it is right password?
-			if (DigestUtils.sha1Hex(oldPassword.trim()).equals(worker.getPassword())) {
-				//found old password, let's check if new password fields are filled
-				if (! newPassword.trim().equals("")) {
-					//ok, let's check newPassword2
-					if (! newPassword2.trim().equals("") && newPassword2.trim().equals(newPassword.trim())) {
-						//all passwords are correct
+        //user filled password fields?
+
+        if (oldPassword!=null && !oldPassword.trim().equals("") && newPassword!=null && !newPassword.trim().equals("") && newPassword2!=null && !newPassword2.trim().equals("")) {
+            //it is right password?
+            if (DigestUtils.sha1Hex(oldPassword.trim()).equals(worker.getPassword())) {
+                //found old password, let's check if new password fields are filled
+                if (!newPassword.trim().equals("")) {
+                    //ok, let's check newPassword2
+                    if (!newPassword2.trim().equals("") && newPassword2.trim().equals(newPassword.trim())) {
+                        //all passwords are correct
                         log.info("Updating the password...");
-						worker.setPassword(DigestUtils.sha1Hex(newPassword.trim()));
+                        worker.setPassword(DigestUtils.sha1Hex(newPassword.trim()));
                         log.info("Password has been successfully updated");
-						msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Изменение пароля", "Пароль успешно обновлен");
-					} else {
+                        msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Изменение пароля", "Пароль успешно обновлен");
+                    } else {
                         log.info("Password has not been updated");
                         foundErrors = true;
-						msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Изменение пароля", "Вы не указали или указали некорректное повторение нового пароля");
-					}
-				} else {
-					//old password exists, but no new password provided
+                        msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Изменение пароля", "Вы не указали или указали некорректное повторение нового пароля");
+                    }
+                } else {
+                    //old password exists, but no new password provided
                     log.info("No new password has been provided");
-					msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Изменение пароля", "Вы не указали новый пароль");
-				}
-			} else {
+                    msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Изменение пароля", "Вы не указали новый пароль");
+                }
+            } else {
                 log.info("Incorrect old password");
                 foundErrors = true;
-				msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Изменение пароля", "Вы указали некорректный старый пароль");
-			}
+                msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Изменение пароля", "Вы указали некорректный старый пароль");
+            }
             FacesContext.getCurrentInstance().addMessage(null, msg);
+        }
 		//then, check passport data
 		if (document.getDocPrefix().trim().equals("") || document.getDocNum().trim().equals("") || 
 				document.getDate() == null || document.getWhereAndWhom().trim().equals("")) {

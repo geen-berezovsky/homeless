@@ -107,18 +107,14 @@ public class Util {
 	}
 
 	public static Date validateDateFormat(FacesContext ctx, UIComponent component, Object value) {
-		String str = value.toString();
+
+        Date sd = (Date) value;
+        String str = Util.formatDate(sd);
 		if (!isDateValid(str)) {
 			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Некорректный формат даты!", "Используйте дд.мм.гггг");
 			throw new ValidatorException(msg);
 		} else {
-			try {
-				Date d = new SimpleDateFormat("dd.MM.yyyy").parse(str);
-				return d;
-			} catch (ParseException e) {
-				e.printStackTrace();
-				return null;
-			}
+            return sd;
 		}
 	}
 

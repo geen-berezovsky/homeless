@@ -15,62 +15,83 @@
 		<p:dialog id="editContractDlg" header="Редактирование существующего контракта" widgetVar="editContractWv" resizable="false" closable="true" modal="true" showEffect="fade" hideEffect="explode"
 			dynamic="true" closeOnEscape="true">
 
-			<h:panelGrid columns="2" id="edit_contract_panel_grid">
-				<p:row>
-					<p:outputLabel value="Ф.И.О клиента:" styleClass="base_form_caption_text"/>
-				</p:row>
-				<p:row>
-					<p:outputLabel value="#{clientform.surname} #{clientform.firstname} #{clientform.middlename}" styleClass="base_form_value_text"/>
-				</p:row>
-				<p:row>
-					<p:outputLabel value="Работник:" styleClass="base_form_caption_text"/>
-				</p:row>
-				<p:row>
-					<p:outputLabel value="#{clientcontracts.worker.surname} #{clientcontracts.worker.firstname} #{clientcontracts.worker.middlename}" styleClass="base_form_value_text"/>
-				</p:row>
-				<p:row>
-					<p:outputLabel value="Номер договора:" styleClass="base_form_caption_text" />
-				</p:row>
-				<p:row>
-					<p:outputLabel value="#{clientcontracts.selectedContract.id}" styleClass="base_form_value_text"/>
-				</p:row>
-				<p:row>
-					<p:outputLabel value="Дата начала:" styleClass="base_form_caption_text" />
-				</p:row>
-				<p:row>
-					<p:calendar value="#{clientcontracts.selectedContract.startDate}" id="startContractDateCal" showOn="button" pattern="dd.MM.yyyy" styleClass="base_form_value_text"/>
-				</p:row>
-				<p:row>
-					<p:outputLabel value="Дата окончания:" styleClass="base_form_caption_text" />
-				</p:row>
-				<p:row>
-					<p:calendar value="#{clientcontracts.selectedContract.stopDate}" id="endContractDateCal" showOn="button" pattern="dd.MM.yyyy" styleClass="base_form_value_text"/>
-				</p:row>
-				<p:row>
-					<p:outputLabel value="Статус договора:" styleClass="base_form_caption_text" />
-				</p:row>
-				<p:row>
-					<p:selectOneMenu id="contractResultId" value="#{clientcontracts.selectedContract.result}" converter="contractResultTypeConverter" style="width: 300px;" styleClass="base_form_value_text">
-						<f:selectItems value="#{clientcontracts.contractResultTypes}" var="contractResultType" itemLabel="#{contractResultType.caption}" itemValue="#{contractResultType}" />
-					</p:selectOneMenu>
-				</p:row>
-				<p:row>
-					<p:outputLabel value="Комментарии:" styleClass="base_form_caption_text" />
-				</p:row>
-				<p:row>
-					<p:inputTextarea value="#{clientcontracts.selectedContract.commentResult}" id="commentResultId" style="width:300px;" styleClass="base_form_value_text"/>
-				</p:row>
-			</h:panelGrid>
+            <p:layout style="min-width:1000px;min-height:380px;max-height:380px;">
+            <p:layoutUnit position="west" resizable="true" size="460" minSize="460" maxSize="500">
+                <h:panelGrid columns="2" id="edit_contract_panel_grid">
+                    <p:row>
+                        <p:outputLabel value="Ф.И.О клиента:" styleClass="base_form_caption_text"/>
+                    </p:row>
+                    <p:row>
+                        <p:outputLabel value="#{clientform.surname} #{clientform.firstname} #{clientform.middlename}" styleClass="base_form_value_text"/>
+                    </p:row>
+                    <p:row>
+                        <p:outputLabel value="Работник:" styleClass="base_form_caption_text"/>
+                    </p:row>
+                    <p:row>
+                        <p:outputLabel value="#{clientcontracts.worker.surname} #{clientcontracts.worker.firstname} #{clientcontracts.worker.middlename}" styleClass="base_form_value_text"/>
+                    </p:row>
+                    <p:row>
+                        <p:outputLabel value="Номер договора:" styleClass="base_form_caption_text" />
+                    </p:row>
+                    <p:row>
+                        <p:outputLabel value="#{clientcontracts.selectedContract.id}" styleClass="base_form_value_text"/>
+                    </p:row>
+                    <p:row>
+                        <p:outputLabel value="Дата начала:" styleClass="base_form_caption_text" />
+                    </p:row>
+                    <p:row>
+                        <p:calendar value="#{clientcontracts.selectedContract.startDate}" id="startContractDateCal" showOn="button" pattern="dd.MM.yyyy" styleClass="base_form_value_text"/>
+                    </p:row>
+                    <p:row>
+                        <p:outputLabel value="Дата окончания:" styleClass="base_form_caption_text" />
+                    </p:row>
+                    <p:row>
+                        <p:calendar value="#{clientcontracts.selectedContract.stopDate}" id="endContractDateCal" showOn="button" pattern="dd.MM.yyyy" styleClass="base_form_value_text"/>
+                    </p:row>
+                    <p:row>
+                        <p:outputLabel value="Статус договора:" styleClass="base_form_caption_text" />
+                    </p:row>
+                    <p:row>
+                        <p:selectOneMenu id="contractResultId" value="#{clientcontracts.selectedContract.result}" converter="contractResultTypeConverter" style="width: 300px;" styleClass="base_form_value_text">
+                            <f:selectItems value="#{clientcontracts.contractResultTypes}" var="contractResultType" itemLabel="#{contractResultType.caption}" itemValue="#{contractResultType}" />
+                        </p:selectOneMenu>
+                    </p:row>
+                    <p:row>
+                        <p:outputLabel value="Комментарии:" styleClass="base_form_caption_text" />
+                    </p:row>
+                    <p:row>
+                        <p:inputTextarea value="#{clientcontracts.selectedContract.commentResult}" id="commentResultId" style="width:300px;" styleClass="base_form_value_text"/>
+                    </p:row>
+                </h:panelGrid>
+                    <p:growl id="editcontract_growl" showDetail="true" life="3000" />
+                <p:separator />
+                <p:panel>
+                <center>
+                        <p:commandButton value="Добавить пункт сервисного плана" id="addServicePlanItemId" ajax="true"
+                                         update="@this :add_seriveplanitem :m_tabview:contracts_form contractItemsListId edit_contract_panel_grid editcontract_growl" icon="ui-icon-circle-plus" actionListener="#{clientcontracts.resetTableSelection()}" />
+                    <p:separator />
+                        <p:commandButton value="Обновить контракт" id="updateContractButtonId" actionListener="#{clientcontracts.updateSelectedContract()}" ajax="true"
+                                         update="@this :m_tabview:contracts_form edit_contract_panel_grid editcontract_growl" icon="ui-icon-disk" oncomplete="editContractWv.hide()" />
+                </center>
+                </p:panel>
+
+
+            </p:layoutUnit>
+
+                <p:layoutUnit position="center" size="460" minSize="460" maxSize="400" resizable="false" style="max-height:380px; border: 0;">
+                </p:layoutUnit>
+            </p:layout>
+
 
 			<p:contextMenu for="contractItemsListId">
 				<p:menuitem value="Редактировать" update=":add_seriveplanitem contractItemsListId" icon="ui-icon-pencil" actionListener="#{clientcontracts.editServicePlanItem()}" ajax="true" oncomplete="addServiceItemWv.show();" />
 				<p:menuitem value="Удалить" update=":add_seriveplanitem contractItemsListId" icon="ui-icon-close" actionListener="#{clientcontracts.deleteServicePlanItem()}" action="#{clientcontracts.reload()}" ajax="true" />
 			</p:contextMenu>
-			<p:dataTable id="contractItemsListId" var="contractItemsList" value="#{clientcontracts.contractItems}" paginator="true" rows="5"
+			<p:dataTable id="contractItemsListId" var="contractItemsList" value="#{clientcontracts.contractItems}" paginator="true" rows="10"
 				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15"
-				rowKey="#{contractItemsList.id}" selection="#{clientcontracts.selectedContractControl}" selectionMode="single" widgetVar="contractItemsListWv" styleClass="default_datatable" paginatorPosition="bottom"
-                 scrollable="true" scrollHeight="400">
-				<p:column headerText="ID">
+				rowKey="#{contractItemsList.id}" selection="#{clientcontracts.selectedContractControl}" selectionMode="single" widgetVar="contractItemsListWv" styleClass="default_datatable"
+                 scrollable="true" scrollHeight="300">
+				<p:column headerText="ID" style="width: 30px;">
 					<h:outputText value="#{contractItemsList.id}" />
 				</p:column>
 
@@ -87,15 +108,6 @@
 				</p:column>
 			</p:dataTable>
 			<p:separator />
-			<p:panel>
-				<p:growl id="editcontract_growl" showDetail="true" life="3000" />
-				<center>
-					<p:commandButton value="Добавить пункт сервисного плана" id="addServicePlanItemId" ajax="true"
-						update="@this :add_seriveplanitem :m_tabview:contracts_form contractItemsListId edit_contract_panel_grid editcontract_growl" icon="ui-icon-circle-plus" actionListener="#{clientcontracts.resetTableSelection()}" />
-					<p:commandButton value="Обновить контракт" id="updateContractButtonId" actionListener="#{clientcontracts.updateSelectedContract()}" ajax="true"
-						update="@this :m_tabview:contracts_form edit_contract_panel_grid editcontract_growl" icon="ui-icon-disk" oncomplete="editContractWv.hide()" />
-				</center>
-			</p:panel>
 		</p:dialog>
 	</h:form>
 </ui:composition>

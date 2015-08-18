@@ -46,7 +46,9 @@ public class ClientContractsBean implements Serializable {
     private List<ContractControl> contractItems;
     private List<ContractPoints> contractPointsItems;
     private ContractPointsDataModel contractPointsDataModel;
-    private ContractPoints[] selectedNewContractPoints;
+
+    //    private ContractPoints[] selectedNewContractPoints;
+    private List<ContractPoints> selectedNewContractPoints;
     private ContractControl selectedContractControl;
     private TimeZone timeZone;
     private String workerSelfData;
@@ -106,8 +108,8 @@ public class ClientContractsBean implements Serializable {
 
         setWorkerSelfData(worker.getRules().getCaption() + " " + worker.getSurname() + " " + worker.getFirstname() + " " + worker.getMiddlename());
         workerDocument = getWorkerDocument();
-        if (workerDocument != null && workerDocument.getDoctype() != null && workerDocument.getDocPrefix() != null && workerDocument.getDocNum() != null && workerDocument.getDate() != null && workerDocument.getWhereAndWhom() != null) {
-            setWorkerPassportData(workerDocument.getDoctype().getCaption() + " " + workerDocument.getDocPrefix() + " " + workerDocument.getDocNum() + " выдан " + formatDate(workerDocument.getDate()) + " " + workerDocument.getWhereAndWhom());
+        if (workerDocument != null && workerDocument.getDocPrefix() != null && workerDocument.getDocNum() != null && workerDocument.getDate() != null && workerDocument.getWhereAndWhom() != null) {
+            setWorkerPassportData("Паспорт " + workerDocument.getDocPrefix() + " " + workerDocument.getDocNum() + " выдан " + formatDate(workerDocument.getDate()) + " " + workerDocument.getWhereAndWhom());
         } else {
             setWorkerPassportData("НЕДОСТАТОЧНО ДАННЫХ");
         }
@@ -356,7 +358,7 @@ public class ClientContractsBean implements Serializable {
         }
         Date result = Util.validateDateFormat(ctx, component, value);
         if (result != null) {
-            selectedContract.setStartDate(result);
+            selectedContract.setStopDate(result);
         }
     }
 
@@ -380,11 +382,14 @@ public class ClientContractsBean implements Serializable {
 
     public void addNewContract() {
 
-        if (selectedNewContractPoints.length == 0) {
+        if (selectedNewContractPoints.size() == 0) {
             FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR,
                     "Не выбран ни один пункт сервисного плана", "Пожалуйста, выберите хотя бы один пункт сервисного плана!");
             FacesContext.getCurrentInstance().addMessage(null, msg);
         } else {
+
+
+
             //for each contract point we need add different ContractControl objects related to this contract
             selectedContract.setContractcontrols(new HashSet<ContractControl>());
             for (ContractPoints c : getSelectedNewContractPoints()) {
@@ -403,8 +408,13 @@ public class ClientContractsBean implements Serializable {
 
             getGenericService().addInstance(selectedContract);
 
+            //reset fields
+            selectedContract = new ServContract();
+            selectedNewContractPoints.clear();
+
             RequestContext rc = RequestContext.getCurrentInstance();
             rc.update("conlistId");
+            rc.update(":select_document");
             rc.execute("addContractWv.hide()");
             reload();
 
@@ -434,7 +444,7 @@ public class ClientContractsBean implements Serializable {
     public void setWarrantData(String warrantData) {
         this.warrantData = warrantData;
     }
-
+/*
     public ContractPoints[] getSelectedNewContractPoints() {
         return selectedNewContractPoints;
     }
@@ -442,6 +452,16 @@ public class ClientContractsBean implements Serializable {
     public void setSelectedNewContractPoints(ContractPoints[] selectedNewContractPoints) {
         this.selectedNewContractPoints = selectedNewContractPoints;
     }
+*/
+
+    public List<ContractPoints> getSelectedNewContractPoints() {
+        return selectedNewContractPoints;
+    }
+
+    public void setSelectedNewContractPoints(List<ContractPoints> selectedNewContractPoints) {
+        this.selectedNewContractPoints = selectedNewContractPoints;
+    }
+
 
     public List<ContractControl> getContractItems() {
         return contractItems;

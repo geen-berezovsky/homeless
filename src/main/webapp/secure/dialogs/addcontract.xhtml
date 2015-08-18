@@ -75,18 +75,18 @@
 								value="#{clientcontracts.selectedDocument.doctype} (сер. и номер.: #{clientcontracts.selectedDocument.docPrefix} #{clientcontracts.selectedDocument.docNum}) от #{clientcontracts.formatDate(clientcontracts.selectedDocument.date)} #{clientcontracts.selectedDocument.whereAndWhom}" styleClass="base_form_value_text"/>
 						</p:row>
 						<p:row>
-							<p:outputLabel value="Дата начала:" styleClass="base_form_caption_text"  validator="#{clientcontracts.validateStartDateFormat}"  required="true" requiredMessage="Обязательно к заполнению" />
+							<p:outputLabel value="Дата начала:" styleClass="base_form_caption_text"  />
 						</p:row>
 						<p:row>
 							<p:message display="tooltip" for="startNewContractDateCal" />
-							<p:calendar value="#{clientcontracts.selectedContract.startDate}" id="startNewContractDateCal" showOn="button" pattern="dd.MM.yyyy" styleClass="base_form_value_text"/>
+							<p:calendar value="#{clientcontracts.selectedContract.startDate}" id="startNewContractDateCal" showOn="button" pattern="dd.MM.yyyy" styleClass="base_form_value_text" validator="#{clientcontracts.validateStartDateFormat}"  required="true" requiredMessage="Дата начала обязательна к заполнению!"/>
 						</p:row>
 						<p:row>
-							<p:outputLabel value="Дата окончания:" styleClass="base_form_caption_text"  validator="#{clientcontracts.validateStopDateFormat()}"  required="true" requiredMessage="Обязательно к заполнению"  />
+							<p:outputLabel value="Дата окончания:" styleClass="base_form_caption_text"   />
 						</p:row>
 						<p:row>
 							<p:message display="tooltip" for="stopNewContractDateCal" />
-							<p:calendar value="#{clientcontracts.selectedContract.stopDate}" id="stopNewContractDateCal" showOn="button" pattern="dd.MM.yyyy" styleClass="base_form_value_text"/>
+							<p:calendar value="#{clientcontracts.selectedContract.stopDate}" id="stopNewContractDateCal" showOn="button" pattern="dd.MM.yyyy" styleClass="base_form_value_text" validator="#{clientcontracts.validateStopDateFormat}"  required="true" requiredMessage="Дата окончания обязательна к заполнению!"/>
 						</p:row>
 						<p:row>
 							<p:outputLabel value="Работник:" styleClass="base_form_caption_text"  />
