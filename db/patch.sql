@@ -140,4 +140,9 @@ INSERT INTO `homeless`.`ContractPoints` (`id`, `audience`, `caption`) VALUES ('2
 INSERT INTO `homeless`.`ContractPoints` (`id`, `audience`, `caption`) VALUES ('27', '0', 'Получение загранпаспорта');
 INSERT INTO `homeless`.`ContractPoints` (`id`, `audience`, `caption`) VALUES ('28', '0', 'Получение технических средств реабилитации (протезно-ортопедических изделий)');
 
+-- Fix doctype for all Workers
+create temporary table UPD_PASS (select doc.id from Document doc join Worker w on doc.worker = w.id);
+update Document set doctype = 1 where id in (select id from UPD_PASS);
+drop table UPD_PASS;
+
 update `homeless`.`Worker` set password = sha1(password);

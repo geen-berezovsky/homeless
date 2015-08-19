@@ -17,6 +17,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.log4j.Logger;
 
 import org.primefaces.context.RequestContext;
+import ru.homeless.entities.DocType;
 import ru.homeless.entities.Document;
 import ru.homeless.entities.Worker;
 import ru.homeless.services.WorkerService;
@@ -52,6 +53,7 @@ public class MySettingsBean implements Serializable {
         document = getWorkerService().getWorkerDocumentById(worker.getId());
         if (document == null) {
             document = new Document();
+            document.setDoctype(workerService.getInstanceByCaption(DocType.class,"Паспорт"));
         }
     }
 

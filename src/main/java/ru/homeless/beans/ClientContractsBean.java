@@ -46,8 +46,6 @@ public class ClientContractsBean implements Serializable {
     private List<ContractControl> contractItems;
     private List<ContractPoints> contractPointsItems;
     private ContractPointsDataModel contractPointsDataModel;
-
-    //    private ContractPoints[] selectedNewContractPoints;
     private List<ContractPoints> selectedNewContractPoints;
     private ContractControl selectedContractControl;
     private TimeZone timeZone;
@@ -444,15 +442,6 @@ public class ClientContractsBean implements Serializable {
     public void setWarrantData(String warrantData) {
         this.warrantData = warrantData;
     }
-/*
-    public ContractPoints[] getSelectedNewContractPoints() {
-        return selectedNewContractPoints;
-    }
-
-    public void setSelectedNewContractPoints(ContractPoints[] selectedNewContractPoints) {
-        this.selectedNewContractPoints = selectedNewContractPoints;
-    }
-*/
 
     public List<ContractPoints> getSelectedNewContractPoints() {
         return selectedNewContractPoints;
