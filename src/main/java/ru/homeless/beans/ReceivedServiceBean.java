@@ -51,9 +51,7 @@ public class ReceivedServiceBean implements Serializable {
     }
 
     private void resetForm() {
-        log.info("Reset date: " + date);
         setDate(Calendar.getInstance().getTime());
-        log.info("Reseted date: " + date);
         setSelectedItemComment("");
         setSelectedItemCash(0);
         this.cashValueVisibility = "display: none;";

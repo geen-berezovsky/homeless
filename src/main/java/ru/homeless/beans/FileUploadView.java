@@ -56,7 +56,6 @@ public class FileUploadView {
             ImageIO.write(bufferedImage, "png", tempFile);
 
             Util.applyNewPhoto(clientService, tempFile, Util.getRandomImageName());
-            //RequestContext rc = RequestContext.getCurrentInstance();
             //rc.update("photoUp");
         } else {
             FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Неудача! Файл ", file.getFileName() + " не был загружен!");

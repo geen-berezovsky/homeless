@@ -1,6 +1,7 @@
 package ru.homeless.util;
 
 import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 import ru.homeless.beans.ClientFormBean;
@@ -17,6 +18,7 @@ import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.Blob;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -107,15 +109,27 @@ public class Util {
 	}
 
 	public static Date validateDateFormat(FacesContext ctx, UIComponent component, Object value) {
-
-        Date sd = (Date) value;
-        String str = Util.formatDate(sd);
-		if (!isDateValid(str)) {
-			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Некорректный формат даты!", "Используйте дд.мм.гггг");
-			throw new ValidatorException(msg);
-		} else {
-            return sd;
-		}
+        if (isDateValid(value.toString())) {
+            Date sd = null;
+            if (value instanceof Date) {
+                sd = (Date) value;
+            } else {
+                try {
+                    sd = new SimpleDateFormat("dd.MM.yyyy").parse(value.toString());
+                } catch (ParseException e) {
+                    log.error(e.getMessage(),e);
+                }
+            }
+            String str = value.toString();
+            if (!isDateValid(str)) {
+                FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Некорректный формат даты!", "Используйте дд.мм.гггг");
+                throw new ValidatorException(msg);
+            } else {
+                return sd;
+            }
+        } else {
+            return null;
+        }
 	}
 
 	public static boolean isDateValid(String str) {
@@ -240,13 +254,16 @@ public class Util {
         }
         //Update the client's data on page
 
-        InputStream imageInByteArray = new ByteArrayInputStream(baos.toByteArray());
-        imageInByteArray = new ByteArrayInputStream(resizedBytes);
+        //InputStream imageInByteArray = new ByteArrayInputStream(baos.toByteArray());
+        //imageInByteArray = new ByteArrayInputStream(resizedBytes);
 
         //Evaluating ClientForm Bean
         FacesContext context = FacesContext.getCurrentInstance();
         ClientFormBean cf = context.getApplication().evaluateExpressionGet(context, "#{clientform}", ClientFormBean.class);
-        cf.reloadAll(client.getId());
+        cf.setAvatar(new javax.sql.rowset.serial.SerialBlob(resizedBytes));
+        cf.setPhotoCheckSum(client.getPhotoCheckSum());
+        cf.setPhotoName(client.getPhotoName());
+        //cf.reloadAll(client.getId());
 
         //NOW MOVE THE ORIGINAL FILE FROM CACHE TO THE STORAGE
         Path src_file = Paths.get(sourceFileOnDisk.getAbsolutePath());
@@ -264,6 +281,14 @@ public class Util {
             FacesContext.getCurrentInstance().addMessage(null, msg);
             e.printStackTrace();
         }
+        System.out.println("FINAL "+client.getPhotoCheckSum());
+        RequestContext rc = RequestContext.getCurrentInstance();
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        rc.update(":m_tabview:base_form:photo_main_avatar");
 
     }
 

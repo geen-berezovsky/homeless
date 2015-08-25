@@ -135,6 +135,7 @@ public class ClientDataBean implements Serializable {
 		setAvatar(c.getAvatar());
 		setDate(c.getDate());
 	}
+
 	protected Client copyClientDataToClient(Client c) {
 		c.setId(getId());
 		c.setSurname(getSurname());

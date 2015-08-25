@@ -189,7 +189,6 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
         }
     }
 
-
     public void reloadClientReceivedServices() {
         servicesList = new ArrayList<RecievedService>(client.getRecievedservices());
         Collections.sort(servicesList, new RecievedServiceSortingComparator());

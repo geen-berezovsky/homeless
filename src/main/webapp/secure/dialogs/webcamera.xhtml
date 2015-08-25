@@ -5,8 +5,8 @@
     <h:form id="webcamera_form">
     <p:messages />
 
-    <p:dialog id="cameraService" header="Сфотографировать клиента" widgetVar="cameraServiceWv" resizable="false" closable="true" modal="true" showEffect="fade" hideEffect="explode" dynamic="true"
-		closeOnEscape="true" onHide="#{photoCamBean.onhide()}" position="left top">
+    <p:dialog id="cameraService" header="Сфотографировать клиента" widgetVar="cameraServiceWv" resizable="false" closable="true" modal="true" dynamic="true"
+		closeOnEscape="true" position="left top">
 
 			<p:messages />
 				<h:panelGrid columns="4">
@@ -19,7 +19,7 @@
                             <p:graphicImage value="/images/temp/#{photoCamBean.filename}.png" />
                         </ui:repeat>
                     </p:imageSwitch>
-                    <p:commandButton id="useButton" value="Использовать!" actionListener="#{photoCamBean.usePhoto}" style="#{photoCamBean.useVisible}" oncomplete="cameraServiceWv.hide();" ajax="true" update=":m_tabview:base_form:photo_main_avatar :real_photo_form"/>
+                    <p:commandButton id="useButton" value="Использовать!" actionListener="#{photoCamBean.usePhoto}" style="#{photoCamBean.useVisible}" oncomplete="cameraServiceWv.hide();" ajax="true" update="photo useButton :m_tabview:base_form:photo_main_avatar :real_photo_form"/>
 				</h:panelGrid>
 
 	</p:dialog>

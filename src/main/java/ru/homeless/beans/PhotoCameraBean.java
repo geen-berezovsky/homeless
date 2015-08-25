@@ -76,16 +76,10 @@ public class PhotoCameraBean implements Serializable{
 
     public void usePhoto() throws IOException, SQLException {
         Util.applyNewPhoto(clientService, resultFile, filename);
+        setUseVisible("display: none;");
     }
 
-    public void onhide() {
-    	//photos.clear();
-    	setUseVisible("display: none;");
-		RequestContext rc = RequestContext.getCurrentInstance();
-		rc.update(":webcamera_form");
-    }
-    
-    public void oncapture(CaptureEvent captureEvent) {  
+    public void oncapture(CaptureEvent captureEvent) {
     	//photos.clear();
     	setUseVisible("display: block;");
 		RequestContext rc = RequestContext.getCurrentInstance();
@@ -103,17 +97,8 @@ public class PhotoCameraBean implements Serializable{
         	destTempDir.mkdirs();
         }
         log.info(servletContext.getServerInfo()+servletContext.getContextPath().toString());
-        //String newFileName = destTempDir.getAbsolutePath() + ;
-
-        //photos.add(photo);
-        
         log.info("Trying to save image to: "+newFileName);
-        /*
-        for (String s : photos) {
-        	log.warn("Photo "+s);
-        }
-          */
-        FileImageOutputStream imageOutput;  
+        FileImageOutputStream imageOutput;
         try {  
             imageOutput = new FileImageOutputStream(new File(newFileName));  
             imageOutput.write(data, 0, data.length);  
