@@ -29,7 +29,7 @@
     <ui:include src="clientform/mainmenu.xhtml"/>
 </p:layoutUnit>
 <p:layoutUnit position="center" resizable="true" collapsible="true">
-<p:tabView effect="fade" effectDuration="normal" id="m_tabview" style="#{clientform.mainPanelVisibility}" styleClass="topLayoutMainForm" scrollable="false">
+<p:tabView effect="fade" effectDuration="normal" id="m_tabview" widgetVar="m_tabviewWv" style="#{clientform.mainPanelVisibility}" styleClass="topLayoutMainForm" scrollable="false">
 <p:ajax event="tabChange" listener="#{clientform.tabChangeListener}" update="base_form documents_form contracts_form shelter_form"/>
 <p:tab title="Базовая информация">
     <!-- *** Basic Client Form *** -->
@@ -96,6 +96,7 @@
         <!--
 
 -->
+        <p:remoteCommand name="updateDocumentsTab" actionListener="#{clientform.updateDocumentsTabHeader()}" />
     </h:form>
     <!-- *** End Of Basic Client Form *** -->
     <!--
@@ -107,7 +108,8 @@
 -->
 
 </p:tab>
-<p:tab title="Документы">
+
+<p:tab id="documentsTab" name="documentsTab" title="#{clientform.documentsHeaderInline}">
     <!-- *** Client Documents Form *** -->
     <ui:include src="clientform/documents.xhtml"/>
 </p:tab>
@@ -212,6 +214,21 @@
         <p:outputLabel value="Этот раздел находится в разработке"/>
     </p:panel>
 </p:dialog>
+
+
+    <script type="text/javascript">
+
+        function updateDocumentsTabHeader() {
+            var documentsTab = $('a[href="#m_tabview:documentsTab"]');
+            var parent = documentsTab.parent();
+            //updateDocumentsTab({param: parent});
+            m_tabviewWv.disable(1);
+            m_tabviewWv.re
+
+        }
+
+    </script>
+
 
 
 </h:body>

@@ -80,8 +80,15 @@ public class ClientDocumentsBean implements Serializable {
 		}
 		newSelectedDocument(); // set new document
         this.tempRegVisibility = "display: none;";
+
 		RequestContext rc = RequestContext.getCurrentInstance();
-		rc.update("doclistId");	
+        FacesContext context = FacesContext.getCurrentInstance();
+        ClientFormBean cdb = context.getApplication().evaluateExpressionGet(context, "#{clientform}", ClientFormBean.class);
+        cdb.updateDocumentsTabHeader();
+
+        rc.update("doclistId");
+        rc.execute("updateDocumentsTabHeader()");
+
 	}
 
 	public int getCid() {

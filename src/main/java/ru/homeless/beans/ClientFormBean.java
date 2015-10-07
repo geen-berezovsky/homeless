@@ -68,7 +68,7 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
 
 
     private String header;
-
+    private String documentsHeaderInline;
     private String contactsHeaderInline;
     private String commentsHeaderInline;
 
@@ -90,6 +90,16 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
 
         //RequestContext rc = RequestContext.getCurrentInstance();
         //rc.execute("reload();");
+
+    }
+
+    public void updateDocumentsTabHeader() {
+        List<Document> listOfDocumentsForTitle = getGenericService().getInstancesByClientId(Document.class, client.getId());
+        if (listOfDocumentsForTitle == null || listOfDocumentsForTitle.size() == 0) {
+            documentsHeaderInline = "Документы";
+        } else {
+            documentsHeaderInline = "<u>Документы</u>";
+        }
 
     }
 
@@ -127,6 +137,8 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
         RequestContext rc = RequestContext.getCurrentInstance();
         header = client.getSurname() + " " + client.getFirstname() + " " + client.getMiddlename() + getClientActualStatus(client);
         rc.update("header");
+
+        updateDocumentsTabHeader();
 
         if (client.getContacts() == null || client.getContacts().trim().replaceAll("\\<.*?>","").equals("")) {
             contactsHeaderInline = "Контакты";
@@ -665,4 +677,11 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
 
     }
 
+    public String getDocumentsHeaderInline() {
+        return documentsHeaderInline;
+    }
+
+    public void setDocumentsHeaderInline(String documentsHeaderInline) {
+        this.documentsHeaderInline = documentsHeaderInline;
+    }
 }

@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 5.5.35, for debian-linux-gnu (x86_64)
+-- MySQL dump 10.13  Distrib 5.6.17, for Win64 (x86_64)
 --
--- Host: localhost    Database: homeless-cut
+-- Host: localhost    Database: homeless
 -- ------------------------------------------------------
--- Server version	5.5.35-0ubuntu0.13.10.2
+-- Server version	5.6.23-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -104,7 +104,7 @@ CREATE TABLE `Client` (
   CONSTRAINT `FK7877DFEB12C10578` FOREIGN KEY (`nightStay`) REFERENCES `NightStay` (`id`),
   CONSTRAINT `FK7877DFEB2C9716BA` FOREIGN KEY (`familycommunication`) REFERENCES `FamilyCommunication` (`id`),
   CONSTRAINT `FK7877DFEB4D3B23C6` FOREIGN KEY (`education`) REFERENCES `Education` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=13216 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=16012 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -134,7 +134,7 @@ CREATE TABLE `ContractControl` (
   KEY `FK4E7DABCB62D40A3A` (`servcontract`),
   CONSTRAINT `FK4E7DABCB62D40A3A` FOREIGN KEY (`servcontract`) REFERENCES `ServContract` (`id`),
   CONSTRAINT `FK4E7DABCB9C72A254` FOREIGN KEY (`contractpoints`) REFERENCES `ContractPoints` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6544 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=29599 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -158,7 +158,7 @@ CREATE TABLE `ContractPoints` (
   `audience` int(11) NOT NULL,
   `caption` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -167,7 +167,7 @@ CREATE TABLE `ContractPoints` (
 
 LOCK TABLES `ContractPoints` WRITE;
 /*!40000 ALTER TABLE `ContractPoints` DISABLE KEYS */;
-INSERT INTO `ContractPoints` VALUES (1,1,'Восстановление, получение  паспорта'),(2,0,'Оформление пенсии'),(3,0,'Получение полиса ОМС'),(4,1,'Восстановление, получение ИНН'),(5,1,'Получение документов, подтверждающих трудовой стаж'),(6,0,'Оформление инвалидности'),(7,0,'Устройство в интернат'),(8,0,'Оформление временной регистрации по адресу Ночлежки'),(9,0,'Помощь в оформлении регистрации по другому адресу'),(10,1,'Помощь в трудоустройстве'),(11,1,'Помощь в трудоустройстве с проживанием'),(12,1,'Устройство в городской дом ночного пребывания'),(13,0,'Устройство в реабилитационные центры для алко- и наркозависимых'),(14,0,'Получение лечения, устройство в больницу'),(15,0,'Покупка лекарств (перенесено в разовые услуги)'),(16,0,'Поиск родственников'),(17,0,'Возвращение домой в СПб или другой город'),(18,0,'Восстановление или установление гражданства'),(19,0,'Юридическое сопровождение в суде'),(20,0,'Получение жилья'),(21,0,'Отмена мошеннической сделки и возврат жилья'),(22,0,'Подготовка запросов и(или) заявлений');
+INSERT INTO `ContractPoints` VALUES (1,1,'Восстановление, получение  паспорта'),(2,0,'Оформление пенсии'),(3,0,'Получение полиса ОМС'),(4,1,'Восстановление, получение ИНН'),(5,1,'Получение документов, подтверждающих трудовой стаж'),(6,0,'Оформление инвалидности'),(7,0,'Устройство в интернат'),(8,0,'Оформление временной регистрации по адресу Ночлежки'),(9,0,'Помощь в оформлении регистрации по другому адресу'),(10,1,'Помощь в трудоустройстве'),(11,1,'Помощь в трудоустройстве с проживанием'),(12,1,'Устройство в городской дом ночного пребывания'),(13,0,'Устройство в реабилитационные центры для алко- и наркозависимых'),(14,0,'Получение лечения, устройство в больницу'),(15,0,'Покупка лекарств (перенесено в разовые услуги)'),(16,0,'Поиск родственников'),(17,0,'Возвращение домой в СПб или другой город'),(18,0,'Восстановление или установление гражданства'),(19,0,'Юридическое сопровождение в суде'),(20,0,'Получение жилья'),(21,0,'Отмена мошеннической сделки и возврат жилья'),(22,0,'Подготовка запросов и(или) заявлений'),(23,1,'Реабилитационная программа Дом на пол дороги');
 /*!40000 ALTER TABLE `ContractPoints` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -235,7 +235,7 @@ CREATE TABLE `DocType` (
   `caption` varchar(255) DEFAULT NULL,
   `photoProof` tinyint(1) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -244,7 +244,7 @@ CREATE TABLE `DocType` (
 
 LOCK TABLES `DocType` WRITE;
 /*!40000 ALTER TABLE `DocType` DISABLE KEYS */;
-INSERT INTO `DocType` VALUES (1,1,1,1,'Паспорт',1),(2,0,1,1,'Военный билет',1),(3,0,0,1,'Свидетельство о рождении',0),(4,1,0,1,'Свид. о рег. по Ф8',0),(5,0,1,1,'Временное удостоверение личности',1),(6,0,1,1,'Паспорт иностранного гражданина',1),(7,0,1,1,'Водительские права',1),(8,0,1,1,'Справка об освобождении из МЛС',1),(9,0,1,1,'Разрешение на временное проживание',1),(10,0,1,1,'Вид на жительство',1),(11,1,1,1,'Свид. о рег. по Ф9',0),(12,0,0,0,'???',10),(13,0,10,0,'Ходатайство',0),(14,1,10,0,'Ходатайство Центра по профилактике и борьбе со СПИД и инфекционными заболеваниями',0),(15,1,10,0,'паспорт1',0),(16,1,10,0,'паспорт2',0),(17,1,10,0,'паспорт3',0),(18,1,10,0,'паспорт4',0),(19,0,10,0,'папорт1',0),(20,0,10,0,'Пропуск',1),(21,1,10,0,'Паспорт родителя',0),(22,1,10,0,'справка об освобождении',0),(23,1,10,0,'СО СЛОВ',0),(24,0,10,1,'Свидетельство на возвращение',1),(25,1,10,0,'ходатайство о регистрации ',0),(26,1,10,0,'Ходатайство 1',0),(27,1,10,1,'Ходатайство от приюта \"Транзит\" ',0);
+INSERT INTO `DocType` VALUES (1,1,1,1,'Паспорт',1),(2,0,1,1,'Военный билет',1),(3,0,0,1,'Свидетельство о рождении',0),(4,1,0,1,'Свид. о рег. по Ф8',0),(5,0,1,1,'Временное удостоверение личности',1),(6,0,1,1,'Паспорт иностранного гражданина',1),(7,0,1,1,'Водительские права',1),(8,0,1,1,'Справка об освобождении из МЛС',1),(9,0,1,1,'Разрешение на временное проживание',1),(10,0,1,1,'Вид на жительство',1),(11,1,1,1,'Свид. о рег. по Ф9',0),(12,0,0,0,'???',10),(13,0,10,0,'Ходатайство',0),(14,1,10,0,'Ходатайство Центра по профилактике и борьбе со СПИД и инфекционными заболеваниями',0),(15,1,10,0,'паспорт1',0),(16,1,10,0,'паспорт2',0),(17,1,10,0,'паспорт3',0),(18,1,10,0,'паспорт4',0),(19,0,10,0,'папорт1',0),(20,0,10,0,'Пропуск',1),(21,1,10,0,'Паспорт родителя',0),(22,1,10,0,'справка об освобождении',0),(23,1,10,0,'СО СЛОВ',0),(24,0,10,1,'Свидетельство на возвращение',1),(25,1,10,0,'ходатайство о регистрации ',0),(26,1,10,0,'Ходатайство 1',0),(27,1,10,1,'Ходатайство от приюта \"Транзит\" ',0),(28,1,10,1,'Справка МВД Республики Беларусь',1),(29,1,10,1,'Загранпаспорт РФ',1),(30,1,10,1,'Справка УФМС об установлении личности',1),(31,1,10,0,'паспорт СССР',0),(32,1,10,1,'справка',0);
 /*!40000 ALTER TABLE `DocType` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -274,7 +274,7 @@ CREATE TABLE `Document` (
   CONSTRAINT `FK3737353B5FC8D6E0` FOREIGN KEY (`client`) REFERENCES `Client` (`id`),
   CONSTRAINT `FK3737353BA4679646` FOREIGN KEY (`worker`) REFERENCES `Worker` (`id`),
   CONSTRAINT `FK3737353BCB1DEFA` FOREIGN KEY (`doctype`) REFERENCES `DocType` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5502 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=7382 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -283,6 +283,7 @@ CREATE TABLE `Document` (
 
 LOCK TABLES `Document` WRITE;
 /*!40000 ALTER TABLE `Document` DISABLE KEYS */;
+INSERT INTO `Document` VALUES (4644,NULL,NULL,'2002-02-19 00:00:00','980433','40 01 ',0,'23 о/м Невского р-на С-Пб',NULL,1,2),(4659,NULL,NULL,'2013-06-13 00:00:00','764313','40 13',0,'тп№2 ОУФМС России по СПб и ЛО в Адмиралтейском р-не гор. Санкт-Петербурга',NULL,1,4),(4679,NULL,NULL,'2008-05-20 00:00:00','440545','40 07',0,'ТП № 59 ОУФМС РФ по  СПБ и ЛО в Петроградском р-не по Санкт-Петербургу',NULL,1,5),(4724,NULL,NULL,'2009-04-21 00:00:00','979617','14 08',0,'Отделением №1 ОУФМС в г.Белгороде',NULL,1,3),(6296,NULL,NULL,'2008-06-11 00:00:00','520574','40 08',0,'ТП № 32 ОУФМС России по СПб и ЛО в Колпинском р-не',NULL,1,8),(6300,NULL,NULL,'2002-09-19 00:00:00','016871','4003',0,'18 отделом милиции Петроградского района Санкт-Петербурга',NULL,1,11),(7013,NULL,NULL,'2003-04-11 00:00:00','694837','6303',0,'Волжским РОВД г.Саратова',NULL,1,13);
 /*!40000 ALTER TABLE `Document` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -307,7 +308,7 @@ CREATE TABLE `Education` (
 
 LOCK TABLES `Education` WRITE;
 /*!40000 ALTER TABLE `Education` DISABLE KEYS */;
-INSERT INTO `Education` VALUES (1,0,'Нет ответа'),(2,0,'Нет образования'),(3,0,'Нет образования'),(4,0,'Незаконченное среднее'),(5,1,'Среднее'),(6,1,'Среднее специальное'),(7,1,'Высшее, н/высшее');
+INSERT INTO `Education` VALUES (1,0,'Нет ответа'),(2,0,'Нет образования'),(3,0,'Начальное'),(4,0,'Незаконченное среднее'),(5,1,'Среднее'),(6,1,'Среднее специальное'),(7,1,'Высшее, н/высшее');
 /*!40000 ALTER TABLE `Education` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -331,7 +332,7 @@ CREATE TABLE `FamilyCommunication` (
 
 LOCK TABLES `FamilyCommunication` WRITE;
 /*!40000 ALTER TABLE `FamilyCommunication` DISABLE KEYS */;
-INSERT INTO `FamilyCommunication` VALUES (1,'Нет ответа'),(2,'Видится'),(3,'Нет ответа'),(4,'Нет родственников');
+INSERT INTO `FamilyCommunication` VALUES (1,'Нет ответа'),(2,'Видится'),(3,'Не видится'),(4,'Нет родственников');
 /*!40000 ALTER TABLE `FamilyCommunication` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -354,7 +355,7 @@ CREATE TABLE `GivenCertificate` (
   KEY `FKC67D95FA5FC8D6E0` (`client`),
   CONSTRAINT `FKC67D95FA5FC8D6E0` FOREIGN KEY (`client`) REFERENCES `Client` (`id`),
   CONSTRAINT `FKC67D95FAA4679646` FOREIGN KEY (`worker`) REFERENCES `Worker` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4348 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=12540 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -386,7 +387,7 @@ CREATE TABLE `NightStay` (
 
 LOCK TABLES `NightStay` WRITE;
 /*!40000 ALTER TABLE `NightStay` DISABLE KEYS */;
-INSERT INTO `NightStay` VALUES (1,'Нет ответа'),(2,'Нет ответа'),(3,'Гос. ДНП'),(4,'Др. гос. учреждение'),(5,'Другое');
+INSERT INTO `NightStay` VALUES (1,'Нет ответа'),(2,'Улица'),(3,'Гос. ДНП'),(4,'Др. гос. учреждение'),(5,'Другое');
 /*!40000 ALTER TABLE `NightStay` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -434,7 +435,7 @@ CREATE TABLE `RecievedService` (
   CONSTRAINT `FK8DD747EC2912C51A` FOREIGN KEY (`servicesType`) REFERENCES `ServicesType` (`id`),
   CONSTRAINT `FK8DD747EC5FC8D6E0` FOREIGN KEY (`client`) REFERENCES `Client` (`id`),
   CONSTRAINT `FK8DD747ECA4679646` FOREIGN KEY (`worker`) REFERENCES `Worker` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7618 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=28265 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -493,7 +494,7 @@ CREATE TABLE `ServContract` (
   CONSTRAINT `FK3F2223685FC8D6E0` FOREIGN KEY (`client`) REFERENCES `Client` (`id`),
   CONSTRAINT `FK3F222368A23578C8` FOREIGN KEY (`contractresult`) REFERENCES `ContractResult` (`id`),
   CONSTRAINT `FK3F222368A4679646` FOREIGN KEY (`worker`) REFERENCES `Worker` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=536 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1548 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -552,7 +553,7 @@ CREATE TABLE `ShelterHistory` (
   KEY `FK6BA300F7553201A` (`shelterresult`),
   CONSTRAINT `FK6BA300F5FC8D6E0` FOREIGN KEY (`client`) REFERENCES `Client` (`id`),
   CONSTRAINT `FK6BA300F7553201A` FOREIGN KEY (`shelterresult`) REFERENCES `ShelterResult` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=117 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=319 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -601,7 +602,7 @@ CREATE TABLE `Tranzit` (
   `n_client` int(11) DEFAULT NULL,
   `servdate` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=209 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=396 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -632,7 +633,7 @@ CREATE TABLE `Worker` (
   PRIMARY KEY (`id`),
   KEY `FK9AC73F9ECAF79164` (`rules`),
   CONSTRAINT `FK9AC73F9ECAF79164` FOREIGN KEY (`rules`) REFERENCES `Rules` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -641,7 +642,7 @@ CREATE TABLE `Worker` (
 
 LOCK TABLES `Worker` WRITE;
 /*!40000 ALTER TABLE `Worker` DISABLE KEYS */;
-INSERT INTO `Worker` VALUES (1,'Григорий','Сергеевич','111','Свердлин','2011-06-06 00:00:00','78АА0561688',1),(2,'Валентина','Марьяновна','111','Борейко','2013-02-07 00:00:00','17',2),(3,'Ольга','Игоревна','111','Алферова','2013-02-07 00:00:00','16',2),(4,'Антонина','Александровна','111','Невская','2013-08-08 00:00:00','18',2),(5,'Светлана','Владимировна','111','Быстрова','2013-02-07 00:00:00','3',2),(6,'Екатерина','Александровна','111','Диковская','2013-02-12 00:00:00','19',3),(7,'Игорь','Залманович','111','Карлинский','2013-02-07 00:00:00','ПРОШУ МЕНЯ ЗАПОЛНИТЬ',5),(8,'Елена','Игоревна','111','Кондрахина','2013-02-07 00:00:00','ПРОШУ МЕНЯ ЗАПОЛНИТЬ',4),(9,'Елизавета','?','111','Лаврентьева','2013-02-07 00:00:00','ПРОШУ МЕНЯ ЗАПОЛНИТЬ',6);
+INSERT INTO `Worker` VALUES (1,'Григорий','Сергеевич','111','Свердлин','2011-06-06 00:00:00','78АА0561688',1),(2,'Валентина','Марьяновна','111','Борейко','2013-02-07 00:00:00','17',2),(3,'Ольга','Игоревна','111','Алферова','2013-02-07 00:00:00','16',2),(4,'Антонина','Александровна','111','Невская','2013-08-08 00:00:00','18',2),(5,'Светлана','Владимировна','111','Быстрова','2013-02-07 00:00:00','3',2),(6,'Екатерина','Александровна','111','Диковская','2013-02-12 00:00:00','19',3),(7,'Игорь','Залманович','111','Карлинский','2013-02-07 00:00:00','ПРОШУ МЕНЯ ЗАПОЛНИТЬ',5),(8,'Елена','Игоревна','111','Кондрахина','2013-02-07 00:00:00','06112014',4),(9,'Елизавета','?','111','Лаврентьева','2013-02-07 00:00:00','ПРОШУ МЕНЯ ЗАПОЛНИТЬ',6),(10,'Вячеслав','Анатольевич','111','Самонов','2014-10-27 00:00:00','б/н',3),(11,'Кира','Сергеевна','111','Подлипаева','2014-12-29 00:00:00','21',2),(12,'Наталья','???','111','Шавлохова','2015-02-06 00:00:00','ПРОШУ МЕНЯ ЗАПОЛНИТЬ',2),(13,'Роман','Валерьевич','111','Ширшов','2015-06-22 00:00:00','12',2);
 /*!40000 ALTER TABLE `Worker` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -725,6 +726,10 @@ LOCK TABLES `link_reasonofhomeless_client` WRITE;
 /*!40000 ALTER TABLE `link_reasonofhomeless_client` DISABLE KEYS */;
 /*!40000 ALTER TABLE `link_reasonofhomeless_client` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Dumping routines for database 'homeless'
+--
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -735,4 +740,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-03-23 21:36:55
+-- Dump completed on 2015-10-08  1:30:47
