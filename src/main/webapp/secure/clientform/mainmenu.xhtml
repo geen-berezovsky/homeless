@@ -24,7 +24,7 @@
 			<p:menuitem value="Отчеты" icon="ui-icon-calculator" action="#{reports.openDlg()}"></p:menuitem>
             <p:menuitem value="Просроченные прививки и ФЛГ" icon="ui-icon-calculator" onclick="notImplementedDlgWv.show();" url="#"></p:menuitem>
 			<p:submenu label="Справка" icon="ui-icon-help">
-                <p:menuitem value="Справка по работе с СУБД" onclick="notImplementedDlgWv.show();" url="#"></p:menuitem>
+                <p:menuitem value="Справка по работе с СУБД" onclick="manualDlgWv.show();" url="#"></p:menuitem>
                 <p:menuitem value="О программе..." onclick="aboutDlgWv.show();" url="#"></p:menuitem>
             </p:submenu>
 			<p:menuitem value="Выход" actionListener="#{user.logout}" ajax="false" id="exitId" />
