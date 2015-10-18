@@ -30,7 +30,7 @@
 </p:layoutUnit>
 <p:layoutUnit position="center" resizable="true" collapsible="true">
 <p:tabView effect="fade" effectDuration="normal" id="m_tabview" widgetVar="m_tabviewWv" style="#{clientform.mainPanelVisibility}" styleClass="topLayoutMainForm" scrollable="false">
-<p:ajax event="tabChange" listener="#{clientform.tabChangeListener}" update="base_form documents_form contracts_form shelter_form"/>
+<p:ajax event="tabChange" listener="#{clientform.tabChangeListener}" update="documents_form contracts_form shelter_form"/>
 <p:tab title="Базовая информация">
     <!-- *** Basic Client Form *** -->
 
@@ -222,10 +222,18 @@
             var documentsTab = $('a[href="#m_tabview:documentsTab"]');
             var parent = documentsTab.parent();
             //updateDocumentsTab({param: parent});
-            m_tabviewWv.disable(1);
-            m_tabviewWv.re
+            //m_tabviewWv.disable(1);
 
         }
+
+        function forceFirstTab() {
+            m_tabviewWv.select(0);
+        }
+
+        function save0Tab() {
+            jQuery('#m_tabview\\:base_form\\:saveClientForm').click();
+        }
+
 
     </script>
 

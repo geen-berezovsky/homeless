@@ -96,7 +96,7 @@ public class PhotoCameraBean implements Serializable{
         if (!destTempDir.exists()) {
         	destTempDir.mkdirs();
         }
-        log.info(servletContext.getServerInfo()+servletContext.getContextPath().toString());
+        log.info(servletContext.getServerInfo()+servletContext.toString());
         log.info("Trying to save image to: "+newFileName);
         FileImageOutputStream imageOutput;
         try {  

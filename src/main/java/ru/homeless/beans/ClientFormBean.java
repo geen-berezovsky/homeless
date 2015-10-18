@@ -18,6 +18,7 @@ import javax.faces.validator.ValidatorException;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
+import org.primefaces.component.tabview.TabView;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.TabChangeEvent;
 
@@ -71,6 +72,7 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
     private String documentsHeaderInline;
     private String contactsHeaderInline;
     private String commentsHeaderInline;
+    private int tabIndex = 0;
 
     public ClientFormBean()  {
         this.mainPanelVisibility = "display: none;";
@@ -166,25 +168,27 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
         //Client may live in shelter, lived in shelter earlier, not lived in shelter at all or stored under calculation
         String result = "(ID = " + client.getId() ;
         List<ShelterHistory> shelters = getGenericService().getInstancesByClientId(ShelterHistory.class, client);
-        if (shelters.size() == 0) {
-            result += ", в приюте ранее не проживал";
-            if (! client.isGender()) {
+        if (shelters != null) {
+            if (shelters.size() == 0) {
+                result += ", в приюте ранее не проживал";
+                if (!client.isGender()) {
+                    result += "а";
+                }
+                return result + ")";
+            }
+
+            for (ShelterHistory sh : shelters) {
+                if (sh.getOutShelter()!= null && sh.getOutShelter().getTime() >= new Date().getTime()) {
+                    return result + ", в приюте проживает)";
+                }
+            }
+            result += ", в приюте ранее проживал";
+            if (!client.isGender()) {
                 result += "а";
             }
+
             return result + ")";
-        }
-
-        for (ShelterHistory sh : shelters) {
-            if (sh.getOutShelter().getTime() >= new Date().getTime()) {
-                return result + ", в приюте проживает)";
-            }
-        }
-        result += ", в приюте ранее проживал";
-        if (! client.isGender()) {
-            result += "а";
-        }
-
-        return result + ")";
+        } else return result + ", информация по проживанию в приюте в базе данных отсутствует)";
     }
 
     public void reloadClientData() {
@@ -464,81 +468,76 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
     public void saveClientForm(ClientFormBean cfb) {
         FacesMessage msg = null;
 
-        if (((client.getMemo() != null) && (!client.getMemo().equals(getMemo()))) || ((client.getContacts() != null) && (!client.getContacts().equals(getContacts())))) {
-            log.info("Changed data on Comments or on Contacts tab - do not save the whole client settings!");
-            client.setMemo(getMemo());
-            client.setContacts(getContacts());
-        } else {
-            //update "homeless till the moment" (don't move it after client data copying!)
-            updateHomelessDate(selectedMonth);
-            client = copyClientDataToClient(client);
-            //Update Surname, FirstName and MiddleName for starting with uppercase letter
-/*
-            if (client.getSurname().trim().equals("") || client.getMiddlename().trim().equals("") || client.getFirstname().trim().equals("")) {
-                FacesMessage msg1 = new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                        "ФИО не может содержать цифры, спецсимволы и пробелы и быть пустым!\nТолько русский или латинский текст, а также тире.", "Пожалуйста, проверьте форму!");
-                    FacesContext.getCurrentInstance().addMessage(null, msg1);
-                throw new ValidatorException(msg1);
-            }
-*/
+        //only when client is already selected and not null
+        //the client will be null when you just had open this application
+        if (client != null) {
+                //update "homeless till the moment" (don't move it after client data copying!)
+                updateHomelessDate(selectedMonth);
+                client = copyClientDataToClient(client);
+                //Update Surname, FirstName and MiddleName for starting with uppercase letter
+                String fl = client.getSurname().toUpperCase().substring(0, 1);
+                String ll = client.getSurname().toLowerCase().substring(1, client.getSurname().length());
+                client.setSurname(fl + ll);
+                fl = client.getFirstname().toUpperCase().substring(0, 1);
+                ll = client.getFirstname().toLowerCase().substring(1, client.getFirstname().length());
+                client.setFirstname(fl + ll);
+                fl = client.getMiddlename().toUpperCase().substring(0, 1);
+                ll = client.getMiddlename().toLowerCase().substring(1, client.getMiddlename().length());
+                client.setMiddlename(fl + ll);
 
+                if (client.getMemo() != null && !client.getMemo().equals(getMemo())) {
+                    client.setMemo(getMemo());
+                }
+                if (client.getContacts() != null && !client.getContacts().equals(getContacts())) {
+                    client.setContacts(getContacts());
+                }
 
-            String fl = client.getSurname().toUpperCase().substring(0, 1);
-            String ll = client.getSurname().toLowerCase().substring(1, client.getSurname().length());
-            client.setSurname(fl + ll);
-            fl = client.getFirstname().toUpperCase().substring(0, 1);
-            ll = client.getFirstname().toLowerCase().substring(1, client.getFirstname().length());
-            client.setFirstname(fl + ll);
-            fl = client.getMiddlename().toUpperCase().substring(0, 1);
-            ll = client.getMiddlename().toLowerCase().substring(1, client.getMiddlename().length());
-            client.setMiddlename(fl + ll);
-
-            //update homeless reasons, breadwinners, chronical disasters
-            Set<Breadwinner> sb = new HashSet<Breadwinner>();
-            for (Breadwinner b : getGenericService().getInstances(Breadwinner.class)) {
-                for (String cb : clientBreadwinners) {
-                    if (b.getCaption().equals(cb)) {
-                        sb.add(b);
+                    //update homeless reasons, breadwinners, chronical disasters
+                Set<Breadwinner> sb = new HashSet<Breadwinner>();
+                for (Breadwinner b : getGenericService().getInstances(Breadwinner.class)) {
+                    for (String cb : clientBreadwinners) {
+                        if (b.getCaption().equals(cb)) {
+                            sb.add(b);
+                        }
                     }
                 }
-            }
-            client.setBreadwinners(sb);
+                client.setBreadwinners(sb);
 
-            Set<Reasonofhomeless> sr = new HashSet<Reasonofhomeless>();
-            for (Reasonofhomeless b : getGenericService().getInstances(Reasonofhomeless.class)) {
-                for (String cb : clientReasonsofhomeless) {
-                    if (b.getCaption().equals(cb)) {
-                        sr.add(b);
+                Set<Reasonofhomeless> sr = new HashSet<Reasonofhomeless>();
+                for (Reasonofhomeless b : getGenericService().getInstances(Reasonofhomeless.class)) {
+                    for (String cb : clientReasonsofhomeless) {
+                        if (b.getCaption().equals(cb)) {
+                            sr.add(b);
+                        }
                     }
                 }
-            }
-            client.setReasonofhomeless(sr);
+                client.setReasonofhomeless(sr);
 
-            Set<ChronicDisease> chd = new HashSet<ChronicDisease>();
-            for (ChronicDisease b : getGenericService().getInstances(ChronicDisease.class)) {
-                for (String cb : clientChronicDisease) {
-                    if (b.getCaption().equals(cb)) {
-                        chd.add(b);
+                Set<ChronicDisease> chd = new HashSet<ChronicDisease>();
+                for (ChronicDisease b : getGenericService().getInstances(ChronicDisease.class)) {
+                    for (String cb : clientChronicDisease) {
+                        if (b.getCaption().equals(cb)) {
+                            chd.add(b);
+                        }
                     }
                 }
-            }
-            client.setDiseases(chd);
+                client.setDiseases(chd);
 
-        }
 
-        try {
-            getGenericService().updateInstance(client);
-            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Сохранено", "");
             try {
-                cfb.reloadAll();
-            } catch (SQLException e) {
-                e.printStackTrace();
+                getGenericService().updateInstance(client);
+                msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Сохранено", "");
+                try {
+                    cfb.reloadAll();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            } catch (Exception e) {
+                msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Клиент не сохранен!", "");
             }
-        } catch (Exception e) {
-            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Клиент не сохранен!", "");
-        }
 
-        FacesContext.getCurrentInstance().addMessage(null, msg);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+        }
     }
 
 
@@ -555,25 +554,55 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
     }
 
     public void refreshTabs() {
+
+        //When user change the tab, he don't think about saving unsaved data.
+        //So, let him think that this is a normal situation and perform auto save operation
+        //Saving will run refreshing, so we can skip to do it again, except custom beans reloading
+
         FacesContext context = FacesContext.getCurrentInstance();
         if (cid != 0 && client != null) {
+
             ClientDocumentsBean cdb = context.getApplication().evaluateExpressionGet(context, "#{clientdocuments}", ClientDocumentsBean.class);
             ClientContractsBean ccb = context.getApplication().evaluateExpressionGet(context, "#{clientcontracts}", ClientContractsBean.class);
             ClientShelterBean csb = context.getApplication().evaluateExpressionGet(context, "#{clientshelter}", ClientShelterBean.class);
-            try {
-                reloadAll();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
             cdb.reload();
             ccb.reload();
             csb.reload();
+
+            //We can't just perform saveClientForm(this) because we don't have such context. Currently, "this" is not an exact instance
+            //which we need to send to the save function
+            //Then, use javascript callback to perform the saving
+            RequestContext rc = RequestContext.getCurrentInstance();
+            rc.execute("save0Tab();");
             log.info("Reloaded all data for the selected client " + cid);
         }
     }
 
     public void tabChangeListener(TabChangeEvent event) {
-        refreshTabs();
+        //workaround for getting the current selected tab
+        //it cannot be done with basic way because the tag tabView is not included into <form> tag
+        FacesContext context = FacesContext.getCurrentInstance();
+        Map<String, String> params = context.getExternalContext().getRequestParameterMap();
+        TabView tabView = (TabView) event.getComponent();
+        setTabIndex(Integer.parseInt(params.get(tabView.getClientId(context) + "_tabindex")));
+
+        //But! If user started to change tabs before he type mandatory data, we have to reject this action
+        if (this.getFirstname().trim().equals("") ||
+                this.getSurname().trim().equals("") ||
+                this.getMiddlename().trim().equals("") ||
+                this.getDate() == null) {
+
+            if ((tabIndex > 0)) { //for avoiding cycles when we set the active tab and tablchange listener perform it again
+                RequestContext rc = RequestContext.getCurrentInstance();
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Не заполнены обязательные поля!", "Вы не можете работать с данным клиентом пока не заполнены ФИО и Дата Рождения!"));
+                rc.execute("forceFirstTab();");
+            }
+
+        } else {
+            log.info(this.getSurname());
+            refreshTabs();
+        }
+
     }
 
     public void setHasProfession(int hasProfession) {
@@ -683,5 +712,13 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
 
     public void setDocumentsHeaderInline(String documentsHeaderInline) {
         this.documentsHeaderInline = documentsHeaderInline;
+    }
+
+    public int getTabIndex() {
+        return tabIndex;
+    }
+
+    public void setTabIndex(int tabIndex) {
+        this.tabIndex = tabIndex;
     }
 }
