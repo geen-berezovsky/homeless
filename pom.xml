@@ -52,6 +52,14 @@
                                     <arg value="--toc"/>
                                     <arg value="${basedir}/src/main/resources/manual.docx"/>
                                 </exec>
+				<replaceregexp file="${basedir}/target/homeless/secure/help/manual.html"
+					match="&lt;html xmlns(.*)"
+					replace="&lt;html xmlns=&quot;http://www.w3.org/1999/xhtml&quot; xmlns:h=&quot;http://java.sun.com/jsf/html&quot;&gt;"
+					byline="true"/>
+				<replaceregexp file="${basedir}/target/homeless/secure/help/manual.html"
+					match="head&gt;"
+					replace="h:head&gt;"
+					byline="true"/>
                             </target>
                         </configuration>
                         <goals>
