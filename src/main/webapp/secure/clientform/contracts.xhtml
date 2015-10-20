@@ -50,7 +50,7 @@
 
                     <p:column headerText="Договор">
                         <center>
-                            <p:growl id="growl" showDetail="true" life="5000"/>
+                            <p:growl id="growl" showDetail="true" life="3000"/>
                             <p:commandButton value="Открыть" ajax="false" onclick="PrimeFaces.monitorDownload(clientContractStart, clientContractStop);" icon="ui-icon-arrowthick-1-s" update="@this @form growl" actionListener="#{clientcontracts.downloadContract(conlist.id)}">
                                 <p:fileDownload value="#{clientcontracts.file}" />
                             </p:commandButton>

@@ -87,7 +87,6 @@ public class ClientDocumentsBean implements Serializable {
         cdb.updateDocumentsTabHeader();
 
         rc.update("doclistId");
-        rc.execute("updateDocumentsTabHeader()");
 
 	}
 

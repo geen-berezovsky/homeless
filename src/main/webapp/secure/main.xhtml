@@ -22,21 +22,23 @@
 
 </h:head>
 
-<h:body onload="#{clientform.refreshTabs()}" styleClass="body_style">
+<h:body onload="#{clientform.refreshTabs(0)}" styleClass="body_style">
 <h:outputStylesheet library="primefaces-#{themeService.theme}" name="theme.css" />
 <p:layout id="basePageLayout" fullPage="true">
 <p:layoutUnit position="north" id="topMenu" size="50">
     <ui:include src="clientform/mainmenu.xhtml"/>
 </p:layoutUnit>
 <p:layoutUnit position="center" resizable="true" collapsible="true">
-<p:tabView effect="fade" effectDuration="normal" id="m_tabview" widgetVar="m_tabviewWv" style="#{clientform.mainPanelVisibility}" styleClass="topLayoutMainForm" scrollable="false">
+<p:tabView id="m_tabview" widgetVar="m_tabviewWv" style="#{clientform.mainPanelVisibility}" styleClass="topLayoutMainForm" scrollable="false">
 <p:ajax event="tabChange" listener="#{clientform.tabChangeListener}" update="documents_form contracts_form shelter_form"/>
 <p:tab title="Базовая информация">
     <!-- *** Basic Client Form *** -->
 
     <h:form id="base_form">
+        <h:inputHidden id="memoTmp" value="#{clientform.memoTmp}" />
+        <h:inputHidden id="contactsTmp" value="#{clientform.contactsTmp}" />
 
-        <p:growl id="growl" showDetail="true" life="5000"/>
+        <p:growl id="growl" widgetVar="growl" showDetail="true" life="3000"/>
         <p:layout id="base_client" style="min-width:400px;min-height:750px;" styleClass="topLayoutMainForm">
             <p:layoutUnit position="north" size="5" header="#{clientform.header}" style="min-height:26px" styleClass="topLayoutMainForm" id="header"/>
             <p:layoutUnit position="west" size="210" style="max-height:300px;" header="Фотография">
@@ -96,7 +98,6 @@
         <!--
 
 -->
-        <p:remoteCommand name="updateDocumentsTab" actionListener="#{clientform.updateDocumentsTabHeader()}" />
     </h:form>
     <!-- *** End Of Basic Client Form *** -->
     <!--
@@ -122,11 +123,10 @@
 <p:tab id="contactsTab" title="#{clientform.contactsHeaderInline}">
     <h:form id="client_contacts">
         <p:panel id="add_contacts_panel_grid">
-            <p:editor id="contacts_editor" value="#{clientform.contacts}"/>
+            <p:editor id="contacts_editor" value="#{clientform.contacts}" onchange="handleContactsChange()"/>
             <p:growl id="growl_client_contacts" showDetail="true" life="3000"/>
             <center>
-                <p:commandButton value="Сохранить" actionListener="#{clientform.saveClientForm(clientform)}" id="saveClientFormContacts"
-                                 update="@this :m_tabview add_contacts_panel_grid growl_client_contacts" icon="ui-icon-check"/>
+                <p:button value="Сохранить" onclick="save0Tab()" id="saveClientFormContactsButton" icon="ui-icon-check"/>
             </center>
         </p:panel>
     </h:form>
@@ -134,11 +134,10 @@
 <p:tab id="commentsTab" title="#{clientform.commentsHeaderInline}">
     <h:form id="client_memo">
         <p:panel id="add_memo_panel_grid">
-            <p:editor id="memo_editor" value="#{clientform.memo}"/>
+            <p:editor id="memo_editor" value="#{clientform.memo}" onchange="handleMemoChange()"/>
             <p:growl id="growl_client_memo" showDetail="true" life="3000"/>
             <center>
-                <p:commandButton value="Сохранить" actionListener="#{clientform.saveClientForm(clientform)}" id="saveClientFormComments" update="@this :m_tabview add_memo_panel_grid growl_client_memo"
-                                 icon="ui-icon-check"/>
+                <p:button value="Сохранить" onclick="save0Tab()" id="saveClientFormMemoButton" icon="ui-icon-check"/>
             </center>
         </p:panel>
     </h:form>
@@ -219,22 +218,27 @@
 
     <script type="text/javascript">
 
-        function updateDocumentsTabHeader() {
-            var documentsTab = $('a[href="#m_tabview:documentsTab"]');
-            var parent = documentsTab.parent();
-            //updateDocumentsTab({param: parent});
-            //m_tabviewWv.disable(1);
-
-        }
-
         function forceFirstTab() {
             m_tabviewWv.select(0);
+            growl.renderMessage({summary:'Не заполнены обязательные поля!', detail: 'Вы не можете работать с данным клиентом пока не заполнены ФИО и Дата Рождения!', severity: 0});
         }
 
         function save0Tab() {
+            var memo = document.getElementById("m_tabview:base_form:memoTmp").value;
+            var contacts = document.getElementById("m_tabview:base_form:contactsTmp").value;
+            //alert($('a[href*=\'documentsTab\']').tagName);
             jQuery('#m_tabview\\:base_form\\:saveClientForm').click();
         }
 
+        function handleMemoChange()
+        {
+            document.getElementById("m_tabview:base_form:memoTmp").value = document.getElementById("m_tabview:client_memo:memo_editor_input").value;
+        }
+
+        function handleContactsChange()
+        {
+            document.getElementById("m_tabview:base_form:contactsTmp").value = document.getElementById("m_tabview:client_contacts:contacts_editor_input").value;
+        }
 
     </script>
 

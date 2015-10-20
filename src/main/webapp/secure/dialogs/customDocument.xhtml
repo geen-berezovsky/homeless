@@ -91,7 +91,7 @@
 
                 <p:row>
                     <p:column colspan="2">
-                        <p:growl id="growl" showDetail="true" life="5000"/>
+                        <p:growl id="growl" showDetail="true" life="3000"/>
                         <center>
                             <p:commandButton value="Экспорт в Word" ajax="false" onclick="PrimeFaces.monitorDownload(standardDocumentStart, standardDocumentStop);" icon="ui-icon-arrowthick-1-s" update="@this @form growl" actionListener="#{customDocument.export()}">
                                 <p:fileDownload value="#{customDocument.file}" />

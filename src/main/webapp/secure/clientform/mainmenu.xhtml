@@ -5,7 +5,7 @@
 
 	<h:form id="mainMenu">
         <p:tooltip />
-        <p:growl id="messages" autoUpdate="true" showDetail="true" />
+        <p:growl id="messages" autoUpdate="true" showDetail="true" life="3000"/>
 		<p:menubar autoDisplay="false">
 			<p:submenu label="Клиенты" icon="ui-icon-document">
 				<p:menuitem value="Найти клиента" onclick="searchByNameDlg.show();" url="#"></p:menuitem>

@@ -72,7 +72,15 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
     private String documentsHeaderInline;
     private String contactsHeaderInline;
     private String commentsHeaderInline;
+
+
+    private String memoTmp;
+    private String contactsTmp;
+
+    //Technical variables for auto saving
     private int tabIndex = 0;
+    private int prevTabIndex = 0;
+    // *********************************
 
     public ClientFormBean()  {
         this.mainPanelVisibility = "display: none;";
@@ -89,6 +97,10 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
         rc.update("select_document");
         rc.update("m_tabview");
         rc.update("upload_photo_form");
+
+        prevTabIndex = 0;
+        tabIndex = 0;
+
 
         //RequestContext rc = RequestContext.getCurrentInstance();
         //rc.execute("reload();");
@@ -153,6 +165,10 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
         } else {
             commentsHeaderInline = "<u>Примечания</u>";
         }
+
+        rc.update("contactsTab");
+        rc.update("commentsTab");
+        rc.update("documentsTab");
 
         //set actual client id to session for using in another applications
         HttpSession session = Util.getSession();
@@ -485,12 +501,8 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
                 ll = client.getMiddlename().toLowerCase().substring(1, client.getMiddlename().length());
                 client.setMiddlename(fl + ll);
 
-                if (client.getMemo() != null && !client.getMemo().equals(getMemo())) {
-                    client.setMemo(getMemo());
-                }
-                if (client.getContacts() != null && !client.getContacts().equals(getContacts())) {
-                    client.setContacts(getContacts());
-                }
+                client.setMemo(memoTmp);
+                client.setContacts(contactsTmp);
 
                     //update homeless reasons, breadwinners, chronical disasters
                 Set<Breadwinner> sb = new HashSet<Breadwinner>();
@@ -523,7 +535,6 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
                 }
                 client.setDiseases(chd);
 
-
             try {
                 getGenericService().updateInstance(client);
                 msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Сохранено", "");
@@ -536,7 +547,9 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
                 msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Клиент не сохранен!", "");
             }
 
-            FacesContext.getCurrentInstance().addMessage(null, msg);
+            if (msg != null) {
+                FacesContext.getCurrentInstance().addMessage(null, msg);
+            }
         }
     }
 
@@ -553,7 +566,7 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
         }
     }
 
-    public void refreshTabs() {
+    public void refreshTabs(Integer pti) {
 
         //When user change the tab, he don't think about saving unsaved data.
         //So, let him think that this is a normal situation and perform auto save operation
@@ -572,8 +585,13 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
             //We can't just perform saveClientForm(this) because we don't have such context. Currently, "this" is not an exact instance
             //which we need to send to the save function
             //Then, use javascript callback to perform the saving
-            RequestContext rc = RequestContext.getCurrentInstance();
-            rc.execute("save0Tab();");
+
+            if (pti == 0 || pti == 3 || pti ==4) { //if previous tab contains changes in fields
+                RequestContext rc = RequestContext.getCurrentInstance();
+                rc.execute("save0Tab();");
+            }
+
+
             log.info("Reloaded all data for the selected client " + cid);
         }
     }
@@ -594,15 +612,15 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
 
             if ((tabIndex > 0)) { //for avoiding cycles when we set the active tab and tablchange listener perform it again
                 RequestContext rc = RequestContext.getCurrentInstance();
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Не заполнены обязательные поля!", "Вы не можете работать с данным клиентом пока не заполнены ФИО и Дата Рождения!"));
+                //FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "", ""));
                 rc.execute("forceFirstTab();");
             }
 
         } else {
             log.info(this.getSurname());
-            refreshTabs();
+            refreshTabs(prevTabIndex);
         }
-
+        prevTabIndex = tabIndex;
     }
 
     public void setHasProfession(int hasProfession) {
@@ -721,4 +739,29 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
     public void setTabIndex(int tabIndex) {
         this.tabIndex = tabIndex;
     }
+
+    public String getMemoTmp() {
+        return memoTmp;
+    }
+
+    public void setMemoTmp(String memoTmp) {
+        this.memoTmp = memoTmp;
+    }
+
+    public String getContactsTmp() {
+        return contactsTmp;
+    }
+
+    public void setContactsTmp(String contactsTmp) {
+        this.contactsTmp = contactsTmp;
+    }
+
+    public int getPrevTabIndex() {
+        return prevTabIndex;
+    }
+
+    public void setPrevTabIndex(int prevTabIndex) {
+        this.prevTabIndex = prevTabIndex;
+    }
+
 }
