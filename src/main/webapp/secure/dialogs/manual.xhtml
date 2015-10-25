@@ -5,9 +5,9 @@
       xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui">
 <ui:composition>
     <h:form id="manual">
-        <p:dialog id="manualDlg" header="Справка" widgetVar="manualDlgWv" closable="true" modal="true"
+        <p:dialog id="manualDlg" header="Справка" widgetVar="manualDlgWv" closable="true" modal="true" resizable="false"
                   showEffect="fade" hideEffect="explode" dynamic="true" closeOnEscape="true">
-            <p:scrollPanel id="manualDlgScrollPanel" mode="native" style="font-size: 70%; max-height: 500px; max-width: 700px;">
+            <p:scrollPanel id="manualDlgScrollPanel" mode="native" style="font-size: 70%; max-height:#{user_manual.height}px; max-width: #{user_manual.width}px;">
                 <ui:include src="../help/manual.html"/>
             </p:scrollPanel>
         </p:dialog>
