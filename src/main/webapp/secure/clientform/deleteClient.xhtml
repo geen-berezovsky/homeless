@@ -1,0 +1,30 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui">
+<ui:composition>
+            <p:dialog id="deleteClient" header="Подтвердите удаление" appendTo="@form" widgetVar="deleteClientWv" resizable="false"
+                  closable="true" showEffect="fade" hideEffect="explode" dynamic="true" closeOnEscape="true"
+                  style="font-size: 200%;" draggable="false">
+                <p:panel>
+                    <h:outputText value="Вся связанная с клиентом история будет удалена!" styleClass="warn_delete_client"/>
+                </p:panel>
+            <p:panelGrid columns="2" style="margin: 0 auto;" styleClass="base_form_panel_grid_class">
+
+                <p:commandButton id="delCConfirm" value="Да" update=":m_tabview :searchForm"
+                                 oncomplete="deleteClientWv.hide()" actionListener="#{clientform.deleteClient()}"
+                                 action="#{clientform.refreshTabs(0)}" ajax="true"/>
+                <p:commandButton id="delCDecline" value="Нет" oncomplete="deleteClientWv.hide()" ajax="true"/>
+            </p:panelGrid>
+        </p:dialog>
+
+        <p:dialog header="Подтвердите удаление" appendTo="@form" widgetVar="deadClientWv" resizable="false"
+                  closable="true" showEffect="fade" hideEffect="explode" dynamic="true" closeOnEscape="true"
+                  style="font-size: 200%;" draggable="false">
+            <p:panelGrid columns="2" style="margin: 0 auto;" styleClass="base_form_panel_grid_class">
+            </p:panelGrid>
+        </p:dialog>
+
+</ui:composition>
+</html>

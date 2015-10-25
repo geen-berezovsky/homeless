@@ -15,7 +15,7 @@
 				<p:outputLabel for="date" value="Дата рождения:" styleClass="base_form_caption_text"/>
 				<p:inputMask value="#{clientsearch.date}" id="date" required="false" label="date" mask="99.99.9999" styleClass="base_form_value_text"/>
 				<center>
-					<p:commandButton id="submitSearchByName" value="Поиск" update="displayFoundByName searchByIdDlg searchByNameDlg" oncomplete="openSearchResult();" actionListener="#{clientsearch.findClients}" ajax="true" />
+					<p:commandButton id="submitSearchByName" value="Поиск" update="foundClientsList displayFoundByName searchByIdDlg searchByNameDlg" oncomplete="openSearchResult();" actionListener="#{clientsearch.findClients}" ajax="true" />
 				</center>
 			</h:panelGrid>
 		</p:dialog>
@@ -27,7 +27,7 @@
 			<h:panelGrid columns="3">
                         <p:outputLabel for="_id" value="ID:" />
                         <p:inputText value="#{clientsearch.id}" id="_id" required="true" label="_id" />
-                        <p:commandButton id="submitSearchById" value="Поиск" update="displayFoundByName searchByNameDlg searchByIdDlg" oncomplete="openSearchResult();" actionListener="#{clientsearch.findClients}" ajax="true" />
+                        <p:commandButton id="submitSearchById" value="Поиск" update="foundClientsList displayFoundByName searchByNameDlg searchByIdDlg" oncomplete="openSearchResult();" actionListener="#{clientsearch.findClients}" ajax="true" />
 			</h:panelGrid>
 		</p:dialog>
 
@@ -35,7 +35,7 @@
 
 		<!-- *********************          Search Details Dialog          ********************* -->
 		<p:dialog id="displayFoundByName" header="Список найденных клиентов" widgetVar="displayFoundByName" resizable="false" closable="true" modal="true" showEffect="fade" hideEffect="explode" closeOnEscape="true">
-			<p:dataTable var="client" value="#{clientsearch.foundList}" paginator="true" rows="15"
+			<p:dataTable id="foundClientsList" var="client" value="#{clientsearch.foundList}" paginator="true" rows="15"
 				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15" paginatorPosition="bottom" styleClass="default_datatable"
                 rowKey="#{client.id}" selectionMode="single" sortMode="multiple">
 				<p:column headerText="ID" sortBy="#{client.id}">

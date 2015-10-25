@@ -131,3 +131,9 @@
 .companyHeaderGrid tr, .companyHeaderGrid td {
     border: none;
 }
+
+.warn_delete_client {
+    font-size: 16px;
+    color: darkred;
+    font-weight: bold;
+}

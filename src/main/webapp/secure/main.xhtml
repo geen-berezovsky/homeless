@@ -154,8 +154,16 @@
 
 </p:tab>
 <p:tab title="Построить документ">
-    <p:commandButton value="Стандартный документ" actionListener="#{customDocument.openDlg()}" icon="ui-icon-circle-plus"/>
-    <p:commandButton value="Запрос в ЗАГС" actionListener="#{zagsrequest.openDlg()}" icon="ui-icon-circle-plus"/>
+    <h:form id="customDocumentsMenu">
+    <p:scrollPanel>
+        <p:menu styleClass="documentsMenuCss">
+            <p:submenu label="Выберите тип документа">
+                <p:menuitem value="Стандартный документ" actionListener="#{customDocument.openDlg()}" icon="ui-icon-circle-plus"/>
+                <p:menuitem value="Запрос в ЗАГС" actionListener="#{zagsrequest.openDlg()}" icon="ui-icon-circle-plus"/>
+            </p:submenu>
+        </p:menu>
+    </p:scrollPanel>
+    </h:form>
 </p:tab>
 <p:tab title="Выдать справку">
 
@@ -180,6 +188,17 @@
 
 </p:tab>
 <p:tab title="Удалить клиента">
+    <h:form id="deleteClientMenu">
+        <p:scrollPanel>
+            <p:menu styleClass="documentsMenuCss">
+                <p:submenu label="Удаление клиента">
+                    <p:menuitem value="Отметить клиента как умершего" onclick="deadClientWv.show()" icon="ui-icon-circle-minus"/>
+                    <p:menuitem value="Удалить ошибочно созданного клиента" onclick="deleteClientWv.show();" icon="ui-icon-circle-minus"/>
+                </p:submenu>
+            </p:menu>
+        </p:scrollPanel>
+        <ui:include src="clientform/deleteClient.xhtml" />
+    </h:form>
 </p:tab>
 
 </p:tabView>
@@ -194,7 +213,9 @@
 
 <p:panel id="base_panel" widgetVar="base_panelWv" style="#{clientform.mainPanelVisibility}">
 </p:panel>
-<!-- Include Dialogs -->
+
+
+    <!-- Include Dialogs -->
 <ui:include src="dialogs/search.xhtml"/>
 <ui:include src="dialogs/webcamera.xhtml"/>
 <ui:include src="dialogs/addservices.xhtml"/>
@@ -217,7 +238,6 @@
 <ui:include src="dialogs/about.xhtml"/>
 <ui:include src="dialogs/manual.xhtml"/>
 <ui:include src="dialogs/myclients.xhtml"/>
-
 
 <p:dialog id="notImplementedDlg" header="Этот раздел еще не имплементирован" widgetVar="notImplementedDlgWv" resizable="false" closable="true" modal="true" showEffect="fade" hideEffect="explode" closeOnEscape="true">
     <p:panel>

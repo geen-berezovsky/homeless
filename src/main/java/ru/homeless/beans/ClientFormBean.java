@@ -720,6 +720,72 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
 
     }
 
+    public void deleteClient() {
+        HttpSession session = Util.getSession();
+
+        session.removeAttribute("clientform");
+        session.removeAttribute("stddoc");
+        session.removeAttribute("clientshelter");
+        session.removeAttribute("cit");
+
+        try {
+
+            log.info("Client with ID = "+client.getId() + " will be deleted");
+            log.info("Deleting all client's documents...");
+
+            List<Document> documents = getGenericService().getInstancesByClientId(Document.class, client.getId());
+            for (Document document : documents) {
+                log.info("\tDeleting document id = "+document.getId());
+                getGenericService().deleteInstance(document);
+                log.info("\t... done!");
+            }
+
+            for (Breadwinner breadwinner : client.getBreadwinners()) {
+                log.info("\tDeleting breadwinner id = "+breadwinner.getId());
+                getGenericService().deleteInstance(breadwinner);
+                log.info("\t... done!");
+            }
+
+            for (Reasonofhomeless reasonofhomeless : client.getReasonofhomeless()) {
+                log.info("\tDeleting reasonofhomeless id = "+reasonofhomeless.getId());
+                getGenericService().deleteInstance(reasonofhomeless);
+                log.info("\t... done!");
+            }
+
+            for (ChronicDisease chronicDisease : client.getDiseases()) {
+                log.info("\tDeleting chronicDisease id = " + chronicDisease.getId());
+                getGenericService().deleteInstance(chronicDisease);
+                log.info("\t... done!");
+            }
+
+            for (ServContract servContract : getGenericService().getInstancesByClientId(ServContract.class, client.getId())) {
+                log.info("\tDeleting servContract id = " + servContract.getId());
+                getGenericService().deleteInstance(servContract);
+                log.info("\t... done!");
+            }
+
+            for (ShelterHistory shelterHistory : getGenericService().getInstancesByClientId(ShelterHistory.class, client)) {
+                log.info("\tDeleting shelterHistory id = " + shelterHistory.getId());
+                getGenericService().deleteInstance(shelterHistory);
+                log.info("\t... done!");
+            }
+
+
+
+            client.setEducation(null);
+            client.setNightstay(null);
+            client.setFcom(null);
+
+            log.info("Deleting the client itself...");
+            getGenericService().deleteInstance(client);
+            log.info("Client with ID = "+client.getId() + " is deleted");
+            client = null;
+        } catch (Exception e) {
+            log.error("Cannot delete client with ID = "+client.getId(),e);
+        }
+    }
+
+
     public String getDocumentsHeaderInline() {
         return documentsHeaderInline;
     }
