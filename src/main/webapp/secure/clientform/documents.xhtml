@@ -8,7 +8,7 @@
 
                 <p:dialog header="Подтвердите удаление" appendTo="@form" widgetVar="deleteDocument" resizable="false" closable="true" showEffect="fade" hideEffect="explode" dynamic="true" closeOnEscape="true" style="font-size: 200%;" draggable="false">
                     <p:panelGrid columns="2" style="margin: 0 auto;" styleClass="base_form_panel_grid_class">
-                        <p:commandButton id="docConfirm" value="Да" update=":m_tabview:documents_form:doclistId" oncomplete="deleteDocument.hide()" actionListener="#{clientdocuments.deleteDocument()}" action="#{clientdocuments.reload()}"/>
+                        <p:commandButton id="docConfirm" value="Да" update=":m_tabview:documents_form:doclistId :m_tabview:documentsTabTitle" oncomplete="deleteDocument.hide()" actionListener="#{clientdocuments.deleteDocument()}" action="#{clientdocuments.reload()}"/>
                         <p:commandButton id="docDecline" value="Нет" update=":m_tabview:documents_form:doclistId" oncomplete="deleteDocument.hide()"/>
                     </p:panelGrid>
                 </p:dialog>

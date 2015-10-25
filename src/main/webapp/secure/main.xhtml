@@ -4,6 +4,7 @@
       xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui"
       xmlns:f="http://java.sun.com/jsf/core">
 
+
 <h:head>
     <title>Добро пожаловать, #{user.name}!</title>
     <link href="css/default.css" rel="stylesheet" type="text/css"/>
@@ -82,7 +83,7 @@
                     </p:layoutUnit>
                     <p:layoutUnit position="south" size="100" style="min-height: 45px; max-height: 45px" styleClass="bottomLayoutMainForm">
                         <center>
-                            <p:commandButton value="Сохранить" actionListener="#{clientform.saveClientForm(clientform)}" id="saveClientForm" update="@this :m_tabview:base_form base_form_panel_grid growl"
+                            <p:commandButton value="Сохранить" actionListener="#{clientform.saveClientForm(clientform)}" id="saveClientForm" update="@this :m_tabview:base_form :m_tabview:contactsTabTitle :m_tabview:commentsTabTitle base_form_panel_grid growl"
                                              icon="ui-icon-check"/>
                         </center>
                     </p:layoutUnit>
@@ -110,7 +111,10 @@
 
 </p:tab>
 
-<p:tab id="documentsTab" name="documentsTab" title="#{clientform.documentsHeaderInline}">
+<p:tab id="documentsTab" name="documentsTab">
+    <f:facet name="title">
+        <h:outputText id="documentsTabTitle" value="Документы" style="#{clientform.documentsHeaderInline}"/>
+    </f:facet>
     <!-- *** Client Documents Form *** -->
     <ui:include src="clientform/documents.xhtml"/>
 </p:tab>
@@ -120,24 +124,30 @@
 
 
 </p:tab>
-<p:tab id="contactsTab" title="#{clientform.contactsHeaderInline}">
+<p:tab id="contactsTab">
+    <f:facet name="title">
+        <h:outputText id="contactsTabTitle" value="Контакты" style="#{clientform.contactsHeaderInline}"/>
+    </f:facet>
     <h:form id="client_contacts">
         <p:panel id="add_contacts_panel_grid">
             <p:editor id="contacts_editor" value="#{clientform.contacts}" onchange="handleContactsChange()"/>
             <p:growl id="growl_client_contacts" showDetail="true" life="3000"/>
             <center>
-                <p:button value="Сохранить" onclick="save0Tab()" id="saveClientFormContactsButton" icon="ui-icon-check"/>
+                <p:commandButton value="Сохранить" onclick="save0Tab()" id="saveClientFormContactsButton" icon="ui-icon-check" update=":m_tabview:contactsTabTitle" />
             </center>
         </p:panel>
     </h:form>
 </p:tab>
-<p:tab id="commentsTab" title="#{clientform.commentsHeaderInline}">
+<p:tab id="commentsTab">
+    <f:facet name="title">
+        <h:outputText id="commentsTabTitle" value="Примечания" style="#{clientform.commentsHeaderInline}"/>
+    </f:facet>
     <h:form id="client_memo">
         <p:panel id="add_memo_panel_grid">
             <p:editor id="memo_editor" value="#{clientform.memo}" onchange="handleMemoChange()"/>
             <p:growl id="growl_client_memo" showDetail="true" life="3000"/>
             <center>
-                <p:button value="Сохранить" onclick="save0Tab()" id="saveClientFormMemoButton" icon="ui-icon-check"/>
+                <p:commandButton value="Сохранить" onclick="save0Tab()" id="saveClientFormMemoButton" icon="ui-icon-check" update=":m_tabview:commentsTabTitle" />
             </center>
         </p:panel>
     </h:form>

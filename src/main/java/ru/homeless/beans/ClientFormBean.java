@@ -110,9 +110,9 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
     public void updateDocumentsTabHeader() {
         List<Document> listOfDocumentsForTitle = getGenericService().getInstancesByClientId(Document.class, client.getId());
         if (listOfDocumentsForTitle == null || listOfDocumentsForTitle.size() == 0) {
-            documentsHeaderInline = "Документы";
+            documentsHeaderInline = "";
         } else {
-            documentsHeaderInline = "<u>Документы</u>";
+            documentsHeaderInline = "text-decoration: underline;";
         }
 
     }
@@ -155,20 +155,16 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
         updateDocumentsTabHeader();
 
         if (client.getContacts() == null || client.getContacts().trim().replaceAll("\\<.*?>","").equals("")) {
-            contactsHeaderInline = "Контакты";
+            contactsHeaderInline = "";
         } else {
-            contactsHeaderInline = "<u>Контакты</u>";
+            contactsHeaderInline = "text-decoration: underline;";
         }
 
         if (client.getMemo() == null || client.getMemo().trim().replaceAll("\\<.*?>","").equals("")) {
-            commentsHeaderInline = "Примечания";
+            commentsHeaderInline = "";
         } else {
-            commentsHeaderInline = "<u>Примечания</u>";
+            commentsHeaderInline = "text-decoration: underline;";
         }
-
-        rc.update("contactsTab");
-        rc.update("commentsTab");
-        rc.update("documentsTab");
 
         //set actual client id to session for using in another applications
         HttpSession session = Util.getSession();
