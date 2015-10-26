@@ -1,18 +1,18 @@
 -- This patch should be applied to production after integration
 
-ALTER TABLE `homeless`.`RecievedService` CHANGE COLUMN `id` `id` INT(11) NOT NULL AUTO_INCREMENT  ;
+ALTER TABLE `RecievedService` CHANGE COLUMN `id` `id` INT(11) NOT NULL AUTO_INCREMENT  ;
 update Client set nightStay=1 where nightStay is null;
 ALTER TABLE ServContract add documentId int(11);
 
-CREATE TABLE `homeless`.`Room` (  `id` INT NOT NULL AUTO_INCREMENT,  `roomnumber` VARCHAR(20) NULL,  `roommaxlivers` INT(5) NULL,  `roomnotes` TEXT NULL,  `currentnumoflivers` INT(5) NULL,  PRIMARY KEY (`id`));
+CREATE TABLE `Room` (  `id` INT NOT NULL AUTO_INCREMENT,  `roomnumber` VARCHAR(20) NULL,  `roommaxlivers` INT(5) NULL,  `roomnotes` TEXT NULL,  `currentnumoflivers` INT(5) NULL,  PRIMARY KEY (`id`));
 
-INSERT INTO `homeless`.`Room` (`id`, `roomnumber`, `roommaxlivers`) VALUES ('1', '1.1', '8');
-INSERT INTO `homeless`.`Room` (`id`, `roomnumber`, `roommaxlivers`) VALUES ('2', '1.2', '10');
-INSERT INTO `homeless`.`Room` (`id`, `roomnumber`, `roommaxlivers`) VALUES ('3', '1.3', '11');
-INSERT INTO `homeless`.`Room` (`id`, `roomnumber`, `roommaxlivers`) VALUES ('4', '2.3', '12');
-INSERT INTO `homeless`.`Room` (`id`, `roomnumber`, `roommaxlivers`) VALUES ('5', '2.2', '10');
+INSERT INTO `Room` (`id`, `roomnumber`, `roommaxlivers`) VALUES ('1', '1.1', '8');
+INSERT INTO `Room` (`id`, `roomnumber`, `roommaxlivers`) VALUES ('2', '1.2', '10');
+INSERT INTO `Room` (`id`, `roomnumber`, `roommaxlivers`) VALUES ('3', '1.3', '11');
+INSERT INTO `Room` (`id`, `roomnumber`, `roommaxlivers`) VALUES ('4', '2.3', '12');
+INSERT INTO `Room` (`id`, `roomnumber`, `roommaxlivers`) VALUES ('5', '2.2', '10');
 
-CREATE TABLE `homeless`.`CustomDocumentRegistry` (
+CREATE TABLE `CustomDocumentRegistry` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `client` INT(11) NULL,
   `docNum` VARCHAR(255) NULL,
@@ -30,7 +30,7 @@ CREATE TABLE `homeless`.`CustomDocumentRegistry` (
 DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_general_ci;
 
-CREATE TABLE `homeless`.`ZAGSRequestDocumentRegistry` (
+CREATE TABLE `ZAGSRequestDocumentRegistry` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `client` INT(11) NULL,
   `forWhom` TEXT NULL,
@@ -47,7 +47,7 @@ DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_general_ci;
 
 
-CREATE TABLE `homeless`.`BasicDocumentRegistryType` (
+CREATE TABLE `BasicDocumentRegistryType` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `caption` VARCHAR(255) NULL,
   PRIMARY KEY (`id`))
@@ -57,7 +57,7 @@ CREATE TABLE `homeless`.`BasicDocumentRegistryType` (
 
 
 
-CREATE TABLE `homeless`.`BasicDocumentRegistry` (
+CREATE TABLE `BasicDocumentRegistry` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `type` INT(11) NULL,
   `docNum` VARCHAR(45) NULL,
@@ -97,11 +97,11 @@ set foreign_key_checks = 0;
 delete from ServicesType where id = 20;
 set foreign_key_checks = 1;
 
-ALTER TABLE `homeless`.`RecievedService`
+ALTER TABLE `RecievedService`
 ADD COLUMN `cash` INT(11) NULL AFTER `worker`,
 ADD COLUMN `comment` TEXT NULL AFTER `cash`;
 
-ALTER TABLE `homeless`.`ServicesType`
+ALTER TABLE `ServicesType`
 ADD COLUMN `money` TINYINT(1) NULL DEFAULT 0 AFTER `caption`,
 ADD COLUMN `document` TINYINT(1) NULL DEFAULT 0 AFTER `money`;
 
@@ -117,32 +117,32 @@ insert into ServicesType (id, caption, money) values (20, 'Оплата пошл
 -- NOTE!!! DELETE THE TABLE GivenCertificate after its migration
 
 -- HS-4
-update `homeless`.`Document` set doctype = 13 where doctype=25;
+update `Document` set doctype = 13 where doctype=25;
 delete from DocType where id=25;
 
-update `homeless`.`Document` set doctype = 13 where doctype=26;
+update `Document` set doctype = 13 where doctype=26;
 delete from DocType where id=26;
 
-update `homeless`.`Document` set doctype = 8 where doctype=22;
+update `Document` set doctype = 8 where doctype=22;
 delete from DocType where id=22;
 
 -- HS-10
-ALTER TABLE `homeless`.`Document`
+ALTER TABLE `Document`
 ADD COLUMN `tempRegDateFrom` DATETIME NULL DEFAULT NULL AFTER `worker`,
 ADD COLUMN `tempRegDateTo` DATETIME NULL DEFAULT NULL AFTER `tempRegDateFrom`;
 
-ALTER TABLE `homeless`.`Worker`
+ALTER TABLE `Worker`
 ADD COLUMN `primefacesskin` VARCHAR(60) NULL DEFAULT NULL AFTER `rules`;
 
-INSERT INTO `homeless`.`ContractPoints` (`id`, `audience`, `caption`) VALUES ('24', '0', 'Восстановление документов об образовании');
-INSERT INTO `homeless`.`ContractPoints` (`id`, `audience`, `caption`) VALUES ('25', '0', 'Получение повторного свидетельства о рождении (или получение документов ЗАГС)');
-INSERT INTO `homeless`.`ContractPoints` (`id`, `audience`, `caption`) VALUES ('26', '0', 'Получение/восстановление военного билета');
-INSERT INTO `homeless`.`ContractPoints` (`id`, `audience`, `caption`) VALUES ('27', '0', 'Получение загранпаспорта');
-INSERT INTO `homeless`.`ContractPoints` (`id`, `audience`, `caption`) VALUES ('28', '0', 'Получение технических средств реабилитации (протезно-ортопедических изделий)');
+INSERT INTO `ContractPoints` (`id`, `audience`, `caption`) VALUES ('24', '0', 'Восстановление документов об образовании');
+INSERT INTO `ContractPoints` (`id`, `audience`, `caption`) VALUES ('25', '0', 'Получение повторного свидетельства о рождении (или получение документов ЗАГС)');
+INSERT INTO `ContractPoints` (`id`, `audience`, `caption`) VALUES ('26', '0', 'Получение/восстановление военного билета');
+INSERT INTO `ContractPoints` (`id`, `audience`, `caption`) VALUES ('27', '0', 'Получение загранпаспорта');
+INSERT INTO `ContractPoints` (`id`, `audience`, `caption`) VALUES ('28', '0', 'Получение технических средств реабилитации (протезно-ортопедических изделий)');
 
 -- Fix doctype for all Workers
 create temporary table UPD_PASS (select doc.id from Document doc join Worker w on doc.worker = w.id);
 update Document set doctype = 1 where id in (select id from UPD_PASS);
 drop table UPD_PASS;
 
-update `homeless`.`Worker` set password = sha1(password);
+update `Worker` set password = sha1(password);
