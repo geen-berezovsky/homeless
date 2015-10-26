@@ -60,6 +60,7 @@
 					match="head&gt;"
 					replace="h:head&gt;"
 					byline="true"/>
+				<sleep seconds="1"/>
                             </target>
                         </configuration>
                         <goals>
