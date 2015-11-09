@@ -42,7 +42,7 @@
                                 <taskdef resource="net/sf/antcontrib/antlib.xml" classpathref="maven.plugin.classpath"/>
                                 <property environment="env"/>
                                 <exec executable="pandoc" output="${basedir}/target/homeless/secure/help/manual.html"
-                                      failonerror="false">
+                                      failonerror="false" failifexecutionfails="false">
                                     <arg value="-f"/>
                                     <arg value="docx"/>
                                     <arg value="-t"/>
