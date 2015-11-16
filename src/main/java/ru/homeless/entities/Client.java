@@ -24,6 +24,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name = "Client")
@@ -359,5 +360,10 @@ public class Client implements Serializable {
 	public void setRecievedservices(Set<RecievedService> recievedservices) {
 		this.recievedservices = recievedservices;
 	}
+	
+	@Transient
+    public String getShortFIO(){
+    	return getSurname() + " " + getFirstname().substring(0, 1) + ". " + getMiddlename().substring(0, 1) + ".";
+    }
 
 }

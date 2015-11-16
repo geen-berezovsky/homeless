@@ -1,20 +1,24 @@
 package ru.homeless.beans;
 
-import java.io.*;
+import java.io.Serializable;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
-import javax.faces.component.UIInput;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
-import javax.faces.event.ComponentSystemEvent;
 import javax.faces.event.ValueChangeEvent;
-import javax.faces.validator.ValidatorException;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
@@ -22,11 +26,21 @@ import org.primefaces.component.tabview.TabView;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.TabChangeEvent;
 
-import org.primefaces.model.StreamedContent;
 import ru.homeless.comparators.RecievedServiceSortingComparator;
-import ru.homeless.configuration.Configuration;
-import ru.homeless.entities.*;
-import ru.homeless.services.GenericService;
+import ru.homeless.entities.Breadwinner;
+import ru.homeless.entities.ChronicDisease;
+import ru.homeless.entities.Client;
+import ru.homeless.entities.Document;
+import ru.homeless.entities.Education;
+import ru.homeless.entities.FamilyCommunication;
+import ru.homeless.entities.MyClientsEntity;
+import ru.homeless.entities.NightStay;
+import ru.homeless.entities.Reasonofhomeless;
+import ru.homeless.entities.RecievedService;
+import ru.homeless.entities.ServContract;
+import ru.homeless.entities.ShelterHistory;
+import ru.homeless.entities.Worker;
+import ru.homeless.services.ClientService;
 import ru.homeless.util.Util;
 
 @ManagedBean(name = "clientform")
@@ -81,6 +95,12 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
     private int tabIndex = 0;
     private int prevTabIndex = 0;
     // *********************************
+    
+    @ManagedProperty(value = "#{ClientService}")
+	private ClientService clientService;
+    
+    //TODO: some kind of setting. Move it somewhere
+    protected static final int DAY_COUNT_REMINDER = 3;
 
     public ClientFormBean()  {
         this.mainPanelVisibility = "display: none;";
@@ -825,5 +845,24 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
     public void setPrevTabIndex(int prevTabIndex) {
         this.prevTabIndex = prevTabIndex;
     }
+    
+    public boolean getNeedToOpenReminder(){
+    	return !getClientsFinishingForCurUser().isEmpty();
+    }
+    
+    public ClientService getClientService() {
+		return clientService;
+	}
 
+	public void setClientService(ClientService clientService) {
+		this.clientService = clientService;
+	}
+
+	public Collection<ShelterHistory> getClientsReminderForCurUser(){
+    	return getClientsFinishingForCurUser();
+    }
+    
+    private Collection<ShelterHistory> getClientsFinishingForCurUser(){
+    	return clientService.getClientDAO().getShelterEndsBefore(Util.getNDayFromCurrent(DAY_COUNT_REMINDER));
+    }
 }

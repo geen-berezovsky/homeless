@@ -5,6 +5,7 @@ import java.sql.Blob;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -13,6 +14,7 @@ import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import ru.homeless.entities.*;
 import ru.homeless.util.Util;
@@ -23,18 +25,31 @@ public class ClientDAO extends GenericDAO implements Serializable {
 	private static final long serialVersionUID = 1L;
 	public static Logger log = Logger.getLogger(ClientDAO.class);
 
-    public List<MyClientsEntity> getMyContracts(int workerId, Date startDate, Date endDate) {
-        List<ServContract> contracts = new ArrayList<ServContract>();
-        List<MyClientsEntity> myClientsEntities = new ArrayList<MyClientsEntity>();
+    public List<MyClientsEntity> getMyContracts(int workerId, Date from, Date to) {
         Criteria c = null;
-
-        if (startDate == null && endDate == null) {
-            c = getSessionFactory().getCurrentSession().createCriteria(ServContract.class).add(Restrictions.eq("result", getInstanceById(ContractResult.class, 1))).add(Restrictions.eq("worker", getInstanceById(Worker.class, workerId)));
+        if (from == null && to == null) {
+            c = createCreteiaContractsForWorker(workerId);
         } else {
-            c = getSessionFactory().getCurrentSession().createCriteria(ServContract.class).add(Restrictions.ne("result", getInstanceById(ContractResult.class, 1))).add(Restrictions.eq("worker", getInstanceById(Worker.class, workerId))).add(Restrictions.between("startDate",startDate, endDate));
+            c = createCreteiaContractsForWorker(workerId).add(Restrictions.between("startDate",from, to));
         }
+        return getMyContractsByCriteria(c);
+    }
+    
+    private Criteria createCreteiaContractsForWorker(int workerId){
+    	return getSessionFactory().getCurrentSession().createCriteria(ServContract.class).add(Restrictions.eq("result", getInstanceById(ContractResult.class, 1))).add(Restrictions.eq("worker", getInstanceById(Worker.class, workerId)));
+    }
+
+    /**
+     * Return contracts for criteria 
+     * @param workerId
+     * @param dateToend
+     * @return
+     */
+    private List<MyClientsEntity> getMyContractsByCriteria(Criteria c){
+        List<MyClientsEntity> myClientsEntities = new ArrayList<MyClientsEntity>();
         c.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-        contracts  = c.list();
+        @SuppressWarnings("unchecked")
+		List<ServContract> contracts  = c.list();
 
         for (ServContract sc : contracts) {
             MyClientsEntity myClientsEntity = new MyClientsEntity();
@@ -53,7 +68,26 @@ public class ClientDAO extends GenericDAO implements Serializable {
 
         return myClientsEntities;
     }
-
+    
+    /**
+     * Return contracts ended from current date before <b>dateToEnd</b> for worker with id <b>workerId</b>
+     * @param workerId
+     * @param dateToEnd
+     * @return
+     */
+    @Transactional
+    public List<ShelterHistory> getShelterEndsBefore(Date dateToEnd){
+    	Criteria c = getSessionFactory().getCurrentSession().createCriteria(ShelterHistory.class).add(Restrictions.between("outShelter", new Date(), dateToEnd));
+    	// = createCreteiaContractsForWorker(workerId).add(Restrictions.between("stopDate", new Date(), dateToEnd));
+    	/*MyClientsEntity m = new MyClientsEntity();
+    	m.setId(123);
+    	m.setEndDate("23.23.23");
+    	m.setSurname("Иванов");
+    	m.setFirstname("Иван");
+    	m.setMiddlename("Иванович");*/
+    	return c.list();//Collections.singletonList(m);
+    	//return getMyContractsByCriteria(c);
+    }
 
 	@SuppressWarnings("unchecked")
 	public List<Client> getClientsByCriteria(int id, String surname, String firstname, String middlename, String _date) {
