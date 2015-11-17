@@ -19,11 +19,11 @@
             </p:panelGrid>
         </p:dialog>
 
-        <p:dialog header="Подтвердите удаление" appendTo="@form" widgetVar="deadClientWv" resizable="false"
+        <p:dialog header="Отметить клиента как умершего" appendTo="@form" widgetVar="deadClientWv" resizable="false"
                   closable="true" showEffect="fade" hideEffect="explode" dynamic="true" closeOnEscape="true"
                   style="font-size: 200%;" draggable="false">
-            <p:panelGrid columns="2" style="margin: 0 auto;" styleClass="base_form_panel_grid_class">
-            </p:panelGrid>
+                    <p:outputLabel value="Загрузить скан свидетельства о смерти" styleClass="base_form_caption_text"/>
+                    <p:fileUpload id="deathDocUpload" styleClass="base_form_value_text" uploadLabel="Загрузить" cancelLabel="Отмена" label="Выбор файла" fileUploadListener="#{clientdocumentscan.handleDeathDocUpload}" />
         </p:dialog>
 
 </ui:composition>
