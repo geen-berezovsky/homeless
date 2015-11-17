@@ -204,8 +204,26 @@
 </p:tabView>
 
 </p:layoutUnit>
-<p:layoutUnit id="right" position="east" size="300" resizable="true" closable="true" collapsible="true" header="Reminders" minSize="200" collapsed="true">
-    Schedule
+
+
+<p:layoutUnit id="right" position="east" size="300" resizable="true" closable="true" collapsible="true" header="Reminders" minSize="200" collapsed="#{not clientform.needToOpenReminder}">
+     
+    <p:dataTable var="clientInfo" value="#{clientform.clientsReminderForCurUser}" rendered="#{clientform.needToOpenReminder}">
+        <f:facet name="header">
+            Скорое окончание даты заселения
+        </f:facet>
+        <p:column headerText="Id">
+            <h:outputText value="#{clientInfo.client.id}" />
+        </p:column>
+        <p:column headerText="Клиент">
+          <h:outputText value="#{clientInfo.client.shortFIO}" />        
+        </p:column>
+        <p:column headerText="Дата">
+            <h:outputText value="#{clientInfo.outShelter}" >
+              <f:convertDateTime pattern="dd.MM.yyyy" />
+            </h:outputText>
+        </p:column>
+    </p:dataTable>
 </p:layoutUnit>
 
 
