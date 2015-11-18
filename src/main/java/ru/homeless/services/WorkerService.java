@@ -40,7 +40,7 @@ public class WorkerService extends GenericService implements Serializable {
 		 */
         List<Worker> workers = getInstances(Worker.class);
 		for (Worker w : workers) {
-			if ((w.getFirstname() + " " + w.getSurname()).equals(name) && DigestUtils.sha1Hex(password).equals(w.getPassword())) {
+            if ((w.getFirstname() + " " + w.getSurname()).equals(name) && DigestUtils.sha1Hex(password).equals(w.getPassword())) {
 				return w;
 			}
 		}

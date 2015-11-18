@@ -1,29 +1,27 @@
 package ru.homeless.util;
 
-import org.apache.log4j.Logger;
-import org.primefaces.context.RequestContext;
-import org.primefaces.model.DefaultStreamedContent;
-import org.primefaces.model.StreamedContent;
-import ru.homeless.beans.ClientFormBean;
-import ru.homeless.configuration.Configuration;
-import ru.homeless.entities.Client;
-import ru.homeless.services.ClientService;
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
-import java.awt.*;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.sql.Blob;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
-import java.util.ResourceBundle;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -36,7 +34,15 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
+import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
+
+import ru.homeless.beans.ClientFormBean;
+import ru.homeless.configuration.Configuration;
+import ru.homeless.entities.Client;
+import ru.homeless.services.ClientService;
 
 public class Util {
 
@@ -311,6 +317,16 @@ public class Util {
         return new DefaultStreamedContent(stream, docType, docName);
     }
 
-
+    /**
+     * Return +dayCount from current date
+     * @param dayCount
+     * @return
+     */
+    public static Date getNDayFromCurrent(int dayCount){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        calendar.add(Calendar.DAY_OF_YEAR, dayCount);
+        return calendar.getTime();
+    }
 
 }
