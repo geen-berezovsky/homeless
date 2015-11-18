@@ -484,7 +484,7 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
         //the client will be null when you just had open this application
         if (client != null) {
                 //update "homeless till the moment" (don't move it after client data copying!)
-                updateHomelessDate(selectedMonth);
+                updateHomelessDate(selectedMonth, getSelectedYear());
                 client = copyClientDataToClient(client);
                 //Update Surname, FirstName and MiddleName for starting with uppercase letter
                 String fl = client.getSurname().toUpperCase().substring(0, 1);

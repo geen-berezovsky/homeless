@@ -9,6 +9,9 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.sql.Blob;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -506,30 +509,44 @@ public class ClientDataBean implements Serializable {
 			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Неправильно указан год в поле <Бездомный с момента>!","Используйте формат гггг");
 			throw new ValidatorException(msg);
 		} else {
-			updateHomelessDate(Integer.parseInt(str));
+			updateHomelessDate(0, Integer.parseInt(str));
 		}
 	}
-	
-	public void updateHomelessDate(int newValue) {
-		int month = 0;
-		int year = 0;
+
+	public void updateHomelessDate(int month, int year) {
+		int m = 0;
+		int y = 0;
+
 		Calendar orig = GregorianCalendar.getInstance();
 		if (getHomelessdate()!=null) {
 			orig.setTime(getHomelessdate());
-		}
-		if (newValue < 13) { // it is monthId
-			month = newValue;
-			year = orig.get(Calendar.YEAR);
 		} else {
-			year = newValue;
-			month = orig.get(Calendar.MONTH);
+			DateFormat df = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
+			try {
+				orig.setTime(df.parse("01.01.1900 00:00:00"));
+			} catch (ParseException e) {
+				log.error("Date parse exception",e);
+			}
 		}
+
+		if (month == 0) {
+			//set only year
+			y = year;
+			m = orig.get(Calendar.MONTH);
+		} else if (year == 0) {
+			//set only month
+			m = month;
+			y = orig.get(Calendar.YEAR);
+		} else {
+			m = orig.get(Calendar.MONTH);
+			y = orig.get(Calendar.YEAR);
+		}
+
 		Calendar c = GregorianCalendar.getInstance();
 		c.set(year, month, 1, 0, 0, 0);
 		// setting updated value to the client
 		setHomelessdate(c.getTime());
-	}	
-
+	}
 	
 	public void updateHomelessDate() {
 		setSelectedMonth(getHomelessMonth(getHomelessdate()));
