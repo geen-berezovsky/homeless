@@ -5,7 +5,7 @@ import java.sql.Blob;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -16,7 +16,12 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import ru.homeless.entities.*;
+import ru.homeless.entities.Client;
+import ru.homeless.entities.ContractResult;
+import ru.homeless.entities.MyClientsEntity;
+import ru.homeless.entities.ServContract;
+import ru.homeless.entities.ShelterHistory;
+import ru.homeless.entities.Worker;
 import ru.homeless.util.Util;
 
 @Repository
@@ -70,23 +75,28 @@ public class ClientDAO extends GenericDAO implements Serializable {
     }
     
     /**
-     * Return contracts ended from current date before <b>dateToEnd</b> for worker with id <b>workerId</b>
+     * Returns info about shelter ended from current date before <b>dateToEnd</b>. Including both date.
      * @param workerId
      * @param dateToEnd
      * @return
      */
     @Transactional
     public List<ShelterHistory> getShelterEndsBefore(Date dateToEnd){
-    	Criteria c = getSessionFactory().getCurrentSession().createCriteria(ShelterHistory.class).add(Restrictions.between("outShelter", new Date(), dateToEnd));
-    	// = createCreteiaContractsForWorker(workerId).add(Restrictions.between("stopDate", new Date(), dateToEnd));
-    	/*MyClientsEntity m = new MyClientsEntity();
-    	m.setId(123);
-    	m.setEndDate("23.23.23");
-    	m.setSurname("Иванов");
-    	m.setFirstname("Иван");
-    	m.setMiddlename("Иванович");*/
-    	return c.list();//Collections.singletonList(m);
-    	//return getMyContractsByCriteria(c);
+    	Criteria shelterInfoCriteria = getSessionFactory().getCurrentSession().createCriteria(ShelterHistory.class);
+
+        shelterInfoCriteria.add(Restrictions.ge("outShelter", getCurDateDaysOnly()));
+        shelterInfoCriteria.add(Restrictions.le("outShelter", dateToEnd));
+    	shelterInfoCriteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+    	return shelterInfoCriteria.list();
+    }
+    
+    private Date getCurDateDaysOnly(){
+    	Calendar cal = Calendar.getInstance();
+    	cal.set(Calendar.HOUR_OF_DAY, 0);
+    	cal.set(Calendar.MINUTE, 0);
+    	cal.set(Calendar.SECOND, 0);
+    	cal.set(Calendar.MILLISECOND, 0);
+    	return cal.getTime();
     }
 
 	@SuppressWarnings("unchecked")
