@@ -26,7 +26,7 @@ public class ContractResult implements Serializable {
 			return false;
 		}
 		ContractResult d = (ContractResult) o;
-		if (getId() == d.getId()) {
+        if (new Integer(getId()).equals(new Integer(d.getId()))) {
 			return true;
 		} else {
 			return false;	

@@ -42,4 +42,18 @@ public class FamilyCommunication implements Serializable {
 	public String toString() {
 		return caption;
 	}
+
+    public boolean equals(Object o) {
+        if (o == null) return false;
+        if (! (o instanceof FamilyCommunication)) {
+            return false;
+        }
+        FamilyCommunication d = (FamilyCommunication) o;
+        if (new Integer(getId()).equals(new Integer(d.getId()))) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 }

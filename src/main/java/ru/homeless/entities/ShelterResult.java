@@ -49,7 +49,7 @@ public class ShelterResult implements Serializable {
             return false;
         }
         ShelterResult d = (ShelterResult) o;
-        if (getId() == d.getId()) {
+        if (new Integer(getId()).equals(new Integer(d.getId()))) {
             return true;
         } else {
             return false;

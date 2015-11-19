@@ -502,10 +502,14 @@ public class ClientDataBean implements Serializable {
 		}
 	}
 
-	
+	/*
+	Deprecated because of social workers sometimes don't know the real homeless age for the client or client can't say it
+	This method can be deleted safely
+	 */
 	public void validateHomelessYear(FacesContext ctx, UIComponent component, Object value) {
 		String str = value.toString();
-		if (! isYearValid(str)) {
+        System.out.println(str);
+        if (! isYearValid(str)) {
 			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Неправильно указан год в поле <Бездомный с момента>!","Используйте формат гггг");
 			throw new ValidatorException(msg);
 		} else {

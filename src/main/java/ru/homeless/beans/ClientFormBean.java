@@ -27,6 +27,9 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.event.TabChangeEvent;
 
 import ru.homeless.comparators.RecievedServiceSortingComparator;
+import ru.homeless.converters.EducationConverter;
+import ru.homeless.converters.FComConverter;
+import ru.homeless.converters.NightStayConverter;
 import ru.homeless.entities.Breadwinner;
 import ru.homeless.entities.ChronicDisease;
 import ru.homeless.entities.Client;
@@ -250,28 +253,28 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
         this.client = client;
     }
 
-    public List<String> getEducationTypes() {
-        List<String> l = new ArrayList<String>();
-        for (Education e : getGenericService().getInstances(Education.class)) {
-            l.add(e.getCaption());
-        }
-        return l;
+    public List<Education> getEducationTypes() {
+        //refresh converter if new data available
+        List<Education> list = getGenericService().getInstances(Education.class);
+        EducationConverter.edDB = new ArrayList<Education>();
+        EducationConverter.edDB.addAll(list);
+        return list;
     }
 
-    public List<String> getNightStayTypes() {
-        List<String> l = new ArrayList<String>();
-        for (NightStay ns : getGenericService().getInstances(NightStay.class)) {
-            l.add(ns.getCaption());
-        }
-        return l;
+    public List<NightStay> getNightStayTypes() {
+        //refresh converter if new data available
+        List<NightStay> list = getGenericService().getInstances(NightStay.class);
+        NightStayConverter.nsDB = new ArrayList<NightStay>();
+        NightStayConverter.nsDB.addAll(list);
+        return  list;
     }
 
-    public List<String> getFamilyCommunicationTypes() {
-        List<String> l = new ArrayList<String>();
-        for (FamilyCommunication f : getGenericService().getInstances(FamilyCommunication.class)) {
-            l.add(f.getCaption());
-        }
-        return l;
+    public List<FamilyCommunication> getFamilyCommunicationTypes() {
+        //refresh converter if new data available
+        List<FamilyCommunication> list = getGenericService().getInstances(FamilyCommunication.class);
+        FComConverter.fcomDB = new ArrayList<FamilyCommunication>();
+        FComConverter.fcomDB.addAll(list);
+        return list;
     }
 
 	/*
@@ -708,10 +711,16 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
     }
 
     @PostConstruct
-    public void postConstructExample() {
-        /*
-        Do nothing now. Just a stub.
-         */
+    // special for converter and selection data model!
+    public void init() {
+        FComConverter.fcomDB = new ArrayList<FamilyCommunication>();
+        FComConverter.fcomDB.addAll(getGenericService().getInstances(FamilyCommunication.class));
+
+        NightStayConverter.nsDB = new ArrayList<NightStay>();
+        NightStayConverter.nsDB.addAll(getGenericService().getInstances(NightStay.class));
+
+        EducationConverter.edDB = new ArrayList<Education>();
+        EducationConverter.edDB.addAll(getGenericService().getInstances(Education.class));
     }
 
     public void openPhotoDlg() {

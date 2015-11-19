@@ -42,4 +42,18 @@ public class NightStay implements Serializable {
 		return caption;
 	}
 
+    public boolean equals(Object o) {
+        if (o == null) return false;
+        if (! (o instanceof NightStay)) {
+            return false;
+        }
+        NightStay d = (NightStay) o;
+        if (new Integer(getId()).equals(new Integer(d.getId()))) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
 }

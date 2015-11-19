@@ -201,7 +201,8 @@ public class ClientDocumentsBean implements Serializable {
 	}
 
 	public List<DocType> getDocTypes() {
-		return docTypes;
+		init();
+        return docTypes;
 	}
 
 	public void setDocTypes(List<DocType> docTypes) {

@@ -44,8 +44,8 @@
 			<h:outputText value="Образование:" styleClass="base_form_caption_text"/>
 		</p:row>
 		<p:row>
-			<p:selectOneMenu id="educationId" value="#{clientform.education.caption}" style="width:150px;" styleClass="base_form_value_text">
-				<f:selectItems value="#{clientform.educationTypes}" var="education" itemValue="#{education}"/>
+			<p:selectOneMenu id="educationId" value="#{clientform.education}" converter="edConverter" style="width:150px;" styleClass="base_form_value_text">
+				<f:selectItems value="#{clientform.educationTypes}" var="education" itemValue="#{education}" itemLabel="#{education.caption}"/>
 			</p:selectOneMenu>
 		</p:row>
 		<p:row>
@@ -62,18 +62,18 @@
 			<h:outputText value="Где ночевали:" styleClass="base_form_caption_text"/>
 		</p:row>
 		<p:row>
-			<p:selectOneMenu id="nightStayId" value="#{clientform.nightStay.caption}" style="width:150px;" styleClass="base_form_value_text">
-				<f:selectItems value="#{clientform.nightStayTypes}" var="nightStay" itemValue="#{nightStay}" />
+			<p:selectOneMenu id="nightStayId" value="#{clientform.nightStay}" converter="nsConverter" style="width:150px;" styleClass="base_form_value_text">
+				<f:selectItems value="#{clientform.nightStayTypes}" var="nightStay" itemValue="#{nightStay}" itemLabel="#{nightStay.caption}"/>
 			</p:selectOneMenu>
-		</p:row>
+        </p:row>
 		<p:row>
 			<h:outputText value="Видитесь ли с родственниками:" styleClass="base_form_caption_text"/>
 		</p:row>
 		<p:row>
-			<p:selectOneMenu id="familyCommunicationsId" value="#{clientform.fcom.caption}" style="width:150px;" styleClass="base_form_value_text">
-				<f:selectItems value="#{clientform.familyCommunicationTypes}" var="familyCommunication" itemValue="#{familyCommunication}" />
-			</p:selectOneMenu>
-		</p:row>
+            <p:selectOneMenu id="familyCommunicationsId" value="#{clientform.fcom}" converter="fcomConverter" style="width:150px;" styleClass="base_form_value_text">
+                <f:selectItems value="#{clientform.familyCommunicationTypes}" var="familyCommunication" itemValue="#{familyCommunication}" itemLabel="#{familyCommunication.caption}" />
+            </p:selectOneMenu>
+        </p:row>
 
 	</h:panelGrid>
 

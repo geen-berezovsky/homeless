@@ -171,7 +171,7 @@ public class Client implements Serializable {
 		this.diseases = diseases;
 	}
 
-	@ManyToOne(fetch = FetchType.EAGER, targetEntity = NightStay.class, cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.LAZY, targetEntity = NightStay.class)
 	@JoinColumn(name = "nightStay")
 	public NightStay getNightstay() {
 		return nightStay;
@@ -181,7 +181,7 @@ public class Client implements Serializable {
 		this.nightStay = nightStay;
 	}
 
-	@ManyToOne(fetch = FetchType.EAGER, targetEntity = Education.class, cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.LAZY, targetEntity = Education.class)
 	@JoinColumn(name = "education")
 	public Education getEducation() {
 		return education;
@@ -249,7 +249,7 @@ public class Client implements Serializable {
 		this.dependents = dependents;
 	}
 
-	@ManyToOne(fetch = FetchType.EAGER, targetEntity = FamilyCommunication.class, cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.LAZY, targetEntity = FamilyCommunication.class)
 	@JoinColumn(name = "familycommunication")
 	public FamilyCommunication getFcom() {
 		return fcom;

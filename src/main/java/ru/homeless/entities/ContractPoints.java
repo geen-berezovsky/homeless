@@ -25,7 +25,7 @@ public class ContractPoints implements Serializable {
 			return false;
 		}
 		ContractPoints d = (ContractPoints) o;
-		if (getId() == d.getId()) {
+        if (new Integer(getId()).equals(new Integer(d.getId()))) {
 			return true;
 		} else {
 			return false;	

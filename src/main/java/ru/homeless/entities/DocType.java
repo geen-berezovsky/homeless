@@ -38,7 +38,7 @@ public class DocType implements Serializable {
 			return false;
 		}
 		DocType d = (DocType) o;
-		if (getId() == d.getId()) {
+        if (new Integer(getId()).equals(new Integer(d.getId()))) {
 			return true;
 		} else {
 			return false;	
