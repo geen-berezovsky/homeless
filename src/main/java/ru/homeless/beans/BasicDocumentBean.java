@@ -48,7 +48,6 @@ public class BasicDocumentBean implements Serializable {
     }
 
     public void openDlg(String strings) {
-        log.info("openDLG");
         HttpSession session = Util.getSession();
         worker = (Worker) session.getAttribute("worker");
         String cids = session.getAttribute("cid").toString();
@@ -66,7 +65,6 @@ public class BasicDocumentBean implements Serializable {
 
         RequestContext rc = RequestContext.getCurrentInstance();
         for (String s : strings.split("-")) {
-            log.info("Executing "+s);
             rc.execute(s);
         }
     }
@@ -76,8 +74,6 @@ public class BasicDocumentBean implements Serializable {
         int requestType = 0;
         String filename = "";
         int selectedDocumentId = 0;
-
-        log.info("basicDocumentRegistryTypeId = "+basicDocumentRegistryTypeId);
 
         switch (basicDocumentRegistryTypeId) {
             case 11: {

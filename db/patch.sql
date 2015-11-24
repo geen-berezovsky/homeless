@@ -146,3 +146,10 @@ update Document set doctype = 1 where id in (select id from UPD_PASS);
 drop table UPD_PASS;
 
 update `Worker` set password = sha1(password);
+
+-- Implementing client's death registration
+ALTER TABLE `homeless`.`Client`
+ADD COLUMN `deathDate` DATETIME NULL DEFAULT NULL AFTER `nightStay`,
+ADD COLUMN `deathReason` VARCHAR(255) NULL DEFAULT NULL AFTER `deathDate`,
+ADD COLUMN `deathCity` VARCHAR(255) NULL DEFAULT NULL AFTER `deathReason`,
+ADD COLUMN `deathDocPath` TINYTEXT NULL DEFAULT NULL AFTER `deathCity`;

@@ -4,6 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html"
       xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui">
 <ui:composition>
+    <h:form id="deleteClientForm">
             <p:dialog id="deleteClient" header="Подтвердите удаление" appendTo="@form" widgetVar="deleteClientWv" resizable="false"
                   closable="true" showEffect="fade" hideEffect="explode" dynamic="true" closeOnEscape="true"
                   style="font-size: 200%;" draggable="false">
@@ -18,13 +19,46 @@
                 <p:commandButton id="delCDecline" value="Нет" oncomplete="deleteClientWv.hide()" ajax="true"/>
             </p:panelGrid>
         </p:dialog>
-
-        <p:dialog header="Отметить клиента как умершего" appendTo="@form" widgetVar="deadClientWv" resizable="false"
+    </h:form>
+    <h:form id="clientDeathForm">
+        <p:dialog id="clientDeath" header="Отметить клиента как умершего" appendTo="@form" widgetVar="clientDeathWv" resizable="false"
                   closable="true" showEffect="fade" hideEffect="explode" dynamic="true" closeOnEscape="true"
-                  style="font-size: 200%;" draggable="false">
+                  draggable="false">
                     <p:outputLabel value="Загрузить скан свидетельства о смерти" styleClass="base_form_caption_text"/>
-                    <p:fileUpload id="deathDocUpload" styleClass="base_form_value_text" uploadLabel="Загрузить" cancelLabel="Отмена" label="Выбор файла" fileUploadListener="#{clientdocumentscan.handleDeathDocUpload}" />
-        </p:dialog>
+                    <p:fileUpload id="deathDocUpload" styleClass="base_form_value_text" uploadLabel="Загрузить" cancelLabel="Отмена" label="Выбор файла" fileUploadListener="#{clientdeathdocument.handleDeathDocUpload}" update="deathDocPath"/>
 
+            <p:panelGrid columns="2" style="margin: 0 auto;" styleClass="base_form_panel_grid_class">
+                <p:row>
+                    <h:outputText value="Загруженный документ: " styleClass="base_form_caption_text"/>
+                </p:row>
+                <p:row>
+                    <p:commandLink id="deathDocPath" onclick="m_tabviewWv.select(1)" value="#{clientdeathdocument.deathDocPath}" styleClass="base_form_value_text" />
+                </p:row>
+
+                <p:row>
+                    <p:outputLabel for="deathDateInput" value="Дата смерти (01.01.1900 для сброса):" styleClass="base_form_caption_text" />
+                </p:row>
+                <p:row>
+                    <p:calendar value="#{clientdeathdocument.deathDate}" id="deathDateInput" showOn="button" pattern="dd.MM.yyyy" styleClass="base_form_value_text" required="true" size="10"/>
+                </p:row>
+                <p:row>
+                    <p:outputLabel for="deathReasonInput" value="Причина смерти (если известна):" styleClass="base_form_caption_text"/>
+                </p:row>
+                <p:row>
+                    <p:inputText value="#{clientdeathdocument.deathReason}" id="deathReasonInput" size="30" styleClass="base_form_value_text" required="false" />
+                </p:row>
+                <p:row>
+                    <p:outputLabel for="deathCityInput" value="Место смерти (если известно):" styleClass="base_form_caption_text"/>
+                </p:row>
+                <p:row>
+                    <p:inputText value="#{clientdeathdocument.deathCity}" id="deathCityInput" size="30" styleClass="base_form_value_text" required="false" />
+                </p:row>
+            </p:panelGrid>
+            <center>
+                <p:commandButton value="Сохранить" update="@this @form :m_tabview" actionListener="#{clientdeathdocument.saveClientDeath()}" oncomplete="clientDeathWv.hide()"/>
+            </center>
+
+        </p:dialog>
+    </h:form>
 </ui:composition>
 </html>

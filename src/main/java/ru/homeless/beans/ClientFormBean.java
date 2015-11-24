@@ -1,5 +1,6 @@
 package ru.homeless.beans;
 
+import java.io.File;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -27,6 +28,7 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.event.TabChangeEvent;
 
 import ru.homeless.comparators.RecievedServiceSortingComparator;
+import ru.homeless.configuration.Configuration;
 import ru.homeless.converters.EducationConverter;
 import ru.homeless.converters.FComConverter;
 import ru.homeless.converters.NightStayConverter;
@@ -115,6 +117,12 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
     public void reloadAll(int id) throws SQLException {
         this.cid = id;
         this.mainPanelVisibility = "display: block;";
+
+        File profile = new File(Configuration.profilesDir+"/"+cid);
+        if (!profile.exists()) {
+            profile.mkdirs();
+        }
+
         reloadAll();
         RequestContext rc = RequestContext.getCurrentInstance();
         rc.update("select_document");
@@ -201,7 +209,7 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
 
     private String getClientActualStatus(Client client) {
         //Client may live in shelter, lived in shelter earlier, not lived in shelter at all or stored under calculation
-        String result = "(ID = " + client.getId() ;
+        String result = " (ID = " + client.getId() ;
         List<ShelterHistory> shelters = getGenericService().getInstancesByClientId(ShelterHistory.class, client);
         if (shelters != null) {
             if (shelters.size() == 0) {
@@ -220,6 +228,13 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
             result += ", в приюте ранее проживал";
             if (!client.isGender()) {
                 result += "а";
+            }
+            if (client.getDeathDate() != null) {
+                result += ", умер";
+                if (!client.isGender()) {
+                    result += "ла";
+                }
+                result += " "+Util.formatDate(client.getDeathDate());
             }
 
             return result + ")";

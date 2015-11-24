@@ -58,6 +58,11 @@ public class Client implements Serializable {
 	private String photoName;
 	private String photoCheckSum;
 
+    private Date deathDate;
+    private String deathReason;
+    private String deathCity;
+    private String deathDocPath;
+
 	public Client() {
 
 	}
@@ -366,4 +371,35 @@ public class Client implements Serializable {
     	return getSurname() + " " + getFirstname().substring(0, 1) + ". " + getMiddlename().substring(0, 1) + ".";
     }
 
+    public Date getDeathDate() {
+        return deathDate;
+    }
+
+    public void setDeathDate(Date deathDate) {
+        this.deathDate = deathDate;
+    }
+
+    public String getDeathReason() {
+        return deathReason;
+    }
+
+    public void setDeathReason(String deathReason) {
+        this.deathReason = deathReason;
+    }
+
+    public String getDeathCity() {
+        return deathCity;
+    }
+
+    public void setDeathCity(String deathCity) {
+        this.deathCity = deathCity;
+    }
+
+    public String getDeathDocPath() {
+        return deathDocPath;
+    }
+
+    public void setDeathDocPath(String deathDocPath) {
+        this.deathDocPath = deathDocPath;
+    }
 }
