@@ -3,6 +3,7 @@ package ru.homeless.beans;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
@@ -49,6 +50,12 @@ public class ReminderBean implements Serializable{
     	return clientService.getShelterEndsBefore(Util.getNDayFromCurrent(DAY_COUNT_REMINDER));
     }
     
+    public Collection<ShelterHistory> getEndedShelterAndNotLeaving(){
+    	return clientService.getEndedShelterAndNotLeaving();
+    }
+    
+    
+    
  /*   public void onRowFinishingShelterReminderClck(final SelectEvent event) {
     	ShelterHistory myClientsEntity = (ShelterHistory) event.getObject();
         //RequestContext rc = RequestContext.getCurrentInstance();
@@ -81,8 +88,17 @@ public class ReminderBean implements Serializable{
        return null;
     }*/
     
-    public boolean getNeedToOpenReminder(){
+    public boolean isHasSoonShelterEnded(){
     	return !getClientsFinishingForCurUser().isEmpty();
+    }
+    
+    public boolean isHasShelterEndedAndNotLeaving(){
+    	return !getEndedShelterAndNotLeaving().isEmpty();
+    }
+    
+    public boolean getNeedToOpenReminder(){
+    	return isHasSoonShelterEnded()
+    	    || isHasShelterEndedAndNotLeaving();
     }
 
 }

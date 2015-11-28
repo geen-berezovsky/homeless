@@ -133,4 +133,18 @@ public class ClientDAO extends GenericDAO implements Serializable {
     	shelterInfoCriteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
     	return shelterInfoCriteria.list();
     }
+    
+    /**
+     * Returns ShelterHistory for clients, who should leave before today, but shelter status is living.
+     * @return
+     */
+    public List<ShelterHistory> getEndedShelterAndNotLeaving(){
+    	Criteria shelterInfoCriteria = getSessionFactory().getCurrentSession().createCriteria(ShelterHistory.class);
+    	
+        shelterInfoCriteria.add(Restrictions.le("outShelter", getCurDateDaysOnly()));
+        shelterInfoCriteria.add(Restrictions.eq("shelterresult", ru.homeless.entities.ShelterResult.Results.LIVING.getId()));
+        
+    	shelterInfoCriteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+    	return shelterInfoCriteria.list();
+    }
 }
