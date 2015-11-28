@@ -25,6 +25,7 @@ import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 import org.primefaces.component.tabview.TabView;
 import org.primefaces.context.RequestContext;
+import org.primefaces.event.SelectEvent;
 import org.primefaces.event.TabChangeEvent;
 
 import ru.homeless.comparators.RecievedServiceSortingComparator;
@@ -100,12 +101,6 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
     private int tabIndex = 0;
     private int prevTabIndex = 0;
     // *********************************
-    
-    @ManagedProperty(value = "#{ClientService}")
-	private ClientService clientService;
-    
-    //TODO: some kind of setting. Move it somewhere
-    protected static final int DAY_COUNT_REMINDER = 3;
 
     public ClientFormBean()  {
         this.mainPanelVisibility = "display: none;";
@@ -870,23 +865,4 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
         this.prevTabIndex = prevTabIndex;
     }
     
-    public boolean getNeedToOpenReminder(){
-    	return !getClientsFinishingForCurUser().isEmpty();
-    }
-    
-    public ClientService getClientService() {
-		return clientService;
-	}
-
-	public void setClientService(ClientService clientService) {
-		this.clientService = clientService;
-	}
-
-	public Collection<ShelterHistory> getClientsReminderForCurUser(){
-    	return getClientsFinishingForCurUser();
-    }
-    
-    private Collection<ShelterHistory> getClientsFinishingForCurUser(){
-    	return clientService.getClientDAO().getShelterEndsBefore(Util.getNDayFromCurrent(DAY_COUNT_REMINDER));
-    }
 }

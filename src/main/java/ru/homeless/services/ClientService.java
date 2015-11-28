@@ -12,6 +12,7 @@ import ru.homeless.dao.ClientDAO;
 import ru.homeless.entities.Client;
 import ru.homeless.entities.MyClientsEntity;
 import ru.homeless.entities.ServContract;
+import ru.homeless.entities.ShelterHistory;
 
 @Service("ClientService")
 @Transactional(readOnly = false)
@@ -44,4 +45,7 @@ public class ClientService extends GenericService implements Serializable {
         return  getClientDAO().getMyContracts(workerId, startDate, endDate);
     }
 
+    public List<ShelterHistory> getShelterEndsBefore(Date dateToEnd){
+    	return clientDAO.getShelterEndsBefore(dateToEnd);
+    }
 }

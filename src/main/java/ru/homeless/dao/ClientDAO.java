@@ -1,11 +1,12 @@
 package ru.homeless.dao;
 
+import static ru.homeless.util.Util.getCurDateDaysOnly;
+
 import java.io.Serializable;
 import java.sql.Blob;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -73,31 +74,6 @@ public class ClientDAO extends GenericDAO implements Serializable {
 
         return myClientsEntities;
     }
-    
-    /**
-     * Returns info about shelter ended from current date before <b>dateToEnd</b>. Including both date.
-     * @param workerId
-     * @param dateToEnd
-     * @return
-     */
-    @Transactional
-    public List<ShelterHistory> getShelterEndsBefore(Date dateToEnd){
-    	Criteria shelterInfoCriteria = getSessionFactory().getCurrentSession().createCriteria(ShelterHistory.class);
-
-        shelterInfoCriteria.add(Restrictions.ge("outShelter", getCurDateDaysOnly()));
-        shelterInfoCriteria.add(Restrictions.le("outShelter", dateToEnd));
-    	shelterInfoCriteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-    	return shelterInfoCriteria.list();
-    }
-    
-    private Date getCurDateDaysOnly(){
-    	Calendar cal = Calendar.getInstance();
-    	cal.set(Calendar.HOUR_OF_DAY, 0);
-    	cal.set(Calendar.MINUTE, 0);
-    	cal.set(Calendar.SECOND, 0);
-    	cal.set(Calendar.MILLISECOND, 0);
-    	return cal.getTime();
-    }
 
 	@SuppressWarnings("unchecked")
 	public List<Client> getClientsByCriteria(int id, String surname, String firstname, String middlename, String _date) {
@@ -140,5 +116,21 @@ public class ClientDAO extends GenericDAO implements Serializable {
             return false;
         }
         return true;
+    }
+    
+    /**
+     * Returns info about shelter ended from current date before <b>dateToEnd</b>. Including both dates.
+     * @param workerId
+     * @param dateToEnd
+     * @return
+     */
+    @Transactional
+    public List<ShelterHistory> getShelterEndsBefore(Date dateToEnd){
+    	Criteria shelterInfoCriteria = getSessionFactory().getCurrentSession().createCriteria(ShelterHistory.class);
+
+        shelterInfoCriteria.add(Restrictions.ge("outShelter", getCurDateDaysOnly()));
+        shelterInfoCriteria.add(Restrictions.le("outShelter", dateToEnd));
+    	shelterInfoCriteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+    	return shelterInfoCriteria.list();
     }
 }

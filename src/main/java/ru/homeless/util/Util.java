@@ -320,13 +320,29 @@ public class Util {
     /**
      * Return +dayCount from current date
      * @param dayCount
-     * @return
+     * @return +day count and time 23:59:59 
      */
     public static Date getNDayFromCurrent(int dayCount){
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
         calendar.add(Calendar.DAY_OF_YEAR, dayCount);
+        calendar.set(Calendar.MINUTE, 59);
+        calendar.set(Calendar.SECOND, 59);
+        calendar.set(Calendar.HOUR_OF_DAY, 23);
         return calendar.getTime();
+    }
+    
+    /**
+     * Returns 0 hour 0 minutes date of current date
+     * @return
+     */
+    public static Date getCurDateDaysOnly(){
+    	Calendar cal = Calendar.getInstance();
+    	cal.set(Calendar.HOUR_OF_DAY, 0);
+    	cal.set(Calendar.MINUTE, 0);
+    	cal.set(Calendar.SECOND, 0);
+    	cal.set(Calendar.MILLISECOND, 0);
+    	return cal.getTime();
     }
 
 }
