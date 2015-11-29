@@ -14,7 +14,7 @@ import javax.faces.validator.ValidatorException;
 
 import ru.homeless.entities.DocType;
 
-@FacesConverter(forClass = ru.homeless.entities.DocType.class, value = "docTypeConverter")
+@FacesConverter(value = "docTypeConverter")
 public class DocTypeConverter implements Converter, Serializable {
 
 	private static final long serialVersionUID = 1L;

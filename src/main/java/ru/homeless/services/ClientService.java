@@ -45,11 +45,13 @@ public class ClientService extends GenericService implements Serializable {
         return  getClientDAO().getMyContracts(workerId, startDate, endDate);
     }
 
+    @Transactional
     public List<ShelterHistory> getShelterEndsBefore(Date dateToEnd){
     	return getClientDAO().getShelterEndsBefore(dateToEnd);
     }
-    
+
+    @Transactional
     public List<ShelterHistory> getEndedShelterAndNotLeaving(){
-    	return getClientDAO().getEndedShelterAndNotLeaving();
+        return getClientDAO().getEndedShelterAndNotLeaving();
     }
 }

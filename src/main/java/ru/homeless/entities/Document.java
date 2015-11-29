@@ -85,7 +85,7 @@ public class Document implements Serializable {
 		this.client = client;
 	}
 
-	@ManyToOne(fetch = FetchType.EAGER, targetEntity = DocType.class)
+	@ManyToOne(targetEntity = DocType.class)
 	@JoinColumn(name = "doctype")
 	public DocType getDoctype() {
 		return doctype;

@@ -206,7 +206,7 @@
 
 
 <p:layoutUnit id="right" position="east" size="300" resizable="true" closable="true" collapsible="true" header="Reminders" minSize="200" collapsed="#{not reminderBean.needToOpenReminder}">
-     
+<h:form name="reminders_form">
     <p:dataTable var="shelterInfo" value="#{reminderBean.clientsReminderForCurUser}" rendered="#{reminderBean.hasSoonShelterEnded}"
     scrollable="true" styleClass="default_datatable" scrollHeight="120"
     rowKey="#{shelterInfo.id}">
@@ -217,7 +217,7 @@
             <h:outputText value="#{shelterInfo.client.id}" />
         </p:column>
         <p:column headerText="Клиент">
-          <h:outputText value="#{shelterInfo.client.shortFIO}" />        
+          <h:outputText value="#{shelterInfo.client.shortFIO}" />
         </p:column>
         <p:column headerText="Дата">
             <h:outputText value="#{shelterInfo.outShelter}" >
@@ -225,7 +225,7 @@
             </h:outputText>
         </p:column>
     </p:dataTable>
-    
+
         <p:dataTable var="shelterInfo" value="#{reminderBean.endedShelterAndNotLeaving}" rendered="#{reminderBean.hasShelterEndedAndNotLeaving}"
     scrollable="true" styleClass="default_datatable" scrollHeight="120"
     rowKey="#{shelterInfo.id}">
@@ -236,7 +236,7 @@
             <h:outputText value="#{shelterInfo.client.id}" />
         </p:column>
         <p:column headerText="Клиент">
-          <h:outputText value="#{shelterInfo.client.shortFIO}" />        
+          <h:outputText value="#{shelterInfo.client.shortFIO}" />
         </p:column>
         <p:column headerText="Дата">
             <h:outputText value="#{shelterInfo.outShelter}" >
@@ -244,7 +244,7 @@
             </h:outputText>
         </p:column>
     </p:dataTable>
-    
+</h:form>
 </p:layoutUnit>
 
 

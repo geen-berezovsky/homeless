@@ -10,7 +10,7 @@ import javax.faces.convert.FacesConverter;
 import java.io.Serializable;
 import java.util.List;
 
-@FacesConverter(forClass = NightStay.class, value = "nsConverter")
+@FacesConverter(value = "nsConverter")
 public class NightStayConverter implements Converter, Serializable {
 
 	private static final long serialVersionUID = 1L;

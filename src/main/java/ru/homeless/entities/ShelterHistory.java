@@ -46,7 +46,7 @@ public class ShelterHistory implements Serializable {
 		this.id = id;
 	}
 
-    @ManyToOne(fetch = FetchType.EAGER, targetEntity = Client.class)
+    @ManyToOne(targetEntity = Client.class)
     @JoinColumn(name = "client")
     public Client getClient() {
 		return client;

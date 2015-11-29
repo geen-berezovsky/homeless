@@ -10,7 +10,7 @@ import javax.faces.convert.FacesConverter;
 import java.io.Serializable;
 import java.util.List;
 
-@FacesConverter(forClass = FamilyCommunication.class, value = "fcomConverter")
+@FacesConverter(value = "fcomConverter")
 public class FComConverter implements Converter, Serializable {
 
 	private static final long serialVersionUID = 1L;

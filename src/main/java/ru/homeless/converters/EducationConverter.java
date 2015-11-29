@@ -10,7 +10,7 @@ import javax.faces.convert.FacesConverter;
 import java.io.Serializable;
 import java.util.List;
 
-@FacesConverter(forClass = Education.class, value = "edConverter")
+@FacesConverter(value = "edConverter")
 public class EducationConverter implements Converter, Serializable {
 
 	private static final long serialVersionUID = 1L;

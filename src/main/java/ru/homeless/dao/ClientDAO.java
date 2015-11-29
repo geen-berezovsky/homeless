@@ -124,7 +124,6 @@ public class ClientDAO extends GenericDAO implements Serializable {
      * @param dateToEnd
      * @return
      */
-    @Transactional
     public List<ShelterHistory> getShelterEndsBefore(Date dateToEnd){
     	Criteria shelterInfoCriteria = getSessionFactory().getCurrentSession().createCriteria(ShelterHistory.class);
 

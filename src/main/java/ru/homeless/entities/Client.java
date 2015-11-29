@@ -163,7 +163,7 @@ public class Client implements Serializable {
 		this.id = id;
 	}
 
-	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL ,targetEntity = ChronicDisease.class)
+	@ManyToMany(cascade = CascadeType.ALL ,targetEntity = ChronicDisease.class)
 	@JoinTable(name = "link_chronicdisease_client", 
 		joinColumns = @JoinColumn(name = "clients_id", nullable = false, updatable = false), 
 		inverseJoinColumns = @JoinColumn(name = "diseases_id", nullable = false, updatable = false) 
@@ -176,7 +176,7 @@ public class Client implements Serializable {
 		this.diseases = diseases;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY, targetEntity = NightStay.class)
+	@ManyToOne(targetEntity = NightStay.class)
 	@JoinColumn(name = "nightStay")
 	public NightStay getNightstay() {
 		return nightStay;
@@ -186,7 +186,7 @@ public class Client implements Serializable {
 		this.nightStay = nightStay;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY, targetEntity = Education.class)
+	@ManyToOne(targetEntity = Education.class)
 	@JoinColumn(name = "education")
 	public Education getEducation() {
 		return education;
@@ -204,7 +204,7 @@ public class Client implements Serializable {
 		this.homelessdate = homelessdate;
 	}
 
-	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL ,targetEntity = Breadwinner.class)
+	@ManyToMany(cascade = CascadeType.ALL ,targetEntity = Breadwinner.class)
 	@JoinTable(name = "link_breadwinner_client", 
 		joinColumns = @JoinColumn(name = "clients_id", nullable = false, updatable = false), 
 		inverseJoinColumns = @JoinColumn(name = "breadwinners_id", nullable = false, updatable = false) 
@@ -217,7 +217,7 @@ public class Client implements Serializable {
 		this.breadwinners = breadwinners;
 	}
 
-	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL ,targetEntity = Reasonofhomeless.class)
+	@ManyToMany(cascade = CascadeType.ALL ,targetEntity = Reasonofhomeless.class)
 	@JoinTable(name = "link_reasonofhomeless_client", 
 		joinColumns = @JoinColumn(name = "clients_id", nullable = false, updatable = false), 
 		inverseJoinColumns = @JoinColumn(name = "reasonofhomeless_id", nullable = false, updatable = false) 
@@ -254,7 +254,7 @@ public class Client implements Serializable {
 		this.dependents = dependents;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY, targetEntity = FamilyCommunication.class)
+	@ManyToOne(targetEntity = FamilyCommunication.class)
 	@JoinColumn(name = "familycommunication")
 	public FamilyCommunication getFcom() {
 		return fcom;
@@ -356,7 +356,7 @@ public class Client implements Serializable {
 		this.photoCheckSum = photoCheckSum;
 	}
 
-	@OneToMany(fetch = FetchType.EAGER, targetEntity = RecievedService.class, cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(targetEntity = RecievedService.class, cascade = CascadeType.ALL, orphanRemoval = true)
 	@JoinColumn(name = "client")
 	public Set<RecievedService> getRecievedservices() {
 		return recievedservices;

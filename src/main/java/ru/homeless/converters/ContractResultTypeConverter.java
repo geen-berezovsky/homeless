@@ -10,7 +10,7 @@ import javax.faces.convert.FacesConverter;
 
 import ru.homeless.entities.ContractResult;
 
-@FacesConverter(forClass = ru.homeless.entities.ContractResult.class, value = "contractResultTypeConverter")
+@FacesConverter(value = "contractResultTypeConverter")
 public class ContractResultTypeConverter implements Converter, Serializable {
 
 	private static final long serialVersionUID = 1L;
