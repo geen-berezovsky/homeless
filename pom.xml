@@ -47,7 +47,6 @@
                                     <arg value="docx"/>
                                     <arg value="-t"/>
                                     <arg value="html"/>
-                                    <arg value="-s"/>
                                     <arg value="-S"/>
                                     <arg value="--toc"/>
                                     <arg value="${basedir}/src/main/resources/manual.docx"/>
