@@ -41,7 +41,7 @@
                             <target>
                                 <taskdef resource="net/sf/antcontrib/antlib.xml" classpathref="maven.plugin.classpath"/>
                                 <property environment="env"/>
-                                <exec executable="pandoc" output="${basedir}/target/homeless/secure/help/manual.html"
+                                <exec executable="pandoc" outputproperty="output.html"
                                       failonerror="false" failifexecutionfails="false">
                                     <arg value="-f"/>
                                     <arg value="docx"/>
@@ -51,6 +51,12 @@
                                     <arg value="--toc"/>
                                     <arg value="${basedir}/src/main/resources/manual.docx"/>
                                 </exec>
+				<echo message="&lt;html xmlns=&quot;http://www.w3.org/1999/xhtml&quot; xmlns:h=&quot;http://java.sun.com/jsf/html&quot;&gt;" file="${basedir}/target/homeless/secure/help/manual.html" />
+				<echo message="${output.html}" file="${basedir}/target/homeless/secure/help/manual.html" append="true" />
+				<echo message="&lt;/html&gt;" file="${basedir}/target/homeless/secure/help/manual.html" append="true" />
+
+				<!-- next strings are deprecated because pandoc is installed on the UAT server -->
+				<!--
 				<replaceregexp file="${basedir}/target/homeless/secure/help/manual.html"
 					match="&lt;html xmlns(.*)"
 					replace="&lt;html xmlns=&quot;http://www.w3.org/1999/xhtml&quot; xmlns:h=&quot;http://java.sun.com/jsf/html&quot;&gt;"
@@ -59,6 +65,7 @@
 					match="head&gt;"
 					replace="h:head&gt;"
 					byline="true"/>
+				-->
                             </target>
                         </configuration>
                         <goals>
