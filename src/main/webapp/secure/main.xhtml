@@ -205,14 +205,15 @@
 </p:layoutUnit>
 
 
-<p:layoutUnit id="right" position="east" size="300" resizable="true" closable="true" collapsible="true" header="Reminders" minSize="200" collapsed="#{not reminderBean.needToOpenReminder}">
-<h:form name="reminders_form">
+<p:layoutUnit id="reminders" position="east" size="300" resizable="true" closable="true" collapsible="true" header="Reminders" minSize="200" collapsed="#{not reminderBean.needToOpenReminder}">
+  <h:form name="reminders_form">
     <p:dataTable var="shelterInfo" value="#{reminderBean.clientsReminderForCurUser}" rendered="#{reminderBean.hasSoonShelterEnded}"
-    scrollable="true" styleClass="default_datatable" scrollHeight="120"
-    rowKey="#{shelterInfo.id}">
+    scrollable="true" styleClass="default_datatable" scrollHeight="120" selectionMode="single"
+    rowKey="#{shelterInfo.id}" widgetVar="soonEndedShelterTable">
         <f:facet name="header">
             Скорое окончание даты заселения
         </f:facet>
+        <p:ajax event="rowSelect" listener="#{reminderBean.onRowClck}"/>
         <p:column headerText="Id">
             <h:outputText value="#{shelterInfo.client.id}" />
         </p:column>
@@ -226,12 +227,13 @@
         </p:column>
     </p:dataTable>
 
-        <p:dataTable var="shelterInfo" value="#{reminderBean.endedShelterAndNotLeaving}" rendered="#{reminderBean.hasShelterEndedAndNotLeaving}"
-    scrollable="true" styleClass="default_datatable" scrollHeight="120"
-    rowKey="#{shelterInfo.id}">
+    <p:dataTable var="shelterInfo" value="#{reminderBean.endedShelterAndNotLeaving}" rendered="#{reminderBean.hasShelterEndedAndNotLeaving}"
+      scrollable="true" styleClass="default_datatable" scrollHeight="120" selectionMode="single"
+      rowKey="#{shelterInfo.id}" widgetVar="fogotenShelterTable">
         <f:facet name="header">
             Просроченная дата выселения
-        </f:facet>
+        </f:facet>        
+        <p:ajax event="rowSelect" listener="#{reminderBean.onRowClck}"/>
         <p:column headerText="Id">
             <h:outputText value="#{shelterInfo.client.id}" />
         </p:column>
@@ -244,7 +246,7 @@
             </h:outputText>
         </p:column>
     </p:dataTable>
-</h:form>
+  </h:form>
 </p:layoutUnit>
 
 

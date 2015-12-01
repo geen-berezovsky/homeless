@@ -3,7 +3,6 @@ package ru.homeless.beans;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.Collection;
-import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
@@ -56,7 +55,7 @@ public class ReminderBean implements Serializable{
     
     
     
- /*   public void onRowFinishingShelterReminderClck(final SelectEvent event) {
+    public void onRowClck(final SelectEvent event) {
     	ShelterHistory myClientsEntity = (ShelterHistory) event.getObject();
         //RequestContext rc = RequestContext.getCurrentInstance();
         //rc.execute("myClientsWv.hide();");
@@ -69,24 +68,7 @@ public class ReminderBean implements Serializable{
         } catch (SQLException e) {
             log.error("Error during ClienFormBean reloading for ShelterHistory=" + myClientsEntity.getId(), e);
         }
-    }*/
-    
- /*   public void setSelectedShelterInfoInReminder(ShelterHistory shInfo){
-        if (shInfo == null){
-        	return;
-        }
-    	FacesContext context = FacesContext.getCurrentInstance();
-        ClientFormBean clientFormBean = context.getApplication().evaluateExpressionGet(context, "#{clientform}", ClientFormBean.class);
-        try {
-            clientFormBean.reloadAll(shInfo.getClient().getId());
-        } catch (SQLException e) {
-            log.error("Error during ClienFormBean reloading for ShelterHistory=" + shInfo.getId(), e);
-        }
     }
-    
-    public ShelterHistory getSelectedShelterInfoInReminder(){
-       return null;
-    }*/
     
     public boolean isHasSoonShelterEnded(){
     	return !getClientsFinishingForCurUser().isEmpty();
