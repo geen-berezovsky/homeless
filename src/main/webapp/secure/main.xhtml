@@ -25,7 +25,7 @@
 
 <h:body onload="#{clientform.refreshTabs(0)}" styleClass="body_style">
 <h:outputStylesheet library="primefaces-#{themeService.theme}" name="theme.css" />
-<p:layout id="basePageLayout" fullPage="true">
+<p:layout id="basePageLayout" fullPage="true" closeTitle="Закрыть панель напоминаний" collapseTitle="Свернуть панель напоминаний" resizeTitle="Растянуть панель напоминаний" expandTitle="Развернуть панель напоминаний">
 <p:layoutUnit position="north" id="topMenu" size="50">
     <ui:include src="clientform/mainmenu.xhtml"/>
 </p:layoutUnit>
@@ -117,6 +117,7 @@
     </f:facet>
     <!-- *** Client Documents Form *** -->
     <ui:include src="clientform/documents.xhtml"/>
+    <ui:include src="clientform/documentsscan.xhtml"/>
 </p:tab>
 <p:tab title="Социальное сопровождение">
     <ui:include src="clientform/contracts.xhtml"/>
@@ -205,7 +206,7 @@
 </p:layoutUnit>
 
 
-<p:layoutUnit id="reminders" position="east" size="300" resizable="true" closable="true" collapsible="true" header="Reminders" minSize="200" collapsed="#{not reminderBean.needToOpenReminder}">
+<p:layoutUnit id="reminders" position="east" size="300" resizable="true" closable="true" collapsible="true" header="Напоминания" minSize="200" collapsed="#{not reminderBean.needToOpenReminder}">
   <h:form name="reminders_form">
     <p:dataTable var="shelterInfo" value="#{reminderBean.clientsReminderForCurUser}" rendered="#{reminderBean.hasSoonShelterEnded}"
     scrollable="true" styleClass="default_datatable" scrollHeight="120" selectionMode="single"
@@ -261,6 +262,7 @@
 <ui:include src="dialogs/webcamera.xhtml"/>
 <ui:include src="dialogs/addservices.xhtml"/>
 <ui:include src="dialogs/adddocument.xhtml"/>
+<ui:include src="dialogs/addscandocument.xhtml"/>
 <ui:include src="dialogs/addcontract.xhtml"/>
 <ui:include src="dialogs/addshelter.xhtml"/>
 <ui:include src="dialogs/editcontract.xhtml"/>

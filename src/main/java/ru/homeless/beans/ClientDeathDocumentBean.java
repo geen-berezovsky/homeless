@@ -47,59 +47,8 @@ public class ClientDeathDocumentBean implements Serializable {
     private String deathReason;
     private String deathCity;
     private Client client;
-    private String deathDocPath;
     private Date nullDate;
 
-    public static String getFileExt(String mimeType) {
-        String extension = "";
-
-        MimeTable testTable = MimeTable.getDefaultTable();
-        Enumeration e = testTable.elements();
-        while (e.hasMoreElements()) {
-            MimeEntry entry = (MimeEntry) e.nextElement();
-            String contentType = entry.getType();
-            String extensionString = entry.getExtensionsAsList();
-            String[] extensionArray = extensionString.split(",");
-            extensionString = extensionArray[extensionArray.length - 1];
-            mimeType = mimeType.replaceAll("/", ".*");
-            if (contentType.matches(mimeType)) {
-                extension = extensionString;
-                break;
-            }
-        }
-        return extension;
-    }
-
-    public void handleDeathDocUpload(FileUploadEvent event) throws IOException {
-        UploadedFile file = event.getFile();
-        HttpSession session = Util.getSession();
-        String clientIdStr = session.getAttribute("cid").toString();
-        FacesMessage msg = null;
-
-        String extension = getFileExt(file.getContentType());
-        if (extension.equals(".jpeg")) {
-            extension = ".jpg";
-        }
-
-        deathDocPath = Configuration.profilesDir+"/"+clientIdStr+"/"+clientIdStr+"-deathCert"+extension;
-        client = getGenericService().getInstanceById(Client.class, Integer.parseInt(session.getAttribute("cid").toString()));
-        client.setDeathDocPath(deathDocPath);
-        getGenericService().updateInstance(client);
-
-        FileOutputStream stream = new FileOutputStream(deathDocPath);
-        try {
-            stream.write(IOUtils.toByteArray(file.getInputstream()));
-            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Документ загружен", "");
-        } catch (Exception e) {
-            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Документ не может быть загружен!", "Обратитесь к администратору");
-        } finally {
-            stream.close();
-        }
-        stream.close();
-        if (msg != null) {
-            FacesContext.getCurrentInstance().addMessage(null, msg);
-        }
-    }
 
     public void updateDeathFields() throws ParseException {
         RequestContext requestContext = RequestContext.getCurrentInstance();
@@ -113,12 +62,6 @@ public class ClientDeathDocumentBean implements Serializable {
             deathDate = sdf.parse(dateInString);
         } else {
             deathDate = client.getDeathDate();
-        }
-
-        if (client.getDeathDocPath() == null) {
-            deathDocPath = "";
-        } else{
-            deathDocPath = client.getDeathDocPath();
         }
 
         if (client.getDeathCity() == null) {
@@ -209,14 +152,6 @@ public class ClientDeathDocumentBean implements Serializable {
 
     public void setClient(Client client) {
         this.client = client;
-    }
-
-    public String getDeathDocPath() {
-        return deathDocPath;
-    }
-
-    public void setDeathDocPath(String deathDocPath) {
-        this.deathDocPath = deathDocPath;
     }
 
     public Date getNullDate() {

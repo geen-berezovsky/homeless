@@ -4,7 +4,7 @@
 <ui:composition>
 	<h:form id="add_document">
 		<p:messages />
-		<p:dialog id="addDocument" header="Добавить/Обновить документ" widgetVar="addDocumentWv" resizable="false" closable="true" modal="true" showEffect="fade" hideEffect="explode" dynamic="true"
+		<p:dialog id="addDocument" header="Добавить/Обновить описание документа" widgetVar="addDocumentWv" resizable="false" closable="true" modal="true" showEffect="fade" hideEffect="explode" dynamic="true"
 			closeOnEscape="true">
 			<h:panelGrid columns="2" id="add_docs_panel_grid">
 				<p:row>
@@ -132,7 +132,7 @@
 			<p:panel>
 				<p:growl id="adddocs_growl" showDetail="true" life="3000" />
 				<center>
-					<p:commandButton value="Добавить/Обновить документ" id="addNewDocumentB" actionListener="#{clientdocuments.addSelectedDocument()}" ajax="true" update="@this :select_document :reg_select_document add_docs_panel_grid :m_tabview:documentsTabTitle :m_tabview:documents_form adddocs_growl" icon="ui-icon-check" oncomplete="addDocumentWv.hide()" />
+					<p:commandButton value="Добавить/Обновить" id="addNewDocumentB" actionListener="#{clientdocuments.addSelectedDocument()}" ajax="true" update="@this :select_document :reg_select_document add_docs_panel_grid :m_tabview:documentsTabTitle :m_tabview:documents_form adddocs_growl" icon="ui-icon-check" oncomplete="addDocumentWv.hide()" />
 				</center>
 			</p:panel>
 		</p:dialog>

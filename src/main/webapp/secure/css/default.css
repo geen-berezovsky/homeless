@@ -104,9 +104,17 @@
     font-size: 75% !important;
 }
 
+.ui-layout-unit-header-title {
+    font-size: 14px !important;
+}
+
 .documentsMenuCss {
     font-size: 100% !important;
     width: auto;
+}
+
+.deathNotification {
+    color: #B00000;
 }
 
 /*

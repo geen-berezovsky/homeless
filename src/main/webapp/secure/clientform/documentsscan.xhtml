@@ -1,0 +1,56 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui">
+<ui:composition>
+    <h:form id="documentsScan_form">
+        <p:panel id="documentsScan_main_panel">
+            <div id="client_documentsScan_panel_div">
+
+                <p:dialog header="Подтвердите удаление" appendTo="@form" widgetVar="deleteDocumentScan" resizable="false" closable="true" showEffect="fade" hideEffect="explode" dynamic="true" closeOnEscape="true" style="font-size: 200%;" draggable="false">
+                    <p:panelGrid columns="2" style="margin: 0 auto;" styleClass="base_form_panel_grid_class">
+                        <p:commandButton id="docScanConfirm" value="Да" update=":m_tabview:documentsScan_form:docScanlistId" oncomplete="deleteDocumentScan.hide()" actionListener="#{scandocuments.deleteDocument}"/>
+                        <p:commandButton id="docScanDecline" value="Нет" update=":m_tabview:documentsScan_form:docScanlistId" oncomplete="deleteDocumentScan.hide()"/>
+                    </p:panelGrid>
+                </p:dialog>
+
+
+                <p:contextMenu for="docScanlistId">
+                    <p:menuitem value="Редактировать" update="docScanlistId" icon="ui-icon-pencil" actionListener="#{scandocuments.editDocument()}" ajax="true" oncomplete="addDocumentScanWv.show();"/>
+                    <p:menuitem value="Удалить" oncomplete="deleteDocumentScan.show()" icon="ui-icon-trash" ajax="true" />
+                </p:contextMenu>
+
+
+                <p:dataTable id="docScanlistId" var="docScanlist" value="#{scandocuments.clientDocumentScans}" paginator="true" rows="15"
+                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15"
+                             rowKey="#{docScanlist.id}" selection="#{scandocuments.selectedDocument}" selectionMode="single" paginatorPosition="bottom" styleClass="default_datatable">
+                    <p:column headerText="ID">
+                        <h:outputText value="#{docScanlist.id}"/>
+                    </p:column>
+                    <p:column headerText="Тип">
+                        <h:outputText value="#{docScanlist.doctype}"/>
+                    </p:column>
+                    <p:column headerText="Имя файла">
+                        <h:outputText value="#{docScanlist.path}"/>
+                    </p:column>
+                    <p:column headerText="Дата загрузки">
+                        <h:outputText value="#{scandocuments.formatDate(docScanlist.uploadingDate)}"/>
+                    </p:column>
+                    <p:column headerText="Работник">
+                        <h:outputText value="#{docScanlist.worker}"/>
+                    </p:column>
+                    <p:column headerText="Комментарии">
+                        <h:outputText value="#{docScanlist.comments}"/>
+                    </p:column>
+
+                </p:dataTable>
+                <p />
+                <center>
+                    <p:commandButton value="Добавить скан документа" icon="ui-icon-circle-plus" process="@this :m_tabview" actionListener="#{scandocuments.resetForm}" style="text-align: right"/>
+                </center>
+
+
+            </div>
+        </p:panel>
+    </h:form>
+</ui:composition>
+</html>

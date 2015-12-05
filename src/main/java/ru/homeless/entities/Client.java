@@ -61,7 +61,6 @@ public class Client implements Serializable {
     private Date deathDate;
     private String deathReason;
     private String deathCity;
-    private String deathDocPath;
 
 	public Client() {
 
@@ -395,11 +394,4 @@ public class Client implements Serializable {
         this.deathCity = deathCity;
     }
 
-    public String getDeathDocPath() {
-        return deathDocPath;
-    }
-
-    public void setDeathDocPath(String deathDocPath) {
-        this.deathDocPath = deathDocPath;
-    }
 }

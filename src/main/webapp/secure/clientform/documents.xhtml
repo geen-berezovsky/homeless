@@ -15,8 +15,8 @@
 
 
                 <p:contextMenu for="doclistId">
-                    <p:menuitem value="Удалить" oncomplete="deleteDocument.show()" icon="ui-icon-trash" ajax="true" />
                     <p:menuitem value="Редактировать" update="doclistId" icon="ui-icon-pencil" actionListener="#{clientdocuments.editDocument()}" ajax="true" oncomplete="addDocumentWv.show();"/>
+                    <p:menuitem value="Удалить" oncomplete="deleteDocument.show()" icon="ui-icon-trash" ajax="true" />
                 </p:contextMenu>
 
 
@@ -54,8 +54,9 @@
                     </p:column>
 
                 </p:dataTable>
+                <p />
                 <center>
-                    <p:commandButton value="Добавить документ" icon="ui-icon-circle-plus" process="@this :m_tabview" actionListener="#{clientdocuments.resetForm}"/>
+                    <p:commandButton value="Добавить описание документа" icon="ui-icon-circle-plus" process="@this :m_tabview" actionListener="#{clientdocuments.resetForm}" style="text-align: right"/>
                 </center>
 
 

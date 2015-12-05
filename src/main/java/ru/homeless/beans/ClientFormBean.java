@@ -205,6 +205,16 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
     private String getClientActualStatus(Client client) {
         //Client may live in shelter, lived in shelter earlier, not lived in shelter at all or stored under calculation
         String result = " (ID = " + client.getId() ;
+        if (client.getDeathDate() != null) {
+            result += ",<span class=\"deathNotification\">";
+            result += " умер";
+            if (!client.isGender()) {
+                result += "ла";
+            }
+            result += " "+Util.formatDate(client.getDeathDate());
+            result += "</span>";
+        }
+
         List<ShelterHistory> shelters = getGenericService().getInstancesByClientId(ShelterHistory.class, client);
         if (shelters != null) {
             if (shelters.size() == 0) {
@@ -223,13 +233,6 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
             result += ", в приюте ранее проживал";
             if (!client.isGender()) {
                 result += "а";
-            }
-            if (client.getDeathDate() != null) {
-                result += ", умер";
-                if (!client.isGender()) {
-                    result += "ла";
-                }
-                result += " "+Util.formatDate(client.getDeathDate());
             }
 
             return result + ")";
@@ -605,9 +608,11 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
         if (cid != 0 && client != null) {
 
             ClientDocumentsBean cdb = context.getApplication().evaluateExpressionGet(context, "#{clientdocuments}", ClientDocumentsBean.class);
+            ScanDocumentsBean sdb = context.getApplication().evaluateExpressionGet(context, "#{scandocuments}", ScanDocumentsBean.class);
             ClientContractsBean ccb = context.getApplication().evaluateExpressionGet(context, "#{clientcontracts}", ClientContractsBean.class);
             ClientShelterBean csb = context.getApplication().evaluateExpressionGet(context, "#{clientshelter}", ClientShelterBean.class);
             cdb.reload();
+            sdb.reload();
             ccb.reload();
             csb.reload();
 

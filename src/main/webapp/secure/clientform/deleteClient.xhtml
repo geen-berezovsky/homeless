@@ -24,17 +24,9 @@
         <p:dialog id="clientDeath" header="Отметить клиента как умершего" appendTo="@form" widgetVar="clientDeathWv" resizable="false"
                   closable="true" showEffect="fade" hideEffect="explode" dynamic="true" closeOnEscape="true"
                   draggable="false">
-                    <p:outputLabel value="Загрузить скан свидетельства о смерти" styleClass="base_form_caption_text"/>
-                    <p:fileUpload id="deathDocUpload" styleClass="base_form_value_text" uploadLabel="Загрузить" cancelLabel="Отмена" label="Выбор файла" fileUploadListener="#{clientdeathdocument.handleDeathDocUpload}" update="deathDocPath"/>
-
+            <p:outputLabel value="При наличии свидетельства о смерти, загрузите его скан в разделе Документы" styleClass="base_form_value_text"/>
+            <p />
             <p:panelGrid columns="2" style="margin: 0 auto;" styleClass="base_form_panel_grid_class">
-                <p:row>
-                    <h:outputText value="Загруженный документ: " styleClass="base_form_caption_text"/>
-                </p:row>
-                <p:row>
-                    <p:commandLink id="deathDocPath" onclick="m_tabviewWv.select(1)" value="#{clientdeathdocument.deathDocPath}" styleClass="base_form_value_text" />
-                </p:row>
-
                 <p:row>
                     <p:outputLabel for="deathDateInput" value="Дата смерти (01.01.1900 для сброса):" styleClass="base_form_caption_text" />
                 </p:row>

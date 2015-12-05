@@ -153,3 +153,36 @@ ADD COLUMN `deathDate` DATETIME NULL DEFAULT NULL AFTER `nightStay`,
 ADD COLUMN `deathReason` VARCHAR(255) NULL DEFAULT NULL AFTER `deathDate`,
 ADD COLUMN `deathCity` VARCHAR(255) NULL DEFAULT NULL AFTER `deathReason`,
 ADD COLUMN `deathDocPath` TINYTEXT NULL DEFAULT NULL AFTER `deathCity`;
+
+update Rules set caption = 'Председатель' where id=1;
+
+CREATE TABLE `homeless`.`DocumentScan` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `doctype` INT(11) NULL,
+  `path` TEXT NULL,
+  `uploadingDate` DATETIME NULL,
+  `comments` TEXT NULL,
+  `client` INT(11) NULL,
+  `worker` INT(11) NULL,
+  PRIMARY KEY (`id`),
+  INDEX `SCAN_CLIENT_idx` (`client` ASC),
+  INDEX `SCAN_DOCTYPE_idx` (`doctype` ASC),
+  INDEX `SCAN_WORKER_idx` (`worker` ASC),
+  CONSTRAINT `SCAN_CLIENT`
+  FOREIGN KEY (`client`)
+  REFERENCES `homeless`.`Client` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `SCAN_DOCTYPE`
+  FOREIGN KEY (`doctype`)
+  REFERENCES `homeless`.`DocType` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `SCAN_WORKER`
+  FOREIGN KEY (`worker`)
+  REFERENCES `homeless`.`Worker` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
+ALTER TABLE `homeless`.`Client` DROP COLUMN `deathDocPath`; -- REMOVING UNNECESSARY COLUMN, THAT ADDED BEFORE
+insert into DocType(addressProof, audience, birthProof, caption, photoProof) values (1,10,1,'Свидетельство о смерти',0);

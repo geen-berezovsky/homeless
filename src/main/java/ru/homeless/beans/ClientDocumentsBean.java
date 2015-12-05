@@ -86,7 +86,7 @@ public class ClientDocumentsBean implements Serializable {
         ClientFormBean cdb = context.getApplication().evaluateExpressionGet(context, "#{clientform}", ClientFormBean.class);
         cdb.updateDocumentsTabHeader();
 
-        rc.update("doclistId");
+        rc.update("m_tabview:documents_form:doclistId");
 
 	}
 
