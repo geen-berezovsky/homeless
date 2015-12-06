@@ -74,8 +74,44 @@
                 <f:selectItems value="#{clientform.familyCommunicationTypes}" var="familyCommunication" itemValue="#{familyCommunication}" itemLabel="#{familyCommunication.caption}" />
             </p:selectOneMenu>
         </p:row>
+        <p:row>
+            <h:outputLabel value="Место проживания:" for="region_living" styleClass="base_form_caption_text"/>
+        </p:row>
+        <p:row>
+            <p:selectOneRadio id="region_living" value="#{clientform.region}" styleClass="base_form_value_text">
+                <f:selectItem itemLabel="?" itemValue="1" />
+                <f:selectItem itemLabel="СПб" itemValue="2" />
+                <f:selectItem itemLabel="ЛО" itemValue="3" />
+            </p:selectOneRadio>
+        </p:row>
+        <p:row>
+            <div style="text-align: center;">
+                <h:outputLabel value="Район:" for="subregion_living" styleClass="base_form_caption_text" style="text-align: right;"/>
+            </div>
+        </p:row>
+        <p:row>
+            <p:outputLabel id="subregion_living" value="TBD" />
+        </p:row>
+        <p:row>
+            <h:outputLabel value="Место последней регистрации:" for="region_registration" styleClass="base_form_caption_text"/>
+        </p:row>
+        <p:row>
+            <p:selectOneRadio id="region_registration" value="#{clientform.region}" styleClass="base_form_value_text">
+                <f:selectItem itemLabel="?" itemValue="1" />
+                <f:selectItem itemLabel="СПб" itemValue="2" />
+                <f:selectItem itemLabel="ЛО" itemValue="3" />
+            </p:selectOneRadio>
+        </p:row>
+        <p:row>
+            <div style="text-align: center;">
+                <h:outputLabel value="Район:" for="subregion_registration" styleClass="base_form_caption_text"/>
+            </div>
+        </p:row>
+        <p:row>
+            <p:outputLabel id="subregion_registration" value="TBD" />
+        </p:row>
 
-	</h:panelGrid>
+    </h:panelGrid>
 
 </ui:composition>
 </html>

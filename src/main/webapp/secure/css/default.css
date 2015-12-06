@@ -51,7 +51,7 @@
 }
 
 .base_form_panel_grid_class .ui-outputlabel .ui-widget {
-	width: 20px;	
+	width: 20px;
 }
 
 .ui-button {
@@ -62,14 +62,13 @@
 	border: none !important;
 	overflow-y:hidden;
 	overflow-x:hidden;
-	
 }
 
 .topLayoutMainForm {
 	border: none !important;
 	overflow-y:hidden;
 	overflow-x:hidden;
-	
+
 }
 .avatar_block1 {
     margin-left: 8px;
@@ -99,6 +98,9 @@
 	font-size: 12px !important;
 }
 
+.ui-tooltip {
+    font-size: 12px !important;
+}
 
 .ui-datepicker {
     font-size: 75% !important;

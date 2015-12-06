@@ -263,6 +263,22 @@ insert into SubRegion(region,caption) values (3,'Сланцевский');
 insert into SubRegion(region,caption) values (3,'Тихвинский');
 insert into SubRegion(region,caption) values (3,'Тосненский');
 
+ALTER TABLE `homeless`.`Client`
+ADD COLUMN `lastLiving` INT(11) NULL DEFAULT 1 AFTER `deathCity`,
+ADD COLUMN `lastRegistration` INT(11) NULL DEFAULT 1 AFTER `lastLiving`,
+ADD INDEX `lastLiving_SubRegion_idx` (`lastLiving` ASC),
+ADD INDEX `lastRegistration_SubRegion_idx` (`lastRegistration` ASC);
+ALTER TABLE `homeless`.`Client`
+ADD CONSTRAINT `lastLiving_SubRegion`
+FOREIGN KEY (`lastLiving`)
+REFERENCES `homeless`.`SubRegion` (`id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION,
+ADD CONSTRAINT `lastRegistration_SubRegion`
+FOREIGN KEY (`lastRegistration`)
+REFERENCES `homeless`.`SubRegion` (`id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;
 
 
 -- ************************

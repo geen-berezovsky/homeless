@@ -33,19 +33,7 @@ import ru.homeless.configuration.Configuration;
 import ru.homeless.converters.EducationConverter;
 import ru.homeless.converters.FComConverter;
 import ru.homeless.converters.NightStayConverter;
-import ru.homeless.entities.Breadwinner;
-import ru.homeless.entities.ChronicDisease;
-import ru.homeless.entities.Client;
-import ru.homeless.entities.Document;
-import ru.homeless.entities.Education;
-import ru.homeless.entities.FamilyCommunication;
-import ru.homeless.entities.MyClientsEntity;
-import ru.homeless.entities.NightStay;
-import ru.homeless.entities.Reasonofhomeless;
-import ru.homeless.entities.RecievedService;
-import ru.homeless.entities.ServContract;
-import ru.homeless.entities.ShelterHistory;
-import ru.homeless.entities.Worker;
+import ru.homeless.entities.*;
 import ru.homeless.services.ClientService;
 import ru.homeless.util.Util;
 
@@ -101,6 +89,8 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
     private int tabIndex = 0;
     private int prevTabIndex = 0;
     // *********************************
+
+    private int region;
 
     public ClientFormBean()  {
         this.mainPanelVisibility = "display: none;";
@@ -830,6 +820,17 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
     }
 
 
+    public List<String> getAllSubRegions(String query) {
+        List<String> sr = new ArrayList<String>();
+
+        for (SubRegion s : getGenericService().getInstances(SubRegion.class)) {
+            sr.add(s.getCaption());
+        }
+
+        return sr;
+    }
+
+
     public String getDocumentsHeaderInline() {
         return documentsHeaderInline;
     }
@@ -869,5 +870,12 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
     public void setPrevTabIndex(int prevTabIndex) {
         this.prevTabIndex = prevTabIndex;
     }
-    
+
+    public int getRegion() {
+        return region;
+    }
+
+    public void setRegion(int region) {
+        this.region = region;
+    }
 }

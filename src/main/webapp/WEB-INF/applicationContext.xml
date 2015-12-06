@@ -78,6 +78,8 @@ http://www.springframework.org/schema/tx/spring-tx-4.0.xsd http://www.springfram
               <value>ru.homeless.entities.BasicDocumentRegistry</value>
               <value>ru.homeless.entities.BasicDocumentRegistryType</value>
               <value>ru.homeless.entities.DocumentScan</value>
+              <value>ru.homeless.entities.Region</value>
+              <value>ru.homeless.entities.SubRegion</value>
 			</list>
 		</property>
 		<property name="hibernateProperties">

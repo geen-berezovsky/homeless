@@ -62,6 +62,9 @@ public class Client implements Serializable {
     private String deathReason;
     private String deathCity;
 
+    private SubRegion lastLiving;
+    private SubRegion lastRegistration;
+
 	public Client() {
 
 	}
@@ -394,4 +397,23 @@ public class Client implements Serializable {
         this.deathCity = deathCity;
     }
 
+    @ManyToOne(targetEntity = SubRegion.class)
+    @JoinColumn(name = "lastLiving")
+    public SubRegion getLastLiving() {
+        return lastLiving;
+    }
+
+    public void setLastLiving(SubRegion lastLiving) {
+        this.lastLiving = lastLiving;
+    }
+
+    @ManyToOne(targetEntity = SubRegion.class)
+    @JoinColumn(name = "lastRegistration")
+    public SubRegion getLastRegistration() {
+        return lastRegistration;
+    }
+
+    public void setLastRegistration(SubRegion lastRegistration) {
+        this.lastRegistration = lastRegistration;
+    }
 }
