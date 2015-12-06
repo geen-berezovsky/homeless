@@ -250,7 +250,7 @@ public class ScanDocumentsBean implements Serializable {
         if (fileName.equals("ФАЙЛ НЕ ЗАГРУЖЕН!")) {
             docPath = "/images/scanDownloadError.png";
             stream = externalContext.getResourceAsStream(docPath);
-            fileName = "ERROR";
+            fileName = "ERROR.png";
         } else {
             docPath = Configuration.profilesDir+"/"+Util.getSession().getAttribute("cid").toString()+"/"+fileName;
             stream = new FileInputStream(docPath);
