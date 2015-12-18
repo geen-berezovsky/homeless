@@ -17,12 +17,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import ru.homeless.entities.Client;
-import ru.homeless.entities.ContractResult;
-import ru.homeless.entities.MyClientsEntity;
-import ru.homeless.entities.ServContract;
-import ru.homeless.entities.ShelterHistory;
-import ru.homeless.entities.Worker;
+import ru.homeless.entities.*;
 import ru.homeless.util.Util;
 
 @Repository
@@ -145,5 +140,16 @@ public class ClientDAO extends GenericDAO implements Serializable {
         
     	shelterInfoCriteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
     	return shelterInfoCriteria.list();
+    }
+
+    /**
+    * Returns list of SubRegion by Region id.
+    * @return
+    */
+    public List<SubRegion> getSubRegionsByRegion(Region region) {
+        Criteria subregions = getSessionFactory().getCurrentSession().createCriteria(SubRegion.class).add(Restrictions.eq("region",region));
+        subregions.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+        return subregions.list();
+
     }
 }

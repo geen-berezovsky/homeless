@@ -36,10 +36,6 @@ public class SubRegion implements Serializable {
 		this.caption = caption;
 	}
 	
-	public String toString() {
-		return caption;
-	}
-
     @ManyToOne(targetEntity = Region.class)
     @JoinColumn(name="region")
     public Region getRegion() {
@@ -49,4 +45,18 @@ public class SubRegion implements Serializable {
     public void setRegion(Region region) {
         this.region = region;
     }
+
+    public boolean equals(Object o) {
+        if (o == null) return false;
+        if (! (o instanceof SubRegion)) {
+            return false;
+        }
+        SubRegion d = (SubRegion) o;
+        if (new Integer(getId()).equals(new Integer(d.getId()))) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 }

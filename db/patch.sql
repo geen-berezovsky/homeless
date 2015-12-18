@@ -282,3 +282,11 @@ REFERENCES `homeless`.`SubRegion` (`id`)
 
 
 -- ************************
+
+ALTER TABLE `homeless`.`Region`
+ADD COLUMN `abbreviation` VARCHAR(10) NULL DEFAULT NULL AFTER `caption`;
+
+update Region set abbreviation = '?' where id=1;
+update Region set abbreviation = 'СПб' where id=2;
+update Region set abbreviation = 'ЛО' where id=3;
+

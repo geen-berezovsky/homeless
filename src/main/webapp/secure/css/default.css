@@ -119,6 +119,24 @@
     color: #B00000;
 }
 
+.ui-panelgrid .ui-panelgrid-cell {
+    padding-top: 3px;
+    padding-bottom: 3px;
+}
+
+.ui-inputfield {
+    padding-top: 3px;
+    padding-bottom: 3px;
+}
+
+.photoLayoutUnit {
+    overflow-y: hidden !important;
+}
+
+.avatar_block2 {
+    margin-top: 7px;
+}
+
 /*
 .ui-widget,.ui-widget .ui-widget {
 	font-size: 90% !important;

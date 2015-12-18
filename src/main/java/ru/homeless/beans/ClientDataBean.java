@@ -34,13 +34,8 @@ import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 
 import ru.homeless.configuration.Configuration;
-import ru.homeless.entities.Breadwinner;
-import ru.homeless.entities.ChronicDisease;
-import ru.homeless.entities.Client;
-import ru.homeless.entities.Education;
-import ru.homeless.entities.FamilyCommunication;
-import ru.homeless.entities.NightStay;
-import ru.homeless.entities.Reasonofhomeless;
+import ru.homeless.entities.*;
+import ru.homeless.services.ClientService;
 import ru.homeless.services.GenericService;
 import ru.homeless.util.Util;
 
@@ -81,20 +76,13 @@ public class ClientDataBean implements Serializable {
 	private String whereWasBorn;
 	private Blob avatar;
     private String originalPhotoFilePath;
+    private SubRegion lastLiving;
+    private SubRegion lastRegistration;
 
 	private Date date;
 
-    public GenericService getGenericService() {
-        return genericService;
-    }
-
-    public void setGenericService(GenericService genericService) {
-        this.genericService = genericService;
-    }
-
-    @ManagedProperty(value = "#{GenericService}")
-    private GenericService genericService;
-
+    @ManagedProperty(value = "#{ClientService}")
+    private ClientService clientService;
 
     //custom
 	private StreamedContent clientFormAvatar; //fake
@@ -137,6 +125,8 @@ public class ClientDataBean implements Serializable {
 		setWhereWasBorn(c.getWhereWasBorn());
 		setAvatar(c.getAvatar());
 		setDate(c.getDate());
+        setLastLiving(c.getLastLiving());
+        setLastRegistration(c.getLastRegistration());
 	}
 
 	protected Client copyClientDataToClient(Client c) {
@@ -168,6 +158,8 @@ public class ClientDataBean implements Serializable {
 		c.setWhereWasBorn(getWhereWasBorn());
 		c.setAvatar(getAvatar());
 		c.setDate(getDate());
+        c.setLastLiving(getLastLiving());
+        c.setLastRegistration(getLastRegistration());
 		return c;
 	}
 	
@@ -269,7 +261,7 @@ public class ClientDataBean implements Serializable {
 	public NightStay getNightStay() {
         if (nightStay == null) {
             return
-                    getGenericService().getInstanceByCaption(NightStay.class, "Нет ответа");
+                    getClientService().getInstanceByCaption(NightStay.class, "Нет ответа");
         } else {
             return nightStay;
         }
@@ -284,7 +276,7 @@ public class ClientDataBean implements Serializable {
         //set new values for relations if not exist
         if (education == null) {
             return
-            getGenericService().getInstanceByCaption(Education.class, "Нет ответа");
+            getClientService().getInstanceByCaption(Education.class, "Нет ответа");
         } else {
             return education;
         }
@@ -296,7 +288,7 @@ public class ClientDataBean implements Serializable {
 
 	public FamilyCommunication getFcom() {
         if (fcom == null ) {
-            return getGenericService().getInstanceByCaption(FamilyCommunication.class, "Нет ответа");
+            return getClientService().getInstanceByCaption(FamilyCommunication.class, "Нет ответа");
         } else {
             return fcom;
         }
@@ -615,4 +607,27 @@ public class ClientDataBean implements Serializable {
     }
 
 
+    public SubRegion getLastLiving() {
+        return lastLiving;
+    }
+
+    public void setLastLiving(SubRegion lastLiving) {
+        this.lastLiving = lastLiving;
+    }
+
+    public SubRegion getLastRegistration() {
+        return lastRegistration;
+    }
+
+    public void setLastRegistration(SubRegion lastRegistration) {
+        this.lastRegistration = lastRegistration;
+    }
+
+    public ClientService getClientService() {
+        return clientService;
+    }
+
+    public void setClientService(ClientService clientService) {
+        this.clientService = clientService;
+    }
 }

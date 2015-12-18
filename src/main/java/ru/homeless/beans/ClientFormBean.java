@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
@@ -15,7 +14,6 @@ import java.util.Set;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
@@ -25,16 +23,12 @@ import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 import org.primefaces.component.tabview.TabView;
 import org.primefaces.context.RequestContext;
-import org.primefaces.event.SelectEvent;
 import org.primefaces.event.TabChangeEvent;
 
 import ru.homeless.comparators.RecievedServiceSortingComparator;
 import ru.homeless.configuration.Configuration;
-import ru.homeless.converters.EducationConverter;
-import ru.homeless.converters.FComConverter;
-import ru.homeless.converters.NightStayConverter;
+import ru.homeless.converters.*;
 import ru.homeless.entities.*;
-import ru.homeless.services.ClientService;
 import ru.homeless.util.Util;
 
 @ManagedBean(name = "clientform")
@@ -74,7 +68,13 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
     private List<String> nightStayTypes;
     private List<String> familyCommunicationTypes;
     private List<String> breadwinnerTypes;
+    private List<String> regionTypes;
 
+    private Region lastLivingRegion;
+    private Region lastRegistrationRegion;
+
+    private List<SubRegion> lastLivingSubRegions;
+    private List<SubRegion> lastRegistrationSubRegions;
 
     private String header;
     private String documentsHeaderInline;
@@ -89,8 +89,6 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
     private int tabIndex = 0;
     private int prevTabIndex = 0;
     // *********************************
-
-    private int region;
 
     public ClientFormBean()  {
         this.mainPanelVisibility = "display: none;";
@@ -117,14 +115,10 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
         prevTabIndex = 0;
         tabIndex = 0;
 
-
-        //RequestContext rc = RequestContext.getCurrentInstance();
-        //rc.execute("reload();");
-
     }
 
     public void updateDocumentsTabHeader() {
-        List<Document> listOfDocumentsForTitle = getGenericService().getInstancesByClientId(Document.class, client.getId());
+        List<Document> listOfDocumentsForTitle = getClientService().getInstancesByClientId(Document.class, client.getId());
         if (listOfDocumentsForTitle == null || listOfDocumentsForTitle.size() == 0) {
             documentsHeaderInline = "";
         } else {
@@ -136,6 +130,24 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
     public void reloadAll() throws SQLException {
         reloadClientData();
         reloadClientReceivedServices();
+
+        //set region according subregion
+        if (client.getLastLiving()==null) {
+            client.setLastLiving(getClientService().getInstanceById(SubRegion.class, 1));
+        }
+        if (client.getLastRegistration()==null) {
+            client.setLastRegistration(getClientService().getInstanceById(SubRegion.class,1));
+        }
+        setLastLivingRegion(client.getLastLiving().getRegion());
+        setLastRegistrationRegion(client.getLastRegistration().getRegion());
+
+        //pull subregions list for actual region
+        lastLivingSubRegions = new ArrayList<>();
+        lastLivingSubRegions.addAll(getClientService().getSubRegionsByRegion((Region) getLastLivingRegion()));
+
+        lastRegistrationSubRegions = new ArrayList<>();
+        lastRegistrationSubRegions.addAll(getClientService().getSubRegionsByRegion((Region) getLastRegistrationRegion()));
+
         //chronic disasters
         if (client != null && client.getUniqDisease() != null && !client.getUniqDisease().trim().equals("")) {
             setAnotherChronicalDisasterChecked(true); //toggle checbox "Another" for chronical disasters
@@ -205,7 +217,7 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
             result += "</span>";
         }
 
-        List<ShelterHistory> shelters = getGenericService().getInstancesByClientId(ShelterHistory.class, client);
+        List<ShelterHistory> shelters = getClientService().getInstancesByClientId(ShelterHistory.class, client);
         if (shelters != null) {
             if (shelters.size() == 0) {
                 result += ", в приюте ранее не проживал";
@@ -230,7 +242,7 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
     }
 
     public void reloadClientData() {
-        setClient(getGenericService().getInstanceById(Client.class, getCid()));
+        setClient(getClientService().getInstanceById(Client.class, getCid()));
         //copy data to externalized class data
         if (client != null) {
             log.info("Client ID = " + client.getId() + " has been selected for usage");
@@ -258,7 +270,7 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
 
     public List<Education> getEducationTypes() {
         //refresh converter if new data available
-        List<Education> list = getGenericService().getInstances(Education.class);
+        List<Education> list = getClientService().getInstances(Education.class);
         EducationConverter.edDB = new ArrayList<Education>();
         EducationConverter.edDB.addAll(list);
         return list;
@@ -266,7 +278,7 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
 
     public List<NightStay> getNightStayTypes() {
         //refresh converter if new data available
-        List<NightStay> list = getGenericService().getInstances(NightStay.class);
+        List<NightStay> list = getClientService().getInstances(NightStay.class);
         NightStayConverter.nsDB = new ArrayList<NightStay>();
         NightStayConverter.nsDB.addAll(list);
         return  list;
@@ -274,11 +286,20 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
 
     public List<FamilyCommunication> getFamilyCommunicationTypes() {
         //refresh converter if new data available
-        List<FamilyCommunication> list = getGenericService().getInstances(FamilyCommunication.class);
+        List<FamilyCommunication> list = getClientService().getInstances(FamilyCommunication.class);
         FComConverter.fcomDB = new ArrayList<FamilyCommunication>();
         FComConverter.fcomDB.addAll(list);
         return list;
     }
+
+    public List<Region> getRegionTypes() {
+        //refresh converter if new data available
+        List<Region> list = getClientService().getInstances(Region.class);
+        RegionIDConverter.regionsList = new ArrayList<Region>();
+        RegionIDConverter.regionsList.addAll(list);
+        return list;
+    }
+
 
 	/*
      * Get all Breadwinners from the database
@@ -286,7 +307,7 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
 
     public List<String> getBreadwinnerTypes() {
         List<String> l = new ArrayList<String>();
-        for (Breadwinner b : getGenericService().getInstances(Breadwinner.class)) {
+        for (Breadwinner b : getClientService().getInstances(Breadwinner.class)) {
             if (!b.getCaption().equals("Другие")) {
                 l.add(b.getCaption());
             }
@@ -316,7 +337,7 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
      */
     public List<String> getReasonofhomelessTypes() {
         List<String> l = new ArrayList<String>();
-        for (Reasonofhomeless r : getGenericService().getInstances(Reasonofhomeless.class)) {
+        for (Reasonofhomeless r : getClientService().getInstances(Reasonofhomeless.class)) {
             if (!r.getCaption().equals("Другие")) {
                 l.add(r.getCaption());
             }
@@ -345,7 +366,7 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
      */
     public List<String> getChronicDiseaseTypes() {
         List<String> l = new ArrayList<String>();
-        for (ChronicDisease cd : getGenericService().getInstances(ChronicDisease.class)) {
+        for (ChronicDisease cd : getClientService().getInstances(ChronicDisease.class)) {
             if (!cd.getCaption().equals("Другие")) {
                 l.add(cd.getCaption());
             }
@@ -485,6 +506,15 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
         rc.update("homeless_reasons_form:anotherHomelessReasons");
     }
 
+    public void loadSubRegionsForLastLiving(ValueChangeEvent event) {
+        lastLivingSubRegions = new ArrayList<>();
+        lastLivingSubRegions.addAll(getClientService().getSubRegionsByRegion((Region) event.getNewValue()));
+    }
+
+    public void loadSubRegionsForLastRegistration(ValueChangeEvent event) {
+        lastRegistrationSubRegions = new ArrayList<>();
+        lastRegistrationSubRegions.addAll(getClientService().getSubRegionsByRegion((Region) event.getNewValue()));
+    }
 
     public boolean isAnotherHomelessReasonChecked() {
         return anotherHomelessReasonChecked;
@@ -528,7 +558,7 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
 
                     //update homeless reasons, breadwinners, chronical disasters
                 Set<Breadwinner> sb = new HashSet<Breadwinner>();
-                for (Breadwinner b : getGenericService().getInstances(Breadwinner.class)) {
+                for (Breadwinner b : getClientService().getInstances(Breadwinner.class)) {
                     for (String cb : clientBreadwinners) {
                         if (b.getCaption().equals(cb)) {
                             sb.add(b);
@@ -538,7 +568,7 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
                 client.setBreadwinners(sb);
 
                 Set<Reasonofhomeless> sr = new HashSet<Reasonofhomeless>();
-                for (Reasonofhomeless b : getGenericService().getInstances(Reasonofhomeless.class)) {
+                for (Reasonofhomeless b : getClientService().getInstances(Reasonofhomeless.class)) {
                     for (String cb : clientReasonsofhomeless) {
                         if (b.getCaption().equals(cb)) {
                             sr.add(b);
@@ -548,7 +578,7 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
                 client.setReasonofhomeless(sr);
 
                 Set<ChronicDisease> chd = new HashSet<ChronicDisease>();
-                for (ChronicDisease b : getGenericService().getInstances(ChronicDisease.class)) {
+                for (ChronicDisease b : getClientService().getInstances(ChronicDisease.class)) {
                     for (String cb : clientChronicDisease) {
                         if (b.getCaption().equals(cb)) {
                             chd.add(b);
@@ -558,7 +588,7 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
                 client.setDiseases(chd);
 
             try {
-                getGenericService().updateInstance(client);
+                getClientService().updateInstance(client);
                 msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Сохранено", "");
                 try {
                     cfb.reloadAll();
@@ -719,13 +749,19 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
     // special for converter and selection data model!
     public void init() {
         FComConverter.fcomDB = new ArrayList<FamilyCommunication>();
-        FComConverter.fcomDB.addAll(getGenericService().getInstances(FamilyCommunication.class));
+        FComConverter.fcomDB.addAll(getClientService().getInstances(FamilyCommunication.class));
 
         NightStayConverter.nsDB = new ArrayList<NightStay>();
-        NightStayConverter.nsDB.addAll(getGenericService().getInstances(NightStay.class));
+        NightStayConverter.nsDB.addAll(getClientService().getInstances(NightStay.class));
 
         EducationConverter.edDB = new ArrayList<Education>();
-        EducationConverter.edDB.addAll(getGenericService().getInstances(Education.class));
+        EducationConverter.edDB.addAll(getClientService().getInstances(Education.class));
+
+        RegionIDConverter.regionsList = new ArrayList<Region>();
+        RegionIDConverter.regionsList.addAll(getClientService().getInstances(Region.class));
+
+        SubRegionIDConverter.regionsList = new ArrayList<>();
+        SubRegionIDConverter.regionsList.addAll(getClientService().getInstances(SubRegion.class));
     }
 
     public void openPhotoDlg() {
@@ -742,11 +778,13 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
         Client client = new Client("", "", "", false, null, null, "", "");
 
         //Setting new values to the relations
-        client.setNightstay(getGenericService().getInstanceByCaption(NightStay.class, "Нет ответа"));
-        client.setEducation(getGenericService().getInstanceByCaption(Education.class, "Нет ответа"));
-        client.setFcom(getGenericService().getInstanceByCaption(FamilyCommunication.class, "Нет ответа"));
+        client.setNightstay(getClientService().getInstanceByCaption(NightStay.class, "Нет ответа"));
+        client.setEducation(getClientService().getInstanceByCaption(Education.class, "Нет ответа"));
+        client.setFcom(getClientService().getInstanceByCaption(FamilyCommunication.class, "Нет ответа"));
+        client.setLastLiving(getClientService().getInstanceById(SubRegion.class,1));
+        client.setLastRegistration(getClientService().getInstanceById(SubRegion.class,1));
 
-        getGenericService().addInstance(client);
+        getClientService().addInstance(client);
         session.setAttribute("cid", client.getId());
         log.info("Client with ID="+client.getId()+" successfully added to the database and set to the http session");
         copyClientToClientData(client);
@@ -767,40 +805,40 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
             log.info("Client with ID = "+client.getId() + " will be deleted");
             log.info("Deleting all client's documents...");
 
-            List<Document> documents = getGenericService().getInstancesByClientId(Document.class, client.getId());
+            List<Document> documents = getClientService().getInstancesByClientId(Document.class, client.getId());
             for (Document document : documents) {
                 log.info("\tDeleting document id = "+document.getId());
-                getGenericService().deleteInstance(document);
+                getClientService().deleteInstance(document);
                 log.info("\t... done!");
             }
 
             for (Breadwinner breadwinner : client.getBreadwinners()) {
                 log.info("\tDeleting breadwinner id = "+breadwinner.getId());
-                getGenericService().deleteInstance(breadwinner);
+                getClientService().deleteInstance(breadwinner);
                 log.info("\t... done!");
             }
 
             for (Reasonofhomeless reasonofhomeless : client.getReasonofhomeless()) {
                 log.info("\tDeleting reasonofhomeless id = "+reasonofhomeless.getId());
-                getGenericService().deleteInstance(reasonofhomeless);
+                getClientService().deleteInstance(reasonofhomeless);
                 log.info("\t... done!");
             }
 
             for (ChronicDisease chronicDisease : client.getDiseases()) {
                 log.info("\tDeleting chronicDisease id = " + chronicDisease.getId());
-                getGenericService().deleteInstance(chronicDisease);
+                getClientService().deleteInstance(chronicDisease);
                 log.info("\t... done!");
             }
 
-            for (ServContract servContract : getGenericService().getInstancesByClientId(ServContract.class, client.getId())) {
+            for (ServContract servContract : getClientService().getInstancesByClientId(ServContract.class, client.getId())) {
                 log.info("\tDeleting servContract id = " + servContract.getId());
-                getGenericService().deleteInstance(servContract);
+                getClientService().deleteInstance(servContract);
                 log.info("\t... done!");
             }
 
-            for (ShelterHistory shelterHistory : getGenericService().getInstancesByClientId(ShelterHistory.class, client)) {
+            for (ShelterHistory shelterHistory : getClientService().getInstancesByClientId(ShelterHistory.class, client)) {
                 log.info("\tDeleting shelterHistory id = " + shelterHistory.getId());
-                getGenericService().deleteInstance(shelterHistory);
+                getClientService().deleteInstance(shelterHistory);
                 log.info("\t... done!");
             }
 
@@ -811,7 +849,7 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
             client.setFcom(null);
 
             log.info("Deleting the client itself...");
-            getGenericService().deleteInstance(client);
+            getClientService().deleteInstance(client);
             log.info("Client with ID = "+client.getId() + " is deleted");
             client = null;
         } catch (Exception e) {
@@ -823,7 +861,7 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
     public List<String> getAllSubRegions(String query) {
         List<String> sr = new ArrayList<String>();
 
-        for (SubRegion s : getGenericService().getInstances(SubRegion.class)) {
+        for (SubRegion s : getClientService().getInstances(SubRegion.class)) {
             sr.add(s.getCaption());
         }
 
@@ -871,11 +909,41 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
         this.prevTabIndex = prevTabIndex;
     }
 
-    public int getRegion() {
-        return region;
+
+    public void setRegionTypes(List<String> regionTypes) {
+        this.regionTypes = regionTypes;
     }
 
-    public void setRegion(int region) {
-        this.region = region;
+    public Region getLastLivingRegion() {
+        return lastLivingRegion;
     }
+
+    public void setLastLivingRegion(Region lastLivingRegion) {
+        this.lastLivingRegion = lastLivingRegion;
+    }
+
+    public Region getLastRegistrationRegion() {
+        return lastRegistrationRegion;
+    }
+
+    public void setLastRegistrationRegion(Region lastRegistrationRegion) {
+        this.lastRegistrationRegion = lastRegistrationRegion;
+    }
+
+    public List<SubRegion> getLastLivingSubRegions() {
+        return lastLivingSubRegions;
+    }
+
+    public void setLastLivingSubRegions(List<SubRegion> lastLivingSubRegions) {
+        this.lastLivingSubRegions = lastLivingSubRegions;
+    }
+
+    public List<SubRegion> getLastRegistrationSubRegions() {
+        return lastRegistrationSubRegions;
+    }
+
+    public void setLastRegistrationSubRegions(List<SubRegion> lastRegistrationSubRegions) {
+        this.lastRegistrationSubRegions = lastRegistrationSubRegions;
+    }
+
 }

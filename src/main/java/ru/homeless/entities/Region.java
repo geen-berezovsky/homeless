@@ -10,8 +10,10 @@ public class Region implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private Integer id;
 	private String caption;
+    private String abbreviation;
 
-	public Region() {
+
+    public Region() {
 
 	}
 
@@ -34,9 +36,25 @@ public class Region implements Serializable {
 		this.caption = caption;
 	}
 	
-	public String toString() {
-		return caption;
-	}
+    public boolean equals(Object o) {
+        if (o == null) return false;
+        if (! (o instanceof Region)) {
+            return false;
+        }
+        Region d = (Region) o;
+        if (new Integer(getId()).equals(new Integer(d.getId()))) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
 
+    public String getAbbreviation() {
+        return abbreviation;
+    }
+
+    public void setAbbreviation(String abbreviation) {
+        this.abbreviation = abbreviation;
+    }
 }
