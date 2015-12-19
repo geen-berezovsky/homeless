@@ -78,6 +78,7 @@ public class ClientDataBean implements Serializable {
     private String originalPhotoFilePath;
     private SubRegion lastLiving;
     private SubRegion lastRegistration;
+    private Boolean hasNotice;
 
 	private Date date;
 
@@ -127,6 +128,7 @@ public class ClientDataBean implements Serializable {
 		setDate(c.getDate());
         setLastLiving(c.getLastLiving());
         setLastRegistration(c.getLastRegistration());
+        setHasNotice(c.getHasNotice());
 	}
 
 	protected Client copyClientDataToClient(Client c) {
@@ -160,6 +162,7 @@ public class ClientDataBean implements Serializable {
 		c.setDate(getDate());
         c.setLastLiving(getLastLiving());
         c.setLastRegistration(getLastRegistration());
+        c.setHasNotice(getHasNotice());
 		return c;
 	}
 	
@@ -629,5 +632,13 @@ public class ClientDataBean implements Serializable {
 
     public void setClientService(ClientService clientService) {
         this.clientService = clientService;
+    }
+
+    public Boolean getHasNotice() {
+        return hasNotice;
+    }
+
+    public void setHasNotice(Boolean hasNotice) {
+        this.hasNotice = hasNotice;
     }
 }

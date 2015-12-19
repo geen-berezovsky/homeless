@@ -290,3 +290,5 @@ update Region set abbreviation = '?' where id=1;
 update Region set abbreviation = 'СПб' where id=2;
 update Region set abbreviation = 'ЛО' where id=3;
 
+ALTER TABLE `homeless`.`Client`
+ADD COLUMN `hasNotice` TINYINT(1) NULL DEFAULT '0' AFTER `lastRegistration`;

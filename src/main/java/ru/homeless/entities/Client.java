@@ -65,6 +65,8 @@ public class Client implements Serializable {
     private SubRegion lastLiving;
     private SubRegion lastRegistration;
 
+    private Boolean hasNotice;
+
 	public Client() {
 
 	}
@@ -133,7 +135,7 @@ public class Client implements Serializable {
 		return gender;
 	}
 
-	public void setGender(boolean gender) {
+    public void setGender(boolean gender) {
 		this.gender = gender;
 	}
 
@@ -415,5 +417,15 @@ public class Client implements Serializable {
 
     public void setLastRegistration(SubRegion lastRegistration) {
         this.lastRegistration = lastRegistration;
+    }
+
+    @Basic
+    @Column(columnDefinition = "BIT")
+    public Boolean getHasNotice() {
+        return hasNotice;
+    }
+
+    public void setHasNotice(Boolean hasNotice) {
+        this.hasNotice = hasNotice;
     }
 }
