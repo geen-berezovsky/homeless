@@ -18,6 +18,7 @@ import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 @ManagedBean (name = "basicdocument")
 @ViewScoped
@@ -134,8 +135,14 @@ public class BasicDocumentBean implements Serializable {
 
         String docNum= "";
 
+        int currYear = Calendar.getInstance().get(Calendar.YEAR);
+
+        Date from = new GregorianCalendar(currYear,1,1).getTime();
+        Date till = new Date();
+
+        System.out.println("from="+from+", till="+till);
         if (basicDocumentRegistryTypeId != 16) {
-            docNum = String.valueOf(workerService.getMaxBaseDocumentRegistryId() + 1)+"/" + String.valueOf(Calendar.getInstance().get(Calendar.YEAR));
+            docNum = getWorkerService().getCountOfBasicDocumentByTypeFromTheStartOfThisYear(from, till)+"/" + String.valueOf(currYear);
         } else {
             docNum = String.valueOf(workerService.getMaxBaseDocumentRegistryDocNumForTranzit() + 1);
         }
