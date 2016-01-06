@@ -24,6 +24,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name = "Client")
@@ -56,6 +57,15 @@ public class Client implements Serializable {
 	private String uniqReason;
 	private String photoName;
 	private String photoCheckSum;
+
+    private Date deathDate;
+    private String deathReason;
+    private String deathCity;
+
+    private SubRegion lastLiving;
+    private SubRegion lastRegistration;
+
+    private Boolean hasNotice;
 
 	public Client() {
 
@@ -125,7 +135,7 @@ public class Client implements Serializable {
 		return gender;
 	}
 
-	public void setGender(boolean gender) {
+    public void setGender(boolean gender) {
 		this.gender = gender;
 	}
 
@@ -157,7 +167,7 @@ public class Client implements Serializable {
 		this.id = id;
 	}
 
-	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL ,targetEntity = ChronicDisease.class)
+	@ManyToMany(cascade = CascadeType.ALL ,targetEntity = ChronicDisease.class)
 	@JoinTable(name = "link_chronicdisease_client", 
 		joinColumns = @JoinColumn(name = "clients_id", nullable = false, updatable = false), 
 		inverseJoinColumns = @JoinColumn(name = "diseases_id", nullable = false, updatable = false) 
@@ -170,7 +180,7 @@ public class Client implements Serializable {
 		this.diseases = diseases;
 	}
 
-	@ManyToOne(fetch = FetchType.EAGER, targetEntity = NightStay.class, cascade = CascadeType.ALL)
+	@ManyToOne(targetEntity = NightStay.class)
 	@JoinColumn(name = "nightStay")
 	public NightStay getNightstay() {
 		return nightStay;
@@ -180,7 +190,7 @@ public class Client implements Serializable {
 		this.nightStay = nightStay;
 	}
 
-	@ManyToOne(fetch = FetchType.EAGER, targetEntity = Education.class, cascade = CascadeType.ALL)
+	@ManyToOne(targetEntity = Education.class)
 	@JoinColumn(name = "education")
 	public Education getEducation() {
 		return education;
@@ -198,7 +208,7 @@ public class Client implements Serializable {
 		this.homelessdate = homelessdate;
 	}
 
-	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL ,targetEntity = Breadwinner.class)
+	@ManyToMany(cascade = CascadeType.ALL ,targetEntity = Breadwinner.class)
 	@JoinTable(name = "link_breadwinner_client", 
 		joinColumns = @JoinColumn(name = "clients_id", nullable = false, updatable = false), 
 		inverseJoinColumns = @JoinColumn(name = "breadwinners_id", nullable = false, updatable = false) 
@@ -211,7 +221,7 @@ public class Client implements Serializable {
 		this.breadwinners = breadwinners;
 	}
 
-	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL ,targetEntity = Reasonofhomeless.class)
+	@ManyToMany(cascade = CascadeType.ALL ,targetEntity = Reasonofhomeless.class)
 	@JoinTable(name = "link_reasonofhomeless_client", 
 		joinColumns = @JoinColumn(name = "clients_id", nullable = false, updatable = false), 
 		inverseJoinColumns = @JoinColumn(name = "reasonofhomeless_id", nullable = false, updatable = false) 
@@ -248,7 +258,7 @@ public class Client implements Serializable {
 		this.dependents = dependents;
 	}
 
-	@ManyToOne(fetch = FetchType.EAGER, targetEntity = FamilyCommunication.class, cascade = CascadeType.ALL)
+	@ManyToOne(targetEntity = FamilyCommunication.class)
 	@JoinColumn(name = "familycommunication")
 	public FamilyCommunication getFcom() {
 		return fcom;
@@ -350,7 +360,7 @@ public class Client implements Serializable {
 		this.photoCheckSum = photoCheckSum;
 	}
 
-	@OneToMany(fetch = FetchType.EAGER, targetEntity = RecievedService.class, cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(targetEntity = RecievedService.class, cascade = CascadeType.ALL, orphanRemoval = true)
 	@JoinColumn(name = "client")
 	public Set<RecievedService> getRecievedservices() {
 		return recievedservices;
@@ -359,5 +369,63 @@ public class Client implements Serializable {
 	public void setRecievedservices(Set<RecievedService> recievedservices) {
 		this.recievedservices = recievedservices;
 	}
+	
+	@Transient
+    public String getShortFIO(){
+    	return getSurname() + " " + getFirstname().substring(0, 1) + ". " + getMiddlename().substring(0, 1) + ".";
+    }
 
+    public Date getDeathDate() {
+        return deathDate;
+    }
+
+    public void setDeathDate(Date deathDate) {
+        this.deathDate = deathDate;
+    }
+
+    public String getDeathReason() {
+        return deathReason;
+    }
+
+    public void setDeathReason(String deathReason) {
+        this.deathReason = deathReason;
+    }
+
+    public String getDeathCity() {
+        return deathCity;
+    }
+
+    public void setDeathCity(String deathCity) {
+        this.deathCity = deathCity;
+    }
+
+    @ManyToOne(targetEntity = SubRegion.class)
+    @JoinColumn(name = "lastLiving")
+    public SubRegion getLastLiving() {
+        return lastLiving;
+    }
+
+    public void setLastLiving(SubRegion lastLiving) {
+        this.lastLiving = lastLiving;
+    }
+
+    @ManyToOne(targetEntity = SubRegion.class)
+    @JoinColumn(name = "lastRegistration")
+    public SubRegion getLastRegistration() {
+        return lastRegistration;
+    }
+
+    public void setLastRegistration(SubRegion lastRegistration) {
+        this.lastRegistration = lastRegistration;
+    }
+
+    @Basic
+    @Column(columnDefinition = "BIT")
+    public Boolean getHasNotice() {
+        return hasNotice;
+    }
+
+    public void setHasNotice(Boolean hasNotice) {
+        this.hasNotice = hasNotice;
+    }
 }

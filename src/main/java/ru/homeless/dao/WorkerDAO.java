@@ -1,6 +1,7 @@
 package ru.homeless.dao;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 import java.util.PropertyPermission;
 
@@ -32,6 +33,21 @@ public class WorkerDAO extends GenericDAO implements Serializable {
 			return null;
 		}
 	}
+
+    /**
+     * This function includes only Basic documents and don't include Transit and Unknown types
+     * @param from
+     * @param till
+     * @return
+     */
+    public Integer getCountOfBasicDocumentByTypeFromTheStartOfThisYear(Date from, Date till) {
+        //exclusions
+        BasicDocumentRegistryType transit = getInstanceById(BasicDocumentRegistryType.class,16);
+        BasicDocumentRegistryType unknown = getInstanceById(BasicDocumentRegistryType.class,20);
+
+        List<BasicDocumentRegistry> result = getSessionFactory().getCurrentSession().createCriteria(BasicDocumentRegistry.class).add(Restrictions.ge("date",from)).add(Restrictions.le("date",till)).add(Restrictions.ne("type",transit)).add(Restrictions.ne("type",unknown)).list();
+        return result.size()+1;
+    }
 
     public int getMaxBaseDocumentRegistryId() {
         DetachedCriteria maxId = DetachedCriteria.forClass(BasicDocumentRegistry.class).setProjection(Projections.max("id"));

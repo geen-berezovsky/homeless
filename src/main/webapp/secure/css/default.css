@@ -51,7 +51,7 @@
 }
 
 .base_form_panel_grid_class .ui-outputlabel .ui-widget {
-	width: 20px;	
+	width: 20px;
 }
 
 .ui-button {
@@ -62,14 +62,13 @@
 	border: none !important;
 	overflow-y:hidden;
 	overflow-x:hidden;
-	
 }
 
 .topLayoutMainForm {
 	border: none !important;
 	overflow-y:hidden;
 	overflow-x:hidden;
-	
+
 }
 .avatar_block1 {
     margin-left: 8px;
@@ -99,14 +98,43 @@
 	font-size: 12px !important;
 }
 
+.ui-tooltip {
+    font-size: 12px !important;
+}
 
 .ui-datepicker {
     font-size: 75% !important;
 }
 
+.ui-layout-unit-header-title {
+    font-size: 14px !important;
+}
+
 .documentsMenuCss {
     font-size: 100% !important;
     width: auto;
+}
+
+.deathNotification {
+    color: #B00000;
+}
+
+.ui-panelgrid .ui-panelgrid-cell {
+    padding-top: 3px;
+    padding-bottom: 3px;
+}
+
+.ui-inputfield {
+    padding-top: 3px;
+    padding-bottom: 3px;
+}
+
+.photoLayoutUnit {
+    overflow-y: hidden !important;
+}
+
+.avatar_block2 {
+    margin-top: 7px;
 }
 
 /*

@@ -118,7 +118,7 @@ public class ServContract implements Serializable {
 		this.documentId = documentId;
 	}
 
-	@OneToMany(fetch = FetchType.EAGER, targetEntity = ContractControl.class, cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(targetEntity = ContractControl.class, cascade = CascadeType.ALL, orphanRemoval = true)
 	@JoinColumn(name = "servcontract")
 	public Set<ContractControl> getContractcontrols() {
 		return contractcontrols;

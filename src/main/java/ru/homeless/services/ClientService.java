@@ -9,9 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ru.homeless.dao.ClientDAO;
-import ru.homeless.entities.Client;
-import ru.homeless.entities.MyClientsEntity;
-import ru.homeless.entities.ServContract;
+import ru.homeless.entities.*;
 
 @Service("ClientService")
 @Transactional(readOnly = false)
@@ -42,6 +40,21 @@ public class ClientService extends GenericService implements Serializable {
     @Transactional
     public List<MyClientsEntity> getMyContracts(int workerId, Date startDate, Date endDate) {
         return  getClientDAO().getMyContracts(workerId, startDate, endDate);
+    }
+
+    @Transactional
+    public List<ShelterHistory> getShelterEndsBefore(Date dateToEnd){
+    	return getClientDAO().getShelterEndsBefore(dateToEnd);
+    }
+
+    @Transactional
+    public List<ShelterHistory> getEndedShelterAndNotLeaving(){
+        return getClientDAO().getEndedShelterAndNotLeaving();
+    }
+
+    @Transactional
+    public List<SubRegion> getSubRegionsByRegion(Region region) {
+        return getClientDAO().getSubRegionsByRegion(region);
     }
 
 }

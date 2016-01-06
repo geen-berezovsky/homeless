@@ -125,7 +125,7 @@ public class BasicDocumentRegistry implements Serializable {
         this.travelCity = travelCity;
     }
 
-    @ManyToOne(fetch = FetchType.EAGER, targetEntity = BasicDocumentRegistryType.class)
+    @ManyToOne(targetEntity = BasicDocumentRegistryType.class)
     @JoinColumn(name = "type")
     public BasicDocumentRegistryType getType() {
         return type;

@@ -1,20 +1,20 @@
 package ru.homeless.converters;
 
-import java.io.Serializable;
-import java.util.List;
+import ru.homeless.entities.Region;
+import ru.homeless.entities.ShelterResult;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
+import java.io.Serializable;
+import java.util.List;
 
-import ru.homeless.entities.ContractResult;
-
-@FacesConverter(value = "contractResultTypeConverter")
-public class ContractResultTypeConverter implements Converter, Serializable {
+@FacesConverter(value = "regionIDConverter")
+public class RegionIDConverter implements Converter, Serializable {
 
 	private static final long serialVersionUID = 1L;
-	public static List<ContractResult> contractResultTypesDB;
+    public static List<Region> regionsList;
 
 	@Override
 	public Object getAsObject(FacesContext arg0, UIComponent arg1, String submittedValue) {
@@ -23,9 +23,9 @@ public class ContractResultTypeConverter implements Converter, Serializable {
 				return null;
 			} else {
 				int number = Integer.parseInt(submittedValue);
-				for (ContractResult d : contractResultTypesDB) {
-					if (d.getId() == number) {
-						return d;
+				for (Region region : regionsList) {
+					if (region.getId() == number) {
+                        return region;
 					}
 				}
 			}
@@ -40,7 +40,7 @@ public class ContractResultTypeConverter implements Converter, Serializable {
 		if (value == null || value.equals("")) {
 			return "";
 		} else {
-			return String.valueOf(((ContractResult) value).getId());
+            return String.valueOf(((Region) value).getId());
 		}
 	}
 

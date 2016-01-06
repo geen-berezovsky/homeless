@@ -11,7 +11,7 @@ import javax.faces.convert.FacesConverter;
 import ru.homeless.entities.ContractPoints;
 import ru.homeless.entities.ContractResult;
 
-@FacesConverter(forClass = ru.homeless.entities.ContractPoints.class, value = "contractPointsTypeConverter")
+@FacesConverter(value = "contractPointsTypeConverter")
 public class ContractPointsTypeConverter implements Converter, Serializable {
 
 	private static final long serialVersionUID = 1L;

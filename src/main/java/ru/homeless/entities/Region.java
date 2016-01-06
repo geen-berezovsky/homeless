@@ -1,36 +1,34 @@
 package ru.homeless.entities;
 
-import static javax.persistence.GenerationType.IDENTITY;
-
+import javax.persistence.*;
 import java.io.Serializable;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import static javax.persistence.GenerationType.IDENTITY;
 
 @Entity
-public class FamilyCommunication implements Serializable {
+public class Region implements Serializable {
 	private static final long serialVersionUID = 1L;
-	private int id;
+	private Integer id;
 	private String caption;
-	
-	public FamilyCommunication() {
-		
+    private String abbreviation;
+
+
+    public Region() {
+
 	}
-	
-	public FamilyCommunication(String caption) {
+
+	public Region(String caption) {
 		setCaption(caption);
 	}
-	
+
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
-	
 	public String getCaption() {
 		return caption;
 	}
@@ -38,17 +36,12 @@ public class FamilyCommunication implements Serializable {
 		this.caption = caption;
 	}
 	
-	@Override
-	public String toString() {
-		return caption;
-	}
-
     public boolean equals(Object o) {
         if (o == null) return false;
-        if (! (o instanceof FamilyCommunication)) {
+        if (! (o instanceof Region)) {
             return false;
         }
-        FamilyCommunication d = (FamilyCommunication) o;
+        Region d = (Region) o;
         if (new Integer(getId()).equals(new Integer(d.getId()))) {
             return true;
         } else {
@@ -56,4 +49,12 @@ public class FamilyCommunication implements Serializable {
         }
     }
 
+
+    public String getAbbreviation() {
+        return abbreviation;
+    }
+
+    public void setAbbreviation(String abbreviation) {
+        this.abbreviation = abbreviation;
+    }
 }

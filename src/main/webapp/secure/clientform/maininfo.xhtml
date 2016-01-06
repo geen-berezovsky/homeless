@@ -83,7 +83,14 @@
 			<p:inputText value="#{clientform.whereWasBorn}" id="cedit_born_place" size="40" styleClass="base_form_value_text">
 			</p:inputText>
 		</p:row>
-	</p:panelGrid>
+        <p:row>
+            <p:outputLabel value="Наличие важных отметок:" styleClass="base_form_caption_text"/>
+        </p:row>
+        <p:row>
+            <p:selectBooleanCheckbox value="#{clientform.hasNotice}" styleClass="base_form_value_text" />
+        </p:row>
+
+    </p:panelGrid>
 
 
 </ui:composition>

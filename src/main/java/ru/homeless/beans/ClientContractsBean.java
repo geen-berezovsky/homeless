@@ -41,8 +41,9 @@ public class ClientContractsBean implements Serializable {
     private Worker worker;
     private Document workerDocument;
     private List<ContractResult> contractResultTypes;
-    private List<ShelterResult> shelterResults;
 
+
+    private List<ShelterResult> shelterResults;
     private List<ContractControl> contractItems;
     private List<ContractPoints> contractPointsItems;
     private ContractPointsDataModel contractPointsDataModel;
@@ -218,7 +219,10 @@ public class ClientContractsBean implements Serializable {
     }
 
     public List<ContractResult> getContractResultTypes() {
-        return contractResultTypes;
+        List<ContractResult> list = getGenericService().getInstances(ContractResult.class);
+        ContractResultTypeConverter.contractResultTypesDB = new ArrayList<ContractResult>();
+        ContractResultTypeConverter.contractResultTypesDB.addAll(list);
+        return list;
     }
 
     public void setContractResultTypes(List<ContractResult> contractResultTypes) {
@@ -263,7 +267,10 @@ public class ClientContractsBean implements Serializable {
     }
 
     public List<ContractPoints> getContractPointsItems() {
-        return contractPointsItems;
+        List<ContractPoints> list = getGenericService().getInstances(ContractPoints.class);
+        ContractPointsTypeConverter.contractPointsTypesDB = new ArrayList<ContractPoints>();
+        ContractPointsTypeConverter.contractPointsTypesDB.addAll(list);
+        return list;
     }
 
     public void setContractPointsItems(List<ContractPoints> contractPointsItems) {
@@ -459,5 +466,18 @@ public class ClientContractsBean implements Serializable {
     public void setContractItems(List<ContractControl> contractItems) {
         this.contractItems = contractItems;
     }
+
+    public List<ShelterResult> getShelterResults() {
+        List<ShelterResult> list = getGenericService().getInstances(ShelterResult.class);
+        ShelterResultConverter.shelterResultList = new ArrayList<ShelterResult>();
+        ShelterResultConverter.shelterResultList.addAll(list);
+        return list;
+    }
+
+    public void setShelterResults(List<ShelterResult> shelterResults) {
+        this.shelterResults = shelterResults;
+    }
+
+
 }
 

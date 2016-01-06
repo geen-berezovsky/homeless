@@ -1,20 +1,20 @@
 package ru.homeless.converters;
 
-import java.io.Serializable;
-import java.util.List;
+import ru.homeless.entities.FamilyCommunication;
+import ru.homeless.entities.NightStay;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
+import java.io.Serializable;
+import java.util.List;
 
-import ru.homeless.entities.ContractResult;
-
-@FacesConverter(value = "contractResultTypeConverter")
-public class ContractResultTypeConverter implements Converter, Serializable {
+@FacesConverter(value = "nsConverter")
+public class NightStayConverter implements Converter, Serializable {
 
 	private static final long serialVersionUID = 1L;
-	public static List<ContractResult> contractResultTypesDB;
+	public static List<NightStay> nsDB;
 
 	@Override
 	public Object getAsObject(FacesContext arg0, UIComponent arg1, String submittedValue) {
@@ -23,7 +23,7 @@ public class ContractResultTypeConverter implements Converter, Serializable {
 				return null;
 			} else {
 				int number = Integer.parseInt(submittedValue);
-				for (ContractResult d : contractResultTypesDB) {
+				for (NightStay d : nsDB) {
 					if (d.getId() == number) {
 						return d;
 					}
@@ -40,7 +40,7 @@ public class ContractResultTypeConverter implements Converter, Serializable {
 		if (value == null || value.equals("")) {
 			return "";
 		} else {
-			return String.valueOf(((ContractResult) value).getId());
+			return String.valueOf(((NightStay) value).getId());
 		}
 	}
 

@@ -1,6 +1,7 @@
 package ru.homeless.services;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.codec.digest.DigestUtils;
@@ -40,7 +41,7 @@ public class WorkerService extends GenericService implements Serializable {
 		 */
         List<Worker> workers = getInstances(Worker.class);
 		for (Worker w : workers) {
-			if ((w.getFirstname() + " " + w.getSurname()).equals(name) && DigestUtils.sha1Hex(password).equals(w.getPassword())) {
+            if ((w.getFirstname() + " " + w.getSurname()).equals(name) && DigestUtils.sha1Hex(password).equals(w.getPassword())) {
 				return w;
 			}
 		}
@@ -55,4 +56,7 @@ public class WorkerService extends GenericService implements Serializable {
         return workerDAO.getMaxBaseDocumentRegistryDocNumForTranzit();
     }
 
+    public Integer getCountOfBasicDocumentByTypeFromTheStartOfThisYear(Date from, Date till) {
+        return workerDAO.getCountOfBasicDocumentByTypeFromTheStartOfThisYear(from, till);
+    }
 }

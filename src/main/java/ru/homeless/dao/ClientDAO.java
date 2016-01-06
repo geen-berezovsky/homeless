@@ -1,5 +1,7 @@
 package ru.homeless.dao;
 
+import static ru.homeless.util.Util.getCurDateDaysOnly;
+
 import java.io.Serializable;
 import java.sql.Blob;
 import java.text.ParseException;
@@ -13,6 +15,7 @@ import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import ru.homeless.entities.*;
 import ru.homeless.util.Util;
@@ -23,18 +26,31 @@ public class ClientDAO extends GenericDAO implements Serializable {
 	private static final long serialVersionUID = 1L;
 	public static Logger log = Logger.getLogger(ClientDAO.class);
 
-    public List<MyClientsEntity> getMyContracts(int workerId, Date startDate, Date endDate) {
-        List<ServContract> contracts = new ArrayList<ServContract>();
-        List<MyClientsEntity> myClientsEntities = new ArrayList<MyClientsEntity>();
+    public List<MyClientsEntity> getMyContracts(int workerId, Date from, Date to) {
         Criteria c = null;
-
-        if (startDate == null && endDate == null) {
-            c = getSessionFactory().getCurrentSession().createCriteria(ServContract.class).add(Restrictions.eq("result", getInstanceById(ContractResult.class, 1))).add(Restrictions.eq("worker", getInstanceById(Worker.class, workerId)));
+        if (from == null && to == null) {
+            c = createCreteiaContractsForWorker(workerId);
         } else {
-            c = getSessionFactory().getCurrentSession().createCriteria(ServContract.class).add(Restrictions.ne("result", getInstanceById(ContractResult.class, 1))).add(Restrictions.eq("worker", getInstanceById(Worker.class, workerId))).add(Restrictions.between("startDate",startDate, endDate));
+            c = createCreteiaContractsForWorker(workerId).add(Restrictions.between("startDate",from, to));
         }
+        return getMyContractsByCriteria(c);
+    }
+    
+    private Criteria createCreteiaContractsForWorker(int workerId){
+    	return getSessionFactory().getCurrentSession().createCriteria(ServContract.class).add(Restrictions.eq("result", getInstanceById(ContractResult.class, 1))).add(Restrictions.eq("worker", getInstanceById(Worker.class, workerId)));
+    }
+
+    /**
+     * Return contracts for criteria 
+     * @param workerId
+     * @param dateToend
+     * @return
+     */
+    private List<MyClientsEntity> getMyContractsByCriteria(Criteria c){
+        List<MyClientsEntity> myClientsEntities = new ArrayList<MyClientsEntity>();
         c.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-        contracts  = c.list();
+        @SuppressWarnings("unchecked")
+		List<ServContract> contracts  = c.list();
 
         for (ServContract sc : contracts) {
             MyClientsEntity myClientsEntity = new MyClientsEntity();
@@ -53,7 +69,6 @@ public class ClientDAO extends GenericDAO implements Serializable {
 
         return myClientsEntities;
     }
-
 
 	@SuppressWarnings("unchecked")
 	public List<Client> getClientsByCriteria(int id, String surname, String firstname, String middlename, String _date) {
@@ -96,5 +111,45 @@ public class ClientDAO extends GenericDAO implements Serializable {
             return false;
         }
         return true;
+    }
+    
+    /**
+     * Returns info about shelter ended from current date before <b>dateToEnd</b>. Including both dates.
+     * @param workerId
+     * @param dateToEnd
+     * @return
+     */
+    public List<ShelterHistory> getShelterEndsBefore(Date dateToEnd){
+    	Criteria shelterInfoCriteria = getSessionFactory().getCurrentSession().createCriteria(ShelterHistory.class);
+
+        shelterInfoCriteria.add(Restrictions.ge("outShelter", getCurDateDaysOnly()));
+        shelterInfoCriteria.add(Restrictions.le("outShelter", dateToEnd));
+    	shelterInfoCriteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+    	return shelterInfoCriteria.list();
+    }
+    
+    /**
+     * Returns ShelterHistory for clients, who should leave before today, but shelter status is living.
+     * @return
+     */
+    public List<ShelterHistory> getEndedShelterAndNotLeaving(){
+    	Criteria shelterInfoCriteria = getSessionFactory().getCurrentSession().createCriteria(ShelterHistory.class);
+    	
+        shelterInfoCriteria.add(Restrictions.le("outShelter", getCurDateDaysOnly()));
+        shelterInfoCriteria.add(Restrictions.eq("shelterresult", ru.homeless.entities.ShelterResult.Results.LIVING.getId()));
+        
+    	shelterInfoCriteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+    	return shelterInfoCriteria.list();
+    }
+
+    /**
+    * Returns list of SubRegion by Region id.
+    * @return
+    */
+    public List<SubRegion> getSubRegionsByRegion(Region region) {
+        Criteria subregions = getSessionFactory().getCurrentSession().createCriteria(SubRegion.class).add(Restrictions.eq("region",region));
+        subregions.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+        return subregions.list();
+
     }
 }

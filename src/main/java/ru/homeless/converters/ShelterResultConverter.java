@@ -10,7 +10,7 @@ import javax.faces.convert.FacesConverter;
 import java.io.Serializable;
 import java.util.List;
 
-@FacesConverter(forClass = ContractPoints.class, value = "shelterResultConverter")
+@FacesConverter(value = "shelterResultConverter")
 public class ShelterResultConverter implements Converter, Serializable {
 
 	private static final long serialVersionUID = 1L;

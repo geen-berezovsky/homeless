@@ -146,3 +146,149 @@ update Document set doctype = 1 where id in (select id from UPD_PASS);
 drop table UPD_PASS;
 
 update `Worker` set password = sha1(password);
+
+-- Implementing client's death registration
+ALTER TABLE `homeless`.`Client`
+ADD COLUMN `deathDate` DATETIME NULL DEFAULT NULL AFTER `nightStay`,
+ADD COLUMN `deathReason` VARCHAR(255) NULL DEFAULT NULL AFTER `deathDate`,
+ADD COLUMN `deathCity` VARCHAR(255) NULL DEFAULT NULL AFTER `deathReason`,
+ADD COLUMN `deathDocPath` TINYTEXT NULL DEFAULT NULL AFTER `deathCity`;
+
+update Rules set caption = 'Председатель' where id=1;
+
+CREATE TABLE `homeless`.`DocumentScan` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `doctype` INT(11) NULL,
+  `path` TEXT NULL,
+  `uploadingDate` DATETIME NULL,
+  `comments` TEXT NULL,
+  `client` INT(11) NULL,
+  `worker` INT(11) NULL,
+  PRIMARY KEY (`id`),
+  INDEX `SCAN_CLIENT_idx` (`client` ASC),
+  INDEX `SCAN_DOCTYPE_idx` (`doctype` ASC),
+  INDEX `SCAN_WORKER_idx` (`worker` ASC),
+  CONSTRAINT `SCAN_CLIENT`
+  FOREIGN KEY (`client`)
+  REFERENCES `homeless`.`Client` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `SCAN_DOCTYPE`
+  FOREIGN KEY (`doctype`)
+  REFERENCES `homeless`.`DocType` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `SCAN_WORKER`
+  FOREIGN KEY (`worker`)
+  REFERENCES `homeless`.`Worker` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
+ALTER TABLE `homeless`.`Client` DROP COLUMN `deathDocPath`; -- REMOVING UNNECESSARY COLUMN, THAT ADDED BEFORE
+insert into DocType(addressProof, audience, birthProof, caption, photoProof) values (1,10,1,'Свидетельство о смерти',0);
+
+-- Changes in the base form
+update Breadwinner set caption='Собирательство' where id=7;
+insert into Breadwinner (audience,caption) values (0,'Социальные пособия');
+insert into Breadwinner (audience,caption) values (0,'Помощь благ-х организаций');
+insert into Breadwinner (audience,caption) values (0,'Ребцентры');
+insert into Breadwinner (audience,caption) values (0,'Помощь церкви');
+
+update ReasonOfHomeless set caption='Мошенничество/Вымогательство' where id=1;
+update ReasonOfHomeless set caption='Осуждение к лишению свободы' where id=2;
+update ReasonOfHomeless set caption='Вынужденный переселенец' where id=4;
+update ReasonOfHomeless set caption='Выселение из служебного жилья' where id=5;
+update ReasonOfHomeless set caption='Беспричинно потянуло странствовать' where id=7;
+insert into ReasonOfHomeless (caption) values ('Взыскание жилья за долги');
+insert into ReasonOfHomeless (caption) values ('Конфликт с соседями');
+insert into ReasonOfHomeless (caption) values ('Продал и пропил');
+
+CREATE TABLE `homeless`.`Region` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `caption` VARCHAR(255) NULL,
+  PRIMARY KEY (`id`));
+
+CREATE TABLE `homeless`.`SubRegion` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `region` INT(11) NULL,
+  `caption` VARCHAR(255) NULL,
+  PRIMARY KEY (`id`),
+  INDEX `region_idx` (`region` ASC),
+  CONSTRAINT `region_subregion`
+  FOREIGN KEY (`region`)
+  REFERENCES `homeless`.`Region` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
+
+
+insert into Region (caption) values ('Неизвестно');
+insert into Region (caption) values ('Санкт-Петербург');
+insert into Region (caption) values ('Ленинградская область');
+
+insert into SubRegion(region,caption) values (1,'Неизвестно');
+insert into SubRegion(region,caption) values (2,'Адмиралтейский');
+insert into SubRegion(region,caption) values (2,'Василеостровский');
+insert into SubRegion(region,caption) values (2,'Выборгский');
+insert into SubRegion(region,caption) values (2,'Калининский');
+insert into SubRegion(region,caption) values (2,'Кировский');
+insert into SubRegion(region,caption) values (2,'Колпинский');
+insert into SubRegion(region,caption) values (2,'Красногвардейский');
+insert into SubRegion(region,caption) values (2,'Красносельский');
+insert into SubRegion(region,caption) values (2,'Кронштадтский');
+insert into SubRegion(region,caption) values (2,'Курортный');
+insert into SubRegion(region,caption) values (2,'Московский');
+insert into SubRegion(region,caption) values (2,'Невский');
+insert into SubRegion(region,caption) values (2,'Петроградский');
+insert into SubRegion(region,caption) values (2,'Петродворцовый');
+insert into SubRegion(region,caption) values (2,'Приморский');
+insert into SubRegion(region,caption) values (2,'Пушкинский');
+insert into SubRegion(region,caption) values (2,'Фрунзенский');
+insert into SubRegion(region,caption) values (2,'Центральный');
+insert into SubRegion(region,caption) values (3,'Бокситогорский');
+insert into SubRegion(region,caption) values (3,'Волосовский');
+insert into SubRegion(region,caption) values (3,'Волховский');
+insert into SubRegion(region,caption) values (3,'Всеволожский');
+insert into SubRegion(region,caption) values (3,'Выборгский');
+insert into SubRegion(region,caption) values (3,'Гатчинский');
+insert into SubRegion(region,caption) values (3,'Кингисеппский');
+insert into SubRegion(region,caption) values (3,'Киришский');
+insert into SubRegion(region,caption) values (3,'Кировский');
+insert into SubRegion(region,caption) values (3,'Лодейнопольский');
+insert into SubRegion(region,caption) values (3,'Ломоносовский');
+insert into SubRegion(region,caption) values (3,'Лужский');
+insert into SubRegion(region,caption) values (3,'Подпорожский');
+insert into SubRegion(region,caption) values (3,'Приозерский');
+insert into SubRegion(region,caption) values (3,'Сланцевский');
+insert into SubRegion(region,caption) values (3,'Тихвинский');
+insert into SubRegion(region,caption) values (3,'Тосненский');
+
+ALTER TABLE `homeless`.`Client`
+ADD COLUMN `lastLiving` INT(11) NULL DEFAULT 1 AFTER `deathCity`,
+ADD COLUMN `lastRegistration` INT(11) NULL DEFAULT 1 AFTER `lastLiving`,
+ADD INDEX `lastLiving_SubRegion_idx` (`lastLiving` ASC),
+ADD INDEX `lastRegistration_SubRegion_idx` (`lastRegistration` ASC);
+ALTER TABLE `homeless`.`Client`
+ADD CONSTRAINT `lastLiving_SubRegion`
+FOREIGN KEY (`lastLiving`)
+REFERENCES `homeless`.`SubRegion` (`id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION,
+ADD CONSTRAINT `lastRegistration_SubRegion`
+FOREIGN KEY (`lastRegistration`)
+REFERENCES `homeless`.`SubRegion` (`id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;
+
+
+-- ************************
+
+ALTER TABLE `homeless`.`Region`
+ADD COLUMN `abbreviation` VARCHAR(10) NULL DEFAULT NULL AFTER `caption`;
+
+update Region set abbreviation = '?' where id=1;
+update Region set abbreviation = 'СПб' where id=2;
+update Region set abbreviation = 'ЛО' where id=3;
+
+ALTER TABLE `homeless`.`Client`
+ADD COLUMN `hasNotice` TINYINT(1) NULL DEFAULT '0' AFTER `lastRegistration`;

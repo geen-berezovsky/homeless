@@ -15,12 +15,14 @@ public class Configuration {
     public static String photos;
     public static String timestampFile;
     public static String reportEngineUrl;
+    public static String profilesDir;
 
     @Autowired
-    public Configuration(@Value("${photos}") String photos, @Value("${timestampFile}") String timestampFile, @Value("${reportEngineUrl}") String reportEngineUrl) {
+    public Configuration(@Value("${photos}") String photos, @Value("${timestampFile}") String timestampFile, @Value("${reportEngineUrl}") String reportEngineUrl, @Value("${profilesDir}") String profilesDir) {
         this.photos = photos;
         this.timestampFile = timestampFile;
         this.reportEngineUrl = reportEngineUrl;
+        this.profilesDir = profilesDir;
     }
 
 

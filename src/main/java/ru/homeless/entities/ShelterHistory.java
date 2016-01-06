@@ -23,15 +23,6 @@ public class ShelterHistory implements Serializable {
 	private Date typhVac;
 	private Date fluorogr;
 	private Integer roomId;
-
-    public Integer getShelterresult() {
-        return shelterresult;
-    }
-
-    public void setShelterresult(Integer shelterresult) {
-        this.shelterresult = shelterresult;
-    }
-
     private Integer shelterresult;
 	
 	public ShelterHistory() {
@@ -55,7 +46,7 @@ public class ShelterHistory implements Serializable {
 		this.id = id;
 	}
 
-    @ManyToOne(fetch = FetchType.EAGER, targetEntity = Client.class)
+    @ManyToOne(targetEntity = Client.class)
     @JoinColumn(name = "client")
     public Client getClient() {
 		return client;
@@ -108,5 +99,11 @@ public class ShelterHistory implements Serializable {
 		this.roomId = roomId;
 	}
 
+    public Integer getShelterresult() {
+        return shelterresult;
+    }
 
+    public void setShelterresult(Integer shelterresult) {
+        this.shelterresult = shelterresult;
+    }
 }

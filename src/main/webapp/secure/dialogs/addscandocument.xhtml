@@ -1,0 +1,65 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui">
+<ui:composition>
+	<h:form id="add_scan_document">
+		<p:messages />
+		<p:dialog id="addScanDocument" header="Добавить/Обновить скан документа" widgetVar="addDocumentScanWv" resizable="false" closable="true" modal="true" showEffect="fade" hideEffect="explode" dynamic="true"
+			closeOnEscape="true">
+            <p:outputLabel value="Загрузить скан документа" styleClass="base_form_caption_text"/>
+            <p:fileUpload id="scanDocUpload" styleClass="base_form_value_text" uploadLabel="Загрузить" cancelLabel="Отмена" label="Выбор файла" fileUploadListener="#{scandocuments.handleScanDocUpload}" update="scanDocPath"/>
+            <h:panelGrid columns="2" id="add_docs_scan_panel_grid">
+                <p:row>
+                    <h:outputText value="Загруженный документ: " styleClass="base_form_caption_text"/>
+                </p:row>
+                <p:row>
+                    <p:commandButton id="scanDocPath" value="#{scandocuments.selectedDocument.path}" onclick="PrimeFaces.monitorDownload(scanStart, scanStop);" styleClass="base_form_value_text" ajax="false" icon="ui-icon-arrowthick-1-s">
+                        <p:fileDownload value="#{scandocuments.file}" />
+                            </p:commandButton>
+                </p:row>
+                <p:row>
+					<p:column>
+						<p:outputLabel value="Тип документа:" styleClass="base_form_caption_text"/>
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column>
+						<p:selectOneMenu id="docScanTypeId" value="#{scandocuments.selectedDocument.doctype}" converter="docTypeConverter" style="width: 420px;" styleClass="base_form_value_text">
+							<f:selectItems value="#{scandocuments.docTypes}" var="docScanType" itemLabel="#{docScanType.caption}" itemValue="#{docScanType}" />
+						</p:selectOneMenu>
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column>
+						<p:outputLabel value="Комментарии:" styleClass="base_form_caption_text"/>
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column>
+						<p:inputTextarea value="#{scandocuments.selectedDocument.comments}" rows="6" cols="50"  styleClass="base_form_value_text"/>
+					</p:column>
+				</p:row>
+			</h:panelGrid>
+			<p:separator />
+			<p:panel>
+				<p:growl id="adddocsscan_growl" showDetail="true" life="3000" />
+				<center>
+					<p:commandButton value="Добавить/Обновить" id="addNewDocumentScanB" actionListener="#{scandocuments.addSelectedDocument()}" ajax="true" update="@this :select_document :reg_select_document add_docs_scan_panel_grid :m_tabview:documentsTabTitle :m_tabview:documentsScan_form adddocsscan_growl" icon="ui-icon-check" oncomplete="addDocumentScanWv.hide()" />
+				</center>
+			</p:panel>
+		</p:dialog>
+        <p:dialog modal="true" widgetVar="scanStatusDialog" header="Status" draggable="false" closable="false" resizable="false">
+            <p:graphicImage name="/images/loading.gif" />
+        </p:dialog>
+	</h:form>
+    <script type="text/javascript">
+        function scanStart() {
+            PF('scanStatusDialog').show();
+        }
+
+        function scanStop() {
+            PF('scanStatusDialog').hide();
+        }
+    </script>
+</ui:composition>
+</html>

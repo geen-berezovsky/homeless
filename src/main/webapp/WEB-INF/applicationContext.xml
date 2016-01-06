@@ -77,12 +77,16 @@ http://www.springframework.org/schema/tx/spring-tx-4.0.xsd http://www.springfram
               <value>ru.homeless.entities.ZAGSRequestDocumentRegistry</value>
               <value>ru.homeless.entities.BasicDocumentRegistry</value>
               <value>ru.homeless.entities.BasicDocumentRegistryType</value>
+              <value>ru.homeless.entities.DocumentScan</value>
+              <value>ru.homeless.entities.Region</value>
+              <value>ru.homeless.entities.SubRegion</value>
 			</list>
 		</property>
 		<property name="hibernateProperties">
 			<props>
 				<prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
 				<prop key="hibernate.show_sql">false</prop>
+                <prop key="hibernate.enable_lazy_load_no_trans">true</prop>
 			</props>
 		</property>
 	</bean>
@@ -90,6 +94,7 @@ http://www.springframework.org/schema/tx/spring-tx-4.0.xsd http://www.springfram
 	<!-- Enable the configuration of transactional behavior based on annotations -->
 	<tx:annotation-driven transaction-manager="txManager" />
 	<tx:annotation-driven proxy-target-class="true"/>
+
 
 	<!-- Transaction Manager is defined -->
 	<bean id="txManager"

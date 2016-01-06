@@ -9,6 +9,9 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.sql.Blob;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -31,13 +34,8 @@ import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 
 import ru.homeless.configuration.Configuration;
-import ru.homeless.entities.Breadwinner;
-import ru.homeless.entities.ChronicDisease;
-import ru.homeless.entities.Client;
-import ru.homeless.entities.Education;
-import ru.homeless.entities.FamilyCommunication;
-import ru.homeless.entities.NightStay;
-import ru.homeless.entities.Reasonofhomeless;
+import ru.homeless.entities.*;
+import ru.homeless.services.ClientService;
 import ru.homeless.services.GenericService;
 import ru.homeless.util.Util;
 
@@ -78,20 +76,14 @@ public class ClientDataBean implements Serializable {
 	private String whereWasBorn;
 	private Blob avatar;
     private String originalPhotoFilePath;
+    private SubRegion lastLiving;
+    private SubRegion lastRegistration;
+    private Boolean hasNotice;
 
 	private Date date;
 
-    public GenericService getGenericService() {
-        return genericService;
-    }
-
-    public void setGenericService(GenericService genericService) {
-        this.genericService = genericService;
-    }
-
-    @ManagedProperty(value = "#{GenericService}")
-    private GenericService genericService;
-
+    @ManagedProperty(value = "#{ClientService}")
+    private ClientService clientService;
 
     //custom
 	private StreamedContent clientFormAvatar; //fake
@@ -134,6 +126,9 @@ public class ClientDataBean implements Serializable {
 		setWhereWasBorn(c.getWhereWasBorn());
 		setAvatar(c.getAvatar());
 		setDate(c.getDate());
+        setLastLiving(c.getLastLiving());
+        setLastRegistration(c.getLastRegistration());
+        setHasNotice(c.getHasNotice());
 	}
 
 	protected Client copyClientDataToClient(Client c) {
@@ -165,6 +160,9 @@ public class ClientDataBean implements Serializable {
 		c.setWhereWasBorn(getWhereWasBorn());
 		c.setAvatar(getAvatar());
 		c.setDate(getDate());
+        c.setLastLiving(getLastLiving());
+        c.setLastRegistration(getLastRegistration());
+        c.setHasNotice(getHasNotice());
 		return c;
 	}
 	
@@ -266,7 +264,7 @@ public class ClientDataBean implements Serializable {
 	public NightStay getNightStay() {
         if (nightStay == null) {
             return
-                    getGenericService().getInstanceByCaption(NightStay.class, "Нет ответа");
+                    getClientService().getInstanceByCaption(NightStay.class, "Нет ответа");
         } else {
             return nightStay;
         }
@@ -281,7 +279,7 @@ public class ClientDataBean implements Serializable {
         //set new values for relations if not exist
         if (education == null) {
             return
-            getGenericService().getInstanceByCaption(Education.class, "Нет ответа");
+            getClientService().getInstanceByCaption(Education.class, "Нет ответа");
         } else {
             return education;
         }
@@ -293,7 +291,7 @@ public class ClientDataBean implements Serializable {
 
 	public FamilyCommunication getFcom() {
         if (fcom == null ) {
-            return getGenericService().getInstanceByCaption(FamilyCommunication.class, "Нет ответа");
+            return getClientService().getInstanceByCaption(FamilyCommunication.class, "Нет ответа");
         } else {
             return fcom;
         }
@@ -499,37 +497,55 @@ public class ClientDataBean implements Serializable {
 		}
 	}
 
-	
+	/*
+	Deprecated because of social workers sometimes don't know the real homeless age for the client or client can't say it
+	This method can be deleted safely
+	 */
 	public void validateHomelessYear(FacesContext ctx, UIComponent component, Object value) {
 		String str = value.toString();
-		if (! isYearValid(str)) {
+        System.out.println(str);
+        if (! isYearValid(str)) {
 			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Неправильно указан год в поле <Бездомный с момента>!","Используйте формат гггг");
 			throw new ValidatorException(msg);
 		} else {
-			updateHomelessDate(Integer.parseInt(str));
+			updateHomelessDate(0, Integer.parseInt(str));
 		}
 	}
-	
-	public void updateHomelessDate(int newValue) {
-		int month = 0;
-		int year = 0;
+
+	public void updateHomelessDate(int month, int year) {
+		int m = 0;
+		int y = 0;
+
 		Calendar orig = GregorianCalendar.getInstance();
 		if (getHomelessdate()!=null) {
 			orig.setTime(getHomelessdate());
-		}
-		if (newValue < 13) { // it is monthId
-			month = newValue;
-			year = orig.get(Calendar.YEAR);
 		} else {
-			year = newValue;
-			month = orig.get(Calendar.MONTH);
+			DateFormat df = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
+			try {
+				orig.setTime(df.parse("01.01.1900 00:00:00"));
+			} catch (ParseException e) {
+				log.error("Date parse exception",e);
+			}
 		}
+
+		if (month == 0) {
+			//set only year
+			y = year;
+			m = orig.get(Calendar.MONTH);
+		} else if (year == 0) {
+			//set only month
+			m = month;
+			y = orig.get(Calendar.YEAR);
+		} else {
+			m = orig.get(Calendar.MONTH);
+			y = orig.get(Calendar.YEAR);
+		}
+
 		Calendar c = GregorianCalendar.getInstance();
 		c.set(year, month, 1, 0, 0, 0);
 		// setting updated value to the client
 		setHomelessdate(c.getTime());
-	}	
-
+	}
 	
 	public void updateHomelessDate() {
 		setSelectedMonth(getHomelessMonth(getHomelessdate()));
@@ -594,4 +610,35 @@ public class ClientDataBean implements Serializable {
     }
 
 
+    public SubRegion getLastLiving() {
+        return lastLiving;
+    }
+
+    public void setLastLiving(SubRegion lastLiving) {
+        this.lastLiving = lastLiving;
+    }
+
+    public SubRegion getLastRegistration() {
+        return lastRegistration;
+    }
+
+    public void setLastRegistration(SubRegion lastRegistration) {
+        this.lastRegistration = lastRegistration;
+    }
+
+    public ClientService getClientService() {
+        return clientService;
+    }
+
+    public void setClientService(ClientService clientService) {
+        this.clientService = clientService;
+    }
+
+    public Boolean getHasNotice() {
+        return hasNotice;
+    }
+
+    public void setHasNotice(Boolean hasNotice) {
+        this.hasNotice = hasNotice;
+    }
 }

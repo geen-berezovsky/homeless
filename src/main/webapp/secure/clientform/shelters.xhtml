@@ -16,8 +16,8 @@
 
 
                 <p:contextMenu for="shelterlistId">
-                    <p:menuitem value="Удалить" oncomplete="deleteShelter.show()" icon="ui-icon-trash" ajax="true" />
                     <p:menuitem value="Редактировать" update="shelterlistId" icon="ui-icon-pencil" actionListener="#{clientshelter.editShelter()}" ajax="true"/>
+                    <p:menuitem value="Удалить" oncomplete="deleteShelter.show()" icon="ui-icon-trash" ajax="true" />
                 </p:contextMenu>
 
                 <p:dataTable id="shelterlistId" widgetVar="shelterlistWv" var="shelterlist" value="#{clientshelter.shelterList}" paginator="true" rows="15"

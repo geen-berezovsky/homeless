@@ -214,8 +214,6 @@ public class ClientShelterBean implements Serializable {
     }
 
     public String formatRoomValue(Integer roomId) {
-        log.info("provided room id = "+roomId);
-        log.info(getRoomService().toString());
         if (roomId == null || roomId == 0) return null; else
             return getRoomService().getInstanceById(Room.class,roomId).getRoomnumber();
     }

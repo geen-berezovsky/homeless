@@ -25,7 +25,7 @@
 
 <h:body onload="#{clientform.refreshTabs(0)}" styleClass="body_style">
 <h:outputStylesheet library="primefaces-#{themeService.theme}" name="theme.css" />
-<p:layout id="basePageLayout" fullPage="true">
+<p:layout id="basePageLayout" fullPage="true" closeTitle="Закрыть панель напоминаний" collapseTitle="Свернуть панель напоминаний" resizeTitle="Растянуть панель напоминаний" expandTitle="Развернуть панель напоминаний">
 <p:layoutUnit position="north" id="topMenu" size="50">
     <ui:include src="clientform/mainmenu.xhtml"/>
 </p:layoutUnit>
@@ -40,9 +40,9 @@
         <h:inputHidden id="contactsTmp" value="#{clientform.contactsTmp}" />
 
         <p:growl id="growl" widgetVar="growl" showDetail="true" life="3000"/>
-        <p:layout id="base_client" style="min-width:400px;min-height:750px;" styleClass="topLayoutMainForm">
+        <p:layout id="base_client" style="min-width:400px;min-height:840px;" styleClass="topLayoutMainForm">
             <p:layoutUnit position="north" size="5" header="#{clientform.header}" style="min-height:26px" styleClass="topLayoutMainForm" id="header"/>
-            <p:layoutUnit position="west" size="210" style="max-height:300px;" header="Фотография">
+            <p:layoutUnit position="west" size="210" style="max-height:300px;" header="Фотография" styleClass="photoLayoutUnit">
                 <p:imageSwitch id="photo_main_avatar" effect="scrollRight">
                     <ui:repeat value="photoCamBean.photos" var="photo_main_avatar_var">
                         <p:commandLink actionListener="#{clientform.openPhotoDlg}">
@@ -62,10 +62,10 @@
             <p:layoutUnit position="east" size="500" style="max-height:300px;" header="Оказанные услуги">
                 <ui:include src="clientform/providedservices.xhtml"/>
             </p:layoutUnit>
-            <p:layoutUnit position="south" size="200" styleClass="bottomLayoutMainForm">
+            <p:layoutUnit position="south" size="200" styleClass="bottomLayoutMainForm" style="min-height: 500px;">
 
                 <p:layout styleClass="photoOperationButtons">
-                    <p:layoutUnit position="west" size="350" header="Дополнительная информация">
+                    <p:layoutUnit position="west" size="400" header="Дополнительная информация">
                         <ui:include src="clientform/personalinfo.xhtml"/>
                     </p:layoutUnit>
                     <p:layoutUnit position="center" styleClass="bottomLayoutMainForm">
@@ -96,9 +96,6 @@
 
         </p:layout>
 
-        <!--
-
--->
     </h:form>
     <!-- *** End Of Basic Client Form *** -->
     <!--
@@ -117,6 +114,7 @@
     </f:facet>
     <!-- *** Client Documents Form *** -->
     <ui:include src="clientform/documents.xhtml"/>
+    <ui:include src="clientform/documentsscan.xhtml"/>
 </p:tab>
 <p:tab title="Социальное сопровождение">
     <ui:include src="clientform/contracts.xhtml"/>
@@ -192,20 +190,61 @@
         <p:scrollPanel>
             <p:menu styleClass="documentsMenuCss">
                 <p:submenu label="Удаление клиента">
-                    <p:menuitem value="Отметить клиента как умершего" onclick="deadClientWv.show()" icon="ui-icon-circle-minus"/>
-                    <p:menuitem value="Удалить ошибочно созданного клиента" onclick="deleteClientWv.show();" icon="ui-icon-circle-minus"/>
+                    <p:menuitem value="Отметить клиента как умершего" actionListener="#{clientdeathdocument.updateDeathFields()}" icon="ui-icon-circle-minus" update=":clientDeathForm" />
+                    <p:menuitem value="Удалить ошибочно созданного клиента" onclick="deleteClientWv.show();"  icon="ui-icon-circle-minus"/>
                 </p:submenu>
             </p:menu>
         </p:scrollPanel>
-        <ui:include src="clientform/deleteClient.xhtml" />
     </h:form>
 </p:tab>
 
 </p:tabView>
 
 </p:layoutUnit>
-<p:layoutUnit id="right" position="east" size="300" resizable="true" closable="true" collapsible="true" header="Reminders" minSize="200" collapsed="true">
-    Schedule
+
+
+<p:layoutUnit id="reminders" position="east" size="300" resizable="true" closable="true" collapsible="true" header="Напоминания" minSize="200" collapsed="#{not reminderBean.needToOpenReminder}">
+  <h:form name="reminders_form">
+    <p:dataTable var="shelterInfo" value="#{reminderBean.clientsReminderForCurUser}" rendered="#{reminderBean.hasSoonShelterEnded}"
+    scrollable="true" styleClass="default_datatable" scrollHeight="120" selectionMode="single"
+    rowKey="#{shelterInfo.id}" widgetVar="soonEndedShelterTable">
+        <f:facet name="header">
+            Скорое окончание даты заселения
+        </f:facet>
+        <p:ajax event="rowSelect" listener="#{reminderBean.onRowClck}"/>
+        <p:column headerText="Id">
+            <h:outputText value="#{shelterInfo.client.id}" />
+        </p:column>
+        <p:column headerText="Клиент">
+          <h:outputText value="#{shelterInfo.client.shortFIO}" />
+        </p:column>
+        <p:column headerText="Дата">
+            <h:outputText value="#{shelterInfo.outShelter}" >
+              <f:convertDateTime pattern="dd.MM.yyyy" />
+            </h:outputText>
+        </p:column>
+    </p:dataTable>
+
+    <p:dataTable var="shelterInfo" value="#{reminderBean.endedShelterAndNotLeaving}" rendered="#{reminderBean.hasShelterEndedAndNotLeaving}"
+      scrollable="true" styleClass="default_datatable" scrollHeight="120" selectionMode="single"
+      rowKey="#{shelterInfo.id}" widgetVar="fogotenShelterTable">
+        <f:facet name="header">
+            Просроченная дата выселения
+        </f:facet>        
+        <p:ajax event="rowSelect" listener="#{reminderBean.onRowClck}"/>
+        <p:column headerText="Id">
+            <h:outputText value="#{shelterInfo.client.id}" />
+        </p:column>
+        <p:column headerText="Клиент">
+          <h:outputText value="#{shelterInfo.client.shortFIO}" />
+        </p:column>
+        <p:column headerText="Дата">
+            <h:outputText value="#{shelterInfo.outShelter}" >
+              <f:convertDateTime pattern="dd.MM.yyyy" />
+            </h:outputText>
+        </p:column>
+    </p:dataTable>
+  </h:form>
 </p:layoutUnit>
 
 
@@ -220,6 +259,7 @@
 <ui:include src="dialogs/webcamera.xhtml"/>
 <ui:include src="dialogs/addservices.xhtml"/>
 <ui:include src="dialogs/adddocument.xhtml"/>
+<ui:include src="dialogs/addscandocument.xhtml"/>
 <ui:include src="dialogs/addcontract.xhtml"/>
 <ui:include src="dialogs/addshelter.xhtml"/>
 <ui:include src="dialogs/editcontract.xhtml"/>
@@ -238,6 +278,7 @@
 <ui:include src="dialogs/about.xhtml"/>
 <ui:include src="dialogs/manual.xhtml"/>
 <ui:include src="dialogs/myclients.xhtml"/>
+<ui:include src="clientform/deleteClient.xhtml" />
 
 <p:dialog id="notImplementedDlg" header="Этот раздел еще не имплементирован" widgetVar="notImplementedDlgWv" resizable="false" closable="true" modal="true" showEffect="fade" hideEffect="explode" closeOnEscape="true">
     <p:panel>

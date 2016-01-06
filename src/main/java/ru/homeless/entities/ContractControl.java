@@ -62,7 +62,7 @@ public class ContractControl implements Serializable {
 		this.comments = comments;
 	}
 
-	@ManyToOne(fetch = FetchType.EAGER, targetEntity = ContractPoints.class)
+	@ManyToOne(targetEntity = ContractPoints.class)
 	@JoinColumn(name="contractpoints")
 	public ContractPoints getContractpoints() {
 		return contractpoints;
