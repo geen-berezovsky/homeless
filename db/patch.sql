@@ -292,3 +292,16 @@ update Region set abbreviation = 'ЛО' where id=3;
 
 ALTER TABLE `homeless`.`Client`
 ADD COLUMN `hasNotice` TINYINT(1) NULL DEFAULT '0' AFTER `lastRegistration`;
+
+-- careful deleting breadwinner with = 8
+CREATE TEMPORARY TABLE new_tbl AS select c.clients_id clients_id from link_breadwinner_client c
+where c.breadwinners_id = 8 and NOT exists (select clients_id d from link_breadwinner_client d
+where d.breadwinners_id = 7
+      and d.clients_id = c.clients_id);
+
+update link_breadwinner_client set breadwinners_id = 7 where breadwinners_id = 8 and clients_id in (select clients_id from new_tbl);
+
+delete from link_breadwinner_client where breadwinners_id = 8;
+
+delete from Breadwinner where id=8;
+-- ***
