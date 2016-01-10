@@ -92,13 +92,15 @@ public class UserBean implements Serializable {
 		List<String> names = new ArrayList<String>();
 		
 		for (Worker w : getWorkerService().getInstances(Worker.class)) {
-			if (query.trim().equals("")) {
-				names.add(w.getFirstname() + " " + w.getSurname());
-			} else {
-				if ((w.getFirstname() + " " + w.getSurname()).toLowerCase().contains(query.toLowerCase())) {
-					names.add(w.getFirstname() + " " + w.getSurname());
-				}
-			}
+            if (! w.getFired()) {
+                if (query.trim().equals("")) {
+                    names.add(w.getFirstname() + " " + w.getSurname());
+                } else {
+                    if ((w.getFirstname() + " " + w.getSurname()).toLowerCase().contains(query.toLowerCase())) {
+                        names.add(w.getFirstname() + " " + w.getSurname());
+                    }
+                }
+            }
 		}
 		return names;
 	}

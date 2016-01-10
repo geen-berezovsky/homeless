@@ -7,7 +7,7 @@
 
 		<p:dialog id="regSelectDocument" header="Выберите документ, на основе которого будет создан договор" widgetVar="regDocumentSelectWv" resizable="false" closable="true" modal="true" showEffect="fade"
 			hideEffect="explode" dynamic="true" closeOnEscape="true">
-    <p:dataTable id="regDoclistId" var="regDoclist" value="#{clientdocuments.documentsList}" paginator="true" rows="15"
+    <p:dataTable id="regDoclistId" var="regDoclist" value="#{clientdocuments.documentsWithAbsentRegistrationList}" paginator="true" rows="15"
         paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15" rowKey="#{regDoclist.id}"
         selection="#{basicdocument.selectedDocument}" selectionMode="single" paginatorPosition="bottom" styleClass="default_datatable">
 

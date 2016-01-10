@@ -9,6 +9,7 @@
     <p:dialog id="addShelter" header="Измените информацию о проживании" widgetVar="addShelterWv" resizable="false"
               closable="true" modal="true" showEffect="fade"
               hideEffect="explode" dynamic="true" closeOnEscape="true">
+        <p:ajax event="close" update="editshelter_growl" listener="#{clientshelter.handleCloseEditShelterDlg}" />
             <h:panelGrid columns="2" id="add_shelters_panel_grid">
                 <p:row>
                     <p:outputLabel value="Клиент:" styleClass="base_form_caption_text"/>
@@ -18,24 +19,20 @@
                             value="#{clientform.surname} #{clientform.firstname} #{clientform.middlename}" styleClass="base_form_value_text"/>
                 </p:row>
                 <p:row>
-                    <p:outputLabel value="Дата заселения:"
-                                   validator="#{clientcontracts.validateStartDateFormat}" required="true"
-                                   requiredMessage="Обязательно к заполнению" styleClass="base_form_caption_text"/>
+                    <p:outputLabel value="Дата заселения:" styleClass="base_form_caption_text"/>
                 </p:row>
                 <p:row>
                     <p:message display="tooltip" for="startNewShelterDateCal"/>
-                    <p:calendar value="#{clientshelter.selectedShelter.inShelter}"
+                    <p:calendar value="#{clientshelter.selectedShelter.inShelter}" validator="#{clientcontracts.validateStartDateFormat}" required="true" requiredMessage="Дата заселения обязательна к заполнению!"
                                 id="startNewShelterDateCal" showOn="button" pattern="dd.MM.yyyy" styleClass="base_form_value_text"/>
                 </p:row>
 
                 <p:row>
-                    <p:outputLabel value="Дата выселения:"
-                                   validator="#{clientshelter.validateStopDateFormat}" required="true"
-                                   requiredMessage="Обязательно к заполнению" styleClass="base_form_caption_text"/>
+                    <p:outputLabel value="Дата выселения:" styleClass="base_form_caption_text"/>
                 </p:row>
                 <p:row>
                     <p:message display="tooltip" for="stopNewShelterDateCal"/>
-                    <p:calendar value="#{clientshelter.selectedShelter.outShelter}" id="stopNewShelterDateCal"
+                    <p:calendar value="#{clientshelter.selectedShelter.outShelter}" id="stopNewShelterDateCal" validator="#{clientshelter.validateStopDateFormat}" required="true" requiredMessage="Дата выселения обязательна к заполнению!"
                                 showOn="button" pattern="dd.MM.yyyy" styleClass="base_form_value_text"/>
                 </p:row>
 
@@ -49,39 +46,35 @@
                     </p:selectOneMenu>
                 </p:row>
                 <p:row>
-                    <p:outputLabel value="Дата проведения флюорографии:" styleClass="base_form_caption_text"
-                                   validator="#{clientshelter.validateVaccinationDateFormat}"/>
+                    <p:outputLabel value="Дата проведения флюорографии:" styleClass="base_form_caption_text" />
                 </p:row>
                 <p:row>
                     <p:message display="tooltip" for="fluDateCal"/>
-                    <p:calendar value="#{clientshelter.selectedShelter.fluorogr}" id="fluDateCal"
+                    <p:calendar value="#{clientshelter.selectedShelter.fluorogr}" id="fluDateCal" validator="#{clientshelter.validateVaccinationDateFormat}"
                                 showOn="button" pattern="dd.MM.yyyy" styleClass="base_form_value_text"/>
                 </p:row>
                 <p:row>
-                    <p:outputLabel value="Дата прививки от дифтерии:" styleClass="base_form_caption_text"
-                                   validator="#{clientshelter.validateVaccinationDateFormat}"/>
+                    <p:outputLabel value="Дата прививки от дифтерии:" styleClass="base_form_caption_text" />
                 </p:row>
                 <p:row>
                     <p:message display="tooltip" for="diftDateCal"/>
-                    <p:calendar value="#{clientshelter.selectedShelter.dipthVac}" id="diftDateCal"
+                    <p:calendar value="#{clientshelter.selectedShelter.dipthVac}" id="diftDateCal" validator="#{clientshelter.validateVaccinationDateFormat}"
                                 showOn="button" pattern="dd.MM.yyyy" styleClass="base_form_value_text"/>
                 </p:row>
                 <p:row>
-                    <p:outputLabel value="Дата прививки от гепатита:" styleClass="base_form_caption_text"
-                                   validator="#{clientshelter.validateVaccinationDateFormat}"/>
+                    <p:outputLabel value="Дата прививки от гепатита:" styleClass="base_form_caption_text" />
                 </p:row>
                 <p:row>
                     <p:message display="tooltip" for="hepDateCal"/>
-                    <p:calendar value="#{clientshelter.selectedShelter.hepotitsVac}" id="hepDateCal"
+                    <p:calendar value="#{clientshelter.selectedShelter.hepotitsVac}" id="hepDateCal" validator="#{clientshelter.validateVaccinationDateFormat}"
                                 showOn="button" pattern="dd.MM.yyyy" styleClass="base_form_value_text"/>
                 </p:row>
                 <p:row>
-                    <p:outputLabel value="Дата прививки от тифа:" styleClass="base_form_caption_text"
-                                   validator="#{clientshelter.validateVaccinationDateFormat}"/>
+                    <p:outputLabel value="Дата прививки от тифа:" styleClass="base_form_caption_text" />
                 </p:row>
                 <p:row>
                     <p:message display="tooltip" for="typhDateCal"/>
-                    <p:calendar value="#{clientshelter.selectedShelter.typhVac}" id="typhDateCal"
+                    <p:calendar value="#{clientshelter.selectedShelter.typhVac}" id="typhDateCal" validator="#{clientshelter.validateVaccinationDateFormat}"
                                 showOn="button" pattern="dd.MM.yyyy" styleClass="base_form_value_text"/>
                 </p:row>
 
@@ -94,9 +87,6 @@
                     </p:selectOneMenu>
                 </p:row>
 
-
-
-
             </h:panelGrid>
             <p:separator />
             <p:panel>
@@ -104,7 +94,7 @@
             <center>
                 <p:commandButton value="Добавить данные о проживании" id="updateShelterButton"
                                  update="@this :m_tabview:shelter_form editshelter_growl" ajax="true"
-                                 actionListener="#{clientshelter.addNewShelterData()}"  icon="ui-icon-disk" oncomplete="addShelterWv.hide()" />
+                                 actionListener="#{clientshelter.addNewShelterData()}"  icon="ui-icon-disk" />
 
             </center>
             </p:panel>

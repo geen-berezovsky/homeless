@@ -40,7 +40,7 @@
         <h:inputHidden id="contactsTmp" value="#{clientform.contactsTmp}" />
 
         <p:growl id="growl" widgetVar="growl" showDetail="true" life="3000"/>
-        <p:layout id="base_client" style="min-width:400px;min-height:840px;" styleClass="topLayoutMainForm">
+        <p:layout id="base_client" style="min-width:400px;min-height:860px;" styleClass="topLayoutMainForm">
             <p:layoutUnit position="north" size="5" header="#{clientform.header}" style="min-height:26px" styleClass="topLayoutMainForm" id="header"/>
             <p:layoutUnit position="west" size="210" style="max-height:300px;" header="Фотография" styleClass="photoLayoutUnit">
                 <p:imageSwitch id="photo_main_avatar" effect="scrollRight">
@@ -300,6 +300,18 @@
             var contacts = document.getElementById("m_tabview:base_form:contactsTmp").value;
             //alert($('a[href*=\'documentsTab\']').tagName);
             jQuery('#m_tabview\\:base_form\\:saveClientForm').click();
+        }
+
+        function saveEditContractForm() {
+            jQuery('#edit_contract\\:updateContractButtonId').click();
+        }
+
+        function saveEditServicePlanItemForm() {
+            jQuery('#add_seriveplanitem\\:addserivceplanitemBid').click();
+        }
+
+        function saveEditShelterForm() {
+            jQuery('#add_shelter\\:updateShelterButton').click();
         }
 
         function handleMemoChange()

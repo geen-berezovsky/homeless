@@ -304,4 +304,18 @@ update link_breadwinner_client set breadwinners_id = 7 where breadwinners_id = 8
 delete from link_breadwinner_client where breadwinners_id = 8;
 
 delete from Breadwinner where id=8;
+
+drop temporary table new_tbl;
 -- ***
+
+-- marking fired workers for removing them from login data and keeping their changes in database
+ALTER TABLE `homeless`.`Worker`
+ADD COLUMN `fired` TINYINT(1) NULL DEFAULT '0' AFTER `primefacesskin`;
+
+update Worker set fired=1 where (id=4 or id=5 or id=3);
+-- ***
+
+insert into Rules (id, caption) values (7,'Руководитель консультационной службы');
+update Worker set rules = 7 where id=6;
+update Worker set middlename='Руслановна' where id=12;
+update Worker set middlename='Дмитриевна' where id=9;

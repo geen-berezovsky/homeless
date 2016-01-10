@@ -6,6 +6,7 @@
 		<p:messages />
 		<p:dialog id="addSeriveplanitem" header="Добавить/Обновить пункт сервисного плана" widgetVar="addServiceItemWv" resizable="false" closable="true" modal="true" showEffect="fade" hideEffect="explode"
 			dynamic="true" closeOnEscape="true" onShow="#{clientcontracts.initContractControl()}">
+            <p:ajax event="close" update="addserivceplanitem_growl" listener="#{clientcontracts.handleCloseEditServicePlanDlg}" />
 			<h:panelGrid columns="2" id="add_serivceplanitem_panel_grid">
 				<p:row>
 					<p:outputLabel value="Клиент:" styleClass="base_form_caption_text" />

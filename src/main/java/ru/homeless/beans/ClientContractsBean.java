@@ -426,6 +426,21 @@ public class ClientContractsBean implements Serializable {
         }
     }
 
+
+    public void handleCloseEditContractDlg() {
+        //auto saving
+        RequestContext rc = RequestContext.getCurrentInstance();
+        rc.execute("saveEditContractForm()");
+        log.info("Dialog Edit Contract has been closed unexpectedly. The selected Contract is saved automatically.");
+    }
+
+    public void handleCloseEditServicePlanDlg() {
+        //auto saving
+        RequestContext rc = RequestContext.getCurrentInstance();
+        rc.execute("saveEditServicePlanItemForm()");
+        log.info("Dialog Edit Service Plan Item has been closed unexpectedly. The selected Service Plan Item is saved automatically.");
+    }
+
     public String getWorkerSelfData() {
         return workerSelfData;
     }

@@ -5,12 +5,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "Worker")
@@ -25,6 +20,7 @@ public class Worker implements Serializable {
 	private String warrantNum;
 	private Date warrantDate;
     private String primefacesskin;
+    private Boolean fired;
 
 	public Worker() {
 		
@@ -118,5 +114,15 @@ public class Worker implements Serializable {
 
     public void setPrimefacesskin(String primefacesskin) {
         this.primefacesskin = primefacesskin;
+    }
+
+    @Basic
+    @Column(columnDefinition = "BIT")
+    public Boolean getFired() {
+        return fired;
+    }
+
+    public void setFired(Boolean fired) {
+        this.fired = fired;
     }
 }

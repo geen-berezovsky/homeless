@@ -129,7 +129,6 @@ public class ClientShelterBean implements Serializable {
 		RequestContext rc = RequestContext.getCurrentInstance();
         rc.update("add_shelter");
         rc.execute("addShelterWv.show();");
-
 	}
 
     public void validateStartDateFormat(FacesContext ctx, UIComponent component, Object value) {
@@ -138,12 +137,8 @@ public class ClientShelterBean implements Serializable {
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR,"Пожалуйста введите дату начала проживания", "Формат даты: ДД.ММ.ГГГГ");
             FacesContext.getCurrentInstance().addMessage(null, msg);
             throw new ValidatorException(msg);
-        }
-        Date result = Util.validateDateFormat(ctx, component, value);
-        if (result == null) {
-            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR,"Некоректный формат даты", "Формат даты: ДД.ММ.ГГГГ");
-            FacesContext.getCurrentInstance().addMessage(null, msg);
-            throw new ValidatorException(msg);
+        } else {
+            Util.validateDateFormat(ctx, component, value);
         }
     }
 
@@ -153,23 +148,13 @@ public class ClientShelterBean implements Serializable {
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Пожалуйста введите дату окончания проживания", "Формат даты: ДД.ММ.ГГГГ");
             FacesContext.getCurrentInstance().addMessage(null, msg);
             throw new ValidatorException(msg);
-        }
-        Date result = Util.validateDateFormat(ctx, component, value);
-        if (result == null) {
-            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR,"Некоректный формат даты", "Формат даты: ДД.ММ.ГГГГ");
-            FacesContext.getCurrentInstance().addMessage(null, msg);
-            throw new ValidatorException(msg);
+        } else {
+            Util.validateDateFormat(ctx, component, value);
         }
     }
 
     public void validateVaccinationDateFormat(FacesContext ctx, UIComponent component, Object value) {
-        FacesMessage msg = null;
-        Date result = Util.validateDateFormat(ctx, component, value);
-        if (result == null) {
-            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR,"Некоректный формат даты", "Формат даты: ДД.ММ.ГГГГ");
-            FacesContext.getCurrentInstance().addMessage(null, msg);
-            throw new ValidatorException(msg);
-        }
+        Util.validateDateFormat(ctx, component, value);
     }
 
     public void newSelectedShelter() {
@@ -239,13 +224,18 @@ public class ClientShelterBean implements Serializable {
         //Update the table
         RequestContext rc = RequestContext.getCurrentInstance();
         rc.update("add_shelter");
+        rc.execute("addShelterWv.hide()");
         //RequestContext rc = RequestContext.getCurrentInstance();
         //rc.update(":m_tabview:shelter_form");
 
-
-
-
-
     }
+
+    public void handleCloseEditShelterDlg() {
+        //auto saving
+        RequestContext rc = RequestContext.getCurrentInstance();
+        rc.execute("saveEditShelterForm()");
+        log.info("Dialog Edit Shelter has been closed unexpectedly. The selected Shelter is saved automatically.");
+    }
+
 
 }

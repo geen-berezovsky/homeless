@@ -35,6 +35,8 @@ public class ClientDocumentsBean implements Serializable {
 	public static Logger log = Logger.getLogger(ClientDocumentsBean.class);
 	private int cid = 0;
 	private List<Document> documentsList = null;
+
+    private List<Document> documentsWithAbsentRegistrationList = null;
 	private Document selectedDocument;
 	private List<DocType> docTypes;
 	
@@ -78,6 +80,15 @@ public class ClientDocumentsBean implements Serializable {
 			this.cid = Integer.parseInt(cids);
 			documentsList = getGenericService().getInstancesByClientId(Document.class, cid);
 		}
+        documentsWithAbsentRegistrationList = new ArrayList<>();
+        for (Document d : documentsList) {
+            if (d.getDoctype().getId() == 1) { //this is Passport
+                if (d.getRegistration() == 1) { //Registration is "Нет"
+                    //only in that case we can create a basic document, because the client has a passport, but don't have a registration
+                    documentsWithAbsentRegistrationList.add(d);
+                }
+            }
+        }
 		newSelectedDocument(); // set new document
         this.tempRegVisibility = "display: none;";
 
@@ -252,6 +263,13 @@ public class ClientDocumentsBean implements Serializable {
         this.tempRegVisibility = tempRegVisibility;
     }
 
+    public List<Document> getDocumentsWithAbsentRegistrationList() {
+        return documentsWithAbsentRegistrationList;
+    }
+
+    public void setDocumentsWithAbsentRegistrationList(List<Document> documentsWithAbsentRegistrationList) {
+        this.documentsWithAbsentRegistrationList = documentsWithAbsentRegistrationList;
+    }
 
 }
 
