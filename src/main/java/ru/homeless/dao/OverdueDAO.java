@@ -41,7 +41,7 @@ public class OverdueDAO extends GenericDAO {
         log.info("Got " + data.size() + " items");
         List<OverdueItem> result = new ArrayList<>();
         for (Object row : data) {
-            //result.add(convert(row));
+            result.add(convert(row));
         }
         return result;
     }
