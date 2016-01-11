@@ -13,18 +13,21 @@ public class Configuration {
     public static String templatesDir;
     public static String organizationInfo;
     public static String useSingleSignature;
+    public static String orgName;
 
     @Autowired
     public Configuration(@Value("${contractsDir}") String contractsDir,
                          @Value("${templatesDir}") String templatesDir,
 
                          @Value("${organizationInfo}") String organizationInfo,
-                         @Value("${useSingleSignature}") String useSingleSignature
+                         @Value("${useSingleSignature}") String useSingleSignature,
+                         @Value("${orgName}") String orgName
                          ) {
         this.contractsDir = contractsDir;
         this.templatesDir = templatesDir;
         this.organizationInfo = organizationInfo;
         this.useSingleSignature = useSingleSignature;
+        this.orgName = orgName;
     }
 
 

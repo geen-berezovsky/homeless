@@ -55,7 +55,7 @@ public class GenericGenerator {
         if (Boolean.parseBoolean(Configuration.useSingleSignature)) {
             worker = contractService.getInstanceById(Worker.class, 1);
         }
-        wordDocumentDefaultValuesMap.put("[t:signatory1]", worker.getRules().getCaption()+ " СПбБОО \"Ночлежка\"");
+        wordDocumentDefaultValuesMap.put("[t:signatory1]", worker.getRules().getCaption()+ " "+Configuration.orgName);
         wordDocumentDefaultValuesMap.put("[t:signatory2]", worker.getSurname()+" "+worker.getFirstname()+" "+worker.getMiddlename());
 
     }
