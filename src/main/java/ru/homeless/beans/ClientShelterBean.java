@@ -17,8 +17,10 @@ import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 
-import ru.homeless.entities.*;
-import ru.homeless.services.GenericService;
+import ru.homeless.entities.Client;
+import ru.homeless.entities.Room;
+import ru.homeless.entities.ShelterHistory;
+import ru.homeless.entities.ShelterResult;
 import ru.homeless.services.RoomService;
 import ru.homeless.util.Util;
 
@@ -239,13 +241,10 @@ public class ClientShelterBean implements Serializable {
         //Update the table
         RequestContext rc = RequestContext.getCurrentInstance();
         rc.update("add_shelter");
+        rc.update("reminders");
+        
         //RequestContext rc = RequestContext.getCurrentInstance();
         //rc.update(":m_tabview:shelter_form");
-
-
-
-
-
     }
 
 }

@@ -1,18 +1,14 @@
 package ru.homeless.beans;
 
-import org.apache.log4j.Logger;
-import org.primefaces.context.RequestContext;
-import org.primefaces.event.SelectEvent;
-import org.primefaces.model.StreamedContent;
-import ru.homeless.configuration.Configuration;
-import ru.homeless.converters.ContractPointsTypeConverter;
-import ru.homeless.converters.ContractResultTypeConverter;
-import ru.homeless.converters.ShelterResultConverter;
-import ru.homeless.entities.*;
-import ru.homeless.primefaces.model.ContractPointsDataModel;
-import ru.homeless.services.GenericService;
-import ru.homeless.services.WorkerService;
-import ru.homeless.util.Util;
+import java.io.File;
+import java.io.IOException;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.TimeZone;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -23,10 +19,27 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.validator.ValidatorException;
 import javax.servlet.http.HttpSession;
-import java.io.File;
-import java.io.IOException;
-import java.io.Serializable;
-import java.util.*;
+
+import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
+import org.primefaces.event.SelectEvent;
+import org.primefaces.model.StreamedContent;
+
+import ru.homeless.converters.ContractPointsTypeConverter;
+import ru.homeless.converters.ContractResultTypeConverter;
+import ru.homeless.converters.ShelterResultConverter;
+import ru.homeless.entities.ContractControl;
+import ru.homeless.entities.ContractPoints;
+import ru.homeless.entities.ContractResult;
+import ru.homeless.entities.ContractResult.PredefinedValues;
+import ru.homeless.entities.Document;
+import ru.homeless.entities.ServContract;
+import ru.homeless.entities.ShelterResult;
+import ru.homeless.entities.Worker;
+import ru.homeless.primefaces.model.ContractPointsDataModel;
+import ru.homeless.services.GenericService;
+import ru.homeless.services.WorkerService;
+import ru.homeless.util.Util;
 
 @ManagedBean(name = "clientcontracts")
 @ViewScoped
@@ -75,7 +88,6 @@ public class ClientContractsBean implements Serializable {
     }
 
     public void downloadContract(int id) throws IOException {
-        RequestContext rc = RequestContext.getCurrentInstance();
 
         selectedContract = getGenericService().getInstanceById(ServContract.class, id);
 
@@ -206,17 +218,30 @@ public class ClientContractsBean implements Serializable {
 
     public void updateSelectedContract() {
 
-        //update from G.Sverdlin: "If the contract is successfully finalized, set the endDate for all subitems"
-        if (selectedContract.getResult().getId() == 2) {
-            Set<ContractControl> set = selectedContract.getContractcontrols();
-            for (ContractControl cc : set) {
-                cc.setEndDate(selectedContract.getStopDate());
+        if ( isContractCompleted() ){
+            //update from G.Sverdlin: "If the contract is successfully finalized, set the endDate for all subitems"
+            if ( isContractSuccessefullyCompleted() ) {
+                Set<ContractControl> set = selectedContract.getContractcontrols();
+                for (ContractControl cc : set) {
+                    cc.setEndDate(selectedContract.getStopDate());
+                }
             }
-        }
+        };
+        
         // ----------------------------------------------------------------------------------------------------
         getGenericService().updateInstance(selectedContract);
         reload();
     }
+    
+    private boolean isContractCompleted(){
+        return ! PredefinedValues.IN_PROGRESS.isSame(selectedContract.getResult());
+    }
+    
+    private boolean isContractSuccessefullyCompleted(){
+        return PredefinedValues.SUCCESSEFULLY_COMPLETED.isSame(selectedContract.getResult());
+    }
+    
+    
 
     public List<ContractResult> getContractResultTypes() {
         List<ContractResult> list = getGenericService().getInstances(ContractResult.class);
