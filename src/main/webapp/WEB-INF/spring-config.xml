@@ -34,7 +34,7 @@
     <bean id="appProps" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="location" value="classpath:/application.properties"/>
         <property name="fileEncoding">
-            <value>cp1251</value>
+            <value>utf8</value>
         </property>
     </bean>
 
