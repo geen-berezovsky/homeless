@@ -12,24 +12,16 @@ import ru.homeless.converters.DocTypeConverter;
 import ru.homeless.entities.*;
 import ru.homeless.services.GenericService;
 import ru.homeless.util.Util;
-import sun.net.www.MimeEntry;
-import sun.net.www.MimeTable;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
-import javax.faces.component.UIComponent;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
-import javax.faces.validator.ValidatorException;
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
 
 @ManagedBean(name = "scandocuments")

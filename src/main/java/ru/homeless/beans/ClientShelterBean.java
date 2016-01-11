@@ -18,7 +18,6 @@ import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 
 import ru.homeless.entities.*;
-import ru.homeless.services.GenericService;
 import ru.homeless.services.RoomService;
 import ru.homeless.util.Util;
 

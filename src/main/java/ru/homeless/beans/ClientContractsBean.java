@@ -127,6 +127,10 @@ public class ClientContractsBean implements Serializable {
             contractItems = new ArrayList<ContractControl>(selectedContract.getContractcontrols());
         }
 
+        FacesContext context = FacesContext.getCurrentInstance();
+        ClientFormBean cdb = context.getApplication().evaluateExpressionGet(context, "#{clientform}", ClientFormBean.class);
+        cdb.updateContractsTabHeader();
+
     }
 
     public void deleteContract() {

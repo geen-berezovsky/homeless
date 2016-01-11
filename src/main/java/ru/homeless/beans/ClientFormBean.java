@@ -80,6 +80,7 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
     private String documentsHeaderInline;
     private String contactsHeaderInline;
     private String commentsHeaderInline;
+    private String contractsHeaderInline;
 
 
     private String memoTmp;
@@ -124,8 +125,17 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
         } else {
             documentsHeaderInline = "text-decoration: underline;";
         }
-
     }
+
+    public void updateContractsTabHeader() {
+        List<ServContract> listOfContractsForTitle = getClientService().getInstancesByClientId(ServContract.class, client.getId());
+        if (listOfContractsForTitle == null || listOfContractsForTitle.size() == 0) {
+            contractsHeaderInline = "";
+        } else {
+            contractsHeaderInline = "text-decoration: underline;";
+        }
+    }
+
 
     public void reloadAll() throws SQLException {
         reloadClientData();
@@ -181,6 +191,7 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
         rc.update("header");
 
         updateDocumentsTabHeader();
+        updateContractsTabHeader();
 
         if (client.getContacts() == null || client.getContacts().trim().replaceAll("\\<.*?>","").equals("")) {
             contactsHeaderInline = "";
@@ -946,4 +957,11 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
         this.lastRegistrationSubRegions = lastRegistrationSubRegions;
     }
 
+    public String getContractsHeaderInline() {
+        return contractsHeaderInline;
+    }
+
+    public void setContractsHeaderInline(String contractsHeaderInline) {
+        this.contractsHeaderInline = contractsHeaderInline;
+    }
 }

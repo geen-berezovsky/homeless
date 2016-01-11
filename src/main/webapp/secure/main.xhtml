@@ -116,7 +116,11 @@
     <ui:include src="clientform/documents.xhtml"/>
     <ui:include src="clientform/documentsscan.xhtml"/>
 </p:tab>
-<p:tab title="Социальное сопровождение">
+<p:tab id="contractsTab" name="contractsTab">
+    <f:facet name="title">
+        <h:outputText id="contractsTabTitle" value="Социальное сопровождение" style="#{clientform.contractsHeaderInline}"/>
+    </f:facet>
+
     <ui:include src="clientform/contracts.xhtml"/>
     <ui:include src="clientform/shelters.xhtml"/>
 

@@ -57,7 +57,7 @@
 		<p:dialog id="addContractDlg" header="Добавление нового контракта" widgetVar="addContractWv" resizable="false" closable="true" modal="false" showEffect="fade" hideEffect="explode" dynamic="true"
 			closeOnEscape="true" onShow="#{clientcontracts.resetSelectedContract()}">
 
-			<p:layout style="min-width:1000px;min-height:400px;max-height:400px;">
+			<p:layout style="min-width:1000px;min-height:420px;max-height:420px;">
 				<p:layoutUnit position="west" resizable="true" size="460" minSize="460" maxSize="500">
 					<h:panelGrid columns="2" id="add_docs_panel_grid">
 						<p:row>
@@ -111,12 +111,12 @@
 					</h:panelGrid>
 					<p:separator />
 					<center>
-						<p:commandButton value="Добавить контракт" update="@this add_docs_panel_grid :m_tabview:contracts_form:conlistId" actionListener="#{clientcontracts.addNewContract()}" />
+						<p:commandButton value="Добавить контракт" update="@this add_docs_panel_grid :m_tabview:contracts_form:conlistId :m_tabview:contractsTabTitle" actionListener="#{clientcontracts.addNewContract()}" />
 					</center>
 
 				</p:layoutUnit>
 
-				<p:layoutUnit position="center" size="460" minSize="460" maxSize="400" resizable="false" style="max-height:380px;">
+				<p:layoutUnit position="center" size="460" minSize="460" maxSize="400" resizable="false" style="max-height:420px;">
 					<p:dataTable id="servitemsid" var="servitems" value="#{clientcontracts.contractPointsDataModel}" paginator="false" rows="100" selection="#{clientcontracts.selectedNewContractPoints}" paginatorPosition="bottom" styleClass="default_datatable">
 						<p:column selectionMode="multiple" style="width:4%" />
 						<p:column headerText="ID" style="width:4%">

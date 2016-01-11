@@ -9,7 +9,7 @@
 
                 <p:dialog header="Подтвердите удаление" appendTo="@form" widgetVar="deleteContract" resizable="false" closable="true" showEffect="fade" hideEffect="explode" dynamic="true" closeOnEscape="true" style="font-size: 200%;" draggable="false">
                     <p:panelGrid columns="2" style="margin: 0 auto;" styleClass="base_form_panel_grid_class">
-                        <p:commandButton id="conConfirm" value="Да" update=":m_tabview:contracts_form:conlistId" oncomplete="deleteContract.hide()" actionListener="#{clientcontracts.deleteContract()}" action="#{clientcontracts.reload()}"/>
+                        <p:commandButton id="conConfirm" value="Да" update=":m_tabview:contracts_form:conlistId :m_tabview:contractsTabTitle" oncomplete="deleteContract.hide()" actionListener="#{clientcontracts.deleteContract()}" action="#{clientcontracts.reload()}"/>
                         <p:commandButton id="conDecline" value="Нет" update=":m_tabview:contracts_form:conlistId" oncomplete="deleteContract.hide()"/>
                     </p:panelGrid>
                 </p:dialog>

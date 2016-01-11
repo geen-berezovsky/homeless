@@ -68,7 +68,7 @@
                                              update="@this :add_seriveplanitem :m_tabview:contracts_form contractItemsListId edit_contract_panel_grid editcontract_growl" icon="ui-icon-circle-plus" actionListener="#{clientcontracts.resetTableSelection()}" />
                             <p:separator />
                             <p:commandButton value="Сохранить/Обновить контракт" id="updateContractButtonId" actionListener="#{clientcontracts.updateSelectedContract()}" ajax="true"
-                                             update="@this :m_tabview:contracts_form edit_contract_panel_grid editcontract_growl" icon="ui-icon-disk" oncomplete="editContractWv.hide()" style="height: 60px;"/>
+                                             update="@this :m_tabview:contracts_form edit_contract_panel_grid editcontract_growl" icon="ui-icon-disk" oncomplete="editContractWv.hide()" style="height: 60px; font-weight: bold;"/>
                         </center>
                     </p:panel>
 

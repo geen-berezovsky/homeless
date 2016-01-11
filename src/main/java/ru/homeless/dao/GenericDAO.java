@@ -45,7 +45,6 @@ public class GenericDAO implements IGenericService, Serializable {
 	}
 
 	public <T> T getInstanceById(Class<T> clazz, int id) {
-		@SuppressWarnings("unchecked")
 		List<T> list = getSessionFactory().getCurrentSession().createCriteria(clazz).add(Restrictions.eq("id", id)).list();
 		if (list != null && list.size() > 0) {
 			return list.get(0);
@@ -54,12 +53,10 @@ public class GenericDAO implements IGenericService, Serializable {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	public <T> List<T> getInstances(Class<T> clazz) {
 		return getSessionFactory().getCurrentSession().createCriteria(clazz).list();
 	}
 
-	@SuppressWarnings("unchecked")
 	public <T> T getInstanceByCaption(Class<T> clazz, String caption) {
 		List<T> list = getSessionFactory().getCurrentSession().createCriteria(clazz).add(Restrictions.eq("caption", caption)).list();
 		if (list != null && list.size() > 0) {
@@ -69,19 +66,17 @@ public class GenericDAO implements IGenericService, Serializable {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	public <T> List<T>getInstancesByClientId(Class<T> clazz, int id) {
 		Criteria c = getSessionFactory().getCurrentSession().createCriteria(clazz).add(Restrictions.eq("client", id)); 
 		c.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 		return c.list();
 	}
 
-    @SuppressWarnings("unchecked")
-    public <T> List<T>getInstancesByClientId(Class<T> clazz, Client client) {
+    @Override
+    public <T> List<T> getInstancesByClientId(Class<T> clazz, Client client) {
         Criteria c = getSessionFactory().getCurrentSession().createCriteria(clazz).add(Restrictions.eq("client", client));
         c.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
         return c.list();
     }
-
 
 }
