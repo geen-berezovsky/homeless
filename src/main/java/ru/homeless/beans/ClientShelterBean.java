@@ -30,6 +30,7 @@ public class ClientShelterBean implements Serializable {
 	private int cid = 0;
 	private List<ShelterHistory> shelterList = null;
 	private ShelterHistory selectedShelter;
+    private List<ServContract> clientsContracts;
 
     public List<ShelterResult> getShelterResultList() {
         return shelterResultList;
@@ -188,11 +189,26 @@ public class ClientShelterBean implements Serializable {
 	}
 
     public void addNewShelter() {
+        RequestContext rc = RequestContext.getCurrentInstance();
+        int number_of_opened_contracts = 0;
+        clientsContracts = getRoomService().getInstancesByClientId(ServContract.class, cid);
+        for (ServContract sc : clientsContracts) {
+            if (sc.getResult().getId() == 1) {
+                number_of_opened_contracts ++;
+            }
+        }
+        if (number_of_opened_contracts == 0) {
+            rc.execute("noContractsFoundDlg.show();");
+            log.info("Client "+getCid() + " has no opened contracts. Please fix it first.");
+            return;
+        }
+
         updateRoomsData();
         shelterResultList = new ArrayList<>();
         shelterResultList.addAll(getRoomService().getInstances(ShelterResult.class));
         selectedShelter = new ShelterHistory();
-        RequestContext rc = RequestContext.getCurrentInstance();
+
+
         rc.update("add_shelter");
         rc.execute("addShelterWv.show();");
     }
@@ -237,4 +253,11 @@ public class ClientShelterBean implements Serializable {
     }
 
 
+    public List<ServContract> getClientsContracts() {
+        return clientsContracts;
+    }
+
+    public void setClientsContracts(List<ServContract> clientsContracts) {
+        this.clientsContracts = clientsContracts;
+    }
 }

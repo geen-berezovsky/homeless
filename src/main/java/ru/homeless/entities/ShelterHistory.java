@@ -24,6 +24,7 @@ public class ShelterHistory implements Serializable {
 	private Date fluorogr;
 	private Integer roomId;
     private Integer shelterresult;
+    private ServContract servContract;
 	
 	public ShelterHistory() {
 		
@@ -105,5 +106,15 @@ public class ShelterHistory implements Serializable {
 
     public void setShelterresult(Integer shelterresult) {
         this.shelterresult = shelterresult;
+    }
+
+    @OneToOne (targetEntity = ServContract.class)
+    @JoinColumn(name="servContract")
+    public ServContract getServContract() {
+        return servContract;
+    }
+
+    public void setServContract(ServContract servContract) {
+        this.servContract = servContract;
     }
 }

@@ -6,7 +6,13 @@
 <ui:composition>
     <p:messages/>
     <h:form id="add_shelter">
-    <p:dialog id="addShelter" header="Измените информацию о проживании" widgetVar="addShelterWv" resizable="false"
+        <p:dialog id="noContractsFoundDialog" header="Клиент не имеет ни одного открытого контракта!" widgetVar="noContractsFoundDlg" resizable="false" closable="true" modal="true" showEffect="fade" hideEffect="explode" closeOnEscape="true">
+            <p:panel>
+                <p:outputLabel value="Пожалуйста, оформите сначала контракт с клиентом."/>
+            </p:panel>
+        </p:dialog>
+
+        <p:dialog id="addShelter" header="Измените информацию о проживании" widgetVar="addShelterWv" resizable="false"
               closable="true" modal="true" showEffect="fade"
               hideEffect="explode" dynamic="true" closeOnEscape="true">
         <p:ajax event="close" update="editshelter_growl" listener="#{clientshelter.handleCloseEditShelterDlg}" />
@@ -17,6 +23,14 @@
                 <p:row>
                     <p:outputLabel
                             value="#{clientform.surname} #{clientform.firstname} #{clientform.middlename}" styleClass="base_form_value_text"/>
+                </p:row>
+                <p:row>
+                    <h:outputText value="Выберите контракт:" styleClass="base_form_caption_text"/>
+                </p:row>
+                <p:row>
+                    <p:selectOneMenu id="contractId" value="#{clientshelter.selectedShelter.servContract}" style="width:150px;" styleClass="base_form_value_text">
+                        <f:selectItems value="#{clientshelter.clientsContracts}" var="shServContract" itemValue="#{shServContract}" itemLabel="#{shServContract.id}"/>
+                    </p:selectOneMenu>
                 </p:row>
                 <p:row>
                     <p:outputLabel value="Дата заселения:" styleClass="base_form_caption_text"/>
