@@ -52,14 +52,9 @@ public class ReminderBean implements Serializable{
     public Collection<ShelterHistory> getEndedShelterAndNotLeaving(){
     	return clientService.getEndedShelterAndNotLeaving();
     }
-    
-    
-    
+      
     public void onRowClck(final SelectEvent event) {
     	ShelterHistory myClientsEntity = (ShelterHistory) event.getObject();
-        //RequestContext rc = RequestContext.getCurrentInstance();
-        //rc.execute("myClientsWv.hide();");
-        //rc.execute("myPrevClientsWv.hide();");
 
         FacesContext context = FacesContext.getCurrentInstance();
         ClientFormBean clientFormBean = context.getApplication().evaluateExpressionGet(context, "#{clientform}", ClientFormBean.class);

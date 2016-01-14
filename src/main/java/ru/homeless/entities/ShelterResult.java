@@ -56,18 +56,19 @@ public class ShelterResult implements Serializable {
         }
     }
     
-    public static enum Results{
-    	LIVING(1),
-    	LEAVE_NORMALLY(2),
-    	LEAVE_TROUBLES(3);
-    	
-    	private int id;
-    	private Results(int id){
-    		this.id = id;
-    	}
-    	
-    	public int getId(){
-    		return id;
-    	}
+    public static enum Results {
+        LIVING(1), 
+        LEAVE_NORMALLY(2), 
+        LEAVE_TROUBLES(3);
+
+        private int id;
+
+        private Results(int id) {
+            this.id = id;
+        }
+
+        public int getId() {
+            return id;
+        }
     }
 }
