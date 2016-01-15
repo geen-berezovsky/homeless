@@ -32,7 +32,7 @@ public class ShelterContractMappingImpl extends ContractMappingImpl implements I
     public WordprocessingMLPackage getDocument(Map<String, String> map, Client client, int contractId, int workerId, ServletContext context) {
     	
 
-    	init(map, client,contractId, workerId, context); //init of generic variables
+    	init(map, client,contractId, workerId, context, IDocumentMapping.DOCUMENT_SHELTER_CONTRACT); //init of generic variables
 		if (new File(contractPath).exists()) {          //the contract is already generated, return the document from disk
             log.info("The contract for client ID="+client.getId()+" already exist, taking it from the storage");
             try {

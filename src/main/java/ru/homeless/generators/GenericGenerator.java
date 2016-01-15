@@ -38,14 +38,13 @@ public class GenericGenerator {
     	wordDocumentDefaultValuesMap = new HashMap<String, String>();
     }
     
-    private void putDefaultValuesInMap(Client client, String documentNumber, Date issueDate, Worker worker)  {
+    private void putDefaultValuesInMap(Client client, Date issueDate, Worker worker)  {
 
         if (issueDate == null) {
             issueDate = new Date();
         }
 
         wordDocumentDefaultValuesMap.put("[t:client:name]", client.getSurname()+" "+client.getFirstname()+" "+client.getMiddlename());
-        wordDocumentDefaultValuesMap.put("[t:num]", documentNumber);
         wordDocumentDefaultValuesMap.put("[t:client:birth]", Util.convertDate(client.getDate()));
         wordDocumentDefaultValuesMap.put("clientWhereWasBorn", client.getWhereWasBorn());
         wordDocumentDefaultValuesMap.put("clientId", String.valueOf(client.getId()));
@@ -85,12 +84,8 @@ public class GenericGenerator {
         }
         log.info("Worker is "+w.getId());
 
-        String docNum = request.getParameter("docNum");
-        log.info("Document number is "+docNum);
-
-
         //Make global preparations
-        putDefaultValuesInMap(client, docNum, Util.parseDate(request, "issueDate", log), w);
+        putDefaultValuesInMap(client, Util.parseDate(request, "issueDate", log), w);
 
 		switch (Integer.parseInt(request.getParameter("requestType"))) {
 		

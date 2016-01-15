@@ -44,27 +44,46 @@ public class ContractMappingImpl  {
     private IContractService contractService;
 
 	
-	public void init(Map<String, String> map, Client client, int contractId, int workerId, ServletContext context) {
+	public void init(Map<String, String> map, Client client, int contractId, int workerId, ServletContext context, int type) {
 		
         log.info("SERVICE="+contractService.toString());
-       
-        servContract = contractService.getInstanceById(ServContract.class, contractId);
-        
-        String sourceFile = client.getSurname() + "_" + client.getFirstname() + "_" + client.getId() + "_" + servContract.getId() + ".docx";
-        log.info("Contracts dir = "+ Configuration.contractsDir);
-        File contractsDir = new File(Configuration.contractsDir);
+
+        String sourceFile = client.getSurname() + "_" + client.getFirstname() + "_" + client.getId() + "_" + servContract.getId();
+        File contractsDir = new File(Configuration.profilesDir+System.getProperty("file.separator")+client.getId());
         if (!contractsDir.exists()) {
             contractsDir.mkdirs();
         }
-        //Saving to the worker's profile
-        worker = contractService.getInstanceById(Worker.class, workerId);
-        
-        File workerDir = new File(contractsDir.getAbsolutePath()+System.getProperty("file.separator")+worker.getSurname()+"_"+worker.getFirstname());
-        if (!workerDir.exists()) {
-            workerDir.mkdirs();
-        }
-        contractPath = workerDir.getAbsolutePath()+System.getProperty("file.separator")+sourceFile;
+        switch (type) {
+            case IDocumentMapping.DOCUMENT_DEFAULT_CONTRACT : {
+                /*
+                While contracts are not moved to client's profiles, keeping the practice to save them info Worker's profile
+                TODO: migrare contracts to client's profiles
+                 */
+                sourceFile += ".docx";
+                contractsDir = new File(Configuration.contractsDir);
+                //Saving to the worker's profile
+                worker = contractService.getInstanceById(Worker.class, workerId);
 
+                File workerDir = new File(contractsDir.getAbsolutePath()+System.getProperty("file.separator")+worker.getSurname()+"_"+worker.getFirstname());
+                if (!workerDir.exists()) {
+                    workerDir.mkdirs();
+                }
+                contractPath = workerDir.getAbsolutePath()+System.getProperty("file.separator")+sourceFile;
+
+                break;
+            }
+            case IDocumentMapping.DOCUMENT_SHELTER_CONTRACT : {
+                /*
+                Saving shelter's additional documents to the client's profile dir with name *_living.docx
+                 */
+                sourceFile += "_living.docx";
+                contractPath = contractsDir.getAbsolutePath()+System.getProperty("file.separator")+sourceFile;
+                break;
+            }
+        }
+
+        servContract = contractService.getInstanceById(ServContract.class, contractId);
+        log.info("Contracts dir = "+ Configuration.contractsDir);
         //prepare the result filename of the generated contract
         String resultFilename = sourceFile.replaceAll(" ","*");
         try {
