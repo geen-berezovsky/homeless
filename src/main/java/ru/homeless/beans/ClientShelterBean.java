@@ -1,5 +1,7 @@
 package ru.homeless.beans;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -17,6 +19,8 @@ import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 
+import org.primefaces.model.StreamedContent;
+import ru.homeless.converters.ShelterContractConverter;
 import ru.homeless.entities.*;
 import ru.homeless.services.RoomService;
 import ru.homeless.util.Util;
@@ -31,6 +35,17 @@ public class ClientShelterBean implements Serializable {
 	private List<ShelterHistory> shelterList = null;
 	private ShelterHistory selectedShelter;
     private List<ServContract> clientsContracts;
+
+    public StreamedContent getFile() {
+        return file;
+    }
+
+    public void setFile(StreamedContent file) {
+        this.file = file;
+    }
+
+    private StreamedContent file;
+
 
     public List<ShelterResult> getShelterResultList() {
         return shelterResultList;
@@ -126,7 +141,9 @@ public class ClientShelterBean implements Serializable {
         shelterResultList = new ArrayList<>();
         shelterResultList.addAll(getRoomService().getInstances(ShelterResult.class));
         selectedShelter = getRoomService().getInstanceById(ShelterHistory.class, selectedShelter.getId());
-		RequestContext rc = RequestContext.getCurrentInstance();
+        ShelterContractConverter.servContracts = new ArrayList<>();
+        ShelterContractConverter.servContracts.addAll(clientsContracts);
+        RequestContext rc = RequestContext.getCurrentInstance();
         rc.update("add_shelter");
         rc.execute("addShelterWv.show();");
 	}
@@ -191,10 +208,12 @@ public class ClientShelterBean implements Serializable {
     public void addNewShelter() {
         RequestContext rc = RequestContext.getCurrentInstance();
         int number_of_opened_contracts = 0;
-        clientsContracts = getRoomService().getInstancesByClientId(ServContract.class, cid);
-        for (ServContract sc : clientsContracts) {
+        List<ServContract> _clientsContracts = getRoomService().getInstancesByClientId(ServContract.class, cid);
+        clientsContracts = new ArrayList<>();
+        for (ServContract sc : _clientsContracts) {
             if (sc.getResult().getId() == 1) {
                 number_of_opened_contracts ++;
+                clientsContracts.add(sc);
             }
         }
         if (number_of_opened_contracts == 0) {
@@ -202,6 +221,8 @@ public class ClientShelterBean implements Serializable {
             log.info("Client "+getCid() + " has no opened contracts. Please fix it first.");
             return;
         }
+        ShelterContractConverter.servContracts = new ArrayList<>();
+        ShelterContractConverter.servContracts.addAll(clientsContracts);
 
         updateRoomsData();
         shelterResultList = new ArrayList<>();
@@ -234,6 +255,7 @@ public class ClientShelterBean implements Serializable {
         log.info("Тиф: "+selectedShelter.getTyphVac());
         log.info("Status: "+selectedShelter.getShelterresult());
         getRoomService().addInstance(selectedShelter);
+
         selectedShelter = new ShelterHistory();
 
         //Update the table
@@ -250,6 +272,25 @@ public class ClientShelterBean implements Serializable {
         RequestContext rc = RequestContext.getCurrentInstance();
         rc.execute("saveEditShelterForm()");
         log.info("Dialog Edit Shelter has been closed unexpectedly. The selected Shelter is saved automatically.");
+    }
+
+    public void downloadContract(int id) throws IOException {
+        RequestContext rc = RequestContext.getCurrentInstance();
+
+        selectedShelter = getRoomService().getInstanceById(ShelterHistory.class, id);
+        ServContract selectedContract = selectedShelter.getServContract();
+
+        String requestSuffix = "/getGeneratedContract?requestType=102&clientId="+ this.cid + "&contractId=" + selectedContract.getId() + "&workerId=" + selectedContract.getWorker().getId();
+        String saveFilePath = "/tmp" + File.separator + "ClientContract.docx";
+        String docType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+        String docName = "ClientContract.docx";
+
+        try {
+            file = Util.downloadDocument(requestSuffix, saveFilePath, docType, docName);
+        } catch (Exception e) {
+            log.error("Cannot download document from " +requestSuffix);
+        }
+
     }
 
 

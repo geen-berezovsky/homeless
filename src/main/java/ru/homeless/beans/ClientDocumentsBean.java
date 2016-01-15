@@ -15,6 +15,7 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.validator.ValidatorException;
+import javax.print.Doc;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
@@ -80,6 +81,12 @@ public class ClientDocumentsBean implements Serializable {
 			this.cid = Integer.parseInt(cids);
 			documentsList = getGenericService().getInstancesByClientId(Document.class, cid);
 		}
+
+        System.out.println("Client "+cids+" has next documents: "+this.cid);
+        for (Document document : documentsList) {
+            System.out.println(document.getId());
+        }
+
         documentsWithAbsentRegistrationList = new ArrayList<>();
         for (Document d : documentsList) {
             if (d.getDoctype().getId() == 1) { //this is Passport

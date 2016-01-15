@@ -337,3 +337,14 @@ update ShelterHistory outerSH,
   (select sh.id shelter, max(sc.id) contract from ShelterHistory sh, ServContract sc where sh.client=sc.client group by sh.id) sb
 set outerSH.servContract = sb.contract
 where outerSH.id = sb.shelter;
+
+ALTER TABLE `homeless`.`ShelterHistory`
+DROP FOREIGN KEY `Sh_SC_FK001`;
+ALTER TABLE `homeless`.`ShelterHistory`
+CHANGE COLUMN `servContract` `servContract` INT(11) NULL ;
+ALTER TABLE `homeless`.`ShelterHistory`
+ADD CONSTRAINT `Sh_SC_FK001`
+FOREIGN KEY (`servContract`)
+REFERENCES `homeless`.`servcontract` (`id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;

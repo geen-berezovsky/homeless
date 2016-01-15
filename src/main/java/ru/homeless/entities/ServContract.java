@@ -128,4 +128,17 @@ public class ServContract implements Serializable {
 		this.contractcontrols = contractcontrols;
 	}
 
+    public boolean equals(Object o) {
+        if (o == null) return false;
+        if (! (o instanceof ServContract)) {
+            return false;
+        }
+        ServContract d = (ServContract) o;
+        if (new Integer(getId()).equals(new Integer(d.getId()))) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 }

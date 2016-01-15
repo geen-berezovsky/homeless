@@ -28,7 +28,7 @@
                     <h:outputText value="Выберите контракт:" styleClass="base_form_caption_text"/>
                 </p:row>
                 <p:row>
-                    <p:selectOneMenu id="contractId" value="#{clientshelter.selectedShelter.servContract}" style="width:150px;" styleClass="base_form_value_text">
+                    <p:selectOneMenu id="contractId" value="#{clientshelter.selectedShelter.servContract}" converter="shContractConverter" style="width:150px;" styleClass="base_form_value_text">
                         <f:selectItems value="#{clientshelter.clientsContracts}" var="shServContract" itemValue="#{shServContract}" itemLabel="#{shServContract.id}"/>
                     </p:selectOneMenu>
                 </p:row>
@@ -100,7 +100,6 @@
                         <f:selectItems value="#{clientshelter.shelterResultList}" var="shelterStatus" itemLabel="#{shelterStatus.caption}" itemValue="#{shelterStatus.id}" />
                     </p:selectOneMenu>
                 </p:row>
-
             </h:panelGrid>
             <p:separator />
             <p:panel>
@@ -114,7 +113,6 @@
             </p:panel>
     </p:dialog>
 </h:form>
-
 
 </ui:composition>
 </html>

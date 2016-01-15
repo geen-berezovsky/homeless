@@ -182,6 +182,7 @@ public class ClientContractsBean implements Serializable {
 
     public void onRowSelect(SelectEvent event) {
         selectedDocument = (Document) event.getObject();
+        log.info("Selected document id = "+selectedDocument.getId());
     }
 
     public Worker getWorker() {

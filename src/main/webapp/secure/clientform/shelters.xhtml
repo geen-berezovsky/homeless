@@ -27,7 +27,9 @@
                     <p:column headerText="ID">
                         <h:outputText value="#{shelterlist.id}"/>
                     </p:column>
-
+                    <p:column headerText="Контракт">
+                        <h:outputText value="#{shelterlist.servContract.id}"/>
+                    </p:column>
                     <p:column headerText="Дата заселения">
                         <h:outputText value="#{clientshelter.formatDate(shelterlist.inShelter)}"/>
                     </p:column>
@@ -52,7 +54,14 @@
                     <p:column headerText="Статус">
                         <h:outputText value="#{clientshelter.shelterStatus(shelterlist.shelterresult)}"/>
                     </p:column>
-
+                    <p:column headerText="Доп. соглашение">
+                        <center>
+                            <p:growl id="adShgrowl" showDetail="true" life="3000"/>
+                            <p:commandButton value="Открыть" ajax="false" onclick="PrimeFaces.monitorDownload(shelterContractStart, shelterContractStop);" icon="ui-icon-arrowthick-1-s" update="@this @form adShgrowl" actionListener="#{clientshelter.downloadContract(shelterlist.id)}">
+                                <p:fileDownload value="#{clientshelter.file}" />
+                            </p:commandButton>
+                        </center>
+                    </p:column>
                 </p:dataTable>
                 <p:panel>
                     <center>
@@ -64,6 +73,16 @@
             </div>
         </p:panel>
     </h:form>
+
+    <script type="text/javascript">
+        function shelterContractStart() {
+            PF('statusShelterContractDialogWv').show();
+        }
+
+        function shelterContractStop() {
+            PF('statusShelterContractDialogWv').hide();
+        }
+    </script>
 
 </ui:composition>
 </html>
