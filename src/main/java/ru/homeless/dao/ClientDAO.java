@@ -169,4 +169,15 @@ public class ClientDAO extends GenericDAO implements Serializable {
         return subregions.list();
 
     }
+
+    /**
+     * New contract number is the count(*) unique records from existing table ServContract + 1
+     * This method returns count(*) from ServContract only
+     * @return
+     */
+    public int getCountOfServContracts() {
+        return ((Long)getSessionFactory().getCurrentSession().createQuery("select count(*) from ServContract ").uniqueResult()).intValue();
+    }
+
+
 }

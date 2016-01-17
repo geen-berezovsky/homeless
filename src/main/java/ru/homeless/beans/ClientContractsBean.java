@@ -1,18 +1,14 @@
 package ru.homeless.beans;
 
-import org.apache.log4j.Logger;
-import org.primefaces.context.RequestContext;
-import org.primefaces.event.SelectEvent;
-import org.primefaces.model.StreamedContent;
-import ru.homeless.configuration.Configuration;
-import ru.homeless.converters.ContractPointsTypeConverter;
-import ru.homeless.converters.ContractResultTypeConverter;
-import ru.homeless.converters.ShelterResultConverter;
-import ru.homeless.entities.*;
-import ru.homeless.primefaces.model.ContractPointsDataModel;
-import ru.homeless.services.GenericService;
-import ru.homeless.services.WorkerService;
-import ru.homeless.util.Util;
+import java.io.File;
+import java.io.IOException;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.TimeZone;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -23,10 +19,28 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.validator.ValidatorException;
 import javax.servlet.http.HttpSession;
-import java.io.File;
-import java.io.IOException;
-import java.io.Serializable;
-import java.util.*;
+
+import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
+import org.primefaces.event.SelectEvent;
+import org.primefaces.model.StreamedContent;
+
+import ru.homeless.converters.ContractPointsTypeConverter;
+import ru.homeless.converters.ContractResultTypeConverter;
+import ru.homeless.converters.ShelterResultConverter;
+import ru.homeless.entities.ContractControl;
+import ru.homeless.entities.ContractPoints;
+import ru.homeless.entities.ContractResult;
+import ru.homeless.entities.ContractResult.PredefinedValues;
+import ru.homeless.entities.Document;
+import ru.homeless.entities.ServContract;
+import ru.homeless.entities.ShelterResult;
+import ru.homeless.entities.Worker;
+import ru.homeless.primefaces.model.ContractPointsDataModel;
+import ru.homeless.services.ClientService;
+import ru.homeless.services.GenericService;
+import ru.homeless.services.WorkerService;
+import ru.homeless.util.Util;
 
 @ManagedBean(name = "clientcontracts")
 @ViewScoped
@@ -64,8 +78,8 @@ public class ClientContractsBean implements Serializable {
 
     private StreamedContent file;
 
-    @ManagedProperty(value = "#{GenericService}")
-    private GenericService genericService;
+    @ManagedProperty(value = "#{ClientService}")
+    private ClientService clientService;
 
     @ManagedProperty(value = "#{WorkerService}")
     private WorkerService workerService;
@@ -75,9 +89,8 @@ public class ClientContractsBean implements Serializable {
     }
 
     public void downloadContract(int id) throws IOException {
-        RequestContext rc = RequestContext.getCurrentInstance();
 
-        selectedContract = getGenericService().getInstanceById(ServContract.class, id);
+        selectedContract = getClientService().getInstanceById(ServContract.class, id);
 
         String requestSuffix = "/getGeneratedContract?requestType=100&clientId="+ this.cid + "&contractId=" + selectedContract.getId() + "&workerId=" + selectedContract.getWorker().getId();
         String saveFilePath = "/tmp" + File.separator + "ClientContract.docx";
@@ -134,7 +147,7 @@ public class ClientContractsBean implements Serializable {
     }
 
     public void deleteContract() {
-        getGenericService().deleteInstance(getGenericService().getInstanceById(ServContract.class, selectedContract.getId()));
+        getClientService().deleteInstance(getClientService().getInstanceById(ServContract.class, selectedContract.getId()));
         reload();
     }
 
@@ -145,6 +158,9 @@ public class ClientContractsBean implements Serializable {
     }
 
     public void showAddContractDialog() {
+        resetSelectedContract();
+        //New docNum = count of all records from ServContract table plus 1
+        selectedContract.setDocNum(String.valueOf(getClientService().getCountOfServContracts() + 1));
         RequestContext rc = RequestContext.getCurrentInstance();
         rc.execute("selectDocumentWv.show()");
     }
@@ -157,7 +173,7 @@ public class ClientContractsBean implements Serializable {
     }
 
     public List<ServContract> getContractsList() {
-        return getGenericService().getInstancesByClientId(ServContract.class, cid);
+        return getClientService().getInstancesByClientId(ServContract.class, cid);
     }
 
     public void setContractsList(List<ServContract> contractsList) {
@@ -182,7 +198,6 @@ public class ClientContractsBean implements Serializable {
 
     public void onRowSelect(SelectEvent event) {
         selectedDocument = (Document) event.getObject();
-        log.info("Selected document id = "+selectedDocument.getId());
     }
 
     public Worker getWorker() {
@@ -191,14 +206,6 @@ public class ClientContractsBean implements Serializable {
 
     public void setWorker(Worker worker) {
         this.worker = worker;
-    }
-
-    public GenericService getGenericService() {
-        return genericService;
-    }
-
-    public void setGenericService(GenericService contractControlService) {
-        this.genericService = contractControlService;
     }
 
     public ContractControl getSelectedContractControl() {
@@ -211,20 +218,33 @@ public class ClientContractsBean implements Serializable {
 
     public void updateSelectedContract() {
 
-        //update from G.Sverdlin: "If the contract is successfully finalized, set the endDate for all subitems"
-        if (selectedContract.getResult().getId() == 2) {
-            Set<ContractControl> set = selectedContract.getContractcontrols();
-            for (ContractControl cc : set) {
-                cc.setEndDate(selectedContract.getStopDate());
+        if ( isContractCompleted() ){
+            //update from G.Sverdlin: "If the contract is successfully finalized, set the endDate for all subitems"
+            if ( isContractSuccessefullyCompleted() ) {
+                Set<ContractControl> set = selectedContract.getContractcontrols();
+                for (ContractControl cc : set) {
+                    cc.setEndDate(selectedContract.getStopDate());
+                }
             }
-        }
+        };
+
         // ----------------------------------------------------------------------------------------------------
-        getGenericService().updateInstance(selectedContract);
+        getClientService().updateInstance(selectedContract);
         reload();
     }
 
+    private boolean isContractCompleted(){
+        return ! PredefinedValues.IN_PROGRESS.isSame(selectedContract.getResult());
+    }
+
+    private boolean isContractSuccessefullyCompleted(){
+        return PredefinedValues.SUCCESSEFULLY_COMPLETED.isSame(selectedContract.getResult());
+    }
+
+
+
     public List<ContractResult> getContractResultTypes() {
-        List<ContractResult> list = getGenericService().getInstances(ContractResult.class);
+        List<ContractResult> list = getClientService().getInstances(ContractResult.class);
         ContractResultTypeConverter.contractResultTypesDB = new ArrayList<ContractResult>();
         ContractResultTypeConverter.contractResultTypesDB.addAll(list);
         return list;
@@ -238,17 +258,17 @@ public class ClientContractsBean implements Serializable {
     // special for converter and selection data model!
     public void init() {
         contractResultTypes = new ArrayList<ContractResult>();
-        contractResultTypes.addAll(getGenericService().getInstances(ContractResult.class));
+        contractResultTypes.addAll(getClientService().getInstances(ContractResult.class));
         ContractResultTypeConverter.contractResultTypesDB = new ArrayList<ContractResult>();
         ContractResultTypeConverter.contractResultTypesDB.addAll(contractResultTypes);
 
         contractPointsItems = new ArrayList<ContractPoints>();
-        contractPointsItems.addAll(getGenericService().getInstances(ContractPoints.class));
+        contractPointsItems.addAll(getClientService().getInstances(ContractPoints.class));
         ContractPointsTypeConverter.contractPointsTypesDB = new ArrayList<ContractPoints>();
         ContractPointsTypeConverter.contractPointsTypesDB.addAll(contractPointsItems);
 
         shelterResults = new ArrayList<ShelterResult>();
-        shelterResults.addAll(getGenericService().getInstances(ShelterResult.class));
+        shelterResults.addAll(getClientService().getInstances(ShelterResult.class));
         ShelterResultConverter.shelterResultList = new ArrayList<ShelterResult>();
         ShelterResultConverter.shelterResultList.addAll(shelterResults);
 
@@ -272,7 +292,7 @@ public class ClientContractsBean implements Serializable {
     }
 
     public List<ContractPoints> getContractPointsItems() {
-        List<ContractPoints> list = getGenericService().getInstances(ContractPoints.class);
+        List<ContractPoints> list = getClientService().getInstances(ContractPoints.class);
         ContractPointsTypeConverter.contractPointsTypesDB = new ArrayList<ContractPoints>();
         ContractPointsTypeConverter.contractPointsTypesDB.addAll(list);
         return list;
@@ -297,16 +317,16 @@ public class ClientContractsBean implements Serializable {
             //getGenericService().addInstance(selectedContractControl);
             selectedContract.getContractcontrols().add(selectedContractControl);
         } else {
-            getGenericService().updateInstance(selectedContractControl);
+            getClientService().updateInstance(selectedContractControl);
         }
 
-        getGenericService().updateInstance(selectedContract);
+        getClientService().updateInstance(selectedContract);
         reload();
     }
 
     public void deleteServicePlanItem() {
         selectedContract.getContractcontrols().remove(selectedContractControl);
-        getGenericService().updateInstance(selectedContract);
+        getClientService().updateInstance(selectedContract);
         reload();
     }
 
@@ -413,10 +433,10 @@ public class ClientContractsBean implements Serializable {
             } else {
                 selectedContract.setDocumentId(0);
             }
-            selectedContract.setResult(getGenericService().getInstanceById(ContractResult.class, 1));
+            selectedContract.setResult(getClientService().getInstanceById(ContractResult.class, 1));
             selectedContract.setWorker(worker);
 
-            getGenericService().addInstance(selectedContract);
+            getClientService().addInstance(selectedContract);
 
             //reset fields
             selectedContract = new ServContract();
@@ -488,7 +508,7 @@ public class ClientContractsBean implements Serializable {
     }
 
     public List<ShelterResult> getShelterResults() {
-        List<ShelterResult> list = getGenericService().getInstances(ShelterResult.class);
+        List<ShelterResult> list = getClientService().getInstances(ShelterResult.class);
         ShelterResultConverter.shelterResultList = new ArrayList<ShelterResult>();
         ShelterResultConverter.shelterResultList.addAll(list);
         return list;
@@ -499,5 +519,12 @@ public class ClientContractsBean implements Serializable {
     }
 
 
+    public ClientService getClientService() {
+        return clientService;
+    }
+
+    public void setClientService(ClientService clientService) {
+        this.clientService = clientService;
+    }
 }
 

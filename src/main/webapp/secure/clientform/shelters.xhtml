@@ -24,11 +24,11 @@
                              paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15"
                              rowKey="#{shelterlist.id}" selection="#{clientshelter.selectedShelter}" selectionMode="single" styleClass="default_datatable" paginatorPosition="bottom">
 
-                    <p:column headerText="ID">
+                    <p:column headerText="ID" rendered="false">
                         <h:outputText value="#{shelterlist.id}"/>
                     </p:column>
                     <p:column headerText="Контракт">
-                        <h:outputText value="#{shelterlist.servContract.id}"/>
+                        <h:outputText value="#{shelterlist.servContract.docNum}"/>
                     </p:column>
                     <p:column headerText="Дата заселения">
                         <h:outputText value="#{clientshelter.formatDate(shelterlist.inShelter)}"/>

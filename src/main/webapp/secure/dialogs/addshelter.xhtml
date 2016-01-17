@@ -29,7 +29,7 @@
                 </p:row>
                 <p:row>
                     <p:selectOneMenu id="contractId" value="#{clientshelter.selectedShelter.servContract}" converter="shContractConverter" style="width:150px;" styleClass="base_form_value_text">
-                        <f:selectItems value="#{clientshelter.clientsContracts}" var="shServContract" itemValue="#{shServContract}" itemLabel="#{shServContract.id}"/>
+                        <f:selectItems value="#{clientshelter.clientsContracts}" var="shServContract" itemValue="#{shServContract}" itemLabel="#{shServContract.docNum}"/>
                     </p:selectOneMenu>
                 </p:row>
                 <p:row>
