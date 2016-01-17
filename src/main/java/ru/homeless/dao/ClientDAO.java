@@ -141,6 +141,23 @@ public class ClientDAO extends GenericDAO implements Serializable {
     	shelterInfoCriteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
     	return shelterInfoCriteria.list();
     }
+    
+    /**
+     * Returns shelters info for client in this period
+     * @param workerId
+     * @param dateToEnd
+     * @return
+     */
+    public List<ShelterHistory> getActiveSheltersForPeriod(Client client, Date startDate, Date endDate){
+        Criteria shelterInfoCriteria = getSessionFactory().getCurrentSession().createCriteria(ShelterHistory.class);
+
+        shelterInfoCriteria.add(Restrictions.ge("outShelter", startDate));
+        shelterInfoCriteria.add(Restrictions.le("inShelter", endDate));
+        
+        shelterInfoCriteria.add(Restrictions.eq("shelterresult", ru.homeless.entities.ShelterResult.Results.LIVING.getId()));
+        shelterInfoCriteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+        return shelterInfoCriteria.list();
+    }
 
     /**
     * Returns list of SubRegion by Region id.

@@ -22,6 +22,7 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.model.StreamedContent;
 import ru.homeless.converters.ShelterContractConverter;
 import ru.homeless.entities.*;
+import ru.homeless.services.ClientService;
 import ru.homeless.services.RoomService;
 import ru.homeless.util.Util;
 
@@ -35,6 +36,9 @@ public class ClientShelterBean implements Serializable {
 	private List<ShelterHistory> shelterList = null;
 	private ShelterHistory selectedShelter;
     private List<ServContract> clientsContracts;
+    
+    @ManagedProperty(value = "#{ClientService}")
+    private ClientService clientService;
 
     public StreamedContent getFile() {
         return file;
@@ -149,22 +153,30 @@ public class ClientShelterBean implements Serializable {
 	}
 
     public void validateStartDateFormat(FacesContext ctx, UIComponent component, Object value) {
-        FacesMessage msg = null;
         if (value==null || value.toString().trim().equals("")) {
-            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR,"Пожалуйста введите дату начала проживания", "Формат даты: ДД.ММ.ГГГГ");
-            FacesContext.getCurrentInstance().addMessage(null, msg);
-            throw new ValidatorException(msg);
+            showValidationMessage("Пожалуйста введите дату начала проживания", "Формат даты: ДД.ММ.ГГГГ");
         } else {
             Util.validateDateFormat(ctx, component, value);
         }
     }
+    
+    public void showValidationMessage(String text, String detail) {
+        FacesMessage msg = createErrorMessage(text, detail);
+        showMessage(msg);
+        throw new ValidatorException(msg);
+    }
+    
+    private FacesMessage createErrorMessage(String text, String detail) {
+        return new FacesMessage(FacesMessage.SEVERITY_ERROR, text, detail);
+    }
+    
+    private void showMessage(FacesMessage msg){
+        FacesContext.getCurrentInstance().addMessage(null, msg); 
+    }
 
     public void validateStopDateFormat(FacesContext ctx, UIComponent component, Object value) {
-        FacesMessage msg = null;
         if (value==null || value.toString().trim().equals("")) {
-            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Пожалуйста введите дату окончания проживания", "Формат даты: ДД.ММ.ГГГГ");
-            FacesContext.getCurrentInstance().addMessage(null, msg);
-            throw new ValidatorException(msg);
+            showValidationMessage( "Пожалуйста введите дату окончания проживания", "Формат даты: ДД.ММ.ГГГГ");
         } else {
             Util.validateDateFormat(ctx, component, value);
         }
@@ -235,36 +247,78 @@ public class ClientShelterBean implements Serializable {
     }
 
     public String formatRoomValue(Integer roomId) {
-        if (roomId == null || roomId == 0) return null; else
+        if (roomId == null || roomId == 0) 
+            return null; 
+        else
             return getRoomService().getInstanceById(Room.class,roomId).getRoomnumber();
     }
 
     public void addNewShelterData() {
 
+        Client client = getRoomService().getInstanceById(Client.class, cid);
         //setting actual client
         selectedShelter.setClient(getRoomService().getInstanceById(Client.class, cid));
+        
+        boolean validated = validateNoOtherActiveShelterForDate(client);
 
-        log.info("Adding new shelter record for client "+cid);
-        log.info(selectedShelter.getClient());
-        log.info("Дата заселения: "+selectedShelter.getInShelter());
-        log.info("Дата выселения: "+selectedShelter.getOutShelter());
-        log.info("Комната: "+selectedShelter.getRoomId());
-        log.info("Флюха: "+selectedShelter.getFluorogr());
-        log.info("Дифтерия: "+selectedShelter.getDipthVac());
-        log.info("Гепатит: "+selectedShelter.getHepotitsVac());
-        log.info("Тиф: "+selectedShelter.getTyphVac());
-        log.info("Status: "+selectedShelter.getShelterresult());
-        getRoomService().addInstance(selectedShelter);
+        if ( validated ){
+            log.info("Adding new shelter record for client "+cid);
+            log.info(selectedShelter.getClient());
+            log.info("Дата заселения: "+selectedShelter.getInShelter());
+            log.info("Дата выселения: "+selectedShelter.getOutShelter());
+            log.info("Комната: "+selectedShelter.getRoomId());
+            log.info("Флюха: "+selectedShelter.getFluorogr());
+            log.info("Дифтерия: "+selectedShelter.getDipthVac());
+            log.info("Гепатит: "+selectedShelter.getHepotitsVac());
+            log.info("Тиф: "+selectedShelter.getTyphVac());
+            log.info("Status: "+selectedShelter.getShelterresult());
+            getRoomService().addInstance(selectedShelter);
 
-        selectedShelter = new ShelterHistory();
+            selectedShelter = new ShelterHistory();
 
-        //Update the table
-        RequestContext rc = RequestContext.getCurrentInstance();
-        rc.update("add_shelter");
-        rc.execute("addShelterWv.hide()");
-        //RequestContext rc = RequestContext.getCurrentInstance();
-        //rc.update(":m_tabview:shelter_form");
+            //Update the table
+            RequestContext rc = RequestContext.getCurrentInstance();
+            rc.update("add_shelter");
+            rc.execute("addShelterWv.hide()");
+        }
 
+    }
+    
+    private boolean validateNoOtherActiveShelterForDate(Client client){
+        if ( isCurrentShelterActive() ){
+            List<ShelterHistory> intersectedSelters = clientService.getIntersetionWithActiveShelters(client, selectedShelter);
+            if ( !intersectedSelters.isEmpty() ){
+                ShelterHistory intersectedShilter = intersectedSelters.get(0);
+               FacesMessage msg = createErrorMessage("На выбранные даты существуют другие активные записи о проживании.", 
+                       createSHDescription(intersectedShilter));
+                showMessage(msg);
+                return false;
+             /*   FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, 
+                        "На выбранные даты существуют другие активные записи о проживании.", createSHDescription(intersectedShilter));
+                FacesContext.getCurrentInstance().addMessage(null, msg);
+             /*   showValidationMessage("На выбранные даты существуют другие активные записи о проживании.", 
+                        createSHDescription(intersectedShilter));*/
+            }
+        };
+        return true;
+    }
+    
+    public ClientService getClientService() {
+        return clientService;
+    }
+
+    public void setClientService(ClientService clientService) {
+        this.clientService = clientService;
+    }
+
+    private boolean isCurrentShelterActive(){
+        return new Integer(ShelterResult.Results.LIVING.getId()).equals( selectedShelter.getShelterresult() );
+    }
+    
+    private String createSHDescription(ShelterHistory sh){
+        return "Комната " + selectedShelter.getRoomId() + 
+                " c " +  Util.formatDate(sh.getInShelter()) +
+                " по " + Util.formatDate(sh.getOutShelter());
     }
 
     public void handleCloseEditShelterDlg() {

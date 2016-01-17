@@ -22,6 +22,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -325,11 +326,7 @@ public class Util {
     public static Date getNDayFromCurrent(int dayCount){
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
-        calendar.add(Calendar.DAY_OF_YEAR, dayCount);
-        calendar.set(Calendar.MINUTE, 59);
-        calendar.set(Calendar.SECOND, 59);
-        calendar.set(Calendar.HOUR_OF_DAY, 23);
-        return calendar.getTime();
+        return getMaximalTimeInDay(calendar.getTime());
     }
     
     /**
@@ -337,12 +334,27 @@ public class Util {
      * @return
      */
     public static Date getCurDateDaysOnly(){
-    	Calendar cal = Calendar.getInstance();
-    	cal.set(Calendar.HOUR_OF_DAY, 0);
-    	cal.set(Calendar.MINUTE, 0);
-    	cal.set(Calendar.SECOND, 0);
-    	cal.set(Calendar.MILLISECOND, 0);
-    	return cal.getTime();
+    	return getMinimalTimeInDay(new Date());
+    }
+    
+    public static Date getMaximalTimeInDay(Date date){
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.set(Calendar.HOUR_OF_DAY, 23);
+        cal.set(Calendar.MINUTE, 59);
+        cal.set(Calendar.SECOND, 59);
+        cal.set(Calendar.MILLISECOND, 99); 
+        return cal.getTime();
+    }
+    
+    public static Date getMinimalTimeInDay(Date date){
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        return cal.getTime();
     }
 
 }

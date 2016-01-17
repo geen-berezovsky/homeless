@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ru.homeless.dao.ClientDAO;
 import ru.homeless.entities.*;
+import ru.homeless.util.Util;
 
 @Service("ClientService")
 @Transactional(readOnly = false)
@@ -50,6 +51,13 @@ public class ClientService extends GenericService implements Serializable {
     @Transactional
     public List<ShelterHistory> getEndedShelterAndNotLeaving(){
         return getClientDAO().getEndedShelterAndNotLeaving();
+    }
+    
+    @Transactional
+    public List<ShelterHistory> getIntersetionWithActiveShelters(Client client, ShelterHistory sH){
+        return getClientDAO().getActiveSheltersForPeriod(client, 
+                Util.getMinimalTimeInDay(sH.getInShelter()), 
+                Util.getMaximalTimeInDay(sH.getOutShelter()));
     }
 
     @Transactional
