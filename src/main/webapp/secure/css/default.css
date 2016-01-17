@@ -73,6 +73,8 @@
 .avatar_block1 {
     margin-left: 8px;
     margin-right: auto;
+    overflow-y:hidden;
+    overflow-x:hidden;
 }
 .avatar_block2 {
     margin-top: 10px;
@@ -122,6 +124,7 @@
 .ui-panelgrid .ui-panelgrid-cell {
     padding-top: 3px;
     padding-bottom: 3px;
+    padding: 2px 2px;
 }
 
 .ui-inputfield {
@@ -131,6 +134,9 @@
 
 .photoLayoutUnit {
     overflow-y: hidden !important;
+    overflow-x: hidden !important;
+    overflow:hidden !important;
+;
 }
 
 .avatar_block2 {
@@ -164,4 +170,9 @@
     font-size: 16px;
     color: darkred;
     font-weight: bold;
+}
+
+.ui-chkbox .ui-chkbox-box {
+    width: 14px;
+    height: 14px;
 }

@@ -40,7 +40,7 @@
         <h:inputHidden id="contactsTmp" value="#{clientform.contactsTmp}" />
 
         <p:growl id="growl" widgetVar="growl" showDetail="true" life="3000"/>
-        <p:layout id="base_client" style="min-width:400px;min-height:860px;" styleClass="topLayoutMainForm">
+        <p:layout id="base_client" style="min-width:400px;min-height:800px;" styleClass="topLayoutMainForm">
             <p:layoutUnit position="north" size="5" header="#{clientform.header}" style="min-height:26px" styleClass="topLayoutMainForm" id="header"/>
             <p:layoutUnit position="west" size="210" style="max-height:300px;" header="Фотография" styleClass="photoLayoutUnit">
                 <p:imageSwitch id="photo_main_avatar" effect="scrollRight">
@@ -62,21 +62,21 @@
             <p:layoutUnit position="east" size="500" style="max-height:300px;" header="Оказанные услуги">
                 <ui:include src="clientform/providedservices.xhtml"/>
             </p:layoutUnit>
-            <p:layoutUnit position="south" size="200" styleClass="bottomLayoutMainForm" style="min-height: 500px;">
+            <p:layoutUnit position="south" size="200" styleClass="bottomLayoutMainForm" style="min-height: 460px;">
 
                 <p:layout styleClass="photoOperationButtons">
-                    <p:layoutUnit position="west" size="400" header="Дополнительная информация">
+                    <p:layoutUnit position="west" size="400" header="Дополнительная информация"  style="min-height: 430px; max-height: 430px;">
                         <ui:include src="clientform/personalinfo.xhtml"/>
                     </p:layoutUnit>
                     <p:layoutUnit position="center" styleClass="bottomLayoutMainForm">
                         <p:layout>
-                            <p:layoutUnit position="west" size="33%" header="Причины бездомности">
+                            <p:layoutUnit position="west" size="33%" header="Причины бездомности" style="min-height: 430px; max-height: 430px;">
                                 <ui:include src="clientform/homelessreasons.xhtml"/>
                             </p:layoutUnit>
-                            <p:layoutUnit position="center" size="33%" header="Источники существования">
+                            <p:layoutUnit position="center" size="33%" header="Источники существования"  style="min-height: 430px; max-height: 430px;">
                                 <ui:include src="clientform/breadwinner.xhtml"/>
                             </p:layoutUnit>
-                            <p:layoutUnit position="east" size="33%" header="Хронические болезни">
+                            <p:layoutUnit position="east" size="33%" header="Хронические болезни"  style="min-height: 430px; max-height: 430px;">
                                 <ui:include src="clientform/chronicaldisasters.xhtml"/>
                             </p:layoutUnit>
                         </p:layout>
