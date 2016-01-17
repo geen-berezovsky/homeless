@@ -293,11 +293,6 @@ public class ClientShelterBean implements Serializable {
                        createSHDescription(intersectedShilter));
                 showMessage(msg);
                 return false;
-             /*   FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, 
-                        "На выбранные даты существуют другие активные записи о проживании.", createSHDescription(intersectedShilter));
-                FacesContext.getCurrentInstance().addMessage(null, msg);
-             /*   showValidationMessage("На выбранные даты существуют другие активные записи о проживании.", 
-                        createSHDescription(intersectedShilter));*/
             }
         };
         return true;

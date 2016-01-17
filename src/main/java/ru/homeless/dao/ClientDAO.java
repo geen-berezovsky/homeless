@@ -180,4 +180,13 @@ public class ClientDAO extends GenericDAO implements Serializable {
     }
 
 
+    public List<ShelterHistory> getActiveSheltersForContract(ServContract contract){
+        Criteria shelterInfoCriteria = getSessionFactory().getCurrentSession().createCriteria(ShelterHistory.class);
+
+        shelterInfoCriteria.add(Restrictions.eq("servContract", contract));        
+        shelterInfoCriteria.add(Restrictions.eq("shelterresult", ru.homeless.entities.ShelterResult.Results.LIVING.getId()));
+        
+        shelterInfoCriteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+        return shelterInfoCriteria.list();
+    }
 }

@@ -3,6 +3,7 @@ package ru.homeless.services;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ru.homeless.dao.ClientDAO;
 import ru.homeless.entities.*;
+import ru.homeless.entities.ContractResult.PredefinedValues;
 import ru.homeless.util.Util;
 
 @Service("ClientService")
@@ -70,4 +72,27 @@ public class ClientService extends GenericService implements Serializable {
         return getClientDAO().getCountOfServContracts();
     }
 
+    @Transactional
+    public void closeContact(ServContract selectedContract){
+        //update from G.Sverdlin: "If the contract is successfully finalized, set the endDate for all subitems"
+        if ( isContractSuccessefullyCompleted(selectedContract) ) {
+            Set<ContractControl> set = selectedContract.getContractcontrols();
+            for (ContractControl cc : set) {
+                cc.setEndDate(selectedContract.getStopDate());
+            }
+        }
+        closeActiveSheltersForContract(selectedContract);
+    }
+    
+    private boolean isContractSuccessefullyCompleted(ServContract selectedContract){
+        return PredefinedValues.SUCCESSEFULLY_COMPLETED.isSame(selectedContract.getResult());
+    }
+    
+    private void closeActiveSheltersForContract(ServContract selectedContrac){
+        List<ShelterHistory> activeShelters = getClientDAO().getActiveSheltersForContract(selectedContrac);//selectedContract.get
+        for (ShelterHistory sh: activeShelters){
+            sh.setShelterresult(ShelterResult.Results.LEAVE_NORMALLY.getId());
+            getClientDAO().updateInstance(sh);
+        }
+    }
 }

@@ -34,6 +34,7 @@ import ru.homeless.entities.ContractResult;
 import ru.homeless.entities.ContractResult.PredefinedValues;
 import ru.homeless.entities.Document;
 import ru.homeless.entities.ServContract;
+import ru.homeless.entities.ShelterHistory;
 import ru.homeless.entities.ShelterResult;
 import ru.homeless.entities.Worker;
 import ru.homeless.primefaces.model.ContractPointsDataModel;
@@ -219,13 +220,7 @@ public class ClientContractsBean implements Serializable {
     public void updateSelectedContract() {
 
         if ( isContractCompleted() ){
-            //update from G.Sverdlin: "If the contract is successfully finalized, set the endDate for all subitems"
-            if ( isContractSuccessefullyCompleted() ) {
-                Set<ContractControl> set = selectedContract.getContractcontrols();
-                for (ContractControl cc : set) {
-                    cc.setEndDate(selectedContract.getStopDate());
-                }
-            }
+            clientService.closeContact(selectedContract);
         };
 
         // ----------------------------------------------------------------------------------------------------
@@ -236,11 +231,6 @@ public class ClientContractsBean implements Serializable {
     private boolean isContractCompleted(){
         return ! PredefinedValues.IN_PROGRESS.isSame(selectedContract.getResult());
     }
-
-    private boolean isContractSuccessefullyCompleted(){
-        return PredefinedValues.SUCCESSEFULLY_COMPLETED.isSame(selectedContract.getResult());
-    }
-
 
 
     public List<ContractResult> getContractResultTypes() {
