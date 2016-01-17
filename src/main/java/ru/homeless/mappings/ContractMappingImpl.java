@@ -47,6 +47,8 @@ public class ContractMappingImpl  {
 	public void init(Map<String, String> map, Client client, int contractId, int workerId, ServletContext context, int type) {
 		
         log.info("SERVICE="+contractService.toString());
+        servContract = contractService.getInstanceById(ServContract.class, contractId);
+        worker = contractService.getInstanceById(Worker.class, workerId);
 
         String sourceFile = client.getSurname() + "_" + client.getFirstname() + "_" + client.getId() + "_" + servContract.getId();
         File contractsDir = new File(Configuration.profilesDir+System.getProperty("file.separator")+client.getId());
@@ -82,7 +84,6 @@ public class ContractMappingImpl  {
             }
         }
 
-        servContract = contractService.getInstanceById(ServContract.class, contractId);
         log.info("Contracts dir = "+ Configuration.contractsDir);
         //prepare the result filename of the generated contract
         String resultFilename = sourceFile.replaceAll(" ","*");
@@ -121,11 +122,11 @@ public class ContractMappingImpl  {
 		String workerInfo = workerShortInfo + ". "+workerDocument.getDoctype().getCaption()+" "+workerDocument.getDocPrefix()+" "+workerDocument.getDocNum()
 				+" выдан "+Util.convertDate(workerDocument.getDate()) + " "+workerDocument.getWhereAndWhom();
 		String orgInfo = Configuration.organizationInfo;
-		String contractControlReplacement = String.valueOf((char)10);
+		String contractControlReplacement = String.valueOf((char) 10);
         for (ContractControl cc : contractControls) {
             contractControlReplacement += "- "+cc.getContractpoints().getCaption() + ";"+String.valueOf((char)13);
         }
-        
+
         placeholdersAndValues = new HashMap<String, String>();
         
         placeholdersAndValues.put("[label:import:contract_num]", contractNum);

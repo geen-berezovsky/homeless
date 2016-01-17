@@ -39,7 +39,9 @@ public class Util {
     public static String getWorkersBio(Worker worker) {
     	//Worker worker = contractService.getInstanceById(Worker.class, workerId);
     	String workerData = worker.getRules().getCaption()+" "+worker.getSurname()+" "+worker.getFirstname()+" "+worker.getMiddlename();
-    	workerData = workerData+", действующий на основании доверенности "+worker.getWarrantNum()+" от "+Util.convertDate(worker.getWarrantDate());
+        //Next string is commented at 17.01.2016 according latest contract template from G.Sverdlin
+    	//workerData = workerData+", действующий на основании доверенности "+worker.getWarrantNum()+" от "+Util.convertDate(worker.getWarrantDate());
+        workerData = workerData+", ";
     	return workerData;
     }
 

@@ -44,7 +44,7 @@ public class ShelterContractMappingImpl extends ContractMappingImpl implements I
         	preparePlaceholdersMap(client, contractId);
 
         	//difference
-    		placeholdersAndValues.put("[contr:num]", String.valueOf(contractId));
+    		placeholdersAndValues.put("[contr:num]", servContract.getDocNum());
     		placeholdersAndValues.put("[contr:date]", contractDate);
 
     		finalDocumentForSaving = new DocTypeProcessor(IDocumentMapping.DOCUMENT_SHELTER_CONTRACT_TEMPLATE_PATH).replaceParametersInDocument(placeholdersAndValues, Util.attachPhoto(client, log), ICustomMappingWordDocument.AVATAR_LOCATION_TOP_RIGHT);
