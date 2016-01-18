@@ -17,6 +17,7 @@ import ru.homeless.beans.BasicDocumentBean;
 import ru.homeless.entities.BasicDocumentRegistry;
 import ru.homeless.entities.BasicDocumentRegistryType;
 import ru.homeless.entities.Document;
+import ru.homeless.util.Util;
 
 @Repository
 public class WorkerDAO extends GenericDAO implements Serializable {
@@ -40,16 +41,53 @@ public class WorkerDAO extends GenericDAO implements Serializable {
      * @param till
      * @return
      */
-    public Integer getCountOfBasicDocumentByTypeFromTheStartOfThisYear(Date from, Date till) {
+    public String getDocNumNonTransit(Date from, Date till, int id) {
         //exclusions
+
+         /*
+            For each BasicDocumentRegistryType (except Transit) we need to take the count of existing documents such type and iterate it
+            Then, the following part of the number will be count of all existing BasicDocumentRegistryType except Transit
+         */
         BasicDocumentRegistryType transit = getInstanceById(BasicDocumentRegistryType.class,16);
         BasicDocumentRegistryType unknown = getInstanceById(BasicDocumentRegistryType.class,20);
+        BasicDocumentRegistryType request = getInstanceById(BasicDocumentRegistryType.class,id);
+        List<BasicDocumentRegistry> allDocumentsList = getSessionFactory().getCurrentSession().createCriteria(BasicDocumentRegistry.class)
+                .add(Restrictions.ge("date", from))
+                .add(Restrictions.le("date", till))
+                .add(Restrictions.ne("type", transit))
+                .add(Restrictions.ne("type", unknown)).list();
 
-        List<BasicDocumentRegistry> result = getSessionFactory().getCurrentSession().createCriteria(BasicDocumentRegistry.class).add(Restrictions.ge("date",from)).add(Restrictions.le("date",till)).add(Restrictions.ne("type",transit)).add(Restrictions.ne("type",unknown)).list();
-        return result.size()+1;
+        List<BasicDocumentRegistry> allDocumentsThisID = getSessionFactory().getCurrentSession().createCriteria(BasicDocumentRegistry.class)
+                .add(Restrictions.ge("date", from))
+                .add(Restrictions.le("date", till))
+                .add(Restrictions.eq("type", request)).list();
+
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(allDocumentsThisID.size()+1);
+        stringBuilder.append("/");
+        stringBuilder.append(allDocumentsList.size()+1);
+        return stringBuilder.toString();
+/*
+        String r1 = "select count(*) from BasicDocumentRegistry where date>="+Util.parseDateForMySql(from)+" and date <="+Util.parseDateForMySql(till)+ " and type <> "+16+" and type <> "+20;
+        String r2 = "select count(*) from BasicDocumentRegistry where date>="+Util.parseDateForMySql(from)+" and date <="+Util.parseDateForMySql(till)+ " and type = "+id;
+
+        System.out.println(r1);
+        System.out.println(r2);
+
+        int f1 = ((Long)getSessionFactory().getCurrentSession().createQuery(r1).uniqueResult()).intValue();
+        int f2 = ((Long)getSessionFactory().getCurrentSession().createQuery(r2).uniqueResult()).intValue();
+
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(f1+1);
+        stringBuilder.append("/");
+        stringBuilder.append(f2);
+        return stringBuilder.toString();
+*/
     }
-
+/*
     public int getMaxBaseDocumentRegistryId() {
+
+
         DetachedCriteria maxId = DetachedCriteria.forClass(BasicDocumentRegistry.class).setProjection(Projections.max("id"));
         List<BasicDocumentRegistry> list = getSessionFactory().getCurrentSession().createCriteria(BasicDocumentRegistry.class).add(Property.forName("id").eq(maxId)).list();
         if (list != null && list.size() > 0) {
@@ -58,6 +96,7 @@ public class WorkerDAO extends GenericDAO implements Serializable {
             return 0;
         }
     }
+    */
 
     public int getMaxBaseDocumentRegistryDocNumForTranzit() {
 

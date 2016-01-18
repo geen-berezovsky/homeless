@@ -137,17 +137,16 @@ public class BasicDocumentBean implements Serializable {
 
         int currYear = Calendar.getInstance().get(Calendar.YEAR);
 
-        Date from = new GregorianCalendar(currYear,1,1).getTime();
+        Date from = new GregorianCalendar(currYear,0,1).getTime();
         Date till = new Date();
 
-        System.out.println("from="+from+", till="+till);
+        log.info("Requested period for counting document number is from "+from+" till "+till);
         if (basicDocumentRegistryTypeId != 16) {
-            docNum = getWorkerService().getCountOfBasicDocumentByTypeFromTheStartOfThisYear(from, till)+"/" + String.valueOf(currYear);
+            docNum = getWorkerService().getDocNumNonTransit(from, till, basicDocumentRegistryTypeId);
         } else {
             docNum = String.valueOf(workerService.getMaxBaseDocumentRegistryDocNumForTranzit() + 1);
         }
-
-        log.info("NEW VALUE = "+docNum);
+        log.info("Document number is "+docNum);
 
         BasicDocumentRegistry basicDocumentRegistry = new BasicDocumentRegistry(client.getId(), docNum, type, selectedDocumentId, dateFrom, dateTill, worker.getId(), new Date(), city);
 
