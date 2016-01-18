@@ -59,6 +59,10 @@ public class GenericGenerator {
 
     }
 
+    private void putDocNumToDefaultMap(HttpServletRequest request) {
+        wordDocumentDefaultValuesMap.put("[t:num]", request.getParameter("docNum"));
+    }
+
     public WordprocessingMLPackage generateWordDocument(HttpServletRequest request) throws UnsupportedEncodingException {
         if (hrp == null ) {
             hrp = new CustomValuesHttpRequestParser();
@@ -91,21 +95,27 @@ public class GenericGenerator {
 		
 			//STANDARD DOCUMENTS
 			case IDocumentMapping.DOCUMENT_SOCIAL_HELP: {
+                putDocNumToDefaultMap(request);
 				return hrp.generateSocialHelpDocument(request, client, wordDocumentDefaultValuesMap);
 			}
 			case IDocumentMapping.DOCUMENT_FREE_TRAVEL: {
+                putDocNumToDefaultMap(request);
 				return hrp.generateFreeTravelDocument(request, client, wordDocumentDefaultValuesMap);
 			}
             case IDocumentMapping.DOCUMENT_SANITATION: {
+                putDocNumToDefaultMap(request);
                 return hrp.generateSanitationDocument(request, client, wordDocumentDefaultValuesMap);
             }
             case IDocumentMapping.DOCUMENT_DISPENSARY: {
+                putDocNumToDefaultMap(request);
                 return hrp.generateDispensaryDocument(request, client, wordDocumentDefaultValuesMap);
             }
             case IDocumentMapping.DOCUMENT_REGISTRATION: {
+                putDocNumToDefaultMap(request);
                 return hrp.generateRegistrationDocument(request, client, wordDocumentDefaultValuesMap);
             }
             case IDocumentMapping.DOCUMENT_TRANSIT: {
+                putDocNumToDefaultMap(request);
                 return hrp.generateTransitDocument(request, client, wordDocumentDefaultValuesMap);
             }
             case IDocumentMapping.DOCUMENT_ZAGS_QUERY: {
