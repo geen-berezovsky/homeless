@@ -337,3 +337,44 @@ update ShelterHistory outerSH,
   (select sh.id shelter, max(sc.id) contract from ShelterHistory sh, ServContract sc where sh.client=sc.client group by sh.id) sb
 set outerSH.servContract = sb.contract
 where outerSH.id = sb.shelter;
+
+-- set documentId = new ("СО СЛОВ") if client has not any document, "Паспорт" if has or random other document in other case
+DELIMITER $$
+
+DROP PROCEDURE IF EXISTS insert_docs $$
+
+CREATE PROCEDURE insert_docs ()
+  BEGIN
+    DECLARE done INT DEFAULT FALSE;
+    DECLARE doc INT(11);
+    DECLARE lastDocId INT(11);
+    DECLARE c, w INT(11);
+    DECLARE cur1 CURSOR FOR SELECT client, worker FROM ServContract where documentId is null;
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+
+    OPEN cur1;
+    read_loop: LOOP
+      FETCH cur1 INTO c, w;
+      IF done THEN
+        LEAVE read_loop;
+      END IF;
+      select count(1) INTO doc from Document where client = c order by doctype limit 1;
+      IF doc<1 THEN
+        SELECT max(id) + 1 INTO lastDocId FROM Document;
+        INSERT INTO Document (id, docNum, registration, client, doctype)
+        VALUES (lastDocId, 0, 0, c, 23);
+        select id INTO doc from Document where id = lastDocId;
+      ELSE
+        select id INTO doc from Document where client = c order by doctype limit 1;
+      END IF;
+      UPDATE ServContract set documentId = doc where client = c;
+    END LOOP;
+    CLOSE cur1;
+
+  END $$
+
+DELIMITER ;
+
+CALL insert_docs();
+drop procedure insert_docs;
+-- documents added
