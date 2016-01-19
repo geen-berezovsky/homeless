@@ -75,9 +75,7 @@ public class ContractResult implements Serializable {
 		}
 		
 		public boolean isSame(ContractResult cr){
-		    return id.equals(cr.getId());
-		    //TODO: rewrite it to use objects
-			//return getContractResult().equals(cr);
+			return getContractResult().equals(cr);
 		}
 	}
 }
