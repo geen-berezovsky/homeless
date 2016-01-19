@@ -289,7 +289,7 @@ public class ClientShelterBean implements Serializable {
             List<ShelterHistory> intersectedSelters = clientService.getIntersetionWithActiveShelters(client, selectedShelter);
             if ( !intersectedSelters.isEmpty() ){
                 ShelterHistory intersectedShilter = intersectedSelters.get(0);
-               FacesMessage msg = createErrorMessage("На выбранные даты существуют другие активные записи о проживании.", 
+               FacesMessage msg = createErrorMessage("У клиета может быть только одна активная запись о проживании. На данный момент активна другая запись.", 
                        createSHDescription(intersectedShilter));
                 showMessage(msg);
                 return false;

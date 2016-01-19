@@ -57,9 +57,7 @@ public class ClientService extends GenericService implements Serializable {
     
     @Transactional
     public List<ShelterHistory> getIntersetionWithActiveShelters(Client client, ShelterHistory sH){
-        return getClientDAO().getActiveSheltersForPeriod(client,
-                Util.getMinimalTimeInDay(sH.getInShelter()),
-                Util.getMaximalTimeInDay(sH.getOutShelter()));
+        return getClientDAO().getActiveSheltersForClient(client);
     }
 
     @Transactional
