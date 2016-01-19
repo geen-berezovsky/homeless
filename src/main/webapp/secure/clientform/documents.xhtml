@@ -23,7 +23,7 @@
                 <p:dataTable id="doclistId" var="doclist" value="#{clientdocuments.documentsList}" paginator="true" rows="15"
                              paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15"
                              rowKey="#{doclist.id}" selection="#{clientdocuments.selectedDocument}" selectionMode="single" paginatorPosition="bottom" styleClass="default_datatable">
-
+                    <p:ajax event="rowDblselect" listener="#{clientdocuments.editDocument()}" global="false" oncomplete="addDocumentWv.show();"/>
                     <p:column headerText="ID">
                         <h:outputText value="#{doclist.id}"/>
                     </p:column>

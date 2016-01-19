@@ -98,7 +98,17 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
         clientChronicDisease = new ArrayList<String>(); // -//-
     }
 
+    public void reload() throws SQLException {
+        //just for search
+        if (client!=null) {
+            reloadAll(client.getId());
+        }
+    }
+
     public void reloadAll(int id) throws SQLException {
+
+        log.info("Opening client with id = "+id);
+
         this.cid = id;
         this.mainPanelVisibility = "display: block;";
 
@@ -253,7 +263,7 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
     }
 
     public void reloadClientData() {
-        setClient(getClientService().getInstanceById(Client.class, getCid()));
+        //setClient(getClientService().getInstanceById(Client.class, getCid())); //deprecated
         //copy data to externalized class data
         if (client != null) {
             log.info("Client ID = " + client.getId() + " has been selected for usage");

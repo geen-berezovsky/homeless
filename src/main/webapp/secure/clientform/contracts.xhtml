@@ -24,7 +24,7 @@
                 <p:dataTable id="conlistId" var="conlist" value="#{clientcontracts.contractsList}" paginator="true" rows="15"
                              paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15"
                              rowKey="#{conlist.id}" selection="#{clientcontracts.selectedContract}" selectionMode="single" styleClass="default_datatable" paginatorPosition="bottom">
-
+                    <p:ajax event="rowDblselect" listener="#{clientcontracts.editContract()}" global="false" oncomplete="editContractWv.show();"/>
                     <p:column headerText="ID" rendered="false">
                         <h:outputText value="#{conlist.id}"/>
                     </p:column>

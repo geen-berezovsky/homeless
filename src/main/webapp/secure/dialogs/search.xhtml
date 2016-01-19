@@ -37,8 +37,8 @@
 		<p:dialog id="displayFoundByName" header="Список найденных клиентов" widgetVar="displayFoundByName" resizable="false" closable="true" modal="true" showEffect="fade" hideEffect="explode" closeOnEscape="true">
 			<p:dataTable id="foundClientsList" var="client" value="#{clientsearch.foundList}" paginator="true" rows="15"
 				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15" paginatorPosition="bottom" styleClass="default_datatable"
-                rowKey="#{client.id}" selectionMode="single" sortMode="multiple">
-				<p:column headerText="ID" sortBy="#{client.id}">
+                rowKey="#{client.id}" selectionMode="single" selection="#{clientform.client}" sortMode="multiple">
+                <p:column headerText="ID" sortBy="#{client.id}">
 					<h:outputText value="#{client.id}" />
 				</p:column>
 				<p:column headerText="Фамилия" sortBy="#{client.surname}">
@@ -54,10 +54,8 @@
 					<h:outputText value="#{clientsearch.formattedDate(client.date)}" />
 					<!-- here are no errors! -->
 				</p:column>
-				<p:column style="width:4%">
-					<p:commandButton action="#{clientform.reloadAll(client.id)}" id="selectButton" icon="ui-icon-search" oncomplete="displayFoundByName.hide();" ajax="true"
-						update="@all @this :m_tabview:base_form :add_services :real_photo_form" styleClass="ui-button"/>
-				</p:column>
+                <p:ajax event="rowDblselect" listener="#{clientform.reload}" global="false" oncomplete="displayFoundByName.hide();"
+                        update="@all @this :m_tabview:base_form :add_services :real_photo_form" />
 			</p:dataTable>
 		</p:dialog>
 		<!-- *********************          Search Details Dialog          ********************* -->

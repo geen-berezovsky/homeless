@@ -215,7 +215,7 @@
         <f:facet name="header">
             Скорое окончание даты заселения
         </f:facet>
-        <p:ajax event="rowSelect" listener="#{reminderBean.onRowClck}"/>
+        <p:ajax event="rowDblselect" listener="#{reminderBean.onRowClck}" global="false"/>
         <p:column headerText="Id">
             <h:outputText value="#{shelterInfo.client.id}" />
         </p:column>
@@ -234,8 +234,8 @@
       rowKey="#{shelterInfo.id}" widgetVar="fogotenShelterTable">
         <f:facet name="header">
             Просроченная дата выселения
-        </f:facet>        
-        <p:ajax event="rowSelect" listener="#{reminderBean.onRowClck}"/>
+        </f:facet>
+        <p:ajax event="rowDblselect" listener="#{reminderBean.onRowClck}" global="false" />
         <p:column headerText="Id">
             <h:outputText value="#{shelterInfo.client.id}" />
         </p:column>
