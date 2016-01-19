@@ -20,7 +20,7 @@
 	<p:dataTable id="recievedservice" var="recievedservice" value="#{clientform.servicesList}" paginator="true" rows="7"
 		paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="7,14,21"
 		rowKey="#{recievedservice.id}" selection="#{services.selectedService}" selectionMode="single" paginatorPosition="bottom" styleClass="default_datatable">
-
+        <p:ajax event="rowDblselect" listener="#{services.updateValue}" global="false" oncomplete="addServiceWv.show()"/>
 		<p:column headerText="id" style="display:none;">
 			<h:outputText value="#{recievedservice.id}" />
 		</p:column>

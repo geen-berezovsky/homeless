@@ -23,7 +23,7 @@
                 <p:dataTable id="shelterlistId" widgetVar="shelterlistWv" var="shelterlist" value="#{clientshelter.shelterList}" paginator="true" rows="15"
                              paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15"
                              rowKey="#{shelterlist.id}" selection="#{clientshelter.selectedShelter}" selectionMode="single" styleClass="default_datatable" paginatorPosition="bottom">
-
+                    <p:ajax event="rowDblselect" listener="#{clientshelter.editShelter()}" global="false"/>
                     <p:column headerText="ID" rendered="false">
                         <h:outputText value="#{shelterlist.id}"/>
                     </p:column>
