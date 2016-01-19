@@ -141,11 +141,7 @@ public class BasicDocumentBean implements Serializable {
         Date till = new Date();
 
         log.info("Requested period for counting document number is from "+from+" till "+till);
-        if (basicDocumentRegistryTypeId != 16) {
-            docNum = getWorkerService().getDocNumNonTransit(from, till, basicDocumentRegistryTypeId);
-        } else {
-            docNum = String.valueOf(workerService.getMaxBaseDocumentRegistryDocNumForTranzit() + 1);
-        }
+        docNum = getWorkerService().getDocNum(from, till, basicDocumentRegistryTypeId);
         log.info("Document number is "+docNum);
 
         BasicDocumentRegistry basicDocumentRegistry = new BasicDocumentRegistry(client.getId(), docNum, type, selectedDocumentId, dateFrom, dateTill, worker.getId(), new Date(), city);

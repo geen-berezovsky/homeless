@@ -48,15 +48,13 @@ public class WorkerService extends GenericService implements Serializable {
 		return null;
 	}
 /*
-    public int getMaxBaseDocumentRegistryId() {
-        return workerDAO.getMaxBaseDocumentRegistryId();
-    }
-*/
+Deprecated according comment in HS-16
+
     public int getMaxBaseDocumentRegistryDocNumForTranzit() {
         return workerDAO.getMaxBaseDocumentRegistryDocNumForTranzit();
     }
-
-    public String getDocNumNonTransit(Date from, Date till, int id) {
-        return workerDAO.getDocNumNonTransit(from, till, id);
+*/
+    public String getDocNum(Date from, Date till, int id) {
+        return workerDAO.getDocNum(from, till, id);
     }
 }
