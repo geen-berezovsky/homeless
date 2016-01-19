@@ -27,16 +27,6 @@ public class OverdueService extends GenericService implements Serializable {
 
     @Transactional
     public List<OverdueItem> getOverdueItems() {
-        //TODO: cleanup
-        /*List<OverdueItem> result = new ArrayList<>();
-        OverdueItem item = new OverdueItem();
-        result.add(item);
-        item.setClientId("123");
-        item.setClientName("client");
-        item.setWorkerName("worker");
-        item.setHasDyphVaccine(true);
-        item.setInShelter(new Date());
-        return result;*/
         return overdueDAO.getOverdueItems();
     }
 }

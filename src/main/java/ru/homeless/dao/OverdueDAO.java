@@ -41,21 +41,16 @@ public class OverdueDAO extends GenericDAO {
         log.info("Got " + data.size() + " items");
         List<OverdueItem> result = new ArrayList<>();
         for (Object row : data) {
-            //result.add(convert(row));
-            //TODO: @ekuznetsov, please fix the string above!
+            result.add(convert(row));
         }
         return result;
     }
 
-    //TODO: cleanup
     private OverdueItem convert(Object row) {
-        /*log.info("Converting item (stub implementation): " + row + " " + row.getClass());
-        OverdueItem item = new OverdueItem();
-        item.setClientId(UUID.randomUUID().toString());*/
         log.info("Converting item: " + row + " " + row.getClass());
         OverdueItem item = new OverdueItem();
         Object[] rowData = (Object[]) row;
-        item.setClientId((String) rowData[0]);
+        item.setClientId((Integer) rowData[0]);
         item.setClientName((String) rowData[1]);
         item.setHasDyphVaccine(isVaccinated(rowData[2]));
         item.setHasHepathVaccine(isVaccinated(rowData[3]));

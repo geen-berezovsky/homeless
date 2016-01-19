@@ -1,19 +1,23 @@
 package ru.homeless.beans;
 
+import org.primefaces.context.RequestContext;
 import ru.homeless.entities.OverdueItem;
 import ru.homeless.services.OverdueService;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import javax.faces.bean.SessionScoped;
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.List;
 
 @ManagedBean(name = "overdue")
-@ViewScoped
+@SessionScoped
 public class OverdueBean implements Serializable {
     @ManagedProperty(value = "#{OverdueService}")
     private OverdueService overdueService;
+    private boolean rendered;
+    List<OverdueItem> items = Collections.emptyList();
 
     public OverdueService getOverdueService() {
         return overdueService;
@@ -24,7 +28,17 @@ public class OverdueBean implements Serializable {
     }
 
     public List<OverdueItem> getItems() {
-        List<OverdueItem> items = overdueService.getOverdueItems();
         return items;
+    }
+
+    public void showDialog() {
+        rendered = true;
+        items = overdueService.getOverdueItems();
+        RequestContext rc = RequestContext.getCurrentInstance();
+        rc.execute("overdueDlgWv.show();");
+    }
+
+    public boolean isRendered(){
+        return rendered;
     }
 }

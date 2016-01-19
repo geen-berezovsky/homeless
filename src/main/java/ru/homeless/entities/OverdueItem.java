@@ -6,7 +6,7 @@ import java.util.Date;
 
 public class OverdueItem {
     private static ThreadLocal<DateFormat> threadLocalDateFormat = new ThreadLocal<>();
-    private String clientId;
+    private Integer clientId;
     private String clientName;
     private Date inShelter;
     private String workerName;
@@ -15,11 +15,11 @@ public class OverdueItem {
     private boolean hasDyphVaccine;
     private boolean hasHepathVaccine;
 
-    public String getClientId() {
+    public Integer getClientId() {
         return clientId;
     }
 
-    public void setClientId(String clientId) {
+    public void setClientId(Integer clientId) {
         this.clientId = clientId;
     }
 
