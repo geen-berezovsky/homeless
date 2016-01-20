@@ -78,7 +78,7 @@
                         </p:row>
                         <p:row>
                             <p:message display="tooltip" for="docNum" />
-                            <p:inputText id="docNum" value="#{clientcontracts.selectedContract.docNum}" style="width:300px;" styleClass="base_form_value_text" title="Поебень"/>
+                            <p:inputText id="docNum" value="#{clientcontracts.selectedContract.docNum}" style="width:300px;" styleClass="base_form_value_text"/>
                         </p:row>
                         <p:row>
 							<p:outputLabel value="Дата начала:" styleClass="base_form_caption_text"  />
@@ -122,7 +122,7 @@
 
 				</p:layoutUnit>
 
-				<p:layoutUnit position="center" size="460" minSize="460" maxSize="400" resizable="false" style="max-height:420px;">
+				<p:layoutUnit position="center" size="460" minSize="460" maxSize="400" resizable="false" style="max-height:470px;">
 					<p:dataTable id="servitemsid" var="servitems" value="#{clientcontracts.contractPointsDataModel}" paginator="false" rows="100" selection="#{clientcontracts.selectedNewContractPoints}" paginatorPosition="bottom" styleClass="default_datatable">
 						<p:column selectionMode="multiple" style="width:4%" />
 						<p:column headerText="ID" style="width:4%">
