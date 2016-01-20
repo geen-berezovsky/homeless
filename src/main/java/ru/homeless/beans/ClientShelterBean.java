@@ -259,7 +259,7 @@ public class ClientShelterBean implements Serializable {
         //setting actual client
         selectedShelter.setClient(getRoomService().getInstanceById(Client.class, cid));
         
-        boolean validated = validateNoOtherActiveShelterForDate(client);
+        boolean validated = validateNoOtherActiveShelterForClient(client);
 
         if ( validated ){
             log.info("Adding new shelter record for client "+cid);
@@ -284,12 +284,12 @@ public class ClientShelterBean implements Serializable {
 
     }
     
-    private boolean validateNoOtherActiveShelterForDate(Client client){
+    private boolean validateNoOtherActiveShelterForClient(Client client){
         if ( isCurrentShelterActive() ){
-            List<ShelterHistory> intersectedSelters = clientService.getIntersetionWithActiveShelters(client, selectedShelter);
+            List<ShelterHistory> intersectedSelters = clientService.getOtherActiveShelters(client, selectedShelter);
             if ( !intersectedSelters.isEmpty() ){
                 ShelterHistory intersectedShilter = intersectedSelters.get(0);
-               FacesMessage msg = createErrorMessage("У клиета может быть только одна активная запись о проживании. На данный момент активна другая запись.", 
+                FacesMessage msg = createErrorMessage("У клиета может быть только одна активная запись о проживании. На данный момент активна другая запись.", 
                        createSHDescription(intersectedShilter));
                 showMessage(msg);
                 return false;

@@ -117,4 +117,17 @@ public class ShelterHistory implements Serializable {
     public void setServContract(ServContract servContract) {
         this.servContract = servContract;
     }
+    
+    public boolean equals(Object other) {
+        if (this == other) return true;
+        if ( !(other instanceof ShelterHistory) ) return false;
+
+        final ShelterHistory otherSH = (ShelterHistory) other;
+
+        return new Integer(getId()).equals(otherSH.getId());
+    }
+
+    public int hashCode() {
+        return 29 * getId();
+    }
 }

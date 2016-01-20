@@ -148,7 +148,7 @@ public class ClientDAO extends GenericDAO implements Serializable {
      * @param dateToEnd
      * @return
      */
-    public List<ShelterHistory> getActiveSheltersForClient(Client client){
+    public List<ShelterHistory> getActiveShelters(Client client){
         Criteria shelterInfoCriteria = getSessionFactory().getCurrentSession().createCriteria(ShelterHistory.class);
 
         shelterInfoCriteria.add(Restrictions.eq("client", client));
