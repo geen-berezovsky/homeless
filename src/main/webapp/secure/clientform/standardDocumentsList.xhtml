@@ -4,7 +4,7 @@
 <ui:composition>
         <p:dialog header="Подтвердите удаление" appendTo="@form" widgetVar="deleteStandardDocument" resizable="false" closable="true" showEffect="fade" hideEffect="explode" dynamic="true" closeOnEscape="true" style="font-size: 200%;" draggable="false">
             <p:panelGrid columns="2" style="margin: 0 auto;" styleClass="base_form_panel_grid_class">
-                <p:commandButton id="stdRcConfirm" value="Да" update=":m_tabview:documentsMenu:stdDocListId" oncomplete="deleteStandardDocument.hide()" actionListener="#{stddoc.deleteSelectedDocument}"/>
+                <p:commandButton id="stdRcConfirm" value="Да" update=":m_tabview:documentsMenu:stdDocListId :m_tabview:base_form:header" oncomplete="deleteStandardDocument.hide()" actionListener="#{stddoc.deleteSelectedDocument}"/>
                 <p:commandButton id="stdRcDecline" value="Нет" update=":m_tabview:documentsMenu:stdDocListId" oncomplete="deleteStandardDocument.hide()"/>
             </p:panelGrid>
         </p:dialog>

@@ -245,25 +245,36 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
                 if (!client.isGender()) {
                     result += "а";
                 }
+                result += checkRegistry();
                 return result + ")";
             }
 
             for (ShelterHistory sh : shelters) {
                 if (sh.getOutShelter()!= null && sh.getOutShelter().getTime() >= new Date().getTime()) {
-                    return result + ", в приюте проживает)";
+                    result += ", в приюте проживает" + checkRegistry();
+                    return result + ")";
                 }
             }
             result += ", в приюте ранее проживал";
             if (!client.isGender()) {
                 result += "а";
             }
-
+            result += checkRegistry();
             return result + ")";
-        } else return result + ", информация по проживанию в приюте в базе данных отсутствует)";
+        } else return result + ", информация по проживанию в приюте и о выданных справках о регистрации в базе данных отсутствует)";
+    }
+
+    private String checkRegistry() {
+        String result = "";
+        if (getClientService().hasBeenRegistered(client.getId())) {
+            result += ", состоит на учете";
+        }
+        System.out.println(result);
+        return result;
     }
 
     public void reloadClientData() {
-        //setClient(getClientService().getInstanceById(Client.class, getCid())); //deprecated
+        setClient(getClientService().getInstanceById(Client.class, getCid())); //cannot be deprecated while opening client from search differ than other open methods
         //copy data to externalized class data
         if (client != null) {
             log.info("Client ID = " + client.getId() + " has been selected for usage");
@@ -692,7 +703,6 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
             }
 
         } else {
-            log.info(this.getSurname());
             refreshTabs(prevTabIndex);
         }
         prevTabIndex = tabIndex;

@@ -15,6 +15,7 @@ import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
 import java.io.*;
 import java.net.URLEncoder;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -70,7 +71,7 @@ public class BasicDocumentBean implements Serializable {
         }
     }
 
-    public void export(int basicDocumentRegistryTypeId) throws IOException {
+    public void export(int basicDocumentRegistryTypeId) throws IOException, SQLException {
         //Prepare new entity and add it to the database
         int requestType = 0;
         String filename = "";
@@ -148,6 +149,9 @@ public class BasicDocumentBean implements Serializable {
 
         workerService.addInstance(basicDocumentRegistry);
         log.debug("Inserted object with ID=" + basicDocumentRegistry.getId());
+        FacesContext context = FacesContext.getCurrentInstance();
+        ClientFormBean cfb = context.getApplication().evaluateExpressionGet(context, "#{clientform}", ClientFormBean.class);
+        cfb.reloadAll();
 
         SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
         String issueDateStr = format.format(dateFrom);
@@ -159,6 +163,8 @@ public class BasicDocumentBean implements Serializable {
         String docName = filename;
 
         file = Util.downloadDocument(requestSuffix, saveFilePath, docType, docName);
+
+
 
     }
 

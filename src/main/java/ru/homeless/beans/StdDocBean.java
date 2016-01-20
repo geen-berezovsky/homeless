@@ -20,6 +20,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.servlet.http.HttpSession;
 import java.io.*;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -37,8 +38,11 @@ public class StdDocBean implements Serializable {
         return getDocumentsList(false);
     }
 
-    public void deleteSelectedDocument() {
+    public void deleteSelectedDocument() throws SQLException {
         getStdDocService().deleteInstance(selectedStdDoc);
+        FacesContext context = FacesContext.getCurrentInstance();
+        ClientFormBean cfb = context.getApplication().evaluateExpressionGet(context, "#{clientform}", ClientFormBean.class);
+        cfb.reloadAll();
         refreshLists(false);
     }
 

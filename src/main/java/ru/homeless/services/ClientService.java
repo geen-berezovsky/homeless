@@ -85,12 +85,17 @@ public class ClientService extends GenericService implements Serializable {
     private boolean isContractSuccessefullyCompleted(ServContract selectedContract){
         return PredefinedValues.SUCCESSEFULLY_COMPLETED.isSame(selectedContract.getResult());
     }
-    
+
     private void closeActiveSheltersForContract(ServContract selectedContrac){
         List<ShelterHistory> activeShelters = getClientDAO().getActiveSheltersForContract(selectedContrac);//selectedContract.get
         for (ShelterHistory sh: activeShelters){
             sh.setShelterresult(ShelterResult.Results.LEAVE_NORMALLY.getId());
             getClientDAO().updateInstance(sh);
         }
+    }
+
+    @Transactional
+    public boolean hasBeenRegistered(int clientId) {
+        return getClientDAO().hasBeenRegistered(clientId);
     }
 }

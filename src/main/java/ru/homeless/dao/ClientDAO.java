@@ -187,4 +187,18 @@ public class ClientDAO extends GenericDAO implements Serializable {
         shelterInfoCriteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
         return shelterInfoCriteria.list();
     }
+
+    public boolean hasBeenRegistered(int clientId) {
+        Criteria registryDocCriteria = getSessionFactory().getCurrentSession().createCriteria(BasicDocumentRegistry.class);
+        BasicDocumentRegistryType request = getInstanceById(BasicDocumentRegistryType.class,11);
+        registryDocCriteria.add(Restrictions.eq("client", clientId));
+        registryDocCriteria.add(Restrictions.eq("type", request));
+        registryDocCriteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+        if (registryDocCriteria.list().size()>0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 }
