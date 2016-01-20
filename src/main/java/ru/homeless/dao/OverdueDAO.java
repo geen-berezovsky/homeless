@@ -52,10 +52,11 @@ public class OverdueDAO extends GenericDAO {
         Object[] rowData = (Object[]) row;
         item.setClientId((Integer) rowData[0]);
         item.setClientName((String) rowData[1]);
-        item.setHasDyphVaccine(isVaccinated(rowData[2]));
-        item.setHasHepathVaccine(isVaccinated(rowData[3]));
-        item.setHasTyphVaccine(isVaccinated(rowData[4]));
-        item.setWorkerName((String) rowData[5]);
+        item.setInShelter((Date)rowData[2]);
+        item.setHasDyphVaccine(isVaccinated(rowData[3]));
+        item.setHasHepathVaccine(isVaccinated(rowData[4]));
+        item.setHasTyphVaccine(isVaccinated(rowData[5]));
+        item.setWorkerName((String) rowData[6]);
         return item;
     }
 
