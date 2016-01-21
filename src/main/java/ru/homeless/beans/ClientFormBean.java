@@ -814,6 +814,7 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
         client.setFcom(getClientService().getInstanceByCaption(FamilyCommunication.class, "Нет ответа"));
         client.setLastLiving(getClientService().getInstanceById(SubRegion.class,1));
         client.setLastRegistration(getClientService().getInstanceById(SubRegion.class,1));
+        client.setRegDate(new Date());
 
         getClientService().addInstance(client);
         session.setAttribute("cid", client.getId());
