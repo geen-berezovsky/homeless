@@ -52,4 +52,18 @@ public class Education implements Serializable {
 		this.audience = audience;
 	}
 
+    public boolean equals(Object o) {
+        if (o == null) return false;
+        if (! (o instanceof Education)) {
+            return false;
+        }
+        Education d = (Education) o;
+        if (new Integer(getId()).equals(new Integer(d.getId()))) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
 }

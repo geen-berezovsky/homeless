@@ -49,11 +49,26 @@ public class ShelterResult implements Serializable {
             return false;
         }
         ShelterResult d = (ShelterResult) o;
-        if (getId() == d.getId()) {
+        if (new Integer(getId()).equals(new Integer(d.getId()))) {
             return true;
         } else {
             return false;
         }
     }
+    
+    public static enum Results {
+        LIVING(1), 
+        LEAVE_NORMALLY(2), 
+        LEAVE_TROUBLES(3);
 
+        private int id;
+
+        private Results(int id) {
+            this.id = id;
+        }
+
+        public int getId() {
+            return id;
+        }
+    }
 }

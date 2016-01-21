@@ -1,17 +1,13 @@
 package ru.homeless.entities;
 
+import org.hibernate.annotations.Cascade;
+
 import static javax.persistence.GenerationType.IDENTITY;
 
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "Document")
@@ -30,16 +26,21 @@ public class Document implements Serializable {
 	private String address;
 	private String city;
 
-	public Document() {
+    private Date tempRegDateFrom;
+    private Date tempRegDateTo;
+
+    public Document() {
 		
 	}
 	
-	public Document(String docPrefix, String docNum, String whereAndWhom, DocType doctype, Date date) {
+	public Document(String docPrefix, String docNum, String whereAndWhom, DocType doctype, Date date, Date tempRegDateFrom, Date tempRegDateTo) {
 		setDocPrefix(docPrefix);
 		setDocNum(docNum);
 		setWhereAndWhom(whereAndWhom);
 		setDoctype(doctype);
 		setDate(date);
+        setTempRegDateFrom(tempRegDateFrom);
+        setTempRegDateTo(tempRegDateTo);
 	}
 
 	@Id
@@ -84,7 +85,7 @@ public class Document implements Serializable {
 		this.client = client;
 	}
 
-	@ManyToOne(fetch = FetchType.EAGER, targetEntity = DocType.class)
+	@ManyToOne(targetEntity = DocType.class)
 	@JoinColumn(name = "doctype")
 	public DocType getDoctype() {
 		return doctype;
@@ -133,14 +134,30 @@ public class Document implements Serializable {
 	public void setWorker(Integer worker) {
 		this.worker = worker;
 	}
-	
-	public boolean equals(Object o) {
+
+    public Date getTempRegDateFrom() {
+        return tempRegDateFrom;
+    }
+
+    public void setTempRegDateFrom(Date tempRegDateFrom) {
+        this.tempRegDateFrom = tempRegDateFrom;
+    }
+
+    public Date getTempRegDateTo() {
+        return tempRegDateTo;
+    }
+
+    public void setTempRegDateTo(Date tempRegDateTo) {
+        this.tempRegDateTo = tempRegDateTo;
+    }
+
+    public boolean equals(Object o) {
 		if (o == null) return false;
 		if (! (o instanceof Document)) {
 			return false;
 		}
 		Document d = (Document) o;
-		if (getId() == d.getId()) {
+        if (new Integer(getId()).equals(new Integer(d.getId()))) {
 			return true;
 		} else {
 			return false;	

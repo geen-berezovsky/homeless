@@ -9,7 +9,6 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -118,7 +117,7 @@ public class ServContract implements Serializable {
 		this.documentId = documentId;
 	}
 
-	@OneToMany(fetch = FetchType.EAGER, targetEntity = ContractControl.class, cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(targetEntity = ContractControl.class, cascade = CascadeType.ALL, orphanRemoval = true)
 	@JoinColumn(name = "servcontract")
 	public Set<ContractControl> getContractcontrols() {
 		return contractcontrols;
@@ -127,5 +126,18 @@ public class ServContract implements Serializable {
 	public void setContractcontrols(Set<ContractControl> contractcontrols) {
 		this.contractcontrols = contractcontrols;
 	}
+
+    public boolean equals(Object o) {
+        if (o == null) return false;
+        if (! (o instanceof ServContract)) {
+            return false;
+        }
+        ServContract d = (ServContract) o;
+        if (new Integer(getId()).equals(new Integer(d.getId()))) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
 }
