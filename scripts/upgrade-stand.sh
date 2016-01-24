@@ -1,61 +1,44 @@
 #!/bin/bash
-if [ -f ~/full.tar.gz ] ; then
-    rm -f ~/full.tar.gz
-fi
-if [ -f ~/db.zip ] ; then
-    rm -f ~/db.zip
-fi
-if [ -d ~/tmp_ext ] ; then
-    rm -rf ~/tmp_ext
-    mkdir ~/tmp_ext
-fi
-if [ -d ~/demo ] ; then
-    rm -rf ~/Contracts
-    rm -rf ~/Photo
-    mkdir ~/demo
-fi
 
-CONNECT_STR="stinger@10.0.0.2"
-echo "Getting info about latest backup for local restoring"
-LAST_FULL=`ssh ${CONNECT_STR} 'ls /ServRoot/DB/Backup/full-* | sort | tail -n 1'`
-echo "Latest backup is ${LAST_FULL}. Downloading it..."
-scp stinger@10.0.0.2:${LAST_FULL} ~/full.tar.gz
-ls -la ~/full.tar.gz
-echo "Getting info about latest DB data backup for local restoring"
-LAST_DB=`ssh ${CONNECT_STR} 'ls /ServRoot/DB/Backup/db-* | sort | tail -n 1'`
-echo "Latest DB data backup is ${LAST_DB}. Downloading it..."
-scp stinger@10.0.0.2:${LAST_DB} ~/db.zip
-cp ../db/patch.sql ~/tmp_ext/
-pushd ~/tmp_ext
-tar -zxf ~/full.tar.gz
-unzip ~/db.zip
-echo "Moving to the demo stand"
-mv -f Photo ~/demo/
-echo "Moving contracts to the demo stand"
-mv -f Contracts ~/demo/
-echo "Deleting the existing database"
-echo "DROP DATABASE homeless" | mysql --user=homeless --password=homeless homeless
+# Preparing new database which is the full copy of production
+
+BACKUP_DIR=/opt/backup/homeless-production
+DEMO_INVENTORY=/opt/HOMELESS-DEMO/Demo-Inventory/
+DEMO_APP=/opt/HOMELESS-DEMO
+INVENTORY_PREFIX=/opt/HOMELESS-PRODUCTION/Inventory
+_TMP=/tmp/_demo
+rm -rf ${_TMP} && mkdir -p ${_TMP}
+
+echo "Deleting the existing database homeless_demo"
+echo "DROP DATABASE homeless_demo" | mysql --user=homeless_demo --password=homeless_demo homeless_demo
 echo "Creating the new database"
-echo "CREATE DATABASE homeless CHARACTER SET utf8 COLLATE utf8_general_ci;" | mysql --user=homeless --password=homeless
-echo "Loading the DB dump"
-mysql --user=homeless --password=homeless homeless < homeless.sql
-echo "Applying patch for the database"
-mysql --user=homeless --password=homeless homeless < patch.sql
-echo "Deleting all other data from temp directory"
-rm -rf ~/tmp_ext/*
-CUR_DATE=`date`
-echo "Setting the new update timestamp ${CUR_DATE}"
-echo ${CUR_DATE}>~/demo/timestamp.txt
+echo "CREATE DATABASE homeless_demo CHARACTER SET utf8 COLLATE utf8_general_ci;" | mysql --user=homeless_demo --password=homeless_demo
+echo "Loading the DB dump from last backup"
+LAST_DB_BACKUP=`ls ${BACKUP_DIR}/mysql | sort | tail -n 1`
+echo "Last backup is ${BACKUP_DIR}/mysql/${LAST_DB_BACKUP}. Installing it to the DEMO instance"
+unzip -d ${_TMP} ${BACKUP_DIR}/mysql/${LAST_DB_BACKUP}
+mysql --user=homeless_demo --password=homeless_demo homeless_demo < ${_TMP}/homeless.sql
+rm -f ${_TMP}/homeless.sql
+echo "Applying new patch for the database"
+mysql --user=homeless_demo --password=homeless_demo homeless_demo < patch.sql
+
+# Preparing inventory
+echo "Preparing inventory"
+LAST_INVENTORY_BACKUP=`ls ${BACKUP_DIR}/inventory | sort | tail -n 1`
+pushd ${DEMO_INVENTORY}
+    unzip ${BACKUP_DIR}/inventory/${LAST_INVENTORY_BACKUP}
 popd
-echo "Updating application at application server"
-echo "Stopping tomcat"
-/opt/tomcat/bin/shutdown.sh
-echo "Waiting 10 seconds to stop"
-sleep 10
-echo "Deleting old application"
-rm -rf /opt/tomcat/webapps/homeless*
-echo "Deploying the new application"
-mv -f ../target/homeless.war /opt/tomcat/webapps/
-echo "Starting tomcat"
-/opt/tomcat/bin/startup.sh
+
+mv -f ${DEMO_INVENTORY}/${INVENTORY_PREFIX}/Photo ${DEMO_INVENTORY}
+mv -f ${DEMO_INVENTORY}/${INVENTORY_PREFIX}/Contracts ${DEMO_INVENTORY}
+mv -f ${DEMO_INVENTORY}/${INVENTORY_PREFIX}/Profiles ${DEMO_INVENTORY}
+
+# Using latest templates from homeless-report-engine project!
+#mv -f ${DEMO_INVENTORY}/${INVENTORY_PREFIX}/Templates ${DEMO_INVENTORY}
+rm -rf ${DEMO_INVENTORY}/opt
+
+exit
+
+echo "Starting TOMCAT"
+${DEMO_INVENTORY}/tomcat/bin/startup.sh
 echo "Application has been updated"
