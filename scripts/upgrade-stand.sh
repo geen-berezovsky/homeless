@@ -20,7 +20,7 @@ unzip -d ${_TMP} ${BACKUP_DIR}/mysql/${LAST_DB_BACKUP}
 mysql --user=homeless_demo --password=homeless_demo homeless_demo < ${_TMP}/homeless.sql
 rm -f ${_TMP}/homeless.sql
 echo "Applying new patch for the database"
-mysql --user=homeless_demo --password=homeless_demo homeless_demo < patch.sql
+mysql --user=homeless_demo --password=homeless_demo homeless_demo < ../db/patch.sql
 
 # Preparing inventory
 echo "Preparing inventory"
@@ -36,8 +36,6 @@ mv -f ${DEMO_INVENTORY}/${INVENTORY_PREFIX}/Profiles ${DEMO_INVENTORY}
 # Using latest templates from homeless-report-engine project!
 #mv -f ${DEMO_INVENTORY}/${INVENTORY_PREFIX}/Templates ${DEMO_INVENTORY}
 rm -rf ${DEMO_INVENTORY}/opt
-
-exit
 
 echo "Starting TOMCAT"
 ${DEMO_INVENTORY}/tomcat/bin/startup.sh
