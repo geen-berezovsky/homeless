@@ -38,5 +38,5 @@ mv -f ${DEMO_INVENTORY}/${INVENTORY_PREFIX}/Profiles ${DEMO_INVENTORY}
 rm -rf ${DEMO_INVENTORY}/opt
 
 echo "Starting TOMCAT"
-${DEMO_INVENTORY}/tomcat/bin/startup.sh
+${DEMO_APP}/tomcat/bin/startup.sh
 echo "Application has been updated"
