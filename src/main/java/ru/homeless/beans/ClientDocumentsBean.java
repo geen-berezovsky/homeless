@@ -82,12 +82,22 @@ public class ClientDocumentsBean implements Serializable {
 		}
         documentsWithAbsentRegistrationList = new ArrayList<>();
         for (Document d : documentsList) {
-            if (d.getDoctype().getId() == 1) { //this is Passport
+            if (d.getDoctype().getId() == 1) { //this is Passport, Parent's Passport or Birth Document
                 if (d.getRegistration() == 1) { //Registration is "Нет"
                     //only in that case we can create a basic document, because the client has a passport, but don't have a registration
                     documentsWithAbsentRegistrationList.add(d);
                 }
             }
+            if (d.getDoctype().getId() == 3) { //this is Birth Document
+                documentsWithAbsentRegistrationList.add(d);
+            }
+            if (d.getDoctype().getId() == 21) { //this is Parent's Passport
+                if (d.getRegistration() == 1) { //Registration is "Нет"
+                    //only in that case we can create a basic document, because the client has a passport, but don't have a registration
+                    documentsWithAbsentRegistrationList.add(d);
+                }
+            }
+
         }
 		newSelectedDocument(); // set new document
         this.tempRegVisibility = "display: none;";
