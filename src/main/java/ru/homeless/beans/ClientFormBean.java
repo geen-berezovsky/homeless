@@ -281,6 +281,8 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
             copyClientToClientData(client);
             //setClientFormAvatar(clientFormAvatar);
             //setAvatar(getClientFormAvatar());
+            setMemoTmp(getMemo());
+            setContactsTmp(getContacts());
             updateHomelessDate();
         } else {
             log.info("Oops, but this client is not found in database...");

@@ -91,6 +91,9 @@ public class ClientDocumentsBean implements Serializable {
             if (d.getDoctype().getId() == 3) { //this is Birth Document
                 documentsWithAbsentRegistrationList.add(d);
             }
+            if (d.getDoctype().getId() == 13) { //this is Khodataystvo
+                documentsWithAbsentRegistrationList.add(d);
+            }
             if (d.getDoctype().getId() == 21) { //this is Parent's Passport
                 if (d.getRegistration() == 1) { //Registration is "Нет"
                     //only in that case we can create a basic document, because the client has a passport, but don't have a registration
