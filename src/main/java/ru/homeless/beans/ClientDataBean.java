@@ -70,8 +70,6 @@ public class ClientDataBean implements Serializable {
 	private String uniqReason;
 	private String photoName;
 	private String photoCheckSum;
-	private String contacts;
-	private String memo;
 	private Date regDate;
 	private String whereWasBorn;
 	private Blob avatar;
@@ -120,8 +118,6 @@ public class ClientDataBean implements Serializable {
 		setUniqReason(c.getUniqReason());
 		setPhotoName(c.getPhotoName());
 		setPhotoCheckSum(c.getPhotoCheckSum());
-		setContacts(c.getContacts());
-		setMemo(c.getMemo());
 		setRegDate(c.getRegDate());
 		setWhereWasBorn(c.getWhereWasBorn());
 		setAvatar(c.getAvatar());
@@ -154,8 +150,6 @@ public class ClientDataBean implements Serializable {
 		c.setUniqReason(getUniqReason());
 		c.setPhotoName(getPhotoName());
 		c.setPhotoCheckSum(getPhotoCheckSum());
-		c.setContacts(getContacts());
-		c.setMemo(getMemo());
 		c.setRegDate(getRegDate());
 		c.setWhereWasBorn(getWhereWasBorn());
 		c.setAvatar(getAvatar());
@@ -363,22 +357,6 @@ public class ClientDataBean implements Serializable {
 
 	public void setPhotoCheckSum(String photoCheckSum) {
 		this.photoCheckSum = photoCheckSum;
-	}
-
-	public String getContacts() {
-		return contacts;
-	}
-
-	public void setContacts(String contacts) {
-		this.contacts = contacts;
-	}
-
-	public String getMemo() {
-		return memo;
-	}
-
-	public void setMemo(String memo) {
-		this.memo = memo;
 	}
 
 	public Date getRegDate() {

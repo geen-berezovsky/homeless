@@ -36,8 +36,6 @@
     <!-- *** Basic Client Form *** -->
 
     <h:form id="base_form">
-        <h:inputHidden id="memoTmp" value="#{clientform.memoTmp}" />
-        <h:inputHidden id="contactsTmp" value="#{clientform.contactsTmp}" />
 
         <p:growl id="growl" widgetVar="growl" showDetail="true" life="3000"/>
         <p:layout id="base_client" style="min-width:400px;min-height:800px;" styleClass="topLayoutMainForm">
@@ -132,10 +130,10 @@
     </f:facet>
     <h:form id="client_contacts">
         <p:panel id="add_contacts_panel_grid">
-            <p:editor id="contacts_editor" value="#{clientform.contacts}" onchange="handleContactsChange()"/>
+            <p:editor id="contacts_editor" value="#{clientform.client.contacts}"/>
             <p:growl id="growl_client_contacts" showDetail="true" life="3000"/>
             <center>
-                <p:commandButton value="Сохранить" onclick="save0Tab()" id="saveClientFormContactsButton" icon="ui-icon-check" update=":m_tabview:contactsTabTitle" />
+                <p:commandButton value="Сохранить" actionListener="#{clientform.saveContactsOnly(clientform)}" id="saveClientFormContactsButton" icon="ui-icon-check" update=":m_tabview:contactsTabTitle" />
             </center>
         </p:panel>
     </h:form>
@@ -146,10 +144,10 @@
     </f:facet>
     <h:form id="client_memo">
         <p:panel id="add_memo_panel_grid">
-            <p:editor id="memo_editor" value="#{clientform.memo}" onchange="handleMemoChange()"/>
+            <p:editor id="memo_editor" value="#{clientform.client.memo}"/>
             <p:growl id="growl_client_memo" showDetail="true" life="3000"/>
             <center>
-                <p:commandButton value="Сохранить" onclick="save0Tab()" id="saveClientFormMemoButton" icon="ui-icon-check" update=":m_tabview:commentsTabTitle" />
+                <p:commandButton value="Сохранить" actionListener="#{clientform.saveMemoOnly(clientform)}" id="saveClientFormMemoButton" icon="ui-icon-check" update=":m_tabview:commentsTabTitle" />
             </center>
         </p:panel>
     </h:form>
@@ -300,10 +298,15 @@
         }
 
         function save0Tab() {
-            var memo = document.getElementById("m_tabview:base_form:memoTmp").value;
-            var contacts = document.getElementById("m_tabview:base_form:contactsTmp").value;
-            //alert($('a[href*=\'documentsTab\']').tagName);
             jQuery('#m_tabview\\:base_form\\:saveClientForm').click();
+        }
+
+        function save3Tab() {
+            jQuery('#m_tabview\\:client_contacts\\:saveClientFormContactsButton').click();
+        }
+
+        function save4Tab() {
+            jQuery('#m_tabview\\:client_memo\\:saveClientFormMemoButton').click();
         }
 
         function saveEditContractForm() {
@@ -318,15 +321,6 @@
             jQuery('#add_shelter\\:updateShelterButton').click();
         }
 
-        function handleMemoChange()
-        {
-            document.getElementById("m_tabview:base_form:memoTmp").value = document.getElementById("m_tabview:client_memo:memo_editor_input").value;
-        }
-
-        function handleContactsChange()
-        {
-            document.getElementById("m_tabview:base_form:contactsTmp").value = document.getElementById("m_tabview:client_contacts:contacts_editor_input").value;
-        }
 
     </script>
 

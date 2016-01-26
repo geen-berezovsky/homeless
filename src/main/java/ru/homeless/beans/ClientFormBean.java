@@ -83,9 +83,6 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
     private String contractsHeaderInline;
 
 
-    private String memoTmp;
-    private String contactsTmp;
-
     //Technical variables for auto saving
     private int tabIndex = 0;
     private int prevTabIndex = 0;
@@ -269,7 +266,6 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
         if (getClientService().hasBeenRegistered(client.getId())) {
             result += ", состоит на учете";
         }
-        System.out.println(result);
         return result;
     }
 
@@ -279,10 +275,6 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
         if (client != null) {
             log.info("Client ID = " + client.getId() + " has been selected for usage");
             copyClientToClientData(client);
-            //setClientFormAvatar(clientFormAvatar);
-            //setAvatar(getClientFormAvatar());
-            setMemoTmp(getMemo());
-            setContactsTmp(getContacts());
             updateHomelessDate();
         } else {
             log.info("Oops, but this client is not found in database...");
@@ -566,6 +558,50 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
         this.anotherHomelessReasonStyle = anotherHomelessReasonStyle;
     }
     // ****************** Working with dynamic change of "Другие" for Homeless Reasons section *******
+    public void saveContactsOnly(ClientFormBean cfb) {
+        FacesMessage msg = null;
+        if (client !=null) {
+            try {
+                getClientService().updateInstance(client);
+                msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Контакты сохранены", "");
+                try {
+                    cfb.reloadAll();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            } catch (Exception e) {
+                msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Контакты не сохранены!", "");
+            }
+
+            if (msg != null) {
+                FacesContext.getCurrentInstance().addMessage(null, msg);
+            }
+
+        }
+    }
+
+
+    public void saveMemoOnly(ClientFormBean cfb) {
+        FacesMessage msg = null;
+        if (client !=null) {
+            try {
+                getClientService().updateInstance(client);
+                msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Примечания сохранены", "");
+                try {
+                    cfb.reloadAll();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            } catch (Exception e) {
+                msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Примечания не сохранены!", "");
+            }
+
+            if (msg != null) {
+                FacesContext.getCurrentInstance().addMessage(null, msg);
+            }
+
+        }
+    }
 
     public void saveClientForm(ClientFormBean cfb) {
         FacesMessage msg = null;
@@ -587,10 +623,7 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
                 ll = client.getMiddlename().toLowerCase().substring(1, client.getMiddlename().length());
                 client.setMiddlename(fl + ll);
 
-                client.setMemo(memoTmp);
-                client.setContacts(contactsTmp);
-
-                    //update homeless reasons, breadwinners, chronical disasters
+                //update homeless reasons, breadwinners, chronical disasters
                 Set<Breadwinner> sb = new HashSet<Breadwinner>();
                 for (Breadwinner b : getClientService().getInstances(Breadwinner.class)) {
                     for (String cb : clientBreadwinners) {
@@ -670,15 +703,21 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
             ccb.reload();
             csb.reload();
 
-            //We can't just perform saveClientForm(this) because we don't have such context. Currently, "this" is not an exact instance
+            //We can't just perform saveClientFormsaveClientForm(this) because we don't have such context. Currently, "this" is not an exact instance
             //which we need to send to the save function
             //Then, use javascript callback to perform the saving
-
-            if (pti == 0 || pti == 3 || pti ==4) { //if previous tab contains changes in fields
+            if (pti == 0) {
                 RequestContext rc = RequestContext.getCurrentInstance();
                 rc.execute("save0Tab();");
             }
-
+            if (pti == 3) {
+                RequestContext rc = RequestContext.getCurrentInstance();
+                rc.execute("save3Tab();");
+            }
+            if (pti == 4) {
+                RequestContext rc = RequestContext.getCurrentInstance();
+                rc.execute("save4Tab();");
+            }
 
             log.info("Reloaded all data for the selected client " + cid);
         }
@@ -917,22 +956,6 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
 
     public void setTabIndex(int tabIndex) {
         this.tabIndex = tabIndex;
-    }
-
-    public String getMemoTmp() {
-        return memoTmp;
-    }
-
-    public void setMemoTmp(String memoTmp) {
-        this.memoTmp = memoTmp;
-    }
-
-    public String getContactsTmp() {
-        return contactsTmp;
-    }
-
-    public void setContactsTmp(String contactsTmp) {
-        this.contactsTmp = contactsTmp;
     }
 
     public int getPrevTabIndex() {
