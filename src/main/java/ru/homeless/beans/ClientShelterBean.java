@@ -146,7 +146,9 @@ public class ClientShelterBean implements Serializable {
         shelterResultList.addAll(getRoomService().getInstances(ShelterResult.class));
         selectedShelter = getRoomService().getInstanceById(ShelterHistory.class, selectedShelter.getId());
         ShelterContractConverter.servContracts = new ArrayList<>();
-        ShelterContractConverter.servContracts.addAll(clientsContracts);
+        if (clientsContracts!=null) {
+            ShelterContractConverter.servContracts.addAll(clientsContracts);
+        }
         RequestContext rc = RequestContext.getCurrentInstance();
         rc.update("add_shelter");
         rc.execute("addShelterWv.show();");
