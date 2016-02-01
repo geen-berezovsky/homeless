@@ -21,6 +21,7 @@ import javax.faces.event.ValueChangeEvent;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
+import org.hibernate.type.StringClobType;
 import org.primefaces.component.tabview.TabView;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.TabChangeEvent;
@@ -611,6 +612,29 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
         if (client != null) {
                 //update "homeless till the moment" (don't move it after client data copying!)
                 updateHomelessDate(selectedMonth, getSelectedYear());
+
+            /*
+            This is the workaround for keeping records while this code is not refactored
+            Current issue is in overwriting existing clients for unknown reasons. As minimum, ClientDataBean should be deprecated.
+            TODO: deprecate ClientDataBean нахрен
+             */
+
+            if (!client.getFirstname().equalsIgnoreCase(getFirstname()) && !client.getSurname().equalsIgnoreCase(getSurname()) && !Util.formatDate(client.getDate()).equals(Util.formatDate(getDate()))) {
+                //произошла какая-то хрень, валим отсюда и показываем сообщение
+                log.error("OLD NAME: "+client.getFirstname()+" "+client.getSurname()+" "+client.getDate());
+                log.error("NEW NAME: "+getFirstname()+" "+getSurname()+" "+getDate());
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "НЕПРЕДВИДЕННАЯ ОШИБКА!", "Защита от перезаписи существующего клиента. Пожалуйста, перезагрузите страницу."));
+                try {
+                    cfb.reloadAll();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                return;
+            }
+             /*
+             ***************************************************************************************************************
+             */
+
                 client = copyClientDataToClient(client);
                 //Update Surname, FirstName and MiddleName for starting with uppercase letter
                 String fl = client.getSurname().toUpperCase().substring(0, 1);
