@@ -41,8 +41,13 @@ public class ClientService extends GenericService implements Serializable {
     }
 
     @Transactional
-    public List<MyClientsEntity> getMyContracts(int workerId, Date startDate, Date endDate) {
-        return  getClientDAO().getMyContracts(workerId, startDate, endDate);
+    public List<MyClientsEntity> getMyContracts(int workerId) {
+        return  getClientDAO().getMyContracts(workerId);
+    }
+
+    @Transactional
+    public List<MyClientsEntity> getMyClosedContracts(int workerId, Date from, Date to) {
+        return getClientDAO().getMyClosedContracts(workerId, from, to);
     }
 
     @Transactional

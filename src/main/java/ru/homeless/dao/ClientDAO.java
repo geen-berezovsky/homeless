@@ -15,7 +15,6 @@ import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import ru.homeless.entities.*;
 import ru.homeless.util.Util;
@@ -26,18 +25,23 @@ public class ClientDAO extends GenericDAO implements Serializable {
 	private static final long serialVersionUID = 1L;
 	public static Logger log = Logger.getLogger(ClientDAO.class);
 
-    public List<MyClientsEntity> getMyContracts(int workerId, Date from, Date to) {
-        Criteria c = null;
-        if (from == null && to == null) {
-            c = createCreteiaContractsForWorker(workerId);
-        } else {
-            c = createCreteiaContractsForWorker(workerId).add(Restrictions.between("startDate",from, to));
-        }
+    public List<MyClientsEntity> getMyContracts(int workerId) {
+        Criteria c = createCriteiaActualContractsForWorker(workerId);
         return getMyContractsByCriteria(c);
     }
-    
-    private Criteria createCreteiaContractsForWorker(int workerId){
+
+    public List<MyClientsEntity> getMyClosedContracts(int workerId, Date from, Date to) {
+        Criteria c = createCriteiaNotActualContractsForWorker(workerId).add(Restrictions.between("startDate", from, to));
+        return getMyContractsByCriteria(c);
+    }
+
+
+    private Criteria createCriteiaActualContractsForWorker(int workerId){
     	return getSessionFactory().getCurrentSession().createCriteria(ServContract.class).add(Restrictions.eq("result", getInstanceById(ContractResult.class, 1))).add(Restrictions.eq("worker", getInstanceById(Worker.class, workerId)));
+    }
+
+    private Criteria createCriteiaNotActualContractsForWorker(int workerId){
+        return getSessionFactory().getCurrentSession().createCriteria(ServContract.class).add(Restrictions.ne("result", getInstanceById(ContractResult.class, 1))).add(Restrictions.eq("worker", getInstanceById(Worker.class, workerId)));
     }
 
     /**

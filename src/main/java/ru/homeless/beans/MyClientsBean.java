@@ -47,7 +47,7 @@ public class MyClientsBean implements Serializable {
         HttpSession session = Util.getSession();
         Worker w = (Worker) session.getAttribute("worker");
         foundList.clear();
-		foundList = getClientService().getMyContracts(w.getId(), null, null);
+		foundList = getClientService().getMyContracts(w.getId());
         RequestContext rc = RequestContext.getCurrentInstance();
         rc.update("myClientsForm");
         rc.execute("myClientsWv.show();");
@@ -57,7 +57,7 @@ public class MyClientsBean implements Serializable {
         HttpSession session = Util.getSession();
         Worker w = (Worker) session.getAttribute("worker");
         foundPrevList.clear();
-        foundPrevList = getClientService().getMyContracts(w.getId(), startDate, endDate);
+        foundPrevList = getClientService().getMyClosedContracts(w.getId(), startDate, endDate);
     }
 
     public void findNotActualClients() {

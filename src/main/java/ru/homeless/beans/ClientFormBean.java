@@ -620,16 +620,18 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
              */
 
             if (!client.getFirstname().equalsIgnoreCase(getFirstname()) && !client.getSurname().equalsIgnoreCase(getSurname()) && !Util.formatDate(client.getDate()).equals(Util.formatDate(getDate()))) {
-                //произошла какая-то хрень, валим отсюда и показываем сообщение
-                log.error("OLD NAME: "+client.getFirstname()+" "+client.getSurname()+" "+client.getDate());
-                log.error("NEW NAME: "+getFirstname()+" "+getSurname()+" "+getDate());
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "НЕПРЕДВИДЕННАЯ ОШИБКА!", "Защита от перезаписи существующего клиента. Пожалуйста, перезагрузите страницу."));
-                try {
-                    cfb.reloadAll();
-                } catch (SQLException e) {
-                    e.printStackTrace();
+                if (!client.getSurname().trim().equals("") && !client.getSurname().trim().equals("")) { //keep new clients
+                    //произошла какая-то хрень, валим отсюда и показываем сообщение
+                    log.error("OLD NAME: " + client.getFirstname() + " " + client.getSurname() + " " + client.getDate());
+                    log.error("NEW NAME: " + getFirstname() + " " + getSurname() + " " + getDate());
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "НЕПРЕДВИДЕННАЯ ОШИБКА!", "Защита от перезаписи существующего клиента. Пожалуйста, перезагрузите страницу."));
+                    try {
+                        cfb.reloadAll();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                    return;
                 }
-                return;
             }
              /*
              ***************************************************************************************************************
