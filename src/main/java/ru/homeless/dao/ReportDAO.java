@@ -91,8 +91,8 @@ public class ReportDAO extends GenericDAO implements IReportDAO {
 	public List<OneTimeServicesReportEntity> getOneTimeServicesReport(Date from, Date till) {
 		List<OneTimeServicesReportEntity> comb = new ArrayList<OneTimeServicesReportEntity>();
 		
-		List<?> res = getSessionFactory().getCurrentSession().createSQLQuery("SELECT CONCAT(w.firstname, ' ', w.surname) as S_NAME, s.caption as S_TYPE FROM GivenCertificate g LEFT JOIN Worker w ON(g.worker=w.id) LEFT JOIN ServicesType s ON(s.id=g.type) WHERE (g.date > "
-				+ Util.parseDateForMySql(from) + " AND g.date < " + Util.parseDateForMySql(till) + ")")
+		List<?> res = getSessionFactory().getCurrentSession().createSQLQuery("SELECT CONCAT(w.firstname, ' ', w.surname) as S_NAME, s.caption as S_TYPE FROM BasicDocumentRegistry g LEFT JOIN Worker w ON(g.performerId=w.id) LEFT JOIN BasicDocumentRegistryType s ON(s.id=g.type) WHERE (g.date >= "
+				+ Util.parseDateForMySql(from) + " AND g.date <= " + Util.parseDateForMySql(till) + ")")
 				.addScalar("S_NAME")
 				.addScalar("S_TYPE").list();
 		for (Object o : res) {
@@ -104,22 +104,10 @@ public class ReportDAO extends GenericDAO implements IReportDAO {
 			}
 			comb.add(new OneTimeServicesReportEntity(xy[0].toString(), xy[1].toString()));
 		}
-		List<?> res2 = getSessionFactory().getCurrentSession().createSQLQuery("SELECT CONCAT(w.firstname, ' ', w.surname) as S_NAME, s.caption as S_TYPE  FROM Tranzit t LEFT JOIN  Worker w ON(t.n_worker=w.id) LEFT JOIN ServicesType s ON(s.id=IF(t.id IS NOT NULL, '100', t.id) )  WHERE (t.servdate > " 
-				+ Util.parseDateForMySql(from) + " AND t.servdate < " + Util.parseDateForMySql(till) + ")")
-				.addScalar("S_NAME")
-				.addScalar("S_TYPE").list();
-		for (Object o : res2) {
-			Object[] xy = (Object[])o;
-			for (int i=0; i<=1; i++) {
-				if (xy[i] == null) {
-					xy[i] = new String("-");
-				}
-			}
-			comb.add(new OneTimeServicesReportEntity(xy[0].toString(), xy[1].toString()));
-		}
+
 		List<?> res3 = getSessionFactory().getCurrentSession().createSQLQuery("SELECT CONCAT(w.firstname, ' ', w.surname) as S_NAME, s.caption as S_TYPE FROM RecievedService r LEFT JOIN Worker w ON(r.worker=w.id) LEFT JOIN ServicesType s" +
-				" ON(r.servicesType=s.id) WHERE (r.date > " 
-				+ Util.parseDateForMySql(from) + " AND r.date < " + Util.parseDateForMySql(till) + ")")
+				" ON(r.servicesType=s.id) WHERE (r.date >= "
+				+ Util.parseDateForMySql(from) + " AND r.date <= " + Util.parseDateForMySql(till) + ")")
 				.addScalar("S_NAME")
 				.addScalar("S_TYPE").list();
 		for (Object o : res3) {
