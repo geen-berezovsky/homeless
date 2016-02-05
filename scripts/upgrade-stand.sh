@@ -14,9 +14,9 @@ echo "DROP DATABASE homeless_demo" | mysql --user=homeless_demo --password=homel
 echo "Creating the new database"
 echo "CREATE DATABASE homeless_demo CHARACTER SET utf8 COLLATE utf8_general_ci;" | mysql --user=homeless_demo --password=homeless_demo
 echo "Loading the DB dump from last backup"
-LAST_DB_BACKUP=`ls ${BACKUP_DIR}/mysql | sort | tail -n 1`
-echo "Last backup is ${BACKUP_DIR}/mysql/${LAST_DB_BACKUP}. Installing it to the DEMO instance"
-unzip -d ${_TMP} ${BACKUP_DIR}/mysql/${LAST_DB_BACKUP}
+LAST_DB_BACKUP=`ls ${BACKUP_DIR}/db-* | sort | tail -n 1`
+echo "Last backup is ${BACKUP_DIR}/${LAST_DB_BACKUP}. Installing it to the DEMO instance"
+unzip -d ${_TMP} ${BACKUP_DIR}/${LAST_DB_BACKUP}
 mysql --user=homeless_demo --password=homeless_demo homeless_demo < ${_TMP}/homeless.sql
 rm -f ${_TMP}/homeless.sql
 echo "Applying new patch for the database"
@@ -24,9 +24,9 @@ mysql --user=homeless_demo --password=homeless_demo homeless_demo < ../db/patch.
 
 # Preparing inventory
 echo "Preparing inventory"
-LAST_INVENTORY_BACKUP=`ls ${BACKUP_DIR}/inventory | sort | tail -n 1`
+LAST_INVENTORY_BACKUP=`ls ${BACKUP_DIR}/inv-* | sort | tail -n 1`
 pushd ${DEMO_INVENTORY}
-    unzip ${BACKUP_DIR}/inventory/${LAST_INVENTORY_BACKUP}
+    unzip ${BACKUP_DIR}/${LAST_INVENTORY_BACKUP}
 popd
 
 mv -f ${DEMO_INVENTORY}/${INVENTORY_PREFIX}/Photo ${DEMO_INVENTORY}
