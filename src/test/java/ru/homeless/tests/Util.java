@@ -16,7 +16,7 @@ public class Util {
 	public static final long defaultPageTimeout = 10;
 	public static final String defaultWorkerUsername = "Валентина Борейко";
 	public static final String defaultWorkerPassword = "111";
-	public static String defaultURL = "http://localhost:8080/homeless/";
+	public static String defaultURL = "http://10.0.0.9/demo-homeless/";
 	
 	
 	public static void logout () {
