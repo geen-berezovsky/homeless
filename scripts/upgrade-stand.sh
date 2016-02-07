@@ -16,7 +16,7 @@ echo "CREATE DATABASE homeless_demo CHARACTER SET utf8 COLLATE utf8_general_ci;"
 echo "Loading the DB dump from last backup"
 LAST_DB_BACKUP=`ls ${BACKUP_DIR}/db-* | sort | tail -n 1`
 echo "Last backup is ${LAST_DB_BACKUP}. Installing it to the DEMO instance"
-unzip -d ${_TMP} ${LAST_DB_BACKUP}
+unzip -d ${_TMP} ${LAST_DB_BACKUP} > /dev/null 2>&1
 mysql --user=homeless_demo --password=homeless_demo homeless_demo < ${_TMP}/homeless.sql
 rm -f ${_TMP}/homeless.sql
 echo "Applying new patch for the database"
@@ -26,7 +26,7 @@ mysql --user=homeless_demo --password=homeless_demo homeless_demo < ../db/patch.
 echo "Preparing inventory"
 LAST_INVENTORY_BACKUP=`ls ${BACKUP_DIR}/inv-* | sort | tail -n 1`
 pushd ${DEMO_INVENTORY}
-    unzip ${LAST_INVENTORY_BACKUP}
+    unzip ${LAST_INVENTORY_BACKUP} > /dev/null 2>&1
 popd
 
 mv -f ${DEMO_INVENTORY}/${INVENTORY_PREFIX}/Photo ${DEMO_INVENTORY}

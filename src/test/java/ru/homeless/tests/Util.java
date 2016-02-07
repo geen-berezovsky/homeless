@@ -106,7 +106,7 @@ public class Util {
             driver.findElement(By.linkText("Клиенты")).click();
             driver.findElement(By.xpath("//div[@id='mainMenu:j_idt7']/ul/li/ul/li[6]/a/span")).click(); // Добавить клиента
 
-            log.info("Waiting default timeout "+Util.defaultPageTimeout+" while page is not completely loaded");
+            log.info("Waiting default timeout "+Util.defaultPageTimeout*2+" seconds while page is not completely loaded");
             //hack for waiting while new client is created
             Thread.sleep(Util.defaultPageTimeout*2000);
 
@@ -121,6 +121,10 @@ public class Util {
             Assert.assertTrue(f.equals(""));
             Assert.assertTrue(m.equals(""));
             Assert.assertTrue(d.equals(""));
+
+            log.info("Waiting default timeout "+Util.defaultPageTimeout*2+" seconds while page is not completely loaded");
+            //hack for waiting while new client is created
+            Thread.sleep(Util.defaultPageTimeout*2000);
 
             log.info("Sending new data to form");
             driver.findElement(By.id("m_tabview:base_form:cedit_surname")).sendKeys(surname);
