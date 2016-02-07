@@ -108,4 +108,8 @@ public class SimpleClient {
         this.id = id;
     }
 
+    public String toString() {
+        return surname+" "+firstname + " "+middlename+" ("+birthDate+")";
+    }
+
 }

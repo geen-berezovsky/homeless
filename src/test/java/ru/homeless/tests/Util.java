@@ -1,5 +1,6 @@
 package ru.homeless.tests;
 
+import com.thoughtworks.selenium.SeleniumException;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.junit.Assert;
@@ -7,6 +8,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.firefox.FirefoxBinary;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -16,6 +18,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Util {
 
@@ -102,7 +106,7 @@ public class Util {
             driver.findElement(By.linkText("Клиенты")).click();
             driver.findElement(By.xpath("//div[@id='mainMenu:j_idt7']/ul/li/ul/li[6]/a/span")).click(); // Добавить клиента
 
-            log.info("Waiting default timeout while page is not completely loaded");
+            log.info("Waiting default timeout "+Util.defaultPageTimeout*1000+" while page is not completely loaded");
             //hack for waiting while new client is created
             Thread.sleep(Util.defaultPageTimeout*1000);
 
@@ -159,6 +163,46 @@ public class Util {
         }
     }
 
+    public static int findClientIdBySimpleData(SimpleClient simpleClient) {
+        try {
+            log.info("Waiting "+Util.defaultPageTimeout+" seconds while all page is loaded");
+            Thread.sleep(Util.defaultPageTimeout * 1000);
+            log.info("Getting client's ID by surname, firstname, middlename, dateOfBirth");
+            driver.findElement(By.linkText("Клиенты")).click();
+            driver.findElement(By.xpath("//div[@id='mainMenu:j_idt7']/ul/li[1]/ul/li[1]/a/span")).click(); // Добавить клиента
+
+            driver.findElement(By.id("searchForm:surname")).clear();
+            driver.findElement(By.id("searchForm:surname")).sendKeys(simpleClient.getSurname());
+            driver.findElement(By.id("searchForm:firstname")).clear();
+            driver.findElement(By.id("searchForm:firstname")).sendKeys(simpleClient.getFirstname());
+            driver.findElement(By.id("searchForm:middlename")).clear();
+            driver.findElement(By.id("searchForm:middlename")).sendKeys(simpleClient.getMiddlename());
+            driver.findElement(By.id("searchForm:date")).clear();
+            driver.findElement(By.id("searchForm:date")).sendKeys(simpleClient.getBirthDate());
+
+            driver.findElement(By.id("searchForm:submitSearchByName")).click();
+            log.info("Waiting "+Util.defaultPageTimeout+" seconds while a search is running");
+            Thread.sleep(Util.defaultPageTimeout * 1000);
+            driver.findElement(By.id("searchForm:foundClientsList:0:selectButton")).click();
+            log.info("Waiting " + Util.defaultPageTimeout + " seconds while a client is opening");
+            Thread.sleep(Util.defaultPageTimeout * 1000);
+            String idString = driver.findElement(By.xpath("//div[@id='m_tabview:base_form:header']/div[1]/span[@class='ui-layout-unit-header-title']")).getText();
+            log.info("Found client "+idString);
+            String retValueStr = idString.substring(idString.indexOf("(ID = ") + 6, idString.indexOf(","));
+            Integer retValue = Integer.parseInt(retValueStr);
+            if (retValue != null && retValue!=0) {
+                return retValue;
+            } else {
+                throw new SeleniumException ("Cannot parse value \""+retValueStr+"\" as Integer!");
+            }
+        } catch (Exception e) {
+            log.error(e);
+            takePicture(Thread.currentThread().getStackTrace()[1].getMethodName());
+        }
+        return 0;
+    }
+
+
     public static void takePicture(String prefix) {
         File screenshotsDir = new File("screenshots");
         if (!screenshotsDir.exists()) {
@@ -173,7 +217,28 @@ public class Util {
         } catch (IOException e) {
             log.error(e);
         }
+        throw new SeleniumException ("Some shit happens while running tests. Please see logs and screenshots.");
     }
 
 
+    public static void performInit() throws IOException {
+        if (!isWindows()) {
+            String Xport = System.getProperty("lmportal.xvfb.id",":10");
+            final File firefoxPath = new File(System.getProperty("lmportal.deploy.firefox.path","/usr/bin/firefox"));
+            FirefoxBinary firefoxBinary = new FirefoxBinary(firefoxPath);
+            firefoxBinary.setEnvironmentProperty("DISPLAY", Xport);
+            driver = new FirefoxDriver(firefoxBinary, null);
+        } else {
+            driver = new FirefoxDriver();
+        }
+
+        new TestData();
+
+        driver.manage().window().maximize();
+
+        directTypingLogin();
+        hideRightPanel();
+
+
+    }
 }
