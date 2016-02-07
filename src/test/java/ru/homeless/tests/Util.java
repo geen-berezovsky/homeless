@@ -1,24 +1,34 @@
 package ru.homeless.tests;
 
+import org.apache.commons.io.FileUtils;
 import org.junit.Assert;
 import org.openqa.selenium.By;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 public class Util {
+
+    private static String OS = System.getProperty("os.name").toLowerCase();
 
 	public static WebDriver driver;
 	public static final long defaultPageTimeout = 10;
 	public static final String defaultWorkerUsername = "Валентина Борейко";
 	public static final String defaultWorkerPassword = "111";
-	public static String defaultURL = "http://10.0.0.9/demo-homeless/";
-	
-	
+	public static String defaultURL = "http://localhost:8080/homeless/";
+
+    public static boolean isWindows() {
+        return (OS.indexOf("win") >= 0);
+    }
+
 	public static void logout () {
 		//Pressing "Выход" link
 		driver.findElement(By.linkText("Выход")).click();
@@ -28,19 +38,30 @@ public class Util {
 	}
 
 
-	public static void directTypingLogin() {
-		//open URL
-		driver.get(Util.defaultURL);
-		//find inputText element with username and put value there
-		driver.findElement(By.id("form:username_input")).sendKeys(Util.defaultWorkerUsername);
-		//find inputText element with password and put value there
-		driver.findElement(By.id("form:password")).sendKeys(Util.defaultWorkerPassword);
-		//Submit form
-		driver.findElement(By.id("form:loginButton")).click();
-		//Waiting NOT MORE THAN 5 seconds for page loading and TEST if the title conains "Добро пожаловать, username!"
-		WebDriverWait wait = new WebDriverWait(driver, Util.defaultPageTimeout);
-		wait.until(ExpectedConditions.titleContains("Добро пожаловать, "+Util.defaultWorkerUsername+"!"));
-		//If there found actual title, driver will go on. Otherwise it will fail with detailed message.
+	public static void directTypingLogin() throws IOException {
+        try {
+            //open URL
+            driver.get(Util.defaultURL);
+            //find inputText element with username and put value there
+            driver.findElement(By.id("form:username_input")).sendKeys(Util.defaultWorkerUsername);
+            //find inputText element with password and put value there
+            driver.findElement(By.id("form:password")).sendKeys(Util.defaultWorkerPassword);
+            //Submit form
+            driver.findElement(By.id("form:loginButton")).click();
+            //Waiting NOT MORE THAN 5 seconds for page loading and TEST if the title conains "Добро пожаловать, username!"
+            WebDriverWait wait = new WebDriverWait(driver, Util.defaultPageTimeout);
+            wait.until(ExpectedConditions.titleContains("Добро пожаловать, " + Util.defaultWorkerUsername + "!"));
+            //If there found actual title, driver will go on. Otherwise it will fail with detailed message.
+        } catch (Exception e) {
+            //Something goes wrong, taking snapshot
+            File srcFile = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
+            if (!isWindows()) {
+                FileUtils.copyFile(srcFile, new File("/tmp/lastLoginScreenshot.png"));
+            } else {
+                FileUtils.copyFile(srcFile, new File("C:/lastLoginScreenshot.png"));
+            }
+
+        }
 	}
 
     public static void setActiveClient(int id) {
