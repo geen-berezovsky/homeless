@@ -106,9 +106,9 @@ public class Util {
             driver.findElement(By.linkText("Клиенты")).click();
             driver.findElement(By.xpath("//div[@id='mainMenu:j_idt7']/ul/li/ul/li[6]/a/span")).click(); // Добавить клиента
 
-            log.info("Waiting default timeout "+Util.defaultPageTimeout*1000+" while page is not completely loaded");
+            log.info("Waiting default timeout "+Util.defaultPageTimeout+" while page is not completely loaded");
             //hack for waiting while new client is created
-            Thread.sleep(Util.defaultPageTimeout*1000);
+            Thread.sleep(Util.defaultPageTimeout*2000);
 
             log.info("Asserting that it is new client");
             //assert that this is the new client
