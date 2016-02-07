@@ -23,7 +23,7 @@ public class Util {
     private static String OS = System.getProperty("os.name").toLowerCase();
 
 	public static WebDriver driver;
-	public static final long defaultPageTimeout = 10;
+	public static final long defaultPageTimeout = 5;
 	public static final String defaultWorkerUsername = "Валентина Борейко";
 	public static final String defaultWorkerPassword = "111";
 	public static String defaultURL = "http://localhost:8080/homeless/";
@@ -34,13 +34,13 @@ public class Util {
 
 	public static void logout () {
         try {
-            log.debug("Performing logout");
+            log.info("Performing logout");
             //Pressing "Выход" link
             driver.findElement(By.linkText("Выход")).click();
             //... and check that exist has been performed correctly
             WebDriverWait wait = new WebDriverWait(driver, Util.defaultPageTimeout);
             wait.until(ExpectedConditions.titleContains("Добро пожаловать!"));
-            log.debug("Logout done");
+            log.info("Logout done");
         } catch (Exception e) {
             takePicture(Thread.currentThread().getStackTrace()[1].getMethodName());
         }
@@ -49,7 +49,7 @@ public class Util {
 
 	public static void directTypingLogin() throws IOException {
         try {
-            log.debug("Performing login");
+            log.info("Performing login");
             //open URL
             driver.get(Util.defaultURL);
             //find inputText element with username and put value there
@@ -62,7 +62,7 @@ public class Util {
             WebDriverWait wait = new WebDriverWait(driver, Util.defaultPageTimeout);
             wait.until(ExpectedConditions.titleContains("Добро пожаловать, " + Util.defaultWorkerUsername + "!"));
             //If there found actual title, driver will go on. Otherwise it will fail with detailed message.
-            log.debug("Login done");
+            log.info("Login done");
         } catch (Exception e) {
             takePicture(Thread.currentThread().getStackTrace()[1].getMethodName());
         }
@@ -70,7 +70,7 @@ public class Util {
 
     public static void setActiveClient(int id) {
         try {
-            log.debug("Finding client id = " + id + " with standard search by ID");
+            log.info("Finding client id = " + id + " with standard search by ID");
             driver.findElement(By.linkText("Клиенты")).click();
             driver.findElement(By.xpath("//div[@id='mainMenu:j_idt7']/ul/li/ul/li[2]/a/span")).click();
             driver.findElement(By.id("searchForm:_id")).clear();
@@ -95,15 +95,15 @@ public class Util {
             boolean important
     ) {
         try {
-            log.debug("Adding client " + surname + " " + firstname + " " + middlename + " (" + date + ")");
+            log.info("Adding client " + surname + " " + firstname + " " + middlename + " (" + date + ")");
             driver.findElement(By.linkText("Клиенты")).click();
             driver.findElement(By.xpath("//div[@id='mainMenu:j_idt7']/ul/li/ul/li[6]/a/span")).click(); // Добавить клиента
 
-            log.debug("Waiting default timeout while page is not completely loaded");
+            log.info("Waiting default timeout while page is not completely loaded");
             //hack for waiting while new client is created
-            Thread.sleep(Util.defaultPageTimeout);
+            Thread.sleep(Util.defaultPageTimeout*1000);
 
-            log.debug("Asserting that it is new client");
+            log.info("Asserting that it is new client");
             //assert that this is the new client
             String s = driver.findElement(By.id("m_tabview:base_form:cedit_surname")).getAttribute("value");
             String f = driver.findElement(By.id("m_tabview:base_form:cedit_firstname")).getAttribute("value");
@@ -115,7 +115,7 @@ public class Util {
             Assert.assertTrue(m.equals(""));
             Assert.assertTrue(d.equals(""));
 
-            log.debug("Sending new data to form");
+            log.info("Sending new data to form");
             driver.findElement(By.id("m_tabview:base_form:cedit_surname")).sendKeys(surname);
             driver.findElement(By.id("m_tabview:base_form:cedit_firstname")).sendKeys(firstname);
             driver.findElement(By.id("m_tabview:base_form:cedit_middlename")).sendKeys(middlename);
@@ -137,9 +137,9 @@ public class Util {
                 driver.findElement(By.xpath("//*[@id=\"m_tabview:base_form:j_idt84\"]/div[2]")).click();
             }
 
-            log.debug("Pressing Save button");
+            log.info("Pressing Save button");
             driver.findElement(By.id("m_tabview:base_form:saveClientForm")).click();
-            log.debug("Done. New Client is added.");
+            log.info("Done. New Client is added.");
         } catch (Exception e) {
             takePicture(Thread.currentThread().getStackTrace()[1].getMethodName());
         }
@@ -147,7 +147,7 @@ public class Util {
 
     public static void hideRightPanel() {
         try {
-            log.debug("Hiding right panel");
+            log.info("Hiding right panel");
             driver.findElement(By.xpath("//*[@id='reminders']/div[1]/a[2]/span")).click();
         } catch (Exception e) {
             takePicture(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -162,7 +162,7 @@ public class Util {
         //Something goes wrong, taking snapshot
         File srcFile = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
         String screenshotFileName = prefix + "-" + new Date().getTime() + ".png";
-        log.debug("Taking screenshot. Filename is " + screenshotFileName);
+        log.info("Taking screenshot. Filename is " + screenshotFileName);
         try {
             FileUtils.copyFile(srcFile, new File(screenshotsDir+"/"+screenshotFileName));
         } catch (IOException e) {
