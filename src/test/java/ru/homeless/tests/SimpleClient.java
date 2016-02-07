@@ -109,7 +109,7 @@ public class SimpleClient {
     }
 
     public String toString() {
-        return surname+" "+firstname + " "+middlename+" ("+birthDate+")";
+        return id+" "+ surname+" "+firstname + " "+middlename+" ("+birthDate+")";
     }
 
 }

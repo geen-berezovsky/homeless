@@ -4,10 +4,7 @@ import com.thoughtworks.selenium.SeleniumException;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.junit.Assert;
-import org.openqa.selenium.By;
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.TakesScreenshot;
-import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxBinary;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -18,6 +15,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -83,7 +81,8 @@ public class Util {
             driver.findElement(By.id("searchForm:_id")).clear();
             driver.findElement(By.id("searchForm:_id")).sendKeys(String.valueOf(id));
             driver.findElement(By.id("searchForm:submitSearchById")).click();
-            driver.manage().timeouts().pageLoadTimeout(Util.defaultPageTimeout, TimeUnit.SECONDS);
+            log.info("Waiting " + Util.defaultPageTimeout + " seconds while a client is opening");
+            Thread.sleep(Util.defaultPageTimeout * 1000);
             driver.findElement(By.id("searchForm:foundClientsList:0:selectButton")).click();
         } catch (Exception e) {
             log.error(e);
@@ -107,9 +106,9 @@ public class Util {
             driver.findElement(By.linkText("Клиенты")).click();
             driver.findElement(By.xpath("//div[@id='mainMenu:j_idt7']/ul/li/ul/li[6]/a/span")).click(); // Добавить клиента
 
-            log.info("Waiting default timeout "+Util.defaultPageTimeout*2+" seconds while page is not completely loaded");
+            log.info("Waiting default timeout "+Util.defaultPageTimeout+" seconds while page is not completely loaded");
             //hack for waiting while new client is created
-            Thread.sleep(Util.defaultPageTimeout*2000);
+            Thread.sleep(Util.defaultPageTimeout*1000);
 
             log.info("Asserting that it is new client");
             //assert that this is the new client
@@ -154,6 +153,80 @@ public class Util {
         }
     }
 
+    public static SimpleClient updateSFM(SimpleClient simpleClient) {
+        try {
+            log.info("Waiting " + Util.defaultPageTimeout/2 + " seconds for opening Memo");
+            Thread.sleep(Util.defaultPageTimeout * 500);
+
+            String s = driver.findElement(By.id("m_tabview:base_form:cedit_surname")).getAttribute("value");
+            String f = driver.findElement(By.id("m_tabview:base_form:cedit_firstname")).getAttribute("value");
+            String m = driver.findElement(By.id("m_tabview:base_form:cedit_middlename")).getAttribute("value");
+            String d = driver.findElement(By.id("m_tabview:base_form:cedit_bdate")).getAttribute("value");
+
+            log.info("Sending new data to form");
+            String newSurname = "-"+s.substring(0,1)+f.substring(0,1)+m.substring(0,1);
+            String newFirstname = "-"+s.substring(0,1)+f.substring(0,1)+m.substring(0,1);
+            String newMiddlename = "-"+s.substring(0,1)+f.substring(0,1)+m.substring(0,1);
+            driver.findElement(By.id("m_tabview:base_form:cedit_surname")).sendKeys(newSurname);
+            driver.findElement(By.id("m_tabview:base_form:cedit_firstname")).sendKeys(newFirstname);
+            driver.findElement(By.id("m_tabview:base_form:cedit_middlename")).sendKeys(newMiddlename);
+
+            log.info("Pressing Save button");
+            driver.findElement(By.id("m_tabview:base_form:saveClientForm")).click();
+            simpleClient.setSurname(s + newSurname);
+            simpleClient.setFirstname(f + newFirstname);
+            simpleClient.setMiddlename(m+newMiddlename);
+            log.info("Done. New Client is added.");
+        } catch (Exception e) {
+            log.error(e);
+            takePicture(Thread.currentThread().getStackTrace()[1].getMethodName());
+        }
+        return simpleClient;
+    }
+
+    public static SimpleClient getSFM(SimpleClient simpleClient) {
+        try {
+            log.info("Waiting " + Util.defaultPageTimeout/2 + " seconds for opening Memo");
+            Thread.sleep(Util.defaultPageTimeout * 500);
+
+            String s = driver.findElement(By.id("m_tabview:base_form:cedit_surname")).getAttribute("value");
+            String f = driver.findElement(By.id("m_tabview:base_form:cedit_firstname")).getAttribute("value");
+            String m = driver.findElement(By.id("m_tabview:base_form:cedit_middlename")).getAttribute("value");
+            String d = driver.findElement(By.id("m_tabview:base_form:cedit_bdate")).getAttribute("value");
+            simpleClient.setSurname(s);
+            simpleClient.setFirstname(f);
+            simpleClient.setMiddlename(m);
+            simpleClient.setBirthDate(d);
+        } catch (Exception e) {
+            log.error(e);
+            takePicture(Thread.currentThread().getStackTrace()[1].getMethodName());
+        }
+        return simpleClient;
+    }
+
+    public static String getMemo(SimpleClient simpleClient) {
+        String text = "";
+        try {
+            log.info("Opening comments");
+            log.info("Waiting " + Util.defaultPageTimeout/2 + " seconds for opening Memo");
+            Thread.sleep(Util.defaultPageTimeout * 500);
+            driver.findElement(By.partialLinkText("Примечания")).click();
+            WebElement editorFrame = driver.findElement(By.xpath("//*[@id='m_tabview:client_memo:memo_editor']/div/iframe"));
+            driver.switchTo().frame(editorFrame);
+            WebElement editorBody = driver.findElement(By.cssSelector("body"));
+            text = editorBody.getText();
+            driver.switchTo().defaultContent();
+            Thread.sleep(1000);
+            driver.findElement(By.id("m_tabview:client_memo:saveClientFormMemoButton")).click();
+            driver.findElement(By.partialLinkText("Базовая информация")).click();
+        } catch (Exception e) {
+            log.error(e);
+            takePicture(Thread.currentThread().getStackTrace()[1].getMethodName());
+        }
+        return text;
+    }
+
+
     public static void hideRightPanel() {
         try {
             log.info("Hiding right panel");
@@ -166,27 +239,30 @@ public class Util {
 
     public static int findClientIdBySimpleData(SimpleClient simpleClient) {
         try {
-            log.info("Waiting "+Util.defaultPageTimeout+" seconds while all page is loaded");
-            Thread.sleep(Util.defaultPageTimeout * 1000);
+            log.info("Waiting "+Util.defaultPageTimeout/2+" seconds while all page is loaded");
+            Thread.sleep(Util.defaultPageTimeout * 500);
             log.info("Getting client's ID by surname, firstname, middlename, dateOfBirth");
             driver.findElement(By.linkText("Клиенты")).click();
             driver.findElement(By.xpath("//div[@id='mainMenu:j_idt7']/ul/li[1]/ul/li[1]/a/span")).click(); // Добавить клиента
 
             driver.findElement(By.id("searchForm:surname")).clear();
             driver.findElement(By.id("searchForm:surname")).sendKeys(simpleClient.getSurname());
+            Thread.sleep(100);
             driver.findElement(By.id("searchForm:firstname")).clear();
             driver.findElement(By.id("searchForm:firstname")).sendKeys(simpleClient.getFirstname());
+            Thread.sleep(100);
             driver.findElement(By.id("searchForm:middlename")).clear();
             driver.findElement(By.id("searchForm:middlename")).sendKeys(simpleClient.getMiddlename());
+            Thread.sleep(100);
             driver.findElement(By.id("searchForm:date")).clear();
             driver.findElement(By.id("searchForm:date")).sendKeys(simpleClient.getBirthDate());
-
+            Thread.sleep(100);
             driver.findElement(By.id("searchForm:submitSearchByName")).click();
-            log.info("Waiting "+Util.defaultPageTimeout+" seconds while a search is running");
-            Thread.sleep(Util.defaultPageTimeout * 1000);
+            log.info("Waiting "+Util.defaultPageTimeout/2+" seconds while a search is running");
+            Thread.sleep(Util.defaultPageTimeout * 500);
             driver.findElement(By.id("searchForm:foundClientsList:0:selectButton")).click();
-            log.info("Waiting " + Util.defaultPageTimeout + " seconds while a client is opening");
-            Thread.sleep(Util.defaultPageTimeout * 1000);
+            log.info("Waiting " + Util.defaultPageTimeout/2 + " seconds while a client is opening");
+            Thread.sleep(Util.defaultPageTimeout * 500);
             String idString = driver.findElement(By.xpath("//div[@id='m_tabview:base_form:header']/div[1]/span[@class='ui-layout-unit-header-title']")).getText();
             log.info("Found client "+idString);
             String retValueStr = idString.substring(idString.indexOf("(ID = ") + 6, idString.indexOf(","));
@@ -203,6 +279,30 @@ public class Util {
         return 0;
     }
 
+    public static void addMemo(String text) {
+        try {
+            log.info("Opening comments");
+            log.info("Waiting " + Util.defaultPageTimeout/2 + " seconds for opening Memo");
+            Thread.sleep(Util.defaultPageTimeout * 500);
+            driver.findElement(By.partialLinkText("Примечания")).click();
+
+            WebElement editorFrame = driver.findElement(By.xpath("//*[@id='m_tabview:client_memo:memo_editor']/div/iframe"));
+            driver.switchTo().frame(editorFrame);
+            WebElement editorBody = driver.findElement(By.cssSelector("body"));
+            String newText = " "+text;
+            editorBody.click();
+            editorBody.sendKeys(newText);
+            driver.switchTo().defaultContent();
+            Thread.sleep(1000);
+            driver.findElement(By.id("m_tabview:client_memo:saveClientFormMemoButton")).click();
+            driver.findElement(By.partialLinkText("Базовая информация")).click();
+
+        } catch (Exception e) {
+            log.error(e);
+            takePicture(Thread.currentThread().getStackTrace()[1].getMethodName());
+        }
+
+    }
 
     public static void takePicture(String prefix) {
         File screenshotsDir = new File("screenshots");
@@ -220,7 +320,6 @@ public class Util {
         }
         throw new SeleniumException ("Some shit happens while running tests. Please see logs and screenshots.");
     }
-
 
     public static void performInit() throws IOException {
         if (!isWindows()) {
@@ -254,4 +353,11 @@ public class Util {
 
 
     }
+
+    public static int randInt(int min, int max) {
+        Random rand = new Random();
+        int randomNum = rand.nextInt((max - min) + 1) + min;
+        return randomNum;
+    }
+
 }
