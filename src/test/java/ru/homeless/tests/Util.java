@@ -232,7 +232,7 @@ public class Util {
                 firefoxBinary.setEnvironmentProperty("DISPLAY", Xport);
                 driver = new FirefoxDriver(firefoxBinary, null);
             } else {
-                System.setProperty("webdriver.chrome.driver","/opt/chromedriver");
+                System.setProperty("webdriver.chrome.driver","/opt/chromedriver/chromedriver");
                 driver = new ChromeDriver();
             }
 
