@@ -42,6 +42,7 @@ public class Util {
             wait.until(ExpectedConditions.titleContains("Добро пожаловать!"));
             log.info("Logout done");
         } catch (Exception e) {
+            log.error(e);
             takePicture(Thread.currentThread().getStackTrace()[1].getMethodName());
         }
 	}
@@ -64,6 +65,7 @@ public class Util {
             //If there found actual title, driver will go on. Otherwise it will fail with detailed message.
             log.info("Login done");
         } catch (Exception e) {
+            log.error(e);
             takePicture(Thread.currentThread().getStackTrace()[1].getMethodName());
         }
 	}
@@ -79,6 +81,7 @@ public class Util {
             driver.manage().timeouts().pageLoadTimeout(Util.defaultPageTimeout, TimeUnit.SECONDS);
             driver.findElement(By.id("searchForm:foundClientsList:0:selectButton")).click();
         } catch (Exception e) {
+            log.error(e);
             takePicture(Thread.currentThread().getStackTrace()[1].getMethodName());
         }
     }
@@ -141,6 +144,7 @@ public class Util {
             driver.findElement(By.id("m_tabview:base_form:saveClientForm")).click();
             log.info("Done. New Client is added.");
         } catch (Exception e) {
+            log.error(e);
             takePicture(Thread.currentThread().getStackTrace()[1].getMethodName());
         }
     }
@@ -150,6 +154,7 @@ public class Util {
             log.info("Hiding right panel");
             driver.findElement(By.xpath("//*[@id='reminders']/div[1]/a[2]/span")).click();
         } catch (Exception e) {
+            log.error(e);
             takePicture(Thread.currentThread().getStackTrace()[1].getMethodName());
         }
     }
@@ -166,7 +171,7 @@ public class Util {
         try {
             FileUtils.copyFile(srcFile, new File(screenshotsDir+"/"+screenshotFileName));
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e);
         }
     }
 
