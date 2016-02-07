@@ -8,6 +8,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxBinary;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.interactions.Actions;
@@ -122,10 +123,6 @@ public class Util {
             Assert.assertTrue(m.equals(""));
             Assert.assertTrue(d.equals(""));
 
-            log.info("Waiting default timeout "+Util.defaultPageTimeout*2+" seconds while page is not completely loaded");
-            //hack for waiting while new client is created
-            Thread.sleep(Util.defaultPageTimeout*2000);
-
             log.info("Sending new data to form");
             driver.findElement(By.id("m_tabview:base_form:cedit_surname")).sendKeys(surname);
             driver.findElement(By.id("m_tabview:base_form:cedit_firstname")).sendKeys(firstname);
@@ -228,12 +225,24 @@ public class Util {
     public static void performInit() throws IOException {
         if (!isWindows()) {
             String Xport = System.getProperty("lmportal.xvfb.id",":10");
-            final File firefoxPath = new File(System.getProperty("lmportal.deploy.firefox.path","/usr/bin/firefox"));
-            FirefoxBinary firefoxBinary = new FirefoxBinary(firefoxPath);
-            firefoxBinary.setEnvironmentProperty("DISPLAY", Xport);
-            driver = new FirefoxDriver(firefoxBinary, null);
+
+            if (System.getenv("webdriver") == null || System.getenv("webdriver").trim().equals("")) {
+                final File firefoxPath = new File(System.getProperty("lmportal.deploy.firefox.path", "/usr/bin/firefox"));
+                FirefoxBinary firefoxBinary = new FirefoxBinary(firefoxPath);
+                firefoxBinary.setEnvironmentProperty("DISPLAY", Xport);
+                driver = new FirefoxDriver(firefoxBinary, null);
+            } else {
+                System.setProperty("webdriver.chrome.driver","/opt/chromedriver");
+                driver = new ChromeDriver();
+            }
+
         } else {
-            driver = new FirefoxDriver();
+            if (System.getenv("webdriver") == null || System.getenv("webdriver").trim().equals("")) {
+                driver = new FirefoxDriver();
+            } else {
+                System.setProperty("webdriver.chrome.driver","C:/tools/chromedriver.exe");
+                driver = new ChromeDriver();
+            }
         }
 
         new TestData();
