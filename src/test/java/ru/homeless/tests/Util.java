@@ -1,6 +1,7 @@
 package ru.homeless.tests;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.OutputType;
@@ -13,10 +14,12 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 public class Util {
 
+    public static Logger log = Logger.getLogger(Util.class);
     private static String OS = System.getProperty("os.name").toLowerCase();
 
 	public static WebDriver driver;
@@ -30,16 +33,23 @@ public class Util {
     }
 
 	public static void logout () {
-		//Pressing "Выход" link
-		driver.findElement(By.linkText("Выход")).click();
-		//... and check that exist has been performed correctly
-		WebDriverWait wait = new WebDriverWait(driver, Util.defaultPageTimeout);
-		wait.until(ExpectedConditions.titleContains("Добро пожаловать!"));
+        try {
+            log.debug("Performing logout");
+            //Pressing "Выход" link
+            driver.findElement(By.linkText("Выход")).click();
+            //... and check that exist has been performed correctly
+            WebDriverWait wait = new WebDriverWait(driver, Util.defaultPageTimeout);
+            wait.until(ExpectedConditions.titleContains("Добро пожаловать!"));
+            log.debug("Logout done");
+        } catch (Exception e) {
+            takePicture(Thread.currentThread().getStackTrace()[1].getMethodName());
+        }
 	}
 
 
 	public static void directTypingLogin() throws IOException {
         try {
+            log.debug("Performing login");
             //open URL
             driver.get(Util.defaultURL);
             //find inputText element with username and put value there
@@ -52,26 +62,25 @@ public class Util {
             WebDriverWait wait = new WebDriverWait(driver, Util.defaultPageTimeout);
             wait.until(ExpectedConditions.titleContains("Добро пожаловать, " + Util.defaultWorkerUsername + "!"));
             //If there found actual title, driver will go on. Otherwise it will fail with detailed message.
+            log.debug("Login done");
         } catch (Exception e) {
-            //Something goes wrong, taking snapshot
-            File srcFile = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
-            if (!isWindows()) {
-                FileUtils.copyFile(srcFile, new File("/tmp/lastLoginScreenshot.png"));
-            } else {
-                FileUtils.copyFile(srcFile, new File("C:/lastLoginScreenshot.png"));
-            }
-
+            takePicture(Thread.currentThread().getStackTrace()[1].getMethodName());
         }
 	}
 
     public static void setActiveClient(int id) {
-        driver.findElement(By.linkText("Клиенты")).click();
-        driver.findElement(By.xpath("//div[@id='mainMenu:j_idt7']/ul/li/ul/li[2]/a/span")).click();
-        driver.findElement(By.id("searchForm:_id")).clear();
-        driver.findElement(By.id("searchForm:_id")).sendKeys(String.valueOf(id));
-        driver.findElement(By.id("searchForm:submitSearchById")).click();
-        driver.manage().timeouts().pageLoadTimeout(Util.defaultPageTimeout, TimeUnit.SECONDS);
-        driver.findElement(By.id("searchForm:foundClientsList:0:selectButton")).click();
+        try {
+            log.debug("Finding client id = " + id + " with standard search by ID");
+            driver.findElement(By.linkText("Клиенты")).click();
+            driver.findElement(By.xpath("//div[@id='mainMenu:j_idt7']/ul/li/ul/li[2]/a/span")).click();
+            driver.findElement(By.id("searchForm:_id")).clear();
+            driver.findElement(By.id("searchForm:_id")).sendKeys(String.valueOf(id));
+            driver.findElement(By.id("searchForm:submitSearchById")).click();
+            driver.manage().timeouts().pageLoadTimeout(Util.defaultPageTimeout, TimeUnit.SECONDS);
+            driver.findElement(By.id("searchForm:foundClientsList:0:selectButton")).click();
+        } catch (Exception e) {
+            takePicture(Thread.currentThread().getStackTrace()[1].getMethodName());
+        }
     }
 
     public static void addNewClient(
@@ -84,51 +93,82 @@ public class Util {
             int fromY,
             String brthPlace,
             boolean important
+    ) {
+        try {
+            log.debug("Adding client " + surname + " " + firstname + " " + middlename + " (" + date + ")");
+            driver.findElement(By.linkText("Клиенты")).click();
+            driver.findElement(By.xpath("//div[@id='mainMenu:j_idt7']/ul/li/ul/li[6]/a/span")).click(); // Добавить клиента
 
-    ) throws InterruptedException {
-        driver.findElement(By.linkText("Клиенты")).click();
-        driver.findElement(By.xpath("//div[@id='mainMenu:j_idt7']/ul/li/ul/li[6]/a/span")).click(); // Добавить клиента
+            log.debug("Waiting default timeout while page is not completely loaded");
+            //hack for waiting while new client is created
+            Thread.sleep(Util.defaultPageTimeout);
 
-        //hack for waiting while new client is created
-        Thread.sleep(3000);
+            log.debug("Asserting that it is new client");
+            //assert that this is the new client
+            String s = driver.findElement(By.id("m_tabview:base_form:cedit_surname")).getAttribute("value");
+            String f = driver.findElement(By.id("m_tabview:base_form:cedit_firstname")).getAttribute("value");
+            String m = driver.findElement(By.id("m_tabview:base_form:cedit_middlename")).getAttribute("value");
+            String d = driver.findElement(By.id("m_tabview:base_form:cedit_bdate")).getAttribute("value");
 
-        //assert that this is the new client
-        String s = driver.findElement(By.id("m_tabview:base_form:cedit_surname")).getAttribute("value");
-        String f = driver.findElement(By.id("m_tabview:base_form:cedit_firstname")).getAttribute("value");
-        String m = driver.findElement(By.id("m_tabview:base_form:cedit_middlename")).getAttribute("value");
-        String d = driver.findElement(By.id("m_tabview:base_form:cedit_bdate")).getAttribute("value");
+            Assert.assertTrue(s.equals(""));
+            Assert.assertTrue(f.equals(""));
+            Assert.assertTrue(m.equals(""));
+            Assert.assertTrue(d.equals(""));
 
-        Assert.assertTrue(s.equals(""));
-        Assert.assertTrue(f.equals(""));
-        Assert.assertTrue(m.equals(""));
-        Assert.assertTrue(d.equals(""));
+            log.debug("Sending new data to form");
+            driver.findElement(By.id("m_tabview:base_form:cedit_surname")).sendKeys(surname);
+            driver.findElement(By.id("m_tabview:base_form:cedit_firstname")).sendKeys(firstname);
+            driver.findElement(By.id("m_tabview:base_form:cedit_middlename")).sendKeys(middlename);
+            driver.findElement(By.id("m_tabview:base_form:cedit_bdate")).sendKeys(date);
 
-        driver.findElement(By.id("m_tabview:base_form:cedit_surname")).sendKeys(surname);
-        driver.findElement(By.id("m_tabview:base_form:cedit_firstname")).sendKeys(firstname);
-        driver.findElement(By.id("m_tabview:base_form:cedit_middlename")).sendKeys(middlename);
-        driver.findElement(By.id("m_tabview:base_form:cedit_bdate")).sendKeys(date);
+            driver.findElement(By.xpath("//*[@id='m_tabview:base_form:selectGender']/div[3]/span")).click();
+            if (gender.equalsIgnoreCase("m")) {
+                driver.findElement(By.xpath("//*[@id='m_tabview:base_form:selectGender_panel']/div/ul/li[1]")).click();
+            } else {
+                driver.findElement(By.xpath("//*[@id='m_tabview:base_form:selectGender_panel']/div/ul/li[2]")).click();
+            }
 
-        driver.findElement(By.xpath("//*[@id='m_tabview:base_form:selectGender']/div[3]/span")).click();
-        if (gender.equalsIgnoreCase("m")) {
-            driver.findElement(By.xpath("//*[@id='m_tabview:base_form:selectGender_panel']/div/ul/li[1]")).click();
-        } else {
-            driver.findElement(By.xpath("//*[@id='m_tabview:base_form:selectGender_panel']/div/ul/li[2]")).click();
+            driver.findElement(By.xpath("//*[@id='m_tabview:base_form:selectMonth']/div[3]/span")).click();
+            driver.findElement(By.xpath("//*[@id=\"m_tabview:base_form:selectMonth_panel\"]/div/ul/li[" + fromM + "]")).click();
+            driver.findElement(By.id("m_tabview:base_form:selectedYear")).clear();
+            driver.findElement(By.id("m_tabview:base_form:selectedYear")).sendKeys(String.valueOf(fromY));
+            driver.findElement(By.id("m_tabview:base_form:cedit_born_place")).sendKeys(String.valueOf(brthPlace));
+            if (important) {
+                driver.findElement(By.xpath("//*[@id=\"m_tabview:base_form:j_idt84\"]/div[2]")).click();
+            }
+
+            log.debug("Pressing Save button");
+            driver.findElement(By.id("m_tabview:base_form:saveClientForm")).click();
+            log.debug("Done. New Client is added.");
+        } catch (Exception e) {
+            takePicture(Thread.currentThread().getStackTrace()[1].getMethodName());
         }
-
-        driver.findElement(By.xpath("//*[@id='m_tabview:base_form:selectMonth']/div[3]/span")).click();
-        driver.findElement(By.xpath("//*[@id=\"m_tabview:base_form:selectMonth_panel\"]/div/ul/li["+fromM+"]")).click();
-        driver.findElement(By.id("m_tabview:base_form:selectedYear")).clear();
-        driver.findElement(By.id("m_tabview:base_form:selectedYear")).sendKeys(String.valueOf(fromY));
-        driver.findElement(By.id("m_tabview:base_form:cedit_born_place")).sendKeys(String.valueOf(brthPlace));
-        if (important) {
-            driver.findElement(By.xpath("//*[@id=\"m_tabview:base_form:j_idt84\"]/div[2]")).click();
-        }
-
-        driver.findElement(By.id("m_tabview:base_form:saveClientForm")).click();
-
     }
 
     public static void hideRightPanel() {
-        driver.findElement(By.xpath("//*[@id='reminders']/div[1]/a[2]/span")).click();
+        try {
+            log.debug("Hiding right panel");
+            driver.findElement(By.xpath("//*[@id='reminders']/div[1]/a[2]/span")).click();
+        } catch (Exception e) {
+            takePicture(Thread.currentThread().getStackTrace()[1].getMethodName());
+        }
     }
+
+    public static void takePicture(String prefix) {
+        File screenshotsDir = new File("screenshots");
+        if (!screenshotsDir.exists()) {
+            screenshotsDir.mkdirs();
+        }
+        //Something goes wrong, taking snapshot
+        File srcFile = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
+        String screenshotFileName = prefix + "-" + new Date().getTime() + ".png";
+        log.debug("Taking screenshot. Filename is " + screenshotFileName);
+        try {
+            FileUtils.copyFile(srcFile, new File(screenshotsDir+"/"+screenshotFileName));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 }
