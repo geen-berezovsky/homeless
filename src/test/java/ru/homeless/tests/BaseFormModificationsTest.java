@@ -3,14 +3,13 @@ package ru.homeless.tests;
 import org.apache.log4j.Logger;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
 
-public class BaseFormModifications {
+public class BaseFormModificationsTest {
 
-    public static Logger log = Logger.getLogger(BaseFormModifications.class);
+    public static Logger log = Logger.getLogger(BaseFormModificationsTest.class);
 
     /*
     This test
@@ -40,7 +39,6 @@ public class BaseFormModifications {
     /*
     This is the [2]
      */
-    @Ignore
     public void searchByNameAndSetIDs() throws IOException {
         for (SimpleClient simpleClient : TestData.testClients) {
             simpleClient.setId(Util.findClientIdBySimpleData(simpleClient));
