@@ -141,14 +141,11 @@ public class ClientShelterBean implements Serializable {
 	}
 
 	public void editShelter() {
+        refreshClientContracts();
         updateRoomsData();
         shelterResultList = new ArrayList<>();
         shelterResultList.addAll(getRoomService().getInstances(ShelterResult.class));
         selectedShelter = getRoomService().getInstanceById(ShelterHistory.class, selectedShelter.getId());
-        ShelterContractConverter.servContracts = new ArrayList<>();
-        if (clientsContracts!=null) {
-            ShelterContractConverter.servContracts.addAll(clientsContracts);
-        }
         RequestContext rc = RequestContext.getCurrentInstance();
         rc.update("add_shelter");
         rc.execute("addShelterWv.show();");
@@ -220,24 +217,9 @@ public class ClientShelterBean implements Serializable {
 	}
 
     public void addNewShelter() {
-        RequestContext rc = RequestContext.getCurrentInstance();
-        int number_of_opened_contracts = 0;
-        List<ServContract> _clientsContracts = getRoomService().getInstancesByClientId(ServContract.class, cid);
-        clientsContracts = new ArrayList<>();
-        for (ServContract sc : _clientsContracts) {
-            if (sc.getResult().getId() == 1) {
-                number_of_opened_contracts ++;
-                clientsContracts.add(sc);
-            }
-        }
-        if (number_of_opened_contracts == 0) {
-            rc.execute("noContractsFoundDlg.show();");
-            log.info("Client "+getCid() + " has no opened contracts. Please fix it first.");
-            return;
-        }
-        ShelterContractConverter.servContracts = new ArrayList<>();
-        ShelterContractConverter.servContracts.addAll(clientsContracts);
 
+        refreshClientContracts();
+        RequestContext rc = RequestContext.getCurrentInstance();
         updateRoomsData();
         shelterResultList = new ArrayList<>();
         shelterResultList.addAll(getRoomService().getInstances(ShelterResult.class));
@@ -344,6 +326,25 @@ public class ClientShelterBean implements Serializable {
 
     }
 
+    public void refreshClientContracts() {
+        RequestContext rc = RequestContext.getCurrentInstance();
+        int number_of_opened_contracts = 0;
+        List<ServContract> _clientsContracts = getRoomService().getInstancesByClientId(ServContract.class, cid);
+        clientsContracts = new ArrayList<>();
+        for (ServContract sc : _clientsContracts) {
+            if (sc.getResult().getId() == 1) {
+                number_of_opened_contracts ++;
+                clientsContracts.add(sc);
+            }
+        }
+        if (number_of_opened_contracts == 0) {
+            rc.execute("noContractsFoundDlg.show();");
+            log.info("Client "+getCid() + " has no opened contracts. Please fix it first.");
+            return;
+        }
+        ShelterContractConverter.servContracts = new ArrayList<>();
+        ShelterContractConverter.servContracts.addAll(clientsContracts);
+    }
 
     public List<ServContract> getClientsContracts() {
         return clientsContracts;

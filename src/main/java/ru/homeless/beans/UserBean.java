@@ -1,9 +1,11 @@
 package ru.homeless.beans;
 
 import java.io.*;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -12,6 +14,7 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import com.sun.jna.platform.win32.Netapi32Util;
@@ -113,11 +116,26 @@ public class UserBean implements Serializable {
 		
 		Worker w = getWorkerService().login(username, password);
 		if (w != null) {
-			log.info(username + " has successfully logged in at " + new Date().toString());
+            HttpSession session = Util.getSession();
+            log.info("******************************************");
+            SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
+            String dateLogin = formatter.format(new Date());
+            log.info(username + " has successfully logged in at " + dateLogin);
+
+            ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+            String userAgent = externalContext.getRequestHeaderMap().get("User-Agent");
+            HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+            String ipAddress = request.getHeader("X-FORWARDED-FOR");
+            if (ipAddress == null) {
+                ipAddress = request.getRemoteAddr();
+            }
+            log.info("IP Address: "+ipAddress);
+            log.info("Browser info: "+userAgent);
+            log.info("******************************************");
             FacesContext fc = FacesContext.getCurrentInstance();
             ThemeService tsb = fc.getApplication().evaluateExpressionGet(fc, "#{themeService}", ThemeService.class);
             tsb.setTheme(w.getPrimefacesskin());
-            HttpSession session = Util.getSession();
+
 			session.setAttribute("username", username);
 			session.setAttribute("worker", w);
 			loggedIn = true;
@@ -128,7 +146,7 @@ public class UserBean implements Serializable {
 
 
 		FacesContext.getCurrentInstance().addMessage(null, msg);
-		context.addCallbackParam("loggedIn", loggedIn);
+        context.addCallbackParam("loggedIn", loggedIn);
 	}
 
 	public void logout() throws IOException {

@@ -586,6 +586,13 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
         FacesMessage msg = null;
         if (client !=null) {
             try {
+                HttpSession session = Util.getSession();
+                String username = session.getAttribute("username").toString();
+
+                log.info("Worker "+username+" has saving new Memo for the client "+client.getSurname()+ " "+client.getFirstname()+ " "+client.getMiddlename() + " ("+Util.formatDate(client.getDate())+")");
+                if (client.getMemo().trim().equals("")) {
+                    log.warn("ATTENTION! Memo that worker "+username+" has saving is empty!!!");
+                }
                 getClientService().updateInstance(client);
                 msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Примечания сохранены", "");
                 try {
@@ -610,6 +617,14 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
         //only when client is already selected and not null
         //the client will be null when you just had open this application
         if (client != null) {
+
+            HttpSession session = Util.getSession();
+            session.setAttribute("cid", cid);
+
+            String username = session.getAttribute("username").toString();
+            log.info("Worker "+username+ "has trying to save a client form where old client name = "+client.getSurname()+" "+client.getFirstname()+ " "+client.getMiddlename() + " ("+Util.formatDate(client.getDate())+")");
+            log.info("... and new client name = "+getSurname()+" "+getFirstname()+ " "+getMiddlename() + " ("+Util.formatDate(getDate())+")");
+
                 //update "homeless till the moment" (don't move it after client data copying!)
                 updateHomelessDate(selectedMonth, getSelectedYear());
 
@@ -624,6 +639,7 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
                     //произошла какая-то хрень, валим отсюда и показываем сообщение
                     log.error("OLD NAME: " + client.getFirstname() + " " + client.getSurname() + " " + client.getDate());
                     log.error("NEW NAME: " + getFirstname() + " " + getSurname() + " " + getDate());
+                    log.error("Worker " + username + " tried to replace OLD_NAME with NEW_NAME and has been rejected");
                     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "НЕПРЕДВИДЕННАЯ ОШИБКА!", "Защита от перезаписи существующего клиента. Пожалуйста, перезагрузите страницу."));
                     try {
                         cfb.reloadAll();
@@ -683,6 +699,7 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
             try {
                 getClientService().updateInstance(client);
                 msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Сохранено", "");
+                log.info("Worker "+username+ "has finished saving client with new name = "+client.getSurname()+" "+client.getFirstname()+ " "+client.getMiddlename() + " ("+Util.formatDate(client.getDate())+")");
                 try {
                     cfb.reloadAll();
                 } catch (SQLException e) {

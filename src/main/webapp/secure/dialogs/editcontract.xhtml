@@ -14,7 +14,7 @@
 		<p:messages />
 		<p:dialog id="editContractDlg" header="Редактирование существующего контракта" widgetVar="editContractWv" resizable="false" closable="true" modal="true" showEffect="fade" hideEffect="explode"
 			dynamic="true" closeOnEscape="true">
-            <p:ajax event="close" update="editcontract_growl" listener="#{clientshelter.handleCloseEditShelterDlg}" />
+            <p:ajax event="close" update="editcontract_growl" listener="#{clientcontracts.handleCloseEditContractDlg}" />
             <p:layout style="min-width:1000px;min-height:200px;max-height:200px;">
             <p:layoutUnit position="west" resizable="true" size="460" minSize="460" maxSize="500">
                 <h:panelGrid columns="2" id="edit_contract_panel_grid">
@@ -91,6 +91,7 @@
 				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15"
 				rowKey="#{contractItemsList.id}" selection="#{clientcontracts.selectedContractControl}" selectionMode="single" widgetVar="contractItemsListWv" styleClass="default_datatable"
                  scrollable="true" scrollHeight="400">
+                <p:ajax event="rowDblselect" listener="#{clientcontracts.editServicePlanItem()}" global="false" oncomplete="addServiceItemWv.show();"/>
 				<p:column headerText="ID" style="width: 30px;">
 					<h:outputText value="#{contractItemsList.id}" />
 				</p:column>
