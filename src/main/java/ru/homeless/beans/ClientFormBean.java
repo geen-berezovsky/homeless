@@ -1,23 +1,28 @@
 package ru.homeless.beans;
 
-import java.io.File;
-import java.io.Serializable;
+import java.awt.*;
+import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
+import java.io.*;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashSet;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
+import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.event.ValueChangeEvent;
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
@@ -26,22 +31,34 @@ import org.primefaces.component.tabview.TabView;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.TabChangeEvent;
 
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
 import ru.homeless.comparators.RecievedServiceSortingComparator;
 import ru.homeless.configuration.Configuration;
 import ru.homeless.converters.*;
 import ru.homeless.entities.*;
+import ru.homeless.services.ClientService;
 import ru.homeless.util.Util;
 
 @ManagedBean(name = "clientform")
 @SessionScoped
-public class ClientFormBean extends ClientDataBean implements Serializable {
+/**
+ * This is the main (base) form for the Client and it is a mirror for all Client's properties
+ * Refactoring is done at 13.02.2016
+ */
+public class ClientFormBean implements Serializable {
 
     public static Logger log = Logger.getLogger(ClientFormBean.class);
     private static final long serialVersionUID = 1L;
-    private int cid;
 
+    @ManagedProperty(value = "#{ClientService}")
+    private ClientService clientService;
+
+    private int cid;
     private Client client;
+
     private List<RecievedService> servicesList;
+
     private String mainPanelVisibility;
 
     //chronical disasters 'another' feature
@@ -83,6 +100,13 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
     private String commentsHeaderInline;
     private String contractsHeaderInline;
 
+    //UTIL variables
+    private int selectedMonth;
+    private int selectedYear;
+    private String originalPhotoFilePath;
+    private StreamedContent clientFormAvatar;
+    private StreamedContent clientFormRealPhoto;
+    private String formattedDate;
 
     //Technical variables for auto saving
     private int tabIndex = 0;
@@ -97,18 +121,15 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
     }
 
     public void reload() throws SQLException {
-        //just for search
-        if (client!=null) {
-            reloadAll(client.getId());
-        }
-    }
+        //Actual client may be already set using search. But, for compatibility this method is saved
+        //Setting actual client id to session for using in another applications
+        HttpSession session = Util.getSession();
+        session.setAttribute("cid", client.getId()); // 'cid' means the ClientID
+        this.cid = client.getId(); //just for simplifying access to the ClientID in this bean
+        setClient(client); //Setting client for the runtime
 
-    public void reloadAll(int id) throws SQLException {
-
-        log.info("Opening client with id = "+id);
-
-        this.cid = id;
-        this.mainPanelVisibility = "display: block;";
+        log.info("Opening client with id = "+client.getId() + " ("+client.toString()+")");
+        this.mainPanelVisibility = "display: block;"; //Show main panel when the first client is attached
 
         File profile = new File(Configuration.profilesDir+"/"+cid);
         if (!profile.exists()) {
@@ -146,18 +167,37 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
 
 
     public void reloadAll() throws SQLException {
-        reloadClientData();
+        if (client != null) {
+            log.info("Client ID = " + cid + " has been selected for usage");
+            updateHomelessDate();
+        } else {
+            log.info("Oops, but this client is not found in database...");
+            return;
+        }
+
         reloadClientReceivedServices();
 
+        //*** CHECK ON NULL ***
+        if (client.getNightstay() == null) {
+            client.setNightstay(getClientService().getInstanceByCaption(NightStay.class, "Нет ответа"));
+        }
+        if (client.getEducation() == null) {
+            client.setEducation(getClientService().getInstanceByCaption(Education.class, "Нет ответа"));
+        }
+        if (client.getFcom() == null) {
+            client.setFcom(getClientService().getInstanceByCaption(FamilyCommunication.class, "Нет ответа"));
+        }
+
         //set region according subregion
-        if (client.getLastLiving()==null) {
+        if (client.getLastLiving() == null) {
             client.setLastLiving(getClientService().getInstanceById(SubRegion.class, 1));
         }
-        if (client.getLastRegistration()==null) {
+        if (client.getLastRegistration() == null) {
             client.setLastRegistration(getClientService().getInstanceById(SubRegion.class,1));
         }
         setLastLivingRegion(client.getLastLiving().getRegion());
         setLastRegistrationRegion(client.getLastRegistration().getRegion());
+        //*** CHECK ON NULL ***
 
         //pull subregions list for actual region
         lastLivingSubRegions = new ArrayList<>();
@@ -213,9 +253,6 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
             commentsHeaderInline = "text-decoration: underline;";
         }
 
-        //set actual client id to session for using in another applications
-        HttpSession session = Util.getSession();
-        session.setAttribute("cid", cid);
         /*
         This is bufix for FireFox because it does not keep value after refreshing from cached page
         We are setting model values only for drop down lists manually (hope their value is small :-) )
@@ -225,6 +262,9 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
 
     private String getClientActualStatus(Client client) {
         //Client may live in shelter, lived in shelter earlier, not lived in shelter at all or stored under calculation
+        if (client == null) {
+            return "";
+        }
         String result = " (ID = " + client.getId() ;
         if (client.getDeathDate() != null) {
             result += ",<span class=\"deathNotification\">";
@@ -270,29 +310,9 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
         return result;
     }
 
-    public void reloadClientData() {
-        setClient(getClientService().getInstanceById(Client.class, getCid())); //cannot be deprecated while opening client from search differ than other open methods
-        //copy data to externalized class data
-        if (client != null) {
-            log.info("Client ID = " + client.getId() + " has been selected for usage");
-            copyClientToClientData(client);
-            updateHomelessDate();
-        } else {
-            log.info("Oops, but this client is not found in database...");
-        }
-    }
-
     public void reloadClientReceivedServices() {
         servicesList = new ArrayList<RecievedService>(client.getRecievedservices());
         Collections.sort(servicesList, new RecievedServiceSortingComparator());
-    }
-
-    public Client getClient() {
-        return client;
-    }
-
-    public void setClient(Client client) {
-        this.client = client;
     }
 
     public List<Education> getEducationTypes() {
@@ -331,7 +351,6 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
 	/*
      * Get all Breadwinners from the database
 	 */
-
     public List<String> getBreadwinnerTypes() {
         List<String> l = new ArrayList<String>();
         for (Breadwinner b : getClientService().getInstances(Breadwinner.class)) {
@@ -341,7 +360,6 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
         }
         return l;
     }
-
 
     /*
      * Just copy the Set<Breadwinner> to List<Breadwinner> for JSF compatibility
@@ -417,29 +435,6 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
         }
     }
 
-    public void setClientChronicDisease(List<String> s) {
-        this.clientChronicDisease = s;
-    }
-
-    /*
-     * Just fake for compatibility. Not used anywhere.
-     */
-    public List<RecievedService> getServicesList() {
-        return servicesList;
-    }
-
-    public void setServicesList(List<RecievedService> servicesList) {
-        this.servicesList = servicesList;
-    }
-
-    public int getCid() {
-        return cid;
-    }
-
-    public void setCid(int cid) {
-        this.cid = cid;
-    }
-
     // ****************** Working with dynamic change of "Другие" for Chronical Disasters section *******
 
     private void toggleAnotherChronicsStyle(boolean x) {
@@ -447,7 +442,7 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
             anotherChronicsStyle = "display:block;";
         } else {
             anotherChronicsStyle = "display:none;";
-            setUniqDisease(null);
+            client.setUniqDisease(null);
         }
     }
 
@@ -465,21 +460,6 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
         //Stub
     }
 
-    public String getAnotherChronicsStyle() {
-        return anotherChronicsStyle;
-    }
-
-    public void setAnotherChronicsStyle(String anotherChronicsStyle) {
-        this.anotherChronicsStyle = anotherChronicsStyle;
-    }
-
-    public boolean isAnotherChronicalDisasterChecked() {
-        return anotherChronicalDisasterChecked;
-    }
-
-    public void setAnotherChronicalDisasterChecked(boolean anotherChronicalDisasterChecked) {
-        this.anotherChronicalDisasterChecked = anotherChronicalDisasterChecked;
-    }
     // ****************** Working with dynamic change of "Другие" for Chronical Disasters section *******
 
     // ****************** Working with dynamic change of "Другие" for Breadwinner section *******
@@ -489,7 +469,7 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
             anotherBreadwinnerStyle = "display:block;";
         } else {
             anotherBreadwinnerStyle = "display:none;";
-            setUniqBreadwinner(null);
+            client.setUniqBreadwinner(null);
         }
     }
 
@@ -523,7 +503,7 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
             anotherHomelessReasonStyle = "display:block;";
         } else {
             anotherHomelessReasonStyle = "display:none;";
-            setUniqReason(null);
+            client.setUniqReason(null);
         }
     }
 
@@ -565,13 +545,11 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
             try {
                 getClientService().updateInstance(client);
                 msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Контакты сохранены", "");
-                try {
-                    cfb.reloadAll();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
+                cfb.reloadAll();
+                log.info("Contacts for client "+cid+" are saved successfully");
             } catch (Exception e) {
                 msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Контакты не сохранены!", "");
+                log.error("Contacts for client "+cid+" are not saved!",e);
             }
 
             if (msg != null) {
@@ -589,19 +567,17 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
                 HttpSession session = Util.getSession();
                 String username = session.getAttribute("username").toString();
 
-                log.info("Worker "+username+" has saving new Memo for the client "+client.getSurname()+ " "+client.getFirstname()+ " "+client.getMiddlename() + " ("+Util.formatDate(client.getDate())+")");
+                log.info("Worker "+username+" is saving new Memo for the client "+client.toString());
                 if (client.getMemo().trim().equals("")) {
                     log.warn("ATTENTION! Memo that worker "+username+" has saving is empty!!!");
                 }
                 getClientService().updateInstance(client);
                 msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Примечания сохранены", "");
-                try {
-                    cfb.reloadAll();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
+                cfb.reloadAll();
+                log.info("Comments (Memo) for client "+cid+" are saved successfully");
             } catch (Exception e) {
                 msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Примечания не сохранены!", "");
+                log.error("Comments (Memo) for client "+cid+" are not saved!",e);
             }
 
             if (msg != null) {
@@ -611,7 +587,22 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
         }
     }
 
-    public void saveClientForm(ClientFormBean cfb) {
+    public String checkNameDash(String source) {
+        String newNamefromSubNames = "";
+        if (source.contains("-")) {
+            String[] subNames = source.split("-");
+            for (String s : subNames) {
+                String upCase = s.toUpperCase();
+                newNamefromSubNames+=upCase.substring(0, 1)+s.toLowerCase().substring(1, s.length())+"-";
+            }
+            newNamefromSubNames = newNamefromSubNames.substring(0,newNamefromSubNames.length()-1);
+        } else {
+            newNamefromSubNames+=source.toUpperCase().substring(0, 1)+source.toLowerCase().substring(1, source.length());
+        }
+        return newNamefromSubNames;
+    }
+
+    public void saveClientForm() {
         FacesMessage msg = null;
 
         //only when client is already selected and not null
@@ -622,48 +613,13 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
             session.setAttribute("cid", cid);
 
             String username = session.getAttribute("username").toString();
-            log.info("Worker "+username+ "has trying to save a client form where old client name = "+client.getSurname()+" "+client.getFirstname()+ " "+client.getMiddlename() + " ("+Util.formatDate(client.getDate())+")");
-            log.info("... and new client name = "+getSurname()+" "+getFirstname()+ " "+getMiddlename() + " ("+Util.formatDate(getDate())+")");
+            log.info("Worker "+username+ " is trying to save a client form where client name = "+client.toString());
+            updateHomelessDate(selectedMonth, getSelectedYear());
 
-                //update "homeless till the moment" (don't move it after client data copying!)
-                updateHomelessDate(selectedMonth, getSelectedYear());
-
-            /*
-            This is the workaround for keeping records while this code is not refactored
-            Current issue is in overwriting existing clients for unknown reasons. As minimum, ClientDataBean should be deprecated.
-            TODO: deprecate ClientDataBean нахрен
-             */
-
-            if (!client.getSurname().equalsIgnoreCase(getSurname()) && !Util.formatDate(client.getDate()).equals(Util.formatDate(getDate()))) {
-                if (!client.getSurname().trim().equals("") && !client.getSurname().trim().equals("")) { //keep new clients
-                    //произошла какая-то хрень, валим отсюда и показываем сообщение
-                    log.error("OLD NAME: " + client.getFirstname() + " " + client.getSurname() + " " + client.getDate());
-                    log.error("NEW NAME: " + getFirstname() + " " + getSurname() + " " + getDate());
-                    log.error("Worker " + username + " tried to replace OLD_NAME with NEW_NAME and has been rejected");
-                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "НЕПРЕДВИДЕННАЯ ОШИБКА!", "Защита от перезаписи существующего клиента. Пожалуйста, перезагрузите страницу."));
-                    try {
-                        cfb.reloadAll();
-                       } catch (SQLException e) {
-                        e.printStackTrace();
-                    }
-                    return;
-                }
-            }
-             /*
-             ***************************************************************************************************************
-             */
-
-                client = copyClientDataToClient(client);
                 //Update Surname, FirstName and MiddleName for starting with uppercase letter
-                String fl = client.getSurname().toUpperCase().substring(0, 1);
-                String ll = client.getSurname().toLowerCase().substring(1, client.getSurname().length());
-                client.setSurname(fl + ll);
-                fl = client.getFirstname().toUpperCase().substring(0, 1);
-                ll = client.getFirstname().toLowerCase().substring(1, client.getFirstname().length());
-                client.setFirstname(fl + ll);
-                fl = client.getMiddlename().toUpperCase().substring(0, 1);
-                ll = client.getMiddlename().toLowerCase().substring(1, client.getMiddlename().length());
-                client.setMiddlename(fl + ll);
+            client.setSurname(checkNameDash(client.getSurname()));
+            client.setFirstname(checkNameDash(client.getFirstname()));
+            client.setMiddlename(checkNameDash(client.getMiddlename()));
 
                 //update homeless reasons, breadwinners, chronical disasters
                 Set<Breadwinner> sb = new HashSet<Breadwinner>();
@@ -699,14 +655,11 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
             try {
                 getClientService().updateInstance(client);
                 msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Сохранено", "");
-                log.info("Worker "+username+ "has finished saving client with new name = "+client.getSurname()+" "+client.getFirstname()+ " "+client.getMiddlename() + " ("+Util.formatDate(client.getDate())+")");
-                try {
-                    cfb.reloadAll();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
+                log.info("Worker "+username+ "is finished saving client with new name = "+client.toString());
+                reloadAll();
             } catch (Exception e) {
                 msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Клиент не сохранен!", "");
+                log.error("Cannot save client "+client.toString(),e);
             }
 
             if (msg != null) {
@@ -735,7 +688,7 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
         //Saving will run refreshing, so we can skip to do it again, except custom beans reloading
 
         FacesContext context = FacesContext.getCurrentInstance();
-        if (cid != 0 && client != null) {
+        if (client != null) {
 
             ClientDocumentsBean cdb = context.getApplication().evaluateExpressionGet(context, "#{clientdocuments}", ClientDocumentsBean.class);
             ScanDocumentsBean sdb = context.getApplication().evaluateExpressionGet(context, "#{scandocuments}", ScanDocumentsBean.class);
@@ -762,7 +715,7 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
                 rc.execute("save4Tab();");
             }
 
-            log.info("Reloaded all data for the selected client " + cid);
+            log.info("Reloaded all data for the selected client " + client.toString());
         }
     }
 
@@ -775,10 +728,10 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
         setTabIndex(Integer.parseInt(params.get(tabView.getClientId(context) + "_tabindex")));
 
         //But! If user started to change tabs before he type mandatory data, we have to reject this action
-        if (this.getFirstname().trim().equals("") ||
-                this.getSurname().trim().equals("") ||
-                this.getMiddlename().trim().equals("") ||
-                this.getDate() == null) {
+        if (client.getFirstname().trim().equals("") ||
+                client.getSurname().trim().equals("") ||
+                client.getMiddlename().trim().equals("") ||
+                client.getDate() == null) {
 
             if ((tabIndex > 0)) { //for avoiding cycles when we set the active tab and tablchange listener perform it again
                 RequestContext rc = RequestContext.getCurrentInstance();
@@ -790,6 +743,377 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
             refreshTabs(prevTabIndex);
         }
         prevTabIndex = tabIndex;
+    }
+
+
+    @PostConstruct
+    // special for converter and selection data model!
+    public void init() {
+        FComConverter.fcomDB = new ArrayList<FamilyCommunication>();
+        FComConverter.fcomDB.addAll(getClientService().getInstances(FamilyCommunication.class));
+
+        NightStayConverter.nsDB = new ArrayList<NightStay>();
+        NightStayConverter.nsDB.addAll(getClientService().getInstances(NightStay.class));
+
+        EducationConverter.edDB = new ArrayList<Education>();
+        EducationConverter.edDB.addAll(getClientService().getInstances(Education.class));
+
+        RegionIDConverter.regionsList = new ArrayList<Region>();
+        RegionIDConverter.regionsList.addAll(getClientService().getInstances(Region.class));
+
+        SubRegionIDConverter.regionsList = new ArrayList<>();
+        SubRegionIDConverter.regionsList.addAll(getClientService().getInstances(SubRegion.class));
+    }
+
+    public void openPhotoDlg() {
+        RequestContext rc = RequestContext.getCurrentInstance();
+        rc.execute("realPhotoWv.show();");
+    }
+
+
+    public void addClient() throws SQLException {
+        log.info("Creating new client and adding it to the database");
+        Client _client = new Client("", "", "", true, null, null, "", "");
+
+        //Setting new values to the relations
+        _client.setNightstay(getClientService().getInstanceByCaption(NightStay.class, "Нет ответа"));
+        _client.setEducation(getClientService().getInstanceByCaption(Education.class, "Нет ответа"));
+        _client.setFcom(getClientService().getInstanceByCaption(FamilyCommunication.class, "Нет ответа"));
+        _client.setLastLiving(getClientService().getInstanceById(SubRegion.class,1));
+        _client.setLastRegistration(getClientService().getInstanceById(SubRegion.class,1));
+        _client.setRegDate(new Date());
+        _client.setRecievedservices(new HashSet<RecievedService>());
+        _client.setBreadwinners(new HashSet<Breadwinner>());
+        _client.setDiseases(new HashSet<ChronicDisease>());
+        _client.setReasonofhomeless(new HashSet<Reasonofhomeless>());
+
+        getClientService().addInstance(_client);
+        log.info("Client with ID=" + _client.getId() + " successfully added to the database and set to the http session");
+        setClient(_client);
+        reload();
+    }
+
+    public void deleteClient() {
+        try {
+
+            log.info("Client with ID = "+client.getId() + " will be deleted");
+            log.info("Deleting all client's documents...");
+
+            List<Document> documents = getClientService().getInstancesByClientId(Document.class, client.getId());
+            for (Document document : documents) {
+                log.info("\tDeleting document id = "+document.getId());
+                getClientService().deleteInstance(document);
+                log.info("\t... done!");
+            }
+
+            for (Breadwinner breadwinner : client.getBreadwinners()) {
+                log.info("\tDeleting breadwinner id = "+breadwinner.getId());
+                getClientService().deleteInstance(breadwinner);
+                log.info("\t... done!");
+            }
+
+            for (Reasonofhomeless reasonofhomeless : client.getReasonofhomeless()) {
+                log.info("\tDeleting reasonofhomeless id = "+reasonofhomeless.getId());
+                getClientService().deleteInstance(reasonofhomeless);
+                log.info("\t... done!");
+            }
+
+            for (ChronicDisease chronicDisease : client.getDiseases()) {
+                log.info("\tDeleting chronicDisease id = " + chronicDisease.getId());
+                getClientService().deleteInstance(chronicDisease);
+                log.info("\t... done!");
+            }
+
+            for (ServContract servContract : getClientService().getInstancesByClientId(ServContract.class, client.getId())) {
+                log.info("\tDeleting servContract id = " + servContract.getId());
+                getClientService().deleteInstance(servContract);
+                log.info("\t... done!");
+            }
+
+            for (ShelterHistory shelterHistory : getClientService().getInstancesByClientId(ShelterHistory.class, client)) {
+                log.info("\tDeleting shelterHistory id = " + shelterHistory.getId());
+                getClientService().deleteInstance(shelterHistory);
+                log.info("\t... done!");
+            }
+
+
+
+            client.setEducation(null);
+            client.setNightstay(null);
+            client.setFcom(null);
+
+            log.info("Deleting the client itself...");
+            getClientService().deleteInstance(client);
+            log.info("Client with ID = "+client.getId() + " is deleted");
+            client = null;
+            HttpSession session = Util.getSession();
+            session.removeAttribute("clientform");
+            session.removeAttribute("stddoc");
+            session.removeAttribute("clientshelter");
+            session.removeAttribute("cid");
+        } catch (Exception e) {
+            log.error("Cannot delete client with ID = "+client.getId(),e);
+        }
+    }
+
+    public List<String> getAllSubRegions(String query) {
+        List<String> sr = new ArrayList<String>();
+        for (SubRegion s : getClientService().getInstances(SubRegion.class)) {
+            sr.add(s.getCaption());
+        }
+        return sr;
+    }
+
+
+    /*
+        REFACTORED METHODS FROM PREVIOUS BEAN
+     */
+
+    public int getHomelessYear(Date query) {
+        if (query != null) {
+            Calendar c = Calendar.getInstance();
+            c.setTime(query);
+            return c.get(Calendar.YEAR);
+        } else {
+            return -1;
+        }
+    }
+
+    public int getHomelessMonth(Date query) {
+        if (query != null) {
+            Calendar c = Calendar.getInstance();
+            c.setTime(query);
+            return c.get(Calendar.MONTH);
+        } else {
+            return -1;
+        }
+    }
+
+    /**
+     * This method update custom homeless date for the main client's form
+     */
+    public void updateHomelessDate() {
+        if (client!=null) {
+            setSelectedMonth(getHomelessMonth(client.getHomelessdate()));
+            setSelectedYear(getHomelessYear(client.getHomelessdate()));
+        }
+    }
+
+    /**
+     * Just set actual homeless date to the database according data in the main client's form
+     * @param month
+     * @param year
+     */
+    public void updateHomelessDate(int month, int year) {
+        if (client == null) {
+            return;
+        }
+        int m = 0;
+        int y = 0;
+
+        Calendar orig = GregorianCalendar.getInstance();
+        if (client.getHomelessdate()!=null) {
+            orig.setTime(client.getHomelessdate());
+        } else {
+            DateFormat df = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
+            try {
+                orig.setTime(df.parse("01.01.1900 00:00:00"));
+            } catch (ParseException e) {
+                log.error("Date parse exception",e);
+            }
+        }
+
+        if (month == 0) {
+            //set only year
+            y = year;
+            m = orig.get(Calendar.MONTH);
+        } else if (year == 0) {
+            //set only month
+            m = month;
+            y = orig.get(Calendar.YEAR);
+        } else {
+            m = orig.get(Calendar.MONTH);
+            y = orig.get(Calendar.YEAR);
+        }
+
+        Calendar c = GregorianCalendar.getInstance();
+        c.set(year, month, 1, 0, 0, 0);
+        // setting updated value to the client
+        client.setHomelessdate(c.getTime());
+    }
+
+    public StreamedContent getClientFormRealPhoto() throws IOException {
+        if (client == null) {
+            return null;
+        }
+        File resultFile = new File(getOriginalPhotoFilePath());
+        if (!resultFile.exists() || client.getPhotoCheckSum().trim().equals("") || client.getPhotoName().trim().equals("")) {
+            return null;
+        } else {
+            StreamedContent sc = Util.loadResizedPhotoFromDisk(resultFile);
+            return sc;
+        }
+    }
+
+    public StreamedContent getClientFormAvatar() {
+        if (client == null) {
+            return null;
+        }
+        InputStream imageInByteArray = null;
+        if ( client.getAvatar() != null) {
+            try {
+                imageInByteArray = client.getAvatar().getBinaryStream();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } else {
+
+            BufferedImage bi = new BufferedImage(177, 144, BufferedImage.TYPE_INT_ARGB);
+            Graphics2D g = bi.createGraphics();
+            Stroke drawingStroke = new BasicStroke(3);
+            Rectangle2D rect = new Rectangle2D.Double(0, 0, 177, 144);
+
+            g.setStroke(drawingStroke);
+            g.draw(rect);
+            g.setPaint(Color.LIGHT_GRAY);
+            g.fill(rect);
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            try {
+                ImageIO.write(bi, "png", baos);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                baos.flush();
+                imageInByteArray = new ByteArrayInputStream(baos.toByteArray());
+                baos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return new DefaultStreamedContent(imageInByteArray, "image/png");
+    }
+
+
+    public String getOriginalPhotoFilePath() {
+        File f = new File(Configuration.photos+"/"+client.getPhotoName());
+        String str = f.getAbsolutePath().toString();
+        if (!f.exists()) {
+            return str + " не найден в хранилище";
+        } else {
+            return str;
+        }
+    }
+
+    public String getFormattedDate() {
+        if (client != null && client.getDate() != null) {
+            return Util.formatDate(client.getDate());
+        } else {
+            return "";
+        }
+    }
+
+    //Shared Validators
+    public void validateTextOnly(FacesContext ctx, UIComponent component, Object value) {
+        Util.validateTextOnly(ctx, component, value);
+    }
+
+    public void validateBirthDateFormat(FacesContext ctx, UIComponent component, Object value) {
+        Date result = Util.validateDateFormat(ctx, component, value);
+        if (result != null && client != null) {
+            client.setDate(result);
+        }
+    }
+
+    public boolean isYearValid(String str) {
+        Pattern pattern = Pattern.compile("\\d{4}");
+        Matcher matcher = pattern.matcher(str);
+        if (matcher.matches()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+     /*
+        *****************************************************
+     */
+
+    public String getDocumentsHeaderInline() {
+        return documentsHeaderInline;
+    }
+
+    public void setDocumentsHeaderInline(String documentsHeaderInline) {
+        this.documentsHeaderInline = documentsHeaderInline;
+    }
+
+    public int getTabIndex() {
+        return tabIndex;
+    }
+
+    public void setTabIndex(int tabIndex) {
+        this.tabIndex = tabIndex;
+    }
+
+    public int getPrevTabIndex() {
+        return prevTabIndex;
+    }
+
+    public void setPrevTabIndex(int prevTabIndex) {
+        this.prevTabIndex = prevTabIndex;
+    }
+
+
+    public void setRegionTypes(List<String> regionTypes) {
+        this.regionTypes = regionTypes;
+    }
+
+    public Region getLastLivingRegion() {
+        return lastLivingRegion;
+    }
+
+    public void setLastLivingRegion(Region lastLivingRegion) {
+        this.lastLivingRegion = lastLivingRegion;
+    }
+
+    public Region getLastRegistrationRegion() {
+        return lastRegistrationRegion;
+    }
+
+    public void setLastRegistrationRegion(Region lastRegistrationRegion) {
+        this.lastRegistrationRegion = lastRegistrationRegion;
+    }
+
+    public List<SubRegion> getLastLivingSubRegions() {
+        return lastLivingSubRegions;
+    }
+
+    public void setLastLivingSubRegions(List<SubRegion> lastLivingSubRegions) {
+        this.lastLivingSubRegions = lastLivingSubRegions;
+    }
+
+    public List<SubRegion> getLastRegistrationSubRegions() {
+        return lastRegistrationSubRegions;
+    }
+
+    public void setLastRegistrationSubRegions(List<SubRegion> lastRegistrationSubRegions) {
+        this.lastRegistrationSubRegions = lastRegistrationSubRegions;
+    }
+
+    public String getContractsHeaderInline() {
+        return contractsHeaderInline;
+    }
+
+    public void setContractsHeaderInline(String contractsHeaderInline) {
+        this.contractsHeaderInline = contractsHeaderInline;
+    }
+
+    public ClientService getClientService() {
+        return clientService;
+    }
+
+    public void setClientService(ClientService clientService) {
+        this.clientService = clientService;
     }
 
     public void setHasProfession(int hasProfession) {
@@ -860,197 +1184,80 @@ public class ClientFormBean extends ClientDataBean implements Serializable {
         this.commentsHeaderInline = commentsHeaderInline;
     }
 
-    @PostConstruct
-    // special for converter and selection data model!
-    public void init() {
-        FComConverter.fcomDB = new ArrayList<FamilyCommunication>();
-        FComConverter.fcomDB.addAll(getClientService().getInstances(FamilyCommunication.class));
 
-        NightStayConverter.nsDB = new ArrayList<NightStay>();
-        NightStayConverter.nsDB.addAll(getClientService().getInstances(NightStay.class));
+    public Client getClient() {
+         return client;
+     }
 
-        EducationConverter.edDB = new ArrayList<Education>();
-        EducationConverter.edDB.addAll(getClientService().getInstances(Education.class));
-
-        RegionIDConverter.regionsList = new ArrayList<Region>();
-        RegionIDConverter.regionsList.addAll(getClientService().getInstances(Region.class));
-
-        SubRegionIDConverter.regionsList = new ArrayList<>();
-        SubRegionIDConverter.regionsList.addAll(getClientService().getInstances(SubRegion.class));
+    public void setClient(Client client) {
+        this.client = client;
     }
 
-    public void openPhotoDlg() {
-        RequestContext rc = RequestContext.getCurrentInstance();
-        rc.execute("realPhotoWv.show();");
+    public String getAnotherChronicsStyle() {
+        return anotherChronicsStyle;
     }
 
-
-    public void addClient() throws SQLException {
-
-        HttpSession session = Util.getSession();
-
-        log.info("Creating new client and adding it to the database");
-        Client client = new Client("", "", "", false, null, null, "", "");
-
-        //Setting new values to the relations
-        client.setNightstay(getClientService().getInstanceByCaption(NightStay.class, "Нет ответа"));
-        client.setEducation(getClientService().getInstanceByCaption(Education.class, "Нет ответа"));
-        client.setFcom(getClientService().getInstanceByCaption(FamilyCommunication.class, "Нет ответа"));
-        client.setLastLiving(getClientService().getInstanceById(SubRegion.class,1));
-        client.setLastRegistration(getClientService().getInstanceById(SubRegion.class,1));
-        client.setRegDate(new Date());
-
-        getClientService().addInstance(client);
-        session.setAttribute("cid", client.getId());
-        log.info("Client with ID="+client.getId()+" successfully added to the database and set to the http session");
-        copyClientToClientData(client);
-        reloadAll(client.getId());
-
+    public void setAnotherChronicsStyle(String anotherChronicsStyle) {
+        this.anotherChronicsStyle = anotherChronicsStyle;
     }
 
-    public void deleteClient() {
-        HttpSession session = Util.getSession();
-
-        session.removeAttribute("clientform");
-        session.removeAttribute("stddoc");
-        session.removeAttribute("clientshelter");
-        session.removeAttribute("cit");
-
-        try {
-
-            log.info("Client with ID = "+client.getId() + " will be deleted");
-            log.info("Deleting all client's documents...");
-
-            List<Document> documents = getClientService().getInstancesByClientId(Document.class, client.getId());
-            for (Document document : documents) {
-                log.info("\tDeleting document id = "+document.getId());
-                getClientService().deleteInstance(document);
-                log.info("\t... done!");
-            }
-
-            for (Breadwinner breadwinner : client.getBreadwinners()) {
-                log.info("\tDeleting breadwinner id = "+breadwinner.getId());
-                getClientService().deleteInstance(breadwinner);
-                log.info("\t... done!");
-            }
-
-            for (Reasonofhomeless reasonofhomeless : client.getReasonofhomeless()) {
-                log.info("\tDeleting reasonofhomeless id = "+reasonofhomeless.getId());
-                getClientService().deleteInstance(reasonofhomeless);
-                log.info("\t... done!");
-            }
-
-            for (ChronicDisease chronicDisease : client.getDiseases()) {
-                log.info("\tDeleting chronicDisease id = " + chronicDisease.getId());
-                getClientService().deleteInstance(chronicDisease);
-                log.info("\t... done!");
-            }
-
-            for (ServContract servContract : getClientService().getInstancesByClientId(ServContract.class, client.getId())) {
-                log.info("\tDeleting servContract id = " + servContract.getId());
-                getClientService().deleteInstance(servContract);
-                log.info("\t... done!");
-            }
-
-            for (ShelterHistory shelterHistory : getClientService().getInstancesByClientId(ShelterHistory.class, client)) {
-                log.info("\tDeleting shelterHistory id = " + shelterHistory.getId());
-                getClientService().deleteInstance(shelterHistory);
-                log.info("\t... done!");
-            }
-
-
-
-            client.setEducation(null);
-            client.setNightstay(null);
-            client.setFcom(null);
-
-            log.info("Deleting the client itself...");
-            getClientService().deleteInstance(client);
-            log.info("Client with ID = "+client.getId() + " is deleted");
-            client = null;
-        } catch (Exception e) {
-            log.error("Cannot delete client with ID = "+client.getId(),e);
-        }
+    public boolean isAnotherChronicalDisasterChecked() {
+        return anotherChronicalDisasterChecked;
     }
 
-
-    public List<String> getAllSubRegions(String query) {
-        List<String> sr = new ArrayList<String>();
-
-        for (SubRegion s : getClientService().getInstances(SubRegion.class)) {
-            sr.add(s.getCaption());
-        }
-
-        return sr;
+    public void setAnotherChronicalDisasterChecked(boolean anotherChronicalDisasterChecked) {
+        this.anotherChronicalDisasterChecked = anotherChronicalDisasterChecked;
     }
 
-
-    public String getDocumentsHeaderInline() {
-        return documentsHeaderInline;
+    public void setClientChronicDisease(List<String> s) {
+        this.clientChronicDisease = s;
     }
 
-    public void setDocumentsHeaderInline(String documentsHeaderInline) {
-        this.documentsHeaderInline = documentsHeaderInline;
+    public List<RecievedService> getServicesList() {
+        return servicesList;
     }
 
-    public int getTabIndex() {
-        return tabIndex;
+    public void setServicesList(List<RecievedService> servicesList) {
+        this.servicesList = servicesList;
     }
 
-    public void setTabIndex(int tabIndex) {
-        this.tabIndex = tabIndex;
+    public int getCid() {
+        return cid;
     }
 
-    public int getPrevTabIndex() {
-        return prevTabIndex;
+    public void setCid(int cid) {
+        this.cid = cid;
     }
 
-    public void setPrevTabIndex(int prevTabIndex) {
-        this.prevTabIndex = prevTabIndex;
+    public int getSelectedMonth() {
+        return selectedMonth;
     }
 
-
-    public void setRegionTypes(List<String> regionTypes) {
-        this.regionTypes = regionTypes;
+    public void setSelectedMonth(int selectedMonth) {
+        this.selectedMonth = selectedMonth;
     }
 
-    public Region getLastLivingRegion() {
-        return lastLivingRegion;
+    public int getSelectedYear() {
+        return selectedYear;
     }
 
-    public void setLastLivingRegion(Region lastLivingRegion) {
-        this.lastLivingRegion = lastLivingRegion;
+    public void setSelectedYear(int selectedYear) {
+        this.selectedYear = selectedYear;
     }
 
-    public Region getLastRegistrationRegion() {
-        return lastRegistrationRegion;
+    public void setOriginalPhotoFilePath(String originalPhotoFilePath) {
+        this.originalPhotoFilePath = originalPhotoFilePath;
     }
 
-    public void setLastRegistrationRegion(Region lastRegistrationRegion) {
-        this.lastRegistrationRegion = lastRegistrationRegion;
+    public void setClientFormAvatar(StreamedContent clientFormAvatar) {
+        this.clientFormAvatar = clientFormAvatar;
     }
 
-    public List<SubRegion> getLastLivingSubRegions() {
-        return lastLivingSubRegions;
+    public void setClientFormRealPhoto(StreamedContent clientFormRealPhoto) {
+        this.clientFormRealPhoto = clientFormRealPhoto;
     }
 
-    public void setLastLivingSubRegions(List<SubRegion> lastLivingSubRegions) {
-        this.lastLivingSubRegions = lastLivingSubRegions;
-    }
-
-    public List<SubRegion> getLastRegistrationSubRegions() {
-        return lastRegistrationSubRegions;
-    }
-
-    public void setLastRegistrationSubRegions(List<SubRegion> lastRegistrationSubRegions) {
-        this.lastRegistrationSubRegions = lastRegistrationSubRegions;
-    }
-
-    public String getContractsHeaderInline() {
-        return contractsHeaderInline;
-    }
-
-    public void setContractsHeaderInline(String contractsHeaderInline) {
-        this.contractsHeaderInline = contractsHeaderInline;
+    public void setFormattedDate(String formattedDate) {
+        this.formattedDate = formattedDate;
     }
 }

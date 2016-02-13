@@ -9,7 +9,7 @@
 		</p:row>
 		<p:row>
 			<p:message display="tooltip" for="cedit_surname" />
-			<p:inputText value="#{clientform.surname}" id="cedit_surname" validator="#{clientform.validateTextOnly}" size="40" styleClass="base_form_value_text" required="true">
+			<p:inputText value="#{clientform.client.surname}" id="cedit_surname" validator="#{clientform.validateTextOnly}" size="40" styleClass="base_form_value_text" required="true">
                 <f:validateLength minimum="2" />
             </p:inputText>
 		</p:row>
@@ -18,7 +18,7 @@
 		</p:row>
 		<p:row>
 			<p:message display="tooltip" for="cedit_firstname" />
-			<p:inputText value="#{clientform.firstname}" id="cedit_firstname" validator="#{clientform.validateTextOnly}" size="40" styleClass="base_form_value_text" required="true">
+			<p:inputText value="#{clientform.client.firstname}" id="cedit_firstname" validator="#{clientform.validateTextOnly}" size="40" styleClass="base_form_value_text" required="true">
                 <f:validateLength minimum="2" />
             </p:inputText>
 		</p:row>
@@ -27,7 +27,7 @@
 		</p:row>
 		<p:row>
 			<p:message display="tooltip" for="cedit_middlename" />
-			<p:inputText value="#{clientform.middlename}" id="cedit_middlename" validator="#{clientform.validateTextOnly}" size="40" styleClass="base_form_value_text" required="true">
+			<p:inputText value="#{clientform.client.middlename}" id="cedit_middlename" validator="#{clientform.validateTextOnly}" size="40" styleClass="base_form_value_text" required="true">
                 <f:validateLength minimum="2" />
             </p:inputText>
 		</p:row>
@@ -44,7 +44,7 @@
 			<p:outputLabel value="Пол:" styleClass="base_form_caption_text"/>
 		</p:row>
 		<p:row>
-			<p:selectOneMenu id="selectGender" value="#{clientform.gender}" styleClass="base_form_value_text" required="true">
+			<p:selectOneMenu id="selectGender" value="#{clientform.client.gender}" styleClass="base_form_value_text" required="true">
 				<f:selectItem itemLabel="Мужской" itemValue="true" />
 				<f:selectItem itemLabel="Женский" itemValue="false" />
 			</p:selectOneMenu>
@@ -80,14 +80,14 @@
 			<p:outputLabel value="Место рождения:" styleClass="base_form_caption_text"/>
 		</p:row>
 		<p:row>
-			<p:inputText value="#{clientform.whereWasBorn}" id="cedit_born_place" size="40" styleClass="base_form_value_text">
+			<p:inputText value="#{clientform.client.whereWasBorn}" id="cedit_born_place" size="40" styleClass="base_form_value_text">
 			</p:inputText>
 		</p:row>
         <p:row>
             <p:outputLabel value="Наличие важных отметок:" styleClass="base_form_caption_text"/>
         </p:row>
         <p:row>
-            <p:selectBooleanCheckbox value="#{clientform.hasNotice}" styleClass="base_form_value_text" />
+            <p:selectBooleanCheckbox value="#{clientform.client.hasNotice}" styleClass="base_form_value_text" />
         </p:row>
 
     </p:panelGrid>

@@ -103,7 +103,7 @@ public class ClientDeathDocumentBean implements Serializable {
 
             FacesContext context = FacesContext.getCurrentInstance();
             ClientFormBean cdb = context.getApplication().evaluateExpressionGet(context, "#{clientform}", ClientFormBean.class);
-            cdb.reloadAll(Integer.parseInt(Util.getSession().getAttribute("cid").toString()));
+            cdb.reloadAll();
             msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Данные сохранены", "");
         } catch (Exception e) {
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Невозможно сохранить данные!", "Обратитесь к администратору");

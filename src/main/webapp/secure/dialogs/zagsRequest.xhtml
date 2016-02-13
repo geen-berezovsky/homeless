@@ -6,7 +6,7 @@
 <ui:composition>
     <h:form id="zags_request">
         <p:dialog id="zagsRequest"
-                  header="Запрос в ЗАГС: #{clientform.surname} #{clientform.firstname} #{clientform.middlename}"
+                  header="Запрос в ЗАГС: #{clientform.client.surname} #{clientform.client.firstname} #{clientform.client.middlename}"
                   widgetVar="zagsRequestWv" resizable="false" closable="true" modal="true" showEffect="fade"
                   hideEffect="explode" dynamic="true" closeOnEscape="true">
 

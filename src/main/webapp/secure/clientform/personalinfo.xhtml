@@ -8,7 +8,7 @@
 			<h:outputText value="Семейное положение:" styleClass="base_form_caption_text"/>
 		</p:row>
 		<p:row>
-			<p:selectOneMenu id="martialId" value="#{clientform.martialStatus}" style="width:150px;" styleClass="base_form_value_text">
+			<p:selectOneMenu id="martialId" value="#{clientform.client.martialStatus}" style="width:150px;" styleClass="base_form_value_text">
 				<f:selectItem itemLabel="Нет ответа" itemValue="0" />
 				<f:selectItem itemLabel="Состоит в браке" itemValue="1" />
 				<f:selectItem itemLabel="Не состоит в браке" itemValue="2" />
@@ -18,7 +18,7 @@
 			<h:outputText value="Наличие иждивенцев:" styleClass="base_form_caption_text"/>
 		</p:row>
 		<p:row>
-			<p:selectOneMenu id="dependentsId" value="#{clientform.dependents}" style="width:150px;" styleClass="base_form_value_text">
+			<p:selectOneMenu id="dependentsId" value="#{clientform.client.dependents}" style="width:150px;" styleClass="base_form_value_text">
 				<f:selectItem itemLabel="Нет ответа" itemValue="0" />
 				<f:selectItem itemLabel="Да" itemValue="1" />
 				<f:selectItem itemLabel="Нет" itemValue="2" />
@@ -38,13 +38,13 @@
 			<h:outputText value="Вид профессии:" styleClass="base_form_caption_text"/>
 		</p:row>
 		<p:row>
-			<p:inputText name="professionDetails" id="professionDetailsId" value="#{clientform.profession}" styleClass="base_form_value_text" size="16"/>
+			<p:inputText name="professionDetails" id="professionDetailsId" value="#{clientform.client.profession}" styleClass="base_form_value_text" size="16"/>
 		</p:row>
 		<p:row>
 			<h:outputText value="Образование:" styleClass="base_form_caption_text"/>
 		</p:row>
 		<p:row>
-			<p:selectOneMenu id="educationId" value="#{clientform.education}" converter="edConverter" style="width:150px;" styleClass="base_form_value_text">
+			<p:selectOneMenu id="educationId" value="#{clientform.client.education}" converter="edConverter" style="width:150px;" styleClass="base_form_value_text">
 				<f:selectItems value="#{clientform.educationTypes}" var="education" itemValue="#{education}" itemLabel="#{education.caption}"/>
 			</p:selectOneMenu>
 		</p:row>
@@ -52,7 +52,7 @@
 			<h:outputText value="Прожив. в жил. помещении:" styleClass="base_form_caption_text"/>
 		</p:row>
 		<p:row>
-			<p:selectOneMenu id="liveInFlatId" value="#{clientform.liveInFlat}" style="width:150px;" styleClass="base_form_value_text">
+			<p:selectOneMenu id="liveInFlatId" value="#{clientform.client.liveInFlat}" style="width:150px;" styleClass="base_form_value_text">
 				<f:selectItem itemLabel="Нет ответа" itemValue="0" />
 				<f:selectItem itemLabel="Да" itemValue="1" />
 				<f:selectItem itemLabel="Нет" itemValue="2" />
@@ -62,7 +62,7 @@
 			<h:outputText value="Где ночевали:" styleClass="base_form_caption_text"/>
 		</p:row>
 		<p:row>
-			<p:selectOneMenu id="nightStayId" value="#{clientform.nightStay}" converter="nsConverter" style="width:150px;" styleClass="base_form_value_text">
+			<p:selectOneMenu id="nightStayId" value="#{clientform.client.nightstay}" converter="nsConverter" style="width:150px;" styleClass="base_form_value_text">
 				<f:selectItems value="#{clientform.nightStayTypes}" var="nightStay" itemValue="#{nightStay}" itemLabel="#{nightStay.caption}"/>
 			</p:selectOneMenu>
         </p:row>
@@ -70,7 +70,7 @@
 			<h:outputText value="Видитесь ли с родственниками:" styleClass="base_form_caption_text"/>
 		</p:row>
 		<p:row>
-            <p:selectOneMenu id="familyCommunicationsId" value="#{clientform.fcom}" converter="fcomConverter" style="width:150px;" styleClass="base_form_value_text">
+            <p:selectOneMenu id="familyCommunicationsId" value="#{clientform.client.fcom}" converter="fcomConverter" style="width:150px;" styleClass="base_form_value_text">
                 <f:selectItems value="#{clientform.familyCommunicationTypes}" var="familyCommunication" itemValue="#{familyCommunication}" itemLabel="#{familyCommunication.caption}" />
             </p:selectOneMenu>
         </p:row>
@@ -87,7 +87,7 @@
                 <h:outputLabel value="Район:" for="subregion_living" styleClass="base_form_caption_text" style="text-align: right;"/>
         </p:row>
         <p:row>
-            <p:selectOneMenu id="subregion_living" value="#{clientform.lastLiving}" converter="subRegionIDConverter" style="width:150px;" styleClass="base_form_value_text">
+            <p:selectOneMenu id="subregion_living" value="#{clientform.client.lastLiving}" converter="subRegionIDConverter" style="width:150px;" styleClass="base_form_value_text">
                 <f:selectItems value="#{clientform.lastLivingSubRegions}" var="lSbRgn" itemValue="#{lSbRgn}" itemLabel="#{lSbRgn.caption}" />
             </p:selectOneMenu>
         </p:row>
@@ -104,7 +104,7 @@
                 <h:outputLabel value="Район:" for="subregion_registration" styleClass="base_form_caption_text"/>
         </p:row>
         <p:row>
-            <p:selectOneMenu id="subregion_registration" value="#{clientform.lastRegistration}" converter="subRegionIDConverter" style="width:150px;" styleClass="base_form_value_text">
+            <p:selectOneMenu id="subregion_registration" value="#{clientform.client.lastRegistration}" converter="subRegionIDConverter" style="width:150px;" styleClass="base_form_value_text">
                 <f:selectItems value="#{clientform.lastRegistrationSubRegions}" var="rSbRgn" itemValue="#{rSbRgn}" itemLabel="#{rSbRgn.caption}" />
             </p:selectOneMenu>
         </p:row>

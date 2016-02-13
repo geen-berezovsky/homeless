@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui">
 <ui:composition>
 	<p:selectManyCheckbox id="chronicDiseasesId" value="#{clientform.clientChronicDisease}" layout="pageDirection" styleClass="base_form_value_text">
-		<f:selectItems value="#{clientform.chronicDiseaseTypes}" var="chdvar" itemValue="#{chdiv}" />
+		<f:selectItems value="#{clientform.chronicDiseaseTypes}"/>
 	</p:selectManyCheckbox>
 
 	<p:separator />
@@ -11,6 +11,6 @@
 		<p:ajax update="anotherChronincs" listener="#{clientform.itemSelected}" />
 	</p:selectBooleanCheckbox>
 	<h:outputText value=" Другие"  styleClass="base_form_caption_text"/>
-	<p:inputText id="anotherChronincs" style="#{clientform.anotherChronicsStyle}" value="#{clientform.uniqDisease}"  styleClass="base_form_value_text"/>
+	<p:inputText id="anotherChronincs" style="#{clientform.anotherChronicsStyle}" value="#{clientform.client.uniqDisease}"  styleClass="base_form_value_text"/>
 </ui:composition>
 </html>

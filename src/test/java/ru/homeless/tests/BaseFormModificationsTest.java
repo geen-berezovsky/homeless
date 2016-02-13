@@ -54,7 +54,7 @@ public class BaseFormModificationsTest {
         log.info("Generating 30 random values from "+minRand+" to "+maxRand);
 
         List<Integer> listNumbers = new ArrayList<>();
-        for (int i=0; i<30; i++) {
+        for (int i=0; i<10; i++) {
             listNumbers.add(Util.randInt(minRand, maxRand));
         }
 

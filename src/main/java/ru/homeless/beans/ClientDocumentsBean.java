@@ -74,10 +74,10 @@ public class ClientDocumentsBean implements Serializable {
 
     public void reload() {
 		HttpSession session = Util.getSession();
-		String cids = session.getAttribute("cid").toString();
+		Object cids = session.getAttribute("cid");
 
-		if (cids != null && !cids.trim().equals("")) {
-			this.cid = Integer.parseInt(cids);
+		if (cids != null && !cids.toString().trim().equals("")) {
+			this.cid = Integer.parseInt(cids.toString());
 			documentsList = getGenericService().getInstancesByClientId(Document.class, cid);
 		}
         documentsWithAbsentRegistrationList = new ArrayList<>();

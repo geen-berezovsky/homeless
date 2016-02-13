@@ -6,7 +6,7 @@
 <ui:composition>
     <h:form id="standard_document">
         <p:dialog id="standardDocument"
-                  header="Стандартный документ: #{clientform.surname} #{clientform.firstname} #{clientform.middlename}"
+                  header="Стандартный документ: #{clientform.client.surname} #{clientform.client.firstname} #{clientform.client.middlename}"
                   widgetVar="standardDocumentWv" resizable="false" closable="true" modal="true" showEffect="fade"
                   hideEffect="explode" dynamic="true" closeOnEscape="true">
 

@@ -80,7 +80,7 @@
                     </p:layoutUnit>
                     <p:layoutUnit position="south" size="100" style="min-height: 45px; max-height: 45px" styleClass="bottomLayoutMainForm">
                         <center>
-                            <p:commandButton value="Сохранить" actionListener="#{clientform.saveClientForm(clientform)}" id="saveClientForm" update="@this :m_tabview:base_form :m_tabview:contactsTabTitle :m_tabview:commentsTabTitle base_form_panel_grid growl"
+                            <p:commandButton value="Сохранить" actionListener="#{clientform.saveClientForm}" id="saveClientForm" update="@this :m_tabview:base_form :m_tabview:contactsTabTitle :m_tabview:commentsTabTitle base_form_panel_grid growl"
                                              icon="ui-icon-check"/>
                         </center>
                     </p:layoutUnit>
@@ -207,8 +207,7 @@
 <p:layoutUnit id="reminders" position="east" size="300" resizable="true" closable="true" collapsible="true" header="Напоминания" minSize="200" collapsed="#{not reminderBean.needToOpenReminder}">
   <h:form name="reminders_form">
     <p:dataTable var="shelterInfo" value="#{reminderBean.clientsReminderForCurUser}" rendered="#{reminderBean.hasSoonShelterEnded}"
-    scrollable="true" styleClass="default_datatable" scrollHeight="120" selectionMode="single"
-    rowKey="#{shelterInfo.id}" widgetVar="soonEndedShelterTable">
+    scrollable="true" styleClass="default_datatable" scrollHeight="120" selectionMode="single" rowKey="#{shelterInfo.id}" widgetVar="soonEndedShelterTable">
         <f:facet name="header">
             Скорое окончание даты заселения
         </f:facet>

@@ -11,6 +11,6 @@
 		<p:ajax update="anotherBreadwinners" listener="#{clientform.itemSelected}" />
 	</p:selectBooleanCheckbox>
 	<h:outputText value=" Другие"  styleClass="base_form_caption_text"/>
-	<p:inputText id="anotherBreadwinners" style="#{clientform.anotherBreadwinnerStyle}" value="#{clientform.uniqBreadwinner}"  styleClass="base_form_value_text"/>
+	<p:inputText id="anotherBreadwinners" style="#{clientform.anotherBreadwinnerStyle}" value="#{clientform.client.uniqBreadwinner}"  styleClass="base_form_value_text"/>
 </ui:composition>
 </html>

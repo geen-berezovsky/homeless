@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui">
 <ui:composition>
     <h:form id="real_photo_form">
-	<p:dialog id="realPhoto" header="Фотография клиента: #{clientform.surname} #{clientform.firstname} #{clientform.middlename} (ID = #{clientform.id})" widgetVar="realPhotoWv" resizable="false" closable="true" modal="true" showEffect="size" hideEffect="explode" dynamic="true" closeOnEscape="true" position="left top">
+	<p:dialog id="realPhoto" header="Фотография клиента: #{clientform.client.surname} #{clientform.client.firstname} #{clientform.client.middlename} (ID = #{clientform.client.id})" widgetVar="realPhotoWv" resizable="false" closable="true" modal="true" showEffect="size" hideEffect="explode" dynamic="true" closeOnEscape="true" position="left top">
 			<p:messages />
                 <p:panel>
                     <h:outputText style="font-size: 10px" value="Оригинал изображения: #{clientform.originalPhotoFilePath}"/>

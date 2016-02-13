@@ -1,5 +1,7 @@
 package ru.homeless.entities;
 
+import ru.homeless.util.Util;
+
 import static javax.persistence.GenerationType.IDENTITY;
 
 import java.io.Serializable;
@@ -428,4 +430,9 @@ public class Client implements Serializable {
     public void setHasNotice(Boolean hasNotice) {
         this.hasNotice = hasNotice;
     }
+
+    public String toString() {
+        return "["+getId()+"] "+getSurname()+" "+getFirstname()+" "+getMiddlename()+" ["+ Util.formatDate(getDate())+"]";
+    }
+
 }

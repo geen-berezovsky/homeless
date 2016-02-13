@@ -267,9 +267,9 @@ public class Util {
         //Evaluating ClientForm Bean
         FacesContext context = FacesContext.getCurrentInstance();
         ClientFormBean cf = context.getApplication().evaluateExpressionGet(context, "#{clientform}", ClientFormBean.class);
-        cf.setAvatar(new javax.sql.rowset.serial.SerialBlob(resizedBytes));
-        cf.setPhotoCheckSum(client.getPhotoCheckSum());
-        cf.setPhotoName(client.getPhotoName());
+        cf.getClient().setAvatar(new javax.sql.rowset.serial.SerialBlob(resizedBytes));
+        cf.getClient().setPhotoCheckSum(client.getPhotoCheckSum());
+        cf.getClient().setPhotoName(client.getPhotoName());
         //cf.reloadAll(client.getId());
 
         //NOW MOVE THE ORIGINAL FILE FROM CACHE TO THE STORAGE

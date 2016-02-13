@@ -172,7 +172,7 @@ public class PhotoCameraBean implements Serializable{
         //Evaluating ClientForm Bean
         FacesContext context = FacesContext.getCurrentInstance();
         ClientFormBean cf = context.getApplication().evaluateExpressionGet(context, "#{clientform}", ClientFormBean.class);
-        cf.reloadAll(client.getId());
+        cf.reloadAll();
     }
 
 }
