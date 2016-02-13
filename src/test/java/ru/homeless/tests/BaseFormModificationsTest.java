@@ -114,8 +114,8 @@ public class BaseFormModificationsTest {
 
     @AfterClass
 	public static void finishTesting() {
-        //Util.logout();
-		//Util.driver.quit();
+        Util.logout();
+		Util.driver.quit();
 	}
 
 

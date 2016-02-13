@@ -26,7 +26,7 @@ public class Util {
     private static String OS = System.getProperty("os.name").toLowerCase();
 
 	public static WebDriver driver;
-	public static final long defaultPageTimeout = 30;
+	public static final long defaultPageTimeout = 10;
 	public static final String defaultWorkerUsername = "Валентина Борейко";
 	public static final String defaultWorkerPassword = "111";
 	public static String defaultURL = "http://localhost:8080/homeless/";
