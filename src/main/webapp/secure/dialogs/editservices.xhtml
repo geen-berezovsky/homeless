@@ -1,0 +1,44 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui">
+<ui:composition>
+	<h:form id="edit_services">
+		<p:messages />
+		<p:dialog id="editService" header="Редактировать оказанную услугу" widgetVar="editServiceWv" resizable="false" closable="true" modal="true" showEffect="fade" hideEffect="explode" dynamic="true" closeOnEscape="true">
+            <p:growl id="editservices_growl" showDetail="true" life="3000" />
+            <p:ajax event="close" listener="#{services.handleCloseOperation}" update="editservices_growl :m_tabview:base_form:recievedservice :edit_services:edititionalServiceValues editService @this"/>
+            <h:panelGrid columns="2" id="edititionalServiceValues">
+				<p:outputLabel value="Клиент:" styleClass="base_form_caption_text"/>
+				<p:outputLabel value="#{clientform.client.surname} #{clientform.client.firstname} #{clientform.client.middlename}" styleClass="base_form_value_text"/>
+
+				<p:outputLabel value="Дата:" styleClass="base_form_caption_text"/>
+				<p:calendar value="#{services.selectedService.date}" showOn="button" pattern="dd.MM.yyyy" styleClass="base_form_value_text"/>
+
+                <p:outputLabel value="Услуга:" styleClass="base_form_caption_text"/>
+                <p:selectOneMenu id="eServiceId"  value="#{services.selectedService.serviceType}" converter="serviceConverter" style="width:250px;" styleClass="base_form_value_text" >
+                    <p:ajax event="change" listener="#{services.itemSelected}" update="editCashInfoValueLabel editCashInfoValue" />
+                    <f:selectItems value="#{services.availableServices}" var="eService" itemValue="#{eService}" />
+                </p:selectOneMenu>
+
+                <p:outputLabel id="editCashInfoValueLabel" for="editCashInfoValue" value="Сумма (только цифры):" styleClass="base_form_caption_text" style="#{services.cashValueVisibility}"/>
+                <p:inputText value="#{services.selectedService.cash}" id="editCashInfoValue" required="false" styleClass="base_form_value_text" style="#{services.cashValueVisibility}"/>
+
+                <p:outputLabel value="Комментарии:" styleClass="base_form_caption_text"/>
+                <p:inputTextarea rows="10" cols="30" id="servicesComment" value="#{services.selectedService.comment}" style="width:250px;" styleClass="base_form_value_text"/>
+            </h:panelGrid>
+            <p:panel>
+                <center>
+                    <p:commandButton value="Обновить" id="editNewServices" actionListener="#{services.updateItem(clientform)}" ajax="true" oncomplete="editServiceWv.hide();"
+                                     update=":m_tabview:base_form:recievedservice editService @this" />
+                </center>
+            </p:panel>
+
+
+
+        </p:dialog>
+
+
+	</h:form>
+
+</ui:composition>
+</html>

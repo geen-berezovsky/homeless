@@ -4,9 +4,11 @@ import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.*;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.event.ValueChangeEvent;
 import javax.servlet.http.HttpSession;
@@ -14,6 +16,8 @@ import javax.servlet.http.HttpSession;
 import org.jboss.logging.Logger;
 
 import org.primefaces.context.RequestContext;
+import ru.homeless.converters.EducationConverter;
+import ru.homeless.converters.ServiceConverter;
 import ru.homeless.entities.*;
 import ru.homeless.services.GenericService;
 import ru.homeless.util.Util;
@@ -25,18 +29,11 @@ public class ReceivedServiceBean implements Serializable {
 
     private static final Logger log = Logger.getLogger(ReceivedServiceBean.class);
     private static final long serialVersionUID = 1L;
-    private Date date;
     private RecievedService selectedService;
-
-    private Integer selectedItemCash;
-
-    private String selectedItem;
-
-    private String selectedItemComment;
+    private List<ServicesType> availableServices;
 
     @ManagedProperty(value = "#{GenericService}")
     private GenericService genericService;
-
 
     private void toggleCashVisibility(boolean value) {
         if (value)
@@ -50,16 +47,19 @@ public class ReceivedServiceBean implements Serializable {
         resetForm();
     }
 
-    private void resetForm() {
-        setDate(Calendar.getInstance().getTime());
-        setSelectedItemComment("");
-        setSelectedItemCash(0);
+    public void resetForm() {
+        selectedService = new RecievedService();
+        selectedService.setComment("");
+        selectedService.setDate(new Date());
+        selectedService.setCash(0);
         this.cashValueVisibility = "display: none;";
-        selectedService = null;
+        log.info("Reseting form with add/edit received service");
     }
 
     public List<ServicesType> getAvailableServices() {
         List<ServicesType> list = getGenericService().getInstances(ServicesType.class);
+
+        //Removing all Справки from the list
         List<ServicesType> todelItems = new ArrayList<ServicesType>();
         for (ServicesType st : list) {
             if (st.getDocument()) todelItems.add(st);
@@ -67,83 +67,85 @@ public class ReceivedServiceBean implements Serializable {
         for (ServicesType i : todelItems) {
             list.remove(i);
         }
+
+        //Pick in the converter's data
+        ServiceConverter.rcDB = new ArrayList<ServicesType>();
+        ServiceConverter.rcDB.addAll(list);
         return list;
     }
 
 
     public void itemSelected() {
-        RequestContext rc = RequestContext.getCurrentInstance();
-
-        for (ServicesType st : getAvailableServices()) {
-            if (selectedItem.equals(st.getCaption())) {
-                if (st.getMoney()) {
-                    toggleCashVisibility(true);
-                } else {
-                    toggleCashVisibility(false);
-                }
-            }
+        if (selectedService.getServiceType().getMoney()) {
+            toggleCashVisibility(true);
+        } else {
+            toggleCashVisibility(false);
         }
-        if (selectedService == null) { //only if it is new record
-            selectedItemComment = "";
-            selectedItemCash = 0;
-        }
-        rc.update("add_services:additionalServiceValues");
     }
 
-    public void addSelectedServices(ClientFormBean cb) {
-            boolean update = false;
-            if (selectedService == null ) {
-                selectedService = new RecievedService();
-            } else {
-                update = true;
-            }
-
-            for (ServicesType st : getAvailableServices()) {
-                if (selectedItem.equals(st.getCaption())) {
-                    selectedService.setServiceType(st);
-                    break;
-                }
-            }
-
-            if (selectedService.getServiceType().getMoney()) {
-                selectedService.setCash(selectedItemCash);
-            }
-
-            selectedService.setComment(selectedItemComment);
-
-            HttpSession session = Util.getSession();
-            String cids = session.getAttribute("cid").toString();
-
-            Client c = null;
-            if (cids != null && !cids.trim().equals("")) {
-                c = getGenericService().getInstanceById(Client.class, Integer.parseInt(cids));
-            }
-
-            selectedService.setWorker((Worker) session.getAttribute("worker"));
-            selectedService.setClient(c);
-            selectedService.setDate(getDate());
-
-            if (! update) {
-                getGenericService().addInstance(selectedService);
-            } else {
-                getGenericService().updateInstance(selectedService);
-            }
+    public void updateItem(ClientFormBean cb) {
+        FacesMessage msg = null;
+        HttpSession session = Util.getSession();
+        selectedService.setWorker((Worker) session.getAttribute("worker"));
+        selectedService.setClient(cb.getClient());
+        log.info("Update Received Service: " + selectedService.getServiceType().getCaption() + ", " + Util.formatDate(selectedService.getDate()) + ", for client " + selectedService.getClient().toString());
+        try {
+            getGenericService().updateInstance(selectedService);
             resetForm();
-            try {
-                cb.reloadAll();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            //Because the client is global for application, we need to reload for him/her actual ReceivedService from the database
+            cb.reloadClientReceivedServices();
+            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Данные по оказанной услуге сохранены", "");
+        } catch (Exception e) {
+            log.error(e);
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Данные по оказанной услуге не сохранены", "");
+        }
+        if (msg != null) {
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+        }
 
     }
 
-    public void updateValue() {
-        setDate(selectedService.getDate());
-        setSelectedItem(selectedService.getServiceType().getCaption());
-        setSelectedItemCash(selectedService.getCash());
-        setSelectedItemComment(selectedService.getComment());
-        itemSelected(); //toggle cash field if necessary
+    public void handleCloseOperation() {
+        FacesMessage msg = null;
+        msg = new FacesMessage(FacesMessage.SEVERITY_WARN, "Данные по оказанной услуге не сохранены", "Пожалуйста, нажимайте кнопку Обновить для сохранения данных!");
+        if (msg != null) {
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+        }
+
+        //auto saving IS NOT WORKING CURRENTLY. Please fix when you will have enough time and this is 'must have'
+        //RequestContext rc = RequestContext.getCurrentInstance();
+        //rc.execute("saveEditServicesForm()");
+        //log.info("Dialog Edit Service has been closed unexpectedly. The selected Service is saved automatically.");
     }
+
+    public void prepareForNewService() {
+        resetForm();
+        RequestContext requestContext = RequestContext.getCurrentInstance();
+        requestContext.execute("addServiceWv.show();");
+    }
+
+    public void addItem(ClientFormBean cb) {
+        FacesMessage msg = null;
+        HttpSession session = Util.getSession();
+        selectedService.setWorker((Worker) session.getAttribute("worker"));
+        selectedService.setClient(cb.getClient());
+        log.info("Adding Received Service: "+selectedService.getServiceType().getCaption()+", "+Util.formatDate(selectedService.getDate())+", for client "+selectedService.getClient().toString());
+        try {
+            getGenericService().addInstance(selectedService);
+            resetForm();
+            //Because the client is global for application, we need to reload for him/her actual ReceivedService from the database
+            cb.reloadClientReceivedServices();
+            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Данные по оказанной услуге сохранены", "");
+        } catch (Exception e) {
+            log.error(e);
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Данные по оказанной услуге не сохранены", "");
+        }
+        if (msg != null) {
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+        }
+
+    }
+
 
     public void deleteService() {
         Client c = selectedService.getClient();
@@ -163,14 +165,6 @@ public class ReceivedServiceBean implements Serializable {
         this.selectedService = selectedService;
     }
 
-    public Date getDate() {
-        return date;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
-    }
-
     public String formattedDate(Date query) {
         return Util.formatDate(query);
     }
@@ -183,30 +177,6 @@ public class ReceivedServiceBean implements Serializable {
         this.genericService = genericService;
     }
 
-    public String getSelectedItemComment() {
-        return selectedItemComment;
-    }
-
-    public void setSelectedItemComment(String selectedItemComment) {
-        this.selectedItemComment = selectedItemComment;
-    }
-
-    public String getSelectedItem() {
-        return selectedItem;
-    }
-
-    public void setSelectedItem(String selectedItem) {
-        this.selectedItem = selectedItem;
-    }
-
-    public Integer getSelectedItemCash() {
-        return selectedItemCash;
-    }
-
-    public void setSelectedItemCash(Integer selectedItemCash) {
-        this.selectedItemCash = selectedItemCash;
-    }
-
     public String getCashValueVisibility() {
         return cashValueVisibility;
     }
@@ -216,4 +186,7 @@ public class ReceivedServiceBean implements Serializable {
     }
 
 
+    public void setAvailableServices(List<ServicesType> availableServices) {
+        this.availableServices = availableServices;
+    }
 }

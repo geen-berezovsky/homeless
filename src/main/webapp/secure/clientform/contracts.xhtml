@@ -28,7 +28,9 @@
                     <p:column headerText="ID" rendered="false">
                         <h:outputText value="#{conlist.id}"/>
                     </p:column>
-
+                    <f:facet name="header">
+                        Договоры с клиентом
+                    </f:facet>
                     <p:column headerText="Номер">
                         <h:outputText value="#{conlist.docNum}"/>
                     </p:column>

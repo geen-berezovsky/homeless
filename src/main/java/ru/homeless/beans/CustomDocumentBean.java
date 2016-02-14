@@ -38,7 +38,7 @@ public class CustomDocumentBean implements Serializable {
 
     private List<String> finalPart;
 
-    private String origSignature = "С уважением\nДиректор СПб БОО \"Ночлежка\"\nСвердлин Григорий";
+    private String origSignature = "С уважением\nПредседатель СПб БОО \"Ночлежка\"\nГригорий Свердлин";
     private String signature = origSignature;
     private String performer;
 

@@ -80,7 +80,7 @@
                     </p:layoutUnit>
                     <p:layoutUnit position="south" size="100" style="min-height: 45px; max-height: 45px" styleClass="bottomLayoutMainForm">
                         <center>
-                            <p:commandButton value="Сохранить" actionListener="#{clientform.saveClientForm}" id="saveClientForm" update="@this :m_tabview:base_form :m_tabview:contactsTabTitle :m_tabview:commentsTabTitle base_form_panel_grid growl"
+                            <p:commandButton value="Сохранить" actionListener="#{clientform.saveClientForm}" id="saveClientForm" update="@this :m_tabview:base_form :m_tabview:contactsTabTitle :m_tabview:commentsTabTitle base_form_panel_grid growl :add_services:additionalServiceValues"
                                              icon="ui-icon-check"/>
                         </center>
                     </p:layoutUnit>
@@ -258,6 +258,7 @@
 <ui:include src="dialogs/search.xhtml"/>
 <ui:include src="dialogs/webcamera.xhtml"/>
 <ui:include src="dialogs/addservices.xhtml"/>
+<ui:include src="dialogs/editservices.xhtml"/>
 <ui:include src="dialogs/adddocument.xhtml"/>
 <ui:include src="dialogs/addscandocument.xhtml"/>
 <ui:include src="dialogs/addcontract.xhtml"/>
@@ -309,6 +310,10 @@
 
         function saveEditContractForm() {
             jQuery('#edit_contract\\:updateContractButtonId').click();
+        }
+
+        function saveEditServicesForm() {
+            jQuery('#edit_services\\:editNewServices').click();
         }
 
         function saveEditServicePlanItemForm() {

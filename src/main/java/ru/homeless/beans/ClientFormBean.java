@@ -311,7 +311,7 @@ public class ClientFormBean implements Serializable {
     }
 
     public void reloadClientReceivedServices() {
-        servicesList = new ArrayList<RecievedService>(client.getRecievedservices());
+        servicesList = new ArrayList<RecievedService>(getClientService().getInstancesByClientId(RecievedService.class, client));
         Collections.sort(servicesList, new RecievedServiceSortingComparator());
     }
 

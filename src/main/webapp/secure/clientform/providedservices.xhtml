@@ -13,14 +13,14 @@
 
 	<!-- Include operations with datatables -->
 	<p:contextMenu for="recievedservice">
-        <p:menuitem value="Редактировать" oncomplete="addServiceWv.show()" actionListener="#{services.updateValue}" icon="ui-icon-trash" ajax="true" />
+        <p:menuitem value="Редактировать" oncomplete="editServiceWv.show()"  icon="ui-icon-trash" ajax="true" />
 		<p:menuitem value="Удалить" oncomplete="deleteReceivedService.show()" icon="ui-icon-trash" ajax="true" />
 	</p:contextMenu>
 
 	<p:dataTable id="recievedservice" var="recievedservice" value="#{clientform.servicesList}" paginator="true" rows="7"
 		paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="7,14,21"
 		rowKey="#{recievedservice.id}" selection="#{services.selectedService}" selectionMode="single" paginatorPosition="bottom" styleClass="default_datatable">
-        <p:ajax event="rowDblselect" listener="#{services.updateValue}" global="false" oncomplete="addServiceWv.show()"/>
+        <p:ajax event="rowDblselect" listener="#{services.itemSelected}" global="false" oncomplete="editServiceWv.show()"/>
 		<p:column headerText="id" style="display:none;">
 			<h:outputText value="#{recievedservice.id}" />
 		</p:column>
@@ -38,7 +38,7 @@
 	</p:dataTable>
 	<p:outputPanel>
 		<center>
-			<p:commandButton value="Добавить услугу" onclick="addServiceWv.show();" icon="ui-icon-circle-plus" type="button" style="margin-top: 10px;"/>
+			<p:commandButton value="Добавить услугу" actionListener="#{services.prepareForNewService()}" icon="ui-icon-circle-plus" style="margin-top: 10px;" update=":add_services:additionalServiceValues"/>
 		</center>
 	</p:outputPanel>
 

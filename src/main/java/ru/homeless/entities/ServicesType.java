@@ -64,4 +64,17 @@ public class ServicesType implements Serializable {
     }
 
 
+    public boolean equals(Object o) {
+        if (o == null) return false;
+        if (! (o instanceof ServicesType)) {
+            return false;
+        }
+        ServicesType d = (ServicesType) o;
+        if (new Integer(getId()).equals(new Integer(d.getId()))) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 }

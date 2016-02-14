@@ -24,6 +24,9 @@
                              paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15"
                              rowKey="#{doclist.id}" selection="#{clientdocuments.selectedDocument}" selectionMode="single" paginatorPosition="bottom" styleClass="default_datatable">
                     <p:ajax event="rowDblselect" listener="#{clientdocuments.editDocument()}" global="false" oncomplete="addDocumentWv.show();"/>
+                    <f:facet name="header">
+                        Зарегистрированные документы клиента
+                    </f:facet>
                     <p:column headerText="ID">
                         <h:outputText value="#{doclist.id}"/>
                     </p:column>
@@ -56,7 +59,7 @@
                 </p:dataTable>
                 <p />
                 <center>
-                    <p:commandButton value="Добавить описание документа" icon="ui-icon-circle-plus" process="@this :m_tabview" actionListener="#{clientdocuments.resetForm}" style="text-align: right"/>
+                    <p:commandButton value="Зарегистрировать документ" icon="ui-icon-circle-plus" process="@this :m_tabview" actionListener="#{clientdocuments.resetForm}" style="text-align: right"/>
                 </center>
 
 
