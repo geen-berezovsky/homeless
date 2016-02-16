@@ -124,27 +124,30 @@ public class ClientFormBean implements Serializable {
         //Actual client may be already set using search. But, for compatibility this method is saved
         //Setting actual client id to session for using in another applications
         HttpSession session = Util.getSession();
-        session.setAttribute("cid", client.getId()); // 'cid' means the ClientID
-        this.cid = client.getId(); //just for simplifying access to the ClientID in this bean
-        setClient(client); //Setting client for the runtime
+        if (client != null) {
+            session.setAttribute("cid", client.getId()); // 'cid' means the ClientID
+            this.cid = client.getId(); //just for simplifying access to the ClientID in this bean
+            setClient(client); //Setting client for the runtime
 
-        log.info("Opening client with id = "+client.getId() + " ("+client.toString()+")");
-        this.mainPanelVisibility = "display: block;"; //Show main panel when the first client is attached
+            log.info("Opening client with id = " + client.getId() + " (" + client.toString() + ")");
+            this.mainPanelVisibility = "display: block;"; //Show main panel when the first client is attached
 
-        File profile = new File(Configuration.profilesDir+"/"+cid);
-        if (!profile.exists()) {
-            profile.mkdirs();
+            File profile = new File(Configuration.profilesDir + "/" + cid);
+            if (!profile.exists()) {
+                profile.mkdirs();
+            }
+
+            reloadAll();
+            RequestContext rc = RequestContext.getCurrentInstance();
+            rc.update("select_document");
+            rc.update("m_tabview");
+            rc.update("upload_photo_form");
+
+            prevTabIndex = 0;
+            tabIndex = 0;
+        } else {
+            log.error("Client is null. Nobody knows how it happens...");
         }
-
-        reloadAll();
-        RequestContext rc = RequestContext.getCurrentInstance();
-        rc.update("select_document");
-        rc.update("m_tabview");
-        rc.update("upload_photo_form");
-
-        prevTabIndex = 0;
-        tabIndex = 0;
-
     }
 
     public void updateDocumentsTabHeader() {
@@ -699,6 +702,8 @@ public class ClientFormBean implements Serializable {
             ccb.reload();
             csb.reload();
 
+            //12.02.2016: Autosaving is TEMPORARY disabled
+            /*
             //We can't just perform saveClientFormsaveClientForm(this) because we don't have such context. Currently, "this" is not an exact instance
             //which we need to send to the save function
             //Then, use javascript callback to perform the saving
@@ -714,12 +719,17 @@ public class ClientFormBean implements Serializable {
                 RequestContext rc = RequestContext.getCurrentInstance();
                 rc.execute("save4Tab();");
             }
+            */
 
             log.info("Reloaded all data for the selected client " + client.toString());
         }
     }
 
     public void tabChangeListener(TabChangeEvent event) {
+
+        //17.02.2016: tabChangeListener is TEMPORARY disabled for investigating an issue with overwriting records
+        // For the first opinion it could be related with autosaving
+
         //workaround for getting the current selected tab
         //it cannot be done with basic way because the tag tabView is not included into <form> tag
         FacesContext context = FacesContext.getCurrentInstance();
@@ -740,7 +750,8 @@ public class ClientFormBean implements Serializable {
             }
 
         } else {
-            refreshTabs(prevTabIndex);
+            //17.02.2016: autosaving is TEMPORARY disabled
+            //refreshTabs(prevTabIndex);
         }
         prevTabIndex = tabIndex;
     }
