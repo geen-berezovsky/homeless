@@ -54,7 +54,7 @@ public class ClientDeathDocumentBean implements Serializable {
         RequestContext requestContext = RequestContext.getCurrentInstance();
         requestContext.execute("clientDeathWv.show();");
         HttpSession session = Util.getSession();
-        client = getGenericService().getInstanceById(Client.class, Util.getCurrentClientId());
+        client = Util.getCurrentClient();
 
         if (client.getDeathDate() == null) {
             SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");

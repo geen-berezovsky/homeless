@@ -73,39 +73,40 @@ public class ClientDocumentsBean implements Serializable {
 
     public void reload() {
 		HttpSession session = Util.getSession();
-
-		documentsList = getGenericService().getInstancesByClientId(Document.class, Util.getCurrentClientId());
-        documentsWithAbsentRegistrationList = new ArrayList<>();
-        for (Document d : documentsList) {
-            if (d.getDoctype().getId() == 1) { //this is Passport, Parent's Passport or Birth Document
-                if (d.getRegistration() == 1) { //Registration is "Нет"
-                    //only in that case we can create a basic document, because the client has a passport, but don't have a registration
+        if (Util.getCurrentClient() != null) {
+            documentsList = getGenericService().getInstancesByClientId(Document.class, Util.getCurrentClient().getId());
+            documentsWithAbsentRegistrationList = new ArrayList<>();
+            for (Document d : documentsList) {
+                if (d.getDoctype().getId() == 1) { //this is Passport, Parent's Passport or Birth Document
+                    if (d.getRegistration() == 1) { //Registration is "Нет"
+                        //only in that case we can create a basic document, because the client has a passport, but don't have a registration
+                        documentsWithAbsentRegistrationList.add(d);
+                    }
+                }
+                if (d.getDoctype().getId() == 3) { //this is Birth Document
                     documentsWithAbsentRegistrationList.add(d);
                 }
-            }
-            if (d.getDoctype().getId() == 3) { //this is Birth Document
-                documentsWithAbsentRegistrationList.add(d);
-            }
-            if (d.getDoctype().getId() == 13) { //this is Khodataystvo
-                documentsWithAbsentRegistrationList.add(d);
-            }
-            if (d.getDoctype().getId() == 21) { //this is Parent's Passport
-                if (d.getRegistration() == 1) { //Registration is "Нет"
-                    //only in that case we can create a basic document, because the client has a passport, but don't have a registration
+                if (d.getDoctype().getId() == 13) { //this is Khodataystvo
                     documentsWithAbsentRegistrationList.add(d);
                 }
-            }
+                if (d.getDoctype().getId() == 21) { //this is Parent's Passport
+                    if (d.getRegistration() == 1) { //Registration is "Нет"
+                        //only in that case we can create a basic document, because the client has a passport, but don't have a registration
+                        documentsWithAbsentRegistrationList.add(d);
+                    }
+                }
 
+            }
+            newSelectedDocument(); // set new document
+            this.tempRegVisibility = "display: none;";
+
+            RequestContext rc = RequestContext.getCurrentInstance();
+            FacesContext context = FacesContext.getCurrentInstance();
+            ClientFormBean cdb = context.getApplication().evaluateExpressionGet(context, "#{clientform}", ClientFormBean.class);
+            cdb.updateDocumentsTabHeader();
+
+            rc.update("m_tabview:documents_form:doclistId");
         }
-		newSelectedDocument(); // set new document
-        this.tempRegVisibility = "display: none;";
-
-		RequestContext rc = RequestContext.getCurrentInstance();
-        FacesContext context = FacesContext.getCurrentInstance();
-        ClientFormBean cdb = context.getApplication().evaluateExpressionGet(context, "#{clientform}", ClientFormBean.class);
-        cdb.updateDocumentsTabHeader();
-
-        rc.update("m_tabview:documents_form:doclistId");
 
 	}
 
@@ -178,7 +179,7 @@ public class ClientDocumentsBean implements Serializable {
 		}
 
 		//finally, set the client
-		selectedDocument.setClient(Util.getCurrentClientId());
+		selectedDocument.setClient(Util.getCurrentClient().getId());
 
 		getGenericService().updateInstance(selectedDocument);
 		reload(); //for updating related view

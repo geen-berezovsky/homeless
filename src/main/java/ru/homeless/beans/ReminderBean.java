@@ -59,7 +59,9 @@ public class ReminderBean implements Serializable{
         FacesContext context = FacesContext.getCurrentInstance();
         ClientFormBean clientFormBean = context.getApplication().evaluateExpressionGet(context, "#{clientform}", ClientFormBean.class);
         try {
-            clientFormBean.reloadAll();
+            log.info("Opening client from reminders tab ID = "+myClientsEntity.getClient().getId());
+            clientFormBean.setClient(myClientsEntity.getClient());
+            clientFormBean.reload();
         } catch (SQLException e) {
             log.error("Error during ClienFormBean reloading for ShelterHistory=" + myClientsEntity.getId(), e);
         }

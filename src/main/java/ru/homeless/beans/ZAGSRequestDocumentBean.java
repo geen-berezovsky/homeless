@@ -56,8 +56,7 @@ public class ZAGSRequestDocumentBean implements Serializable {
         HttpSession session = Util.getSession();
         worker = (Worker) session.getAttribute("worker");
 
-        this.client = getWorkerService().getInstanceById(Client.class, Util.getCurrentClientId());
-
+        this.client = Util.getCurrentClient();
         this.name = client.getSurname()+" "+client.getFirstname()+" "+client.getMiddlename()+" "+Util.formatDate(client.getDate()) +" г.р.";
         this.whereWasBorn = client.getWhereWasBorn();
         this.date = new Date();

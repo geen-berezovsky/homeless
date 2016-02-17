@@ -192,8 +192,8 @@ public class ClientShelterBean implements Serializable {
 	}
 
 	public List<ShelterHistory> getShelterList() {
-        if (Util.getCurrentClientId() != 0) {
-            return getRoomService().getInstancesByClientId(ShelterHistory.class, getRoomService().getInstanceById(Client.class, Util.getCurrentClientId()));
+        if (Util.getCurrentClient() != null) {
+            return getRoomService().getInstancesByClientId(ShelterHistory.class, Util.getCurrentClient());
         } else {
             return new ArrayList<ShelterHistory>();
         }
@@ -226,14 +226,14 @@ public class ClientShelterBean implements Serializable {
 
     public void addNewShelterData() {
 
-        Client client = getRoomService().getInstanceById(Client.class, Util.getCurrentClientId());
+        Client client = Util.getCurrentClient();
         //setting actual client
-        selectedShelter.setClient(getRoomService().getInstanceById(Client.class, Util.getCurrentClientId()));
+        selectedShelter.setClient(client);
         
         boolean validated = validateNoOtherActiveShelterForClient(client);
 
         if ( validated ){
-            log.info("Adding new shelter record for client "+Util.getCurrentClientId());
+            log.info("Adding new shelter record for client "+client.getId());
             log.info(selectedShelter.getClient());
             log.info("Дата заселения: "+selectedShelter.getInShelter());
             log.info("Дата выселения: "+selectedShelter.getOutShelter());
@@ -300,7 +300,7 @@ public class ClientShelterBean implements Serializable {
         selectedShelter = getRoomService().getInstanceById(ShelterHistory.class, id);
         ServContract selectedContract = selectedShelter.getServContract();
 
-        String requestSuffix = "/getGeneratedContract?requestType=102&clientId="+ Util.getCurrentClientId() + "&contractId=" + selectedContract.getId() + "&workerId=" + selectedContract.getWorker().getId();
+        String requestSuffix = "/getGeneratedContract?requestType=102&clientId="+ Util.getCurrentClient().getId() + "&contractId=" + selectedContract.getId() + "&workerId=" + selectedContract.getWorker().getId();
         String saveFilePath = "/tmp" + File.separator + "ClientContract.docx";
         String docType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
         String docName = "ClientContract.docx";
@@ -314,23 +314,25 @@ public class ClientShelterBean implements Serializable {
     }
 
     public void refreshClientContracts() {
-        RequestContext rc = RequestContext.getCurrentInstance();
-        int number_of_opened_contracts = 0;
-        List<ServContract> _clientsContracts = getRoomService().getInstancesByClientId(ServContract.class, Util.getCurrentClientId());
-        clientsContracts = new ArrayList<>();
-        for (ServContract sc : _clientsContracts) {
-            if (sc.getResult().getId() == 1) {
-                number_of_opened_contracts ++;
-                clientsContracts.add(sc);
+        if (Util.getCurrentClient() != null) {
+            RequestContext rc = RequestContext.getCurrentInstance();
+            int number_of_opened_contracts = 0;
+            List<ServContract> _clientsContracts = getRoomService().getInstancesByClientId(ServContract.class, Util.getCurrentClient().getId());
+            clientsContracts = new ArrayList<>();
+            for (ServContract sc : _clientsContracts) {
+                if (sc.getResult().getId() == 1) {
+                    number_of_opened_contracts++;
+                    clientsContracts.add(sc);
+                }
             }
+            if (number_of_opened_contracts == 0) {
+                rc.execute("noContractsFoundDlg.show();");
+                log.info("Client " + Util.getCurrentClient().getId() + " has no opened contracts. Please fix it first.");
+                return;
+            }
+            ShelterContractConverter.servContracts = new ArrayList<>();
+            ShelterContractConverter.servContracts.addAll(clientsContracts);
         }
-        if (number_of_opened_contracts == 0) {
-            rc.execute("noContractsFoundDlg.show();");
-            log.info("Client "+Util.getCurrentClientId() + " has no opened contracts. Please fix it first.");
-            return;
-        }
-        ShelterContractConverter.servContracts = new ArrayList<>();
-        ShelterContractConverter.servContracts.addAll(clientsContracts);
     }
 
     public List<ServContract> getClientsContracts() {

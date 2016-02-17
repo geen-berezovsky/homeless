@@ -91,7 +91,7 @@ public class ClientContractsBean implements Serializable {
 
         selectedContract = getClientService().getInstanceById(ServContract.class, id);
 
-        String requestSuffix = "/getGeneratedContract?requestType=100&clientId="+ Util.getCurrentClientId() + "&contractId=" + selectedContract.getId() + "&workerId=" + selectedContract.getWorker().getId();
+        String requestSuffix = "/getGeneratedContract?requestType=100&clientId="+ Util.getCurrentClient().getId() + "&contractId=" + selectedContract.getId() + "&workerId=" + selectedContract.getWorker().getId();
         String saveFilePath = "/tmp" + File.separator + "ClientContract.docx";
         String docType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
         String docName = "ClientContract.docx";
@@ -160,7 +160,11 @@ public class ClientContractsBean implements Serializable {
     }
 
     public List<ServContract> getContractsList() {
-        return getClientService().getInstancesByClientId(ServContract.class, Util.getCurrentClientId());
+        if (Util.getCurrentClient() == null) {
+            return new ArrayList<>();
+        } else {
+            return getClientService().getInstancesByClientId(ServContract.class, Util.getCurrentClient().getId());
+        }
     }
 
     public void setContractsList(List<ServContract> contractsList) {
@@ -423,7 +427,7 @@ public class ClientContractsBean implements Serializable {
                 selectedContract.getContractcontrols().add(new ContractControl(selectedContract.getId(), c));
             }
             //then add new ServContract
-            selectedContract.setClient(Util.getCurrentClientId());
+            selectedContract.setClient(Util.getCurrentClient().getId());
             selectedContract.setCommentResult("");
             if (selectedDocument != null) {
                 selectedContract.setDocumentId(selectedDocument.getId());

@@ -87,13 +87,17 @@ public class StdDocBean implements Serializable {
     }
 
     private List<BasicDocumentRegistry> getDocumentsList(boolean b) {
-                if (b) {
-                    //return tranzit documents
-                    return getStdDocService().getTranzitDocumentsList(Util.getCurrentClientId());
-                } else {
-                    //return basic documents
-                    return getStdDocService().getStandardDocumentsList(Util.getCurrentClientId());
-                }
+        if (Util.getCurrentClient()!=null) {
+            if (b) {
+                //return tranzit documents
+                return getStdDocService().getTranzitDocumentsList(Util.getCurrentClient().getId());
+            } else {
+                //return basic documents
+                return getStdDocService().getStandardDocumentsList(Util.getCurrentClient().getId());
+            }
+        } else {
+            return new ArrayList<>();
+        }
     }
 
     public void setTranzitDocumentList(List<BasicDocumentRegistry> tranzitDocumentList) {

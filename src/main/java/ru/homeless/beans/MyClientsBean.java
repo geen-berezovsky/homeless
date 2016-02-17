@@ -93,7 +93,9 @@ public class MyClientsBean implements Serializable {
         FacesContext context = FacesContext.getCurrentInstance();
         ClientFormBean clientFormBean = context.getApplication().evaluateExpressionGet(context, "#{clientform}", ClientFormBean.class);
         try {
-            clientFormBean.reloadAll();
+            log.info("Setting up current client ID = "+myClientsEntity.getId());
+            clientFormBean.setClient(getClientService().getInstanceById(Client.class, myClientsEntity.getId()));
+            clientFormBean.reload();
         } catch (SQLException e) {
             e.printStackTrace();
         }

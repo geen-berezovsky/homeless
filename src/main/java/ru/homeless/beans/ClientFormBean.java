@@ -746,7 +746,7 @@ public class ClientFormBean implements Serializable {
 
         } else {
             //17.02.2016: autosaving is TEMPORARY disabled
-            //refreshTabs(prevTabIndex);
+            refreshTabs(prevTabIndex);
         }
         prevTabIndex = tabIndex;
     }

@@ -43,7 +43,7 @@ public class ScanDocumentsBean implements Serializable {
 	}
 
     public void reload() {
-        clientDocumentScans = getGenericService().getInstancesByClientId(DocumentScan.class, getCurrentClient());
+        clientDocumentScans = getGenericService().getInstancesByClientId(DocumentScan.class, Util.getCurrentClient());
 		newSelectedDocument(); // set new document
         RequestContext rc = RequestContext.getCurrentInstance();
         log.info("Updating docScanlistId");
@@ -74,15 +74,11 @@ public class ScanDocumentsBean implements Serializable {
 	}
 
 
-    public Client getCurrentClient() {
-        return getGenericService().getInstanceById(Client.class, Util.getCurrentClientId());
-    }
-
 	public void addSelectedDocument() {
 
         Worker worker = (Worker) Util.getSession().getAttribute("worker");
 
-        selectedDocument.setClient(getCurrentClient());
+        selectedDocument.setClient(Util.getCurrentClient());
         selectedDocument.setWorker(worker);
         selectedDocument.setUploadingDate(new Date());
         if (selectedDocument.getPath() == null || selectedDocument.getPath().trim().equals("")) {
@@ -169,12 +165,12 @@ public class ScanDocumentsBean implements Serializable {
         UploadedFile file = event.getFile();
         FacesMessage msg = null;
         String fileName = file.getFileName();
-        String docPath = Configuration.profilesDir+"/"+Util.getCurrentClientId()+"/"+fileName;
+        String docPath = Configuration.profilesDir+"/"+Util.getCurrentClient().getId()+"/"+fileName;
         //check if client already has the document with the same name
         if (new File(docPath).exists()) {
             for (int i=0; i<Integer.MAX_VALUE; i++) {
                 fileName = String.valueOf(i)+"_"+fileName;
-                docPath = Configuration.profilesDir+"/"+Util.getCurrentClientId()+"/"+fileName;
+                docPath = Configuration.profilesDir+"/"+Util.getCurrentClient().getId()+"/"+fileName;
                 if (! new File(docPath).exists()) {
                     break;
                 }
@@ -227,7 +223,7 @@ public class ScanDocumentsBean implements Serializable {
             stream = externalContext.getResourceAsStream(docPath);
             fileName = "ERROR.png";
         } else {
-            docPath = Configuration.profilesDir+"/"+Util.getCurrentClientId()+"/"+fileName;
+            docPath = Configuration.profilesDir+"/"+Util.getCurrentClient().getId()+"/"+fileName;
             stream = new FileInputStream(docPath);
         }
         file = new DefaultStreamedContent(stream, externalContext.getMimeType(docPath), fileName);

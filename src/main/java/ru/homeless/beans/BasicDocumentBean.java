@@ -60,7 +60,7 @@ public class BasicDocumentBean implements Serializable {
 
         city = "";
 
-        this.client = getWorkerService().getInstanceById(Client.class, Util.getCurrentClientId());
+        this.client = Util.getCurrentClient();
 
         RequestContext rc = RequestContext.getCurrentInstance();
         for (String s : strings.split("-")) {

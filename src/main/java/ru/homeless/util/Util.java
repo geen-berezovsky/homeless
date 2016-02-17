@@ -201,7 +201,7 @@ public class Util {
         //2. copy source file to the target directory with the new name
         //3. make an avatar and save it to the database
         HttpSession session = Util.getSession();
-        Client client = clientService.getInstanceById(Client.class, getCurrentClientId());
+        Client client = Util.getCurrentClient();
         //PREPARE BUFFERED IMAGE AND SET ITS SIZE
         BufferedImage bi = new BufferedImage(177, 144, BufferedImage.TYPE_INT_ARGB);
 
@@ -356,13 +356,13 @@ public class Util {
         return cal.getTime();
     }
 
-    public static int getCurrentClientId() {
+    public static Client getCurrentClient() {
         FacesContext context = FacesContext.getCurrentInstance();
         ClientFormBean cdb = context.getApplication().evaluateExpressionGet(context, "#{clientform}", ClientFormBean.class);
         if (cdb!=null && cdb.getClient()!=null) {
-            return cdb.getClient().getId();
+            return cdb.getClient();
         } else {
-            return 0;
+            return null;
         }
     }
 

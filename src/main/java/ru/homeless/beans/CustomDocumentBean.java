@@ -59,7 +59,7 @@ public class CustomDocumentBean implements Serializable {
     public void openDlg() {
         HttpSession session = Util.getSession();
         worker = (Worker) session.getAttribute("worker");
-        this.client = getWorkerService().getInstanceById(Client.class, Util.getCurrentClientId());
+        this.client = Util.getCurrentClient();
 
         this.mainPart = "К нам обратился за помощью "+client.getSurname()+" "+client.getFirstname()+" "+client.getMiddlename()+" "+Util.formatDate(client.getDate()) +" г.р.";
         this.performer = "Исполнитель: "+worker.getSurname()+" "+worker.getFirstname().substring(0,1)+". "+worker.getMiddlename().substring(0, 1)+".";
