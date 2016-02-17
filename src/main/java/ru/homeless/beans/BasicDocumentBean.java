@@ -52,7 +52,6 @@ public class BasicDocumentBean implements Serializable {
     public void openDlg(String strings) {
         HttpSession session = Util.getSession();
         worker = (Worker) session.getAttribute("worker");
-        String cids = session.getAttribute("cid").toString();
 
         Calendar cal = Calendar.getInstance();
         dateFrom = cal.getTime();
@@ -61,9 +60,7 @@ public class BasicDocumentBean implements Serializable {
 
         city = "";
 
-        if (cids != null && !cids.trim().equals("")) {
-            this.client = getWorkerService().getInstanceById(Client.class, Integer.parseInt(cids));
-        }
+        this.client = getWorkerService().getInstanceById(Client.class, Util.getCurrentClientId());
 
         RequestContext rc = RequestContext.getCurrentInstance();
         for (String s : strings.split("-")) {

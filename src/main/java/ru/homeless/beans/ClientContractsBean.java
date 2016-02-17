@@ -48,7 +48,6 @@ public class ClientContractsBean implements Serializable {
 
     private static final long serialVersionUID = 1L;
     public static Logger log = Logger.getLogger(ClientContractsBean.class);
-    private int cid = 0;
     private List<ServContract> contractsList = null;
     private ServContract selectedContract;
     private Document selectedDocument;
@@ -92,7 +91,7 @@ public class ClientContractsBean implements Serializable {
 
         selectedContract = getClientService().getInstanceById(ServContract.class, id);
 
-        String requestSuffix = "/getGeneratedContract?requestType=100&clientId="+ this.cid + "&contractId=" + selectedContract.getId() + "&workerId=" + selectedContract.getWorker().getId();
+        String requestSuffix = "/getGeneratedContract?requestType=100&clientId="+ Util.getCurrentClientId() + "&contractId=" + selectedContract.getId() + "&workerId=" + selectedContract.getWorker().getId();
         String saveFilePath = "/tmp" + File.separator + "ClientContract.docx";
         String docType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
         String docName = "ClientContract.docx";
@@ -115,7 +114,6 @@ public class ClientContractsBean implements Serializable {
 
     public void reload() {
         HttpSession session = Util.getSession();
-        String cids = session.getAttribute("cid").toString();
         worker = (Worker) session.getAttribute("worker");
 
         setWorkerSelfData(worker.getRules().getCaption() + " " + worker.getSurname() + " " + worker.getFirstname() + " " + worker.getMiddlename());
@@ -129,10 +127,6 @@ public class ClientContractsBean implements Serializable {
             setWarrantData("№" + worker.getWarrantNum() + " от " + formatDate(worker.getWarrantDate()));
         } else {
             setWarrantData("НЕДОСТАТОЧНО ДАННЫХ");
-        }
-
-        if (cids != null && !cids.trim().equals("")) {
-            this.cid = Integer.parseInt(cids);
         }
 
         //update service plan items for actual contract
@@ -164,16 +158,9 @@ public class ClientContractsBean implements Serializable {
         RequestContext rc = RequestContext.getCurrentInstance();
         rc.execute("selectDocumentWv.show()");
     }
-    public int getCid() {
-        return cid;
-    }
-
-    public void setCid(int cid) {
-        this.cid = cid;
-    }
 
     public List<ServContract> getContractsList() {
-        return getClientService().getInstancesByClientId(ServContract.class, cid);
+        return getClientService().getInstancesByClientId(ServContract.class, Util.getCurrentClientId());
     }
 
     public void setContractsList(List<ServContract> contractsList) {
@@ -436,7 +423,7 @@ public class ClientContractsBean implements Serializable {
                 selectedContract.getContractcontrols().add(new ContractControl(selectedContract.getId(), c));
             }
             //then add new ServContract
-            selectedContract.setClient(cid);
+            selectedContract.setClient(Util.getCurrentClientId());
             selectedContract.setCommentResult("");
             if (selectedDocument != null) {
                 selectedContract.setDocumentId(selectedDocument.getId());

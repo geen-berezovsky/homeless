@@ -54,7 +54,6 @@ public class ClientFormBean implements Serializable {
     @ManagedProperty(value = "#{ClientService}")
     private ClientService clientService;
 
-    private int cid;
     private Client client;
 
     private List<RecievedService> servicesList;
@@ -125,14 +124,12 @@ public class ClientFormBean implements Serializable {
         //Setting actual client id to session for using in another applications
         HttpSession session = Util.getSession();
         if (client != null) {
-            session.setAttribute("cid", client.getId()); // 'cid' means the ClientID
-            this.cid = client.getId(); //just for simplifying access to the ClientID in this bean
             setClient(client); //Setting client for the runtime
 
             log.info("Opening client with id = " + client.getId() + " (" + client.toString() + ")");
             this.mainPanelVisibility = "display: block;"; //Show main panel when the first client is attached
 
-            File profile = new File(Configuration.profilesDir + "/" + cid);
+            File profile = new File(Configuration.profilesDir + "/" + client.getId());
             if (!profile.exists()) {
                 profile.mkdirs();
             }
@@ -171,7 +168,7 @@ public class ClientFormBean implements Serializable {
 
     public void reloadAll() throws SQLException {
         if (client != null) {
-            log.info("Client ID = " + cid + " has been selected for usage");
+            log.info("Client ID = " + client.getId() + " has been selected for usage");
             updateHomelessDate();
         } else {
             log.info("Oops, but this client is not found in database...");
@@ -260,7 +257,7 @@ public class ClientFormBean implements Serializable {
         This is bufix for FireFox because it does not keep value after refreshing from cached page
         We are setting model values only for drop down lists manually (hope their value is small :-) )
          */
-        log.info("Successfully loaded data for client id=" + this.cid + ", " + client.getSurname() + " " + client.getFirstname() + " " + client.getMiddlename());
+        log.info("Successfully loaded data for client id=" + client.getId() + ", " + client.getSurname() + " " + client.getFirstname() + " " + client.getMiddlename());
     }
 
     private String getClientActualStatus(Client client) {
@@ -549,10 +546,10 @@ public class ClientFormBean implements Serializable {
                 getClientService().updateInstance(client);
                 msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Контакты сохранены", "");
                 cfb.reloadAll();
-                log.info("Contacts for client "+cid+" are saved successfully");
+                log.info("Contacts for client "+client.getId()+" are saved successfully");
             } catch (Exception e) {
                 msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Контакты не сохранены!", "");
-                log.error("Contacts for client "+cid+" are not saved!",e);
+                log.error("Contacts for client "+client.getId()+" are not saved!",e);
             }
 
             if (msg != null) {
@@ -577,10 +574,10 @@ public class ClientFormBean implements Serializable {
                 getClientService().updateInstance(client);
                 msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Примечания сохранены", "");
                 cfb.reloadAll();
-                log.info("Comments (Memo) for client "+cid+" are saved successfully");
+                log.info("Comments (Memo) for client "+client.getId()+" are saved successfully");
             } catch (Exception e) {
                 msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Примечания не сохранены!", "");
-                log.error("Comments (Memo) for client "+cid+" are not saved!",e);
+                log.error("Comments (Memo) for client "+client.getId()+" are not saved!",e);
             }
 
             if (msg != null) {
@@ -613,8 +610,6 @@ public class ClientFormBean implements Serializable {
         if (client != null) {
 
             HttpSession session = Util.getSession();
-            session.setAttribute("cid", cid);
-
             String username = session.getAttribute("username").toString();
             log.info("Worker "+username+ " is trying to save a client form where client name = "+client.toString());
             updateHomelessDate(selectedMonth, getSelectedYear());
@@ -861,7 +856,6 @@ public class ClientFormBean implements Serializable {
             session.removeAttribute("clientform");
             session.removeAttribute("stddoc");
             session.removeAttribute("clientshelter");
-            session.removeAttribute("cid");
         } catch (Exception e) {
             log.error("Cannot delete client with ID = "+client.getId(),e);
         }
@@ -1230,14 +1224,6 @@ public class ClientFormBean implements Serializable {
 
     public void setServicesList(List<RecievedService> servicesList) {
         this.servicesList = servicesList;
-    }
-
-    public int getCid() {
-        return cid;
-    }
-
-    public void setCid(int cid) {
-        this.cid = cid;
     }
 
     public int getSelectedMonth() {

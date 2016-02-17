@@ -147,8 +147,7 @@ public class PhotoCameraBean implements Serializable{
         //We don't delete the photo forever!!!
         //We clean the fields in database and rename the original photo to ID_{OLD_FILENAME}
         HttpSession session = Util.getSession();
-        String cid = session.getAttribute("cid").toString();
-        Client client = getClientService().getInstanceById(Client.class, Integer.parseInt(cid));
+        Client client = getClientService().getInstanceById(Client.class, Util.getCurrentClientId());
         client.setAvatar(null);
         String new_filename = String.valueOf(client.getId())+"_"+client.getPhotoName();
 

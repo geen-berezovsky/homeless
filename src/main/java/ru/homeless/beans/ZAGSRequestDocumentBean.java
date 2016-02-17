@@ -55,11 +55,8 @@ public class ZAGSRequestDocumentBean implements Serializable {
     public void openDlg() {
         HttpSession session = Util.getSession();
         worker = (Worker) session.getAttribute("worker");
-        String cids = session.getAttribute("cid").toString();
 
-        if (cids != null && !cids.trim().equals("")) {
-            this.client = getWorkerService().getInstanceById(Client.class, Integer.parseInt(cids));
-        }
+        this.client = getWorkerService().getInstanceById(Client.class, Util.getCurrentClientId());
 
         this.name = client.getSurname()+" "+client.getFirstname()+" "+client.getMiddlename()+" "+Util.formatDate(client.getDate()) +" г.р.";
         this.whereWasBorn = client.getWhereWasBorn();

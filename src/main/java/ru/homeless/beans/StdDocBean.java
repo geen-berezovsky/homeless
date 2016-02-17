@@ -87,20 +87,13 @@ public class StdDocBean implements Serializable {
     }
 
     private List<BasicDocumentRegistry> getDocumentsList(boolean b) {
-        HttpSession session = Util.getSession();
-        if (session != null && session.getAttribute("cid")!=null) {
-            String cids = session.getAttribute("cid").toString();
-            if (cids != null && !cids.trim().equals("")) {
                 if (b) {
                     //return tranzit documents
-                    return getStdDocService().getTranzitDocumentsList(Integer.parseInt(cids));
+                    return getStdDocService().getTranzitDocumentsList(Util.getCurrentClientId());
                 } else {
                     //return basic documents
-                    return getStdDocService().getStandardDocumentsList(Integer.parseInt(cids));
+                    return getStdDocService().getStandardDocumentsList(Util.getCurrentClientId());
                 }
-            }
-        }
-        return new ArrayList<>();
     }
 
     public void setTranzitDocumentList(List<BasicDocumentRegistry> tranzitDocumentList) {

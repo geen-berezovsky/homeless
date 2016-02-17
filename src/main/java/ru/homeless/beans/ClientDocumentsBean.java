@@ -33,7 +33,6 @@ public class ClientDocumentsBean implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	public static Logger log = Logger.getLogger(ClientDocumentsBean.class);
-	private int cid = 0;
 	private List<Document> documentsList = null;
 
     private List<Document> documentsWithAbsentRegistrationList = null;
@@ -74,12 +73,8 @@ public class ClientDocumentsBean implements Serializable {
 
     public void reload() {
 		HttpSession session = Util.getSession();
-		Object cids = session.getAttribute("cid");
 
-		if (cids != null && !cids.toString().trim().equals("")) {
-			this.cid = Integer.parseInt(cids.toString());
-			documentsList = getGenericService().getInstancesByClientId(Document.class, cid);
-		}
+		documentsList = getGenericService().getInstancesByClientId(Document.class, Util.getCurrentClientId());
         documentsWithAbsentRegistrationList = new ArrayList<>();
         for (Document d : documentsList) {
             if (d.getDoctype().getId() == 1) { //this is Passport, Parent's Passport or Birth Document
@@ -112,14 +107,6 @@ public class ClientDocumentsBean implements Serializable {
 
         rc.update("m_tabview:documents_form:doclistId");
 
-	}
-
-	public int getCid() {
-		return cid;
-	}
-
-	public void setCid(int cid) {
-		this.cid = cid;
 	}
 
 	public List<Document> getDocumentsList() {
@@ -191,7 +178,7 @@ public class ClientDocumentsBean implements Serializable {
 		}
 
 		//finally, set the client
-		selectedDocument.setClient(cid);
+		selectedDocument.setClient(Util.getCurrentClientId());
 
 		getGenericService().updateInstance(selectedDocument);
 		reload(); //for updating related view

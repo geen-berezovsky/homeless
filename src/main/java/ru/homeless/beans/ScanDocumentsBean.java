@@ -30,7 +30,6 @@ public class ScanDocumentsBean implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	public static Logger log = Logger.getLogger(ScanDocumentsBean.class);
-	private int cid = 0;
 
 	private List<DocType> docTypes;
     private DocumentScan selectedDocument;
@@ -44,28 +43,12 @@ public class ScanDocumentsBean implements Serializable {
 	}
 
     public void reload() {
-		HttpSession session = Util.getSession();
-		String cids = session.getAttribute("cid").toString();
-
-		if (cids != null && !cids.trim().equals("")) {
-			this.cid = Integer.parseInt(cids);
-            clientDocumentScans = getGenericService().getInstancesByClientId(DocumentScan.class, getCurrentClient());
-		}
+        clientDocumentScans = getGenericService().getInstancesByClientId(DocumentScan.class, getCurrentClient());
 		newSelectedDocument(); // set new document
-
         RequestContext rc = RequestContext.getCurrentInstance();
         log.info("Updating docScanlistId");
         rc.update("m_tabview:documentsScan_form:docScanlistId");
-
     }
-
-	public int getCid() {
-		return cid;
-	}
-
-	public void setCid(int cid) {
-		this.cid = cid;
-	}
 
 	public String formatDate(Date q) {
 		if (q != null && !q.equals("")) {
@@ -92,7 +75,7 @@ public class ScanDocumentsBean implements Serializable {
 
 
     public Client getCurrentClient() {
-        return getGenericService().getInstanceById(Client.class, Integer.parseInt(Util.getSession().getAttribute("cid").toString()));
+        return getGenericService().getInstanceById(Client.class, Util.getCurrentClientId());
     }
 
 	public void addSelectedDocument() {
@@ -186,12 +169,12 @@ public class ScanDocumentsBean implements Serializable {
         UploadedFile file = event.getFile();
         FacesMessage msg = null;
         String fileName = file.getFileName();
-        String docPath = Configuration.profilesDir+"/"+Util.getSession().getAttribute("cid").toString()+"/"+fileName;
+        String docPath = Configuration.profilesDir+"/"+Util.getCurrentClientId()+"/"+fileName;
         //check if client already has the document with the same name
         if (new File(docPath).exists()) {
             for (int i=0; i<Integer.MAX_VALUE; i++) {
                 fileName = String.valueOf(i)+"_"+fileName;
-                docPath = Configuration.profilesDir+"/"+Util.getSession().getAttribute("cid").toString()+"/"+fileName;
+                docPath = Configuration.profilesDir+"/"+Util.getCurrentClientId()+"/"+fileName;
                 if (! new File(docPath).exists()) {
                     break;
                 }
@@ -244,7 +227,7 @@ public class ScanDocumentsBean implements Serializable {
             stream = externalContext.getResourceAsStream(docPath);
             fileName = "ERROR.png";
         } else {
-            docPath = Configuration.profilesDir+"/"+Util.getSession().getAttribute("cid").toString()+"/"+fileName;
+            docPath = Configuration.profilesDir+"/"+Util.getCurrentClientId()+"/"+fileName;
             stream = new FileInputStream(docPath);
         }
         file = new DefaultStreamedContent(stream, externalContext.getMimeType(docPath), fileName);
