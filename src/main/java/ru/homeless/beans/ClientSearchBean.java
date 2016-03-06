@@ -79,7 +79,7 @@ public class ClientSearchBean implements Serializable {
 	}
 
 	public void findClients() {
-		foundList = getClientService().getClientsByCriteria(id, surname, firstname, middlename, date);
+		foundList = getClientService().getClientsByCriteria(id, surname.trim(), firstname.trim(), middlename.trim(), date);
         if (foundList == null || foundList.size() == 0) {
             log.warn("No clients found by criteria: ["+id+"]"+", ["+surname+"]"+", ["+firstname+"]"+", ["+middlename+"], ["+date+"]");
         } else {

@@ -21,7 +21,7 @@ public class ZAGSRequestDocumentRegistry implements Serializable {
     private String forWhom;
 
     @Lob
-    private String name;
+    private String respAddress;
 
     @Lob
     private String whereWasBorn;
@@ -39,10 +39,10 @@ public class ZAGSRequestDocumentRegistry implements Serializable {
 
     private Integer performerId;
 
-    public ZAGSRequestDocumentRegistry(Integer client, String forWhom, String name, String whereWasBorn, String address, String mother, String father, Date date, Integer performerId) {
+    public ZAGSRequestDocumentRegistry(Integer client, String forWhom, String respAddress, String whereWasBorn, String address, String mother, String father, Date date, Integer performerId) {
         this.client = client;
         this.forWhom = forWhom;
-        this.name = name;
+        this.respAddress = respAddress;
         this.whereWasBorn = whereWasBorn;
         this.address = address;
         this.mother = mother;
@@ -81,14 +81,6 @@ public class ZAGSRequestDocumentRegistry implements Serializable {
 
     public void setForWhom(String forWhom) {
         this.forWhom = forWhom;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getWhereWasBorn() {
@@ -140,4 +132,11 @@ public class ZAGSRequestDocumentRegistry implements Serializable {
     }
 
 
+    public String getRespAddress() {
+        return respAddress;
+    }
+
+    public void setRespAddress(String respAddress) {
+        this.respAddress = respAddress;
+    }
 }

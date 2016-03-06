@@ -31,7 +31,7 @@ public class ZAGSRequestDocumentBean implements Serializable {
     private Client client;
 
 	private String forWhom = "";
-    private String name = "";
+    private String respAddress = Configuration.zagsRequestDefaultResponseAddress;
     private String whereWasBorn = "";
     private String address = "";
     private String mother = "";
@@ -57,7 +57,6 @@ public class ZAGSRequestDocumentBean implements Serializable {
         worker = (Worker) session.getAttribute("worker");
 
         this.client = Util.getCurrentClient();
-        this.name = client.getSurname()+" "+client.getFirstname()+" "+client.getMiddlename()+" "+Util.formatDate(client.getDate()) +" г.р.";
         this.whereWasBorn = client.getWhereWasBorn();
         this.date = new Date();
 
@@ -68,7 +67,7 @@ public class ZAGSRequestDocumentBean implements Serializable {
     public void export() throws IOException {
 
         //Prepare new entity and add it to the database
-        ZAGSRequestDocumentRegistry zagsRequestDocumentRegistry = new ZAGSRequestDocumentRegistry(client.getId(), forWhom, name, whereWasBorn, address, mother, father, date, worker.getId());
+        ZAGSRequestDocumentRegistry zagsRequestDocumentRegistry = new ZAGSRequestDocumentRegistry(client.getId(), forWhom, respAddress, whereWasBorn, address, mother, father, date, worker.getId());
 
         workerService.addInstance(zagsRequestDocumentRegistry);
         log.debug("Inserted object with ID=" + zagsRequestDocumentRegistry.getId());
@@ -81,7 +80,7 @@ public class ZAGSRequestDocumentBean implements Serializable {
 
         //RESET ALL FIELDS
         forWhom = "";
-        name = "";
+        respAddress = Configuration.zagsRequestDefaultResponseAddress;
         whereWasBorn = "";
         address = "";
         mother = "";
@@ -126,14 +125,6 @@ public class ZAGSRequestDocumentBean implements Serializable {
         this.forWhom = forWhom;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getWhereWasBorn() {
         return whereWasBorn;
     }
@@ -175,4 +166,11 @@ public class ZAGSRequestDocumentBean implements Serializable {
     }
 
 
+    public String getRespAddress() {
+        return respAddress;
+    }
+
+    public void setRespAddress(String respAddress) {
+        this.respAddress = respAddress;
+    }
 }

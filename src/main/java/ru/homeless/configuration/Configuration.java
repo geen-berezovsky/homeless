@@ -16,13 +16,15 @@ public class Configuration {
     public static String timestampFile;
     public static String reportEngineUrl;
     public static String profilesDir;
+    public static String zagsRequestDefaultResponseAddress;
 
     @Autowired
-    public Configuration(@Value("${photos}") String photos, @Value("${timestampFile}") String timestampFile, @Value("${reportEngineUrl}") String reportEngineUrl, @Value("${profilesDir}") String profilesDir) {
+    public Configuration(@Value("${photos}") String photos, @Value("${timestampFile}") String timestampFile, @Value("${reportEngineUrl}") String reportEngineUrl, @Value("${profilesDir}") String profilesDir, @Value("${zagsRequestDefaultResponseAddress}") String zagsRequestDefaultResponseAddress) {
         this.photos = photos;
         this.timestampFile = timestampFile;
         this.reportEngineUrl = reportEngineUrl;
         this.profilesDir = profilesDir;
+        this.zagsRequestDefaultResponseAddress = zagsRequestDefaultResponseAddress;
     }
 
 
