@@ -44,6 +44,7 @@ import ru.homeless.beans.ClientFormBean;
 import ru.homeless.configuration.Configuration;
 import ru.homeless.entities.Client;
 import ru.homeless.services.ClientService;
+import ru.homeless.services.WorkerService;
 
 public class Util {
 
@@ -367,4 +368,14 @@ public class Util {
     }
 
 
+    public static String getDocNum(WorkerService ws, int requestId) {
+        String docNum = "";
+        int currYear = Calendar.getInstance().get(Calendar.YEAR);
+        Date from = new GregorianCalendar(currYear,0,1).getTime();
+        Date till = new Date();
+        log.info("Requested period for counting document number is from "+from+" till "+till);
+        docNum = ws.getDocNum(from, till, requestId);
+        log.info("Document number is "+docNum);
+        return docNum;
+    }
 }

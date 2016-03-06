@@ -30,7 +30,6 @@ public class CustomDocumentBean implements Serializable {
 
     private String origType = "Заявление";
     private String type = origType;
-	private String number = "";
 	private String forWhom = "";
 
     private String preamble = "";
@@ -75,10 +74,32 @@ public class CustomDocumentBean implements Serializable {
             finalPartText += s + " ";
         }
 
-        CustomDocumentRegistry customDocumentRegistry = new CustomDocumentRegistry(client.getId(), number, type, preamble, mainPart, finalPartText, forWhom, signature, performer, worker.getId(), new Date());
+        String docNum = Util.getDocNum(workerService, 1); // This is the Custom Document
+
+
+        CustomDocumentRegistry customDocumentRegistry = new CustomDocumentRegistry(client.getId(), docNum, type, preamble, mainPart, finalPartText, forWhom, signature, performer, worker.getId(), new Date());
 
         workerService.addInstance(customDocumentRegistry);
-        log.debug("Inserted object with ID=" + customDocumentRegistry.getId());
+        log.debug("Inserted Custom Document object with ID=" + customDocumentRegistry.getId());
+
+        /**
+         * This code is necessary only for calculating correct document number. Actually, the document number is based on the count of
+         * documents specified document type and the count of release documents starting the date of the start of current year.
+         *
+         * According the implementation, Custom Documents are stored in another than other documents database table, but the code which calculates the
+         * document number should be the same for all.
+         *
+         * This is the only one reason why we inserting the record to BasicDocumentRegistry table and registered the type of Custom Document
+         * in the table BasicDocumentRegistryType with the id=1. So, it is the fake and it is ignored when we show to end user the table
+         * with generated basic documents.
+         */
+        BasicDocumentRegistryType bdrtype = workerService.getInstanceById(BasicDocumentRegistryType.class, 1);
+        BasicDocumentRegistry basicDocumentRegistry = new BasicDocumentRegistry(client.getId(), docNum, bdrtype, 0, null, null, worker.getId(), new Date(), "");
+        workerService.addInstance(basicDocumentRegistry);
+        log.debug("Inserted BasicDocumentRegistry object with ID=" + basicDocumentRegistry.getId());
+        /**
+         * This code ends
+         */
 
         String requestSuffix = "/getGeneratedWordDocument?requestType=16&clientId="+ client.getId() + "&docId=" + customDocumentRegistry.getId() + "&workerId="+worker.getId();
         String saveFilePath = "/tmp" + File.separator + "StandardDocument.docx";
@@ -88,7 +109,6 @@ public class CustomDocumentBean implements Serializable {
 
         //RESET ALL FIELDS
         type = origType;
-        number = "";
         forWhom = "";
         preamble = "";
         mainPart = "";
@@ -117,14 +137,6 @@ public class CustomDocumentBean implements Serializable {
 
     public void setType(String type) {
         this.type = type;
-    }
-
-    public String getNumber() {
-        return number;
-    }
-
-    public void setNumber(String number) {
-        this.number = number;
     }
 
     public String getForWhom() {
