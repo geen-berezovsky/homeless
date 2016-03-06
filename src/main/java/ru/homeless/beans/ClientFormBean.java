@@ -124,7 +124,8 @@ public class ClientFormBean implements Serializable {
         //Setting actual client id to session for using in another applications
         HttpSession session = Util.getSession();
         if (client != null) {
-            setClient(client); //Setting client for the runtime
+
+            //setClient(client); //Setting client for the runtime
 
             log.info("Opening client with id = " + client.getId() + " (" + client.toString() + ")");
             this.mainPanelVisibility = "display: block;"; //Show main panel when the first client is attached
