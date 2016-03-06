@@ -33,6 +33,9 @@ http://www.springframework.org/schema/tx/spring-tx-4.0.xsd http://www.springfram
 
     <bean id="appProps" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="location" value="classpath:/application.properties"/>
+        <property name="fileEncoding">
+            <value>utf8</value>
+        </property>
     </bean>
 
 	<!-- Data Source Declaration -->
