@@ -1,5 +1,6 @@
 package ru.homeless.shared;
 
+import java.io.IOException;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -142,7 +143,7 @@ public interface IDocumentMapping {
     public WordprocessingMLPackage generateDispensaryDocument(HttpServletRequest request, Client client, Map<String, String> map);
     public WordprocessingMLPackage generateRegistrationDocument(HttpServletRequest request, Client client, Map<String, String> map);
     public WordprocessingMLPackage generateTransitDocument(HttpServletRequest request, Client client, Map<String, String> map);
-    public WordprocessingMLPackage generateZAGSQueryDocument(HttpServletRequest request, Client client, Map<String, String> map);
+    public WordprocessingMLPackage generateZAGSQueryDocument(HttpServletRequest request, Client client, Map<String, String> map) throws IOException;
     public WordprocessingMLPackage generateCustomDocument(HttpServletRequest request, Client client, Map<String, String> map);
 
 

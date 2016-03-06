@@ -65,7 +65,7 @@ public class GetGeneratedDocumentController {
 	 */
 	@RequestMapping(value = "/getGeneratedWordDocument", method = RequestMethod.GET)
 	public @ResponseBody 
-	String getGeneratedWordDocument(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
+	String getGeneratedWordDocument(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
 		response.setContentType("application/vnd.openxmlformats-officedocument.wordprocessingml.document");
         String headerResponse = "attachment; filename*=UTF-8''";
@@ -105,7 +105,7 @@ public class GetGeneratedDocumentController {
  */
     @RequestMapping(value = "/getGeneratedContract", method = RequestMethod.GET)
     public @ResponseBody
-    String getGeneratedContract(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
+    String getGeneratedContract(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         response.setContentType("application/vnd.openxmlformats-officedocument.wordprocessingml.document");
         String headerResponse = "attachment; filename*=UTF-8''";

@@ -1,5 +1,12 @@
 package ru.homeless.util;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintStream;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLEncoder;
 import java.sql.Blob;
 import java.sql.SQLException;
 import java.text.DateFormat;
@@ -10,6 +17,9 @@ import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.github.aleksandy.petrovich.Case;
+import com.github.aleksandy.petrovich.Gender;
+import com.github.aleksandy.petrovich.Petrovich;
 import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -154,4 +164,11 @@ public class Util {
         return (int) l;
     }
 
+    public static String getFIORodPadezh(String f, String i, String o, Gender gender) {
+        Petrovich.Names names = new Petrovich.Names(f,i,o, gender);
+        String result = "";
+        Petrovich.Names resName = new Petrovich().inflectTo(names, Case.GENITIVE);
+        result = resName.lastName + " " + resName.firstName + " " + resName.middleName;
+        return result;
+    }
 }

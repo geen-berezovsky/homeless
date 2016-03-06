@@ -16,6 +16,7 @@ import ru.homeless.services.IContractService;
 import ru.homeless.shared.IDocumentMapping;
 import ru.homeless.util.Util;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.HashMap;
@@ -63,7 +64,7 @@ public class GenericGenerator {
         wordDocumentDefaultValuesMap.put("[t:num]", request.getParameter("docNum"));
     }
 
-    public WordprocessingMLPackage generateWordDocument(HttpServletRequest request) throws UnsupportedEncodingException {
+    public WordprocessingMLPackage generateWordDocument(HttpServletRequest request) throws IOException {
         if (hrp == null ) {
             hrp = new CustomValuesHttpRequestParser();
         }

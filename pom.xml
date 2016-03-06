@@ -206,7 +206,11 @@
             <artifactId>poi-ooxml</artifactId>
             <version>3.11</version>
         </dependency>
-
+        <dependency>
+            <groupId>com.github.aleksandy</groupId>
+            <artifactId>petrovich</artifactId>
+            <version>1.2.1</version>
+        </dependency>
 	</dependencies>
 
 

@@ -3,6 +3,7 @@
  */
 package ru.homeless.parsers;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.Date;
@@ -165,7 +166,7 @@ public class CustomValuesHttpRequestParser implements IDocumentMapping {
      * Map<String, String> map
      * @return XWPFDocument
      */
-    public WordprocessingMLPackage generateZAGSQueryDocument(HttpServletRequest request, Client client, Map<String, String> map) {
+    public WordprocessingMLPackage generateZAGSQueryDocument(HttpServletRequest request, Client client, Map<String, String> map) throws IOException {
         map.put("[input:docId]", parseCustomParams(request, "docId", ""));
         return zagsQueryMappingImpl.getDocument(map, client);
     }
