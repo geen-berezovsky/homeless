@@ -25,6 +25,7 @@ public class ShelterHistory implements Serializable {
 	private Integer roomId;
     private Integer shelterresult;
     private ServContract servContract;
+    private String comments;
 	
 	public ShelterHistory() {
 		
@@ -129,5 +130,13 @@ public class ShelterHistory implements Serializable {
 
     public int hashCode() {
         return 29 * getId();
+    }
+
+    public String getComments() {
+        return comments;
+    }
+
+    public void setComments(String comments) {
+        this.comments = comments;
     }
 }
