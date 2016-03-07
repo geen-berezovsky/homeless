@@ -2,12 +2,14 @@ package ru.homeless.services;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ru.homeless.dao.IReportDAO;
+import ru.homeless.entities.Room;
 import ru.homeless.report.entities.*;
 
 @Service("ReportService")
@@ -33,7 +35,7 @@ public class ReportService extends GenericService implements IReportService {
 	}
 
 	@Override
-	public List<OverVacReportEntity> getOverVacReportEntity() {
+	public Map<Room, List<OverVacReportEntity>> getOverVacReportEntity() {
 		return reportDAO.getOverVacReport();
 	}
 

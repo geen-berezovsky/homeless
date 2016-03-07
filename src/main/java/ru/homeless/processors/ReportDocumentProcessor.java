@@ -1,14 +1,18 @@
 package ru.homeless.processors;
 
+import java.awt.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
+import org.apache.poi.hssf.util.HSSFColor;
+import org.apache.poi.ss.usermodel.BorderStyle;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.xssf.usermodel.XSSFFormulaEvaluator;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.xssf.usermodel.*;
 import org.docx4j.openpackaging.packages.SpreadsheetMLPackage;
 import org.docx4j.openpackaging.parts.PartName;
 import org.docx4j.openpackaging.parts.SpreadsheetML.WorksheetPart;
@@ -56,6 +60,48 @@ public class ReportDocumentProcessor {
                     sheet.getRow(row_start).getCell(col_start + k).setCellValue(value);
                 } else {
                     sheet.getRow(row_start).getCell(col_start + k).setCellValue(s);
+                    /*
+                        CUSTOMIZATIONS FOR DIFFERENT REPORTS (COLORS, STYLES FOR EXACT CELLS)
+                        //REFACTOR IF NECESSARY
+                     */
+
+                    switch (type) {
+                        case IDocumentMapping.REPORT_OVERVAC: {
+                            XSSFCellStyle style = document.createCellStyle();
+                            if (s.contains("Комната")) {
+                                style.setFillForegroundColor(HSSFColor.LIGHT_GREEN.index);
+                                style.setFillPattern( XSSFCellStyle.SOLID_FOREGROUND);
+                                for (int i=1; i<=4; i++) {
+                                    sheet.getRow(row_start).getCell(col_start + k - i).setCellStyle(style);
+                                }
+                                for (int i=1; i<=6; i++) {
+                                    sheet.getRow(row_start).createCell(col_start + k + i);
+                                    sheet.getRow(row_start).getCell(col_start + k + i).setCellStyle(style);
+                                }
+                            } else {
+                                style.setBorderBottom(BorderStyle.THIN);
+                                style.setBorderTop(BorderStyle.THIN);
+                                style.setBorderRight(BorderStyle.THIN);
+                                style.setBorderLeft(BorderStyle.THIN);
+                                if (k == 1) {
+                                    style.setAlignment(XSSFCellStyle.ALIGN_LEFT);
+                                } else {
+                                    style.setAlignment(XSSFCellStyle.ALIGN_CENTER);
+                                }
+
+                            }
+                            //style7.setFillPattern( XSSFCellStyle.LESS_DOTS);
+
+                            sheet.getRow(row_start).getCell(col_start + k).setCellStyle(style);
+                            break;
+                        }
+                    }
+
+
+                    /*
+                        CUSTOMIZATIONS DONE
+                     */
+
                 }
                 k++;
             }

@@ -2,41 +2,32 @@ package ru.homeless.report.entities;
 
 public class OverVacReportEntity {
 	
-	private String clientId;
 	private String name;
 	private String dateOfBirth;
-	private String roomId;
 	private String inShelter;
 	private String outShelter;
 	private String workerSurname;
 	private String fluoragr;
+    private String hepotitsVac;
+    private String dipthVac;
 	private String typhVac;
-	private String dipthVac;
-	private String hepotitsVac;
+    private String comments;
 	
-	public OverVacReportEntity(String clientId, String name, String dateOfBirth, String roomId, String inShelter, String outShelter, String workerSurname, 
-			String fluoragr, String typhVac, String dipthVac, String hepotitsVac) {
+	public OverVacReportEntity(String name, String dateOfBirth, String inShelter, String outShelter, String workerSurname,
+                               String fluoragr, String hepotitsVac, String dipthVac, String typhVac, String comments) {
 		
-		this.clientId = clientId;
 		this.name = name;
 		this.dateOfBirth = dateOfBirth;
-		this.roomId = roomId;
-		this.inShelter = inShelter;
+        this.inShelter = inShelter;
 		this.outShelter = outShelter;
 		this.workerSurname = workerSurname;
 		this.fluoragr = fluoragr;
-		this.typhVac = typhVac;
-		this.dipthVac = dipthVac;
-		this.hepotitsVac = hepotitsVac;
-		
-	}
+        this.hepotitsVac = hepotitsVac;
+        this.dipthVac = dipthVac;
+        this.typhVac = typhVac;
+        this.comments = comments;
+    }
 	
-	public String getClientId() {
-		return clientId;
-	}
-	public void setClientId(String clientId) {
-		this.clientId = clientId;
-	}
 	public String getName() {
 		return name;
 	}
@@ -48,12 +39,6 @@ public class OverVacReportEntity {
 	}
 	public void setDateOfBirth(String dateOfBirth) {
 		this.dateOfBirth = dateOfBirth;
-	}
-	public String getRoomId() {
-		return roomId;
-	}
-	public void setRoomId(String roomId) {
-		this.roomId = roomId;
 	}
 	public String getInShelter() {
 		return inShelter;
@@ -97,6 +82,12 @@ public class OverVacReportEntity {
 	public void setHepotitsVac(String hepotitsVac) {
 		this.hepotitsVac = hepotitsVac;
 	}
-	
-	
+
+    public String getComments() {
+        return comments;
+    }
+
+    public void setComments(String comments) {
+        this.comments = comments;
+    }
 }

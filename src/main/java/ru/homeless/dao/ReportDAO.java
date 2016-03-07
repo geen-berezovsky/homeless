@@ -2,13 +2,11 @@ package ru.homeless.dao;
 
 import java.util.*;
 
-import javassist.runtime.Inner;
 import org.apache.log4j.Logger;
-import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 
+import ru.homeless.entities.Room;
 import ru.homeless.report.entities.*;
-import ru.homeless.shared.IDocumentMapping;
 import ru.homeless.util.Util;
 
 @Repository
@@ -124,9 +122,8 @@ public class ReportDAO extends GenericDAO implements IReportDAO {
 	}
 
 	@Override
-	public List<OverVacReportEntity> getOverVacReport() {
-		List<OverVacReportEntity> result = new ArrayList<OverVacReportEntity>();
-		
+	public Map<Room, List<OverVacReportEntity>> getOverVacReport() {
+/*
 		List<?> res = getSessionFactory().getCurrentSession().createSQLQuery("SELECT c.id, CONCAT(c.surname, ' ', c.firstname, ' ', c.middlename), c.date, sh.roomId, sh.inShelter, sh.outShelter, w.surname, sh.fluorogr, " +
 				"sh.typhVac, sh.dipthVac, sh.hepotitsVac FROM (SELECT * FROM ShelterHistory WHERE roomId<>0) sh LEFT JOIN Client c " +
 				"ON (sh.client = c.id) LEFT JOIN (SELECT * FROM ServContract WHERE contractresult=1) sc ON (c.id=sc.client) LEFT JOIN Worker w " +
@@ -142,21 +139,51 @@ public class ReportDAO extends GenericDAO implements IReportDAO {
 					.addScalar("sh.typhVac")
 					.addScalar("sh.dipthVac")
 					.addScalar("sh.hepotitsVac").list();
-		
-		for (Object o : res) {
-			Object[] xy = (Object[])o;
-			
-			for (int i=0; i<=10; i++) {
-				if (xy[i] == null) {
-					xy[i] = new String("-");
-				}
-			}
-			
-			result.add(new OverVacReportEntity(xy[0].toString(), xy[1].toString(), Util.parseDateForReport(xy[2]), xy[3].toString(),
-					Util.parseDateForReport(xy[4]), Util.parseDateForReport(xy[5]), xy[6].toString(), Util.parseDateForReport(xy[7]),
-					Util.parseDateForReport(xy[8]), Util.parseDateForReport(xy[9]), Util.parseDateForReport(xy[10])));
-		 }
-		return result;
+*/
+
+        Map<Room, List<OverVacReportEntity>> resMapByRoom = new TreeMap<>();
+
+        //For each room prepare the list of people living there and add to the global list
+        for (Room room : getInstances(Room.class)) {
+            List<?> res = getSessionFactory().getCurrentSession().createSQLQuery("" +
+                    "select  concat(c.surname,' ',c.firstname,' ',c.middlename) as 'FIO', date_format(c.date,'%d.%m.%Y') as 'DR', " +
+                    "    date_format(sh.inShelter,'%d.%m.%Y') as 'INS', date_format(sh.outShelter,'%d.%m.%Y') as 'OUTS'," +
+                    "    concat(left(w.surname,1),left(w.firstname,1)) as 'WORKER', date_format(sh.fluorogr,'%d.%m.%Y') as 'FLG'," +
+                    "    date_format(sh.hepotitsVac,'%d.%m.%Y') as 'HEP', date_format(sh.dipthVac,'%d.%m.%Y') as 'DIFT'," +
+                    "    date_format(sh.typhVac,'%d.%m.%Y') as 'TYPTH', sh.comments as 'COMMENTS'" +
+                    " from ShelterHistory sh left join Client c on sh.client = c.id left join ServContract sc on sh.client = sc.client left join Worker w on sc.worker = w.id where sh.roomId = "+room.getId()+" and sh.shelterresult = 1 and sc.contractresult =1;")
+                    .addScalar("FIO")
+                    .addScalar("DR")
+                    .addScalar("INS")
+                    .addScalar("OUTS")
+                    .addScalar("WORKER")
+                    .addScalar("FLG")
+                    .addScalar("HEP")
+                    .addScalar("DIFT")
+                    .addScalar("TYPTH")
+                    .addScalar("COMMENTS").list();
+
+                    List<OverVacReportEntity> result = new ArrayList<OverVacReportEntity>();
+
+            for (Object o : res) {
+                        Object[] xy = (Object[])o;
+
+                        for (int i=0; i<10; i++) {
+                            if (xy[i] == null) {
+                                xy[i] = new String("");
+                            }
+                        }
+
+            result.add(new OverVacReportEntity(xy[0].toString(), xy[1].toString(), xy[2].toString(), xy[3].toString(),
+                                xy[4].toString(), xy[5].toString(), xy[6].toString(), xy[7].toString(),
+                                xy[8].toString(), xy[9].toString()));
+            }
+            resMapByRoom.put(room, result);
+
+        }
+
+
+		return resMapByRoom;
 	}
 
 	@Override

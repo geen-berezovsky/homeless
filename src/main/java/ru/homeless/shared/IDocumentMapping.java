@@ -113,7 +113,7 @@ public interface IDocumentMapping {
     Document title: Стандартный отчет на охрану и в поликлинику
     */
     public final int REPORT_OVERVAC = 206;
-    public final String REPORT_OVERVAC_PATH = Configuration.templatesDir+"/"+"VacReport.xlsm";
+    public final String REPORT_OVERVAC_PATH = Configuration.templatesDir+"/"+"VacReport.xlsx";
     
     /*
     Template file: OuterReport.xlsx

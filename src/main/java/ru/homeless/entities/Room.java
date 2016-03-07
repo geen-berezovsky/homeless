@@ -14,7 +14,7 @@ import static javax.persistence.GenerationType.IDENTITY;
  */
 @Entity
 @Table(name = "Room")
-public class Room implements Serializable {
+public class Room implements Serializable, Comparable<Room> {
 
     private Integer id;
 
@@ -75,4 +75,8 @@ public class Room implements Serializable {
 
     }
 
+    @Override
+    public int compareTo(Room o) {
+        return getRoomnumber().compareTo(o.getRoomnumber());
+    }
 }
