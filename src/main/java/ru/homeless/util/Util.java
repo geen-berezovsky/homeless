@@ -12,6 +12,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.file.Files;
@@ -27,7 +28,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.faces.application.FacesMessage;
+import javax.faces.application.ViewHandler;
 import javax.faces.component.UIComponent;
+import javax.faces.component.UIViewRoot;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.validator.ValidatorException;
 import javax.imageio.ImageIO;
@@ -301,7 +305,7 @@ public class Util {
 
     public static StreamedContent downloadDocument(String requestSuffix, String saveFilePath, String docType,
                                                    String docName) throws IOException {
-
+    try {
         URL url = new URL(Configuration.reportEngineUrl + requestSuffix);
         HttpURLConnection httpConn = (HttpURLConnection) url.openConnection();
         httpConn.setRequestProperty("Accept-Charset", "UTF-8");
@@ -316,6 +320,13 @@ public class Util {
         inputStream.close();
         InputStream stream = new FileInputStream(new File(saveFilePath));
         return new DefaultStreamedContent(stream, docType, docName);
+    } catch (ConnectException e) {
+        log.error("Cannot access Report Engine!!!");
+        //REDIRECT TO THE MAIN PAGE
+        ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+        ec.redirect("main.xhtml");
+        return null;
+    }
     }
 
     /**

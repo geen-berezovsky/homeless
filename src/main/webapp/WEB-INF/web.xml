@@ -76,7 +76,7 @@
 	</context-param>
 
 	<session-config>
-		<session-timeout>100000</session-timeout>
+		<session-timeout>86400</session-timeout>
 	</session-config>
 
 </web-app>
