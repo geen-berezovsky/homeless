@@ -23,9 +23,11 @@ mysql –u юзер –p база_данных < путь_к_дампу (homeles
 mysql> use homeless;
 mysql> source H:\sbdata\homeless\db\homeless.base.sql
 
-Важно убедиться что имена всех таблиц начинаются с заглавной буквы. Если это не так, в файле C:\Program Files\MySQL\MySQL Server 5.6\my.cnf (или C:\ProgramData\MySQL\MySQL Server 5.7\my.ini) в секции [mysqld] указать опцию 
+Важно убедиться что имена всех таблиц начинаются с заглавной буквы. Если это не так, в файле 
+C:\Program Files\MySQL\MySQL Server 5.6\my.cnf (или C:\ProgramData\MySQL\MySQL Server 5.7\my.ini)
+в секции [mysqld] указать опцию 
 lower_case_table_names=2
-и передернуть базу. Если таблички уже импортированы, грохнуть их, например:
+и переимпортить базу. Если таблички уже импортированы, грохнуть их, например:
 drop database homeless;
 или пересоздать базу, и залить их заново.
 
@@ -86,7 +88,7 @@ mysql> source H:\sbdata\homeless\db\patch.sql
 
 1.	Для тестов загрузите ChromeDriver - WebDriver for Chrome с https://sites.google.com/a/chromium.org/chromedriver/downloads в C:/tools/:
 C:/tools/chromedriver.exe
-Note: или подправьте homeless\src\test\java\ru\homeless\tests\Util.java
+Note: если C:/tools/ надо поменять - подправьте в homeless\src\test\java\ru\homeless\tests\Util.java
 2.	В файле homeless\src\main\resources\application.properties
 подправьте ссылки на рабочие директории
 Аналогично  - homeless-report-engine\src\main\resources\application.properties
