@@ -13,7 +13,7 @@
             <p:panelGrid id="zags_request_panel_grid">
                 <p:row>
                     <p:column>
-                        <p:outputLabel value="Кому:" for="zagsRequestForWhomId" styleClass="base_form_caption_text"/>
+                        <p:outputLabel value="Кому/Куда:" for="zagsRequestForWhomId" styleClass="base_form_caption_text"/>
                     </p:column>
                     <p:column>
                         <p:inputTextarea id="zagsRequestForWhomId" rows="6" cols="50" value="#{zagsrequest.forWhom}" styleClass="base_form_value_text" />
@@ -21,10 +21,10 @@
                 </p:row>
                 <p:row>
                     <p:column>
-                        <p:outputLabel value="Имя:" for="zagsRequestNameId" styleClass="base_form_caption_text"/>
+                        <p:outputLabel value="Адрес для ответа:" for="zagsRequestRespAddress" styleClass="base_form_caption_text"/>
                     </p:column>
                     <p:column>
-                        <p:inputTextarea rows="6" cols="50" value="#{zagsrequest.name}" id="zagsRequestNameId" styleClass="base_form_value_text" />
+                        <p:inputTextarea rows="6" cols="50" value="#{zagsrequest.respAddress}" id="zagsRequestRespAddress" styleClass="base_form_value_text" />
                     </p:column>
                 </p:row>
                 <p:row>
@@ -33,14 +33,6 @@
                     </p:column>
                     <p:column>
                         <p:inputTextarea rows="6" cols="50" value="#{zagsrequest.whereWasBorn}" id="zagsRequestWhereWasBornId" styleClass="base_form_value_text"  />
-                    </p:column>
-                </p:row>
-                <p:row>
-                    <p:column>
-                        <p:outputLabel value="Адрес для ответа:" for="zagsRequestAddressId" styleClass="base_form_caption_text"/>
-                    </p:column>
-                    <p:column>
-                        <p:inputTextarea rows="6" cols="50" value="#{zagsrequest.address}" id="zagsRequestAddressId" styleClass="base_form_value_text" />
                     </p:column>
                 </p:row>
                 <p:row>
@@ -57,6 +49,14 @@
                     </p:column>
                     <p:column>
                         <p:inputTextarea rows="6" cols="50" value="#{zagsrequest.father}" id="zagsRequestFatherId" styleClass="base_form_value_text"  />
+                    </p:column>
+                </p:row>
+                <p:row>
+                    <p:column>
+                        <p:outputLabel value="Адрес для получения документа:" for="zagsRequestAddressId" styleClass="base_form_caption_text"/>
+                    </p:column>
+                    <p:column>
+                        <p:inputTextarea rows="6" cols="50" value="#{zagsrequest.address}" id="zagsRequestAddressId" styleClass="base_form_value_text" />
                     </p:column>
                 </p:row>
                 <p:row>

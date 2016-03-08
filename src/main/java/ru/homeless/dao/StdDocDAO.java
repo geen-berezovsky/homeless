@@ -19,7 +19,7 @@ public class StdDocDAO extends GenericDAO implements Serializable {
 
     @SuppressWarnings("unchecked")
     public List<BasicDocumentRegistry> getStandardDocumentsList(int id) {
-        Criteria c = getSessionFactory().getCurrentSession().createCriteria(BasicDocumentRegistry.class).add(Restrictions.eq("client", id)).add(Restrictions.not(Restrictions.eq("type", getInstanceById(BasicDocumentRegistryType.class,16))));
+        Criteria c = getSessionFactory().getCurrentSession().createCriteria(BasicDocumentRegistry.class).add(Restrictions.eq("client", id)).add(Restrictions.not(Restrictions.eq("type", getInstanceById(BasicDocumentRegistryType.class,16)))).add(Restrictions.not(Restrictions.eq("type",getInstanceById(BasicDocumentRegistryType.class,1))));
         c.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
         return c.list();
     }

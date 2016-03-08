@@ -56,6 +56,14 @@ public class ReportsBean implements Serializable {
         return Util.downloadDocument(requestSuffix, saveFilePath, docType, filename);
     }
 
+    private StreamedContent getReport(int type, String from, String till, String filename) throws IOException {
+        String requestSuffix = "/getReport?requestType="+type+"&from="+ from + "&till=" + till;
+        String saveFilePath = "/tmp" + File.separator + filename;
+        String docType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+        log.info("Getting URL: "+requestSuffix);
+        return Util.downloadDocument(requestSuffix, saveFilePath, docType, filename);
+    }
+
 
     public void downloadWorkResultReport() throws IOException {
         file = getMacroReport(200, Util.formatDate(startDate), Util.formatDate(endDate), "WorkResult.xlsm");
@@ -75,7 +83,7 @@ public class ReportsBean implements Serializable {
     }
 
     public void downloadOverVacReport() throws IOException {
-        file = getMacroReport(206, Util.formatDate(startDate), Util.formatDate(endDate), "OverVacReport.xlsm");
+        file = getReport(206, Util.formatDate(startDate), Util.formatDate(endDate), "OverVacReport.xlsx");
     }
 
     public void downloadEvictedReport() throws IOException {

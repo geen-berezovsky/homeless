@@ -93,6 +93,14 @@
                 </p:row>
 
                 <p:row>
+                    <p:outputLabel value="Комментарий на охрану:" styleClass="base_form_caption_text" />
+                </p:row>
+                <p:row>
+                    <p:message display="tooltip" for="sHComment"/>
+                    <p:inputTextarea value="#{clientshelter.selectedShelter.comments}" id="sHComment" styleClass="base_form_value_text" />
+                </p:row>
+
+                <p:row>
                     <p:outputLabel value="Статус:" styleClass="base_form_caption_text"/>
                 </p:row>
                 <p:row>

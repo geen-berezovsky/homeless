@@ -131,19 +131,10 @@ public class BasicDocumentBean implements Serializable {
 
         BasicDocumentRegistryType type = workerService.getInstanceById(BasicDocumentRegistryType.class, basicDocumentRegistryTypeId);
 
-        String docNum= "";
+        String docNum= Util.getDocNum(workerService, basicDocumentRegistryTypeId);
 
-        int currYear = Calendar.getInstance().get(Calendar.YEAR);
-
-        Date from = new GregorianCalendar(currYear,0,1).getTime();
-        Date till = new Date();
-
-        log.info("Requested period for counting document number is from "+from+" till "+till);
-        docNum = getWorkerService().getDocNum(from, till, basicDocumentRegistryTypeId);
-        log.info("Document number is "+docNum);
 
         BasicDocumentRegistry basicDocumentRegistry = new BasicDocumentRegistry(client.getId(), docNum, type, selectedDocumentId, dateFrom, dateTill, worker.getId(), new Date(), city);
-
         workerService.addInstance(basicDocumentRegistry);
         log.debug("Inserted object with ID=" + basicDocumentRegistry.getId());
         FacesContext context = FacesContext.getCurrentInstance();

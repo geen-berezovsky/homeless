@@ -45,8 +45,8 @@ public class WorkerDAO extends GenericDAO implements Serializable {
         //exclusions
 
          /*
-            For each BasicDocumentRegistryType (except Transit) we need to take the count of existing documents such type and iterate it
-            Then, the following part of the number will be count of all existing BasicDocumentRegistryType except Transit
+            For each BasicDocumentRegistryType we need to take the count of existing documents such type and iterate it
+            Then, the following part of the number will be count of all existing BasicDocumentRegistryType
          */
         BasicDocumentRegistryType unknown = getInstanceById(BasicDocumentRegistryType.class,20);
         BasicDocumentRegistryType request = getInstanceById(BasicDocumentRegistryType.class,id);

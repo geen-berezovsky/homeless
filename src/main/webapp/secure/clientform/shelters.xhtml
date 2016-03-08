@@ -57,6 +57,9 @@
                     <p:column headerText="Статус">
                         <h:outputText value="#{clientshelter.shelterStatus(shelterlist.shelterresult)}"/>
                     </p:column>
+                    <p:column headerText="Комментарий">
+                        <h:outputText value="#{shelterlist.comments}"/>
+                    </p:column>
                     <p:column headerText="Доп. соглашение">
                         <center>
                             <p:growl id="adShgrowl" showDetail="true" life="3000"/>
