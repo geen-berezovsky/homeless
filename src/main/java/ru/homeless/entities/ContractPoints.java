@@ -14,6 +14,7 @@ public class ContractPoints implements Serializable {
 	private int id;
 	private String caption;
 	private int audience;
+    private String abbreviation;
 
 	public ContractPoints() {
 		
@@ -67,4 +68,11 @@ public class ContractPoints implements Serializable {
 	}
 
 
+    public String getAbbreviation() {
+        return abbreviation;
+    }
+
+    public void setAbbreviation(String abbreviation) {
+        this.abbreviation = abbreviation;
+    }
 }

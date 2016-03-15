@@ -83,7 +83,7 @@ public class ReportDocumentProcessor {
                                 style.setBorderTop(BorderStyle.THIN);
                                 style.setBorderRight(BorderStyle.THIN);
                                 style.setBorderLeft(BorderStyle.THIN);
-                                if (k == 1) {
+                                if (k == 1 || k == 10) {
                                     style.setAlignment(XSSFCellStyle.ALIGN_LEFT);
                                 } else {
                                     style.setAlignment(XSSFCellStyle.ALIGN_CENTER);
