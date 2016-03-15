@@ -20,7 +20,7 @@ unzip -d ${_TMP} ${LAST_DB_BACKUP} > /dev/null 2>&1
 mysql --user=homeless_demo --password=homeless_demo homeless_demo < ${_TMP}/homeless.sql
 rm -f ${_TMP}/homeless.sql
 echo "Applying new patch for the database"
-mysql --user=homeless_demo --password=homeless_demo homeless_demo < ../db/patch.sql
+mysql --user=homeless_demo --password=homeless_demo -f homeless_demo < ../db/patch.sql
 
 # Preparing inventory
 echo "Preparing inventory"
