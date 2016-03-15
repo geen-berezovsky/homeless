@@ -804,30 +804,19 @@ public class ClientFormBean implements Serializable {
         try {
 
             log.info("Client with ID = "+client.getId() + " will be deleted");
+            
+            log.info("Cleaning breadwinners, reason of homeless and diseases");
+            client.setBreadwinners(Collections.<Breadwinner>emptySet());
+            client.setReasonofhomeless(Collections.<Reasonofhomeless>emptySet());
+            client.setDiseases(Collections.<ChronicDisease>emptySet());
+            getClientService().updateInstance(client);
+            log.info("...done!");
+            
             log.info("Deleting all client's documents...");
-
             List<Document> documents = getClientService().getInstancesByClientId(Document.class, client.getId());
             for (Document document : documents) {
                 log.info("\tDeleting document id = "+document.getId());
                 getClientService().deleteInstance(document);
-                log.info("\t... done!");
-            }
-
-            for (Breadwinner breadwinner : client.getBreadwinners()) {
-                log.info("\tDeleting breadwinner id = "+breadwinner.getId());
-                getClientService().deleteInstance(breadwinner);
-                log.info("\t... done!");
-            }
-
-            for (Reasonofhomeless reasonofhomeless : client.getReasonofhomeless()) {
-                log.info("\tDeleting reasonofhomeless id = "+reasonofhomeless.getId());
-                getClientService().deleteInstance(reasonofhomeless);
-                log.info("\t... done!");
-            }
-
-            for (ChronicDisease chronicDisease : client.getDiseases()) {
-                log.info("\tDeleting chronicDisease id = " + chronicDisease.getId());
-                getClientService().deleteInstance(chronicDisease);
                 log.info("\t... done!");
             }
 
@@ -842,8 +831,6 @@ public class ClientFormBean implements Serializable {
                 getClientService().deleteInstance(shelterHistory);
                 log.info("\t... done!");
             }
-
-
 
             client.setEducation(null);
             client.setNightstay(null);
