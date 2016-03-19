@@ -1,7 +1,8 @@
 package ru.homeless.report.entities;
 
 public class OverVacReportEntity {
-	
+
+    private int id;
 	private String name;
 	private String dateOfBirth;
 	private String inShelter;
@@ -13,10 +14,10 @@ public class OverVacReportEntity {
 	private String typhVac;
     private String comments;
 	
-	public OverVacReportEntity(String name, String dateOfBirth, String inShelter, String outShelter, String workerSurname,
+	public OverVacReportEntity(int id, String name, String dateOfBirth, String inShelter, String outShelter, String workerSurname,
                                String fluoragr, String hepotitsVac, String dipthVac, String typhVac, String comments) {
-		
-		this.name = name;
+        this.id = id;
+        this.name = name;
 		this.dateOfBirth = dateOfBirth;
         this.inShelter = inShelter;
 		this.outShelter = outShelter;
@@ -89,5 +90,13 @@ public class OverVacReportEntity {
 
     public void setComments(String comments) {
         this.comments = comments;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

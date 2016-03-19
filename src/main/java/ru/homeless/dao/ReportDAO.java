@@ -146,14 +146,15 @@ public class ReportDAO extends GenericDAO implements IReportDAO {
         //For each room prepare the list of people living there and add to the global list
         for (Room room : getInstances(Room.class)) {
             List<?> res = getSessionFactory().getCurrentSession().createSQLQuery("" +
-                    "select  concat(c.surname,' ',c.firstname,' ',c.middlename) as 'FIO', date_format(c.date,'%d.%m.%Y') as 'DR', " +
+                    "select  c.id, concat(c.surname,' ',c.firstname,' ',c.middlename) as 'FIO', date_format(c.date,'%d.%m.%Y') as 'DR', " +
                     "    date_format(sh.inShelter,'%d.%m.%Y') as 'INS', date_format(sh.outShelter,'%d.%m.%Y') as 'OUTS'," +
                     "    concat(left(w.surname,1),left(w.firstname,1)) as 'WORKER', date_format(sh.fluorogr,'%d.%m.%Y') as 'FLG'," +
                     "    date_format(sh.hepotitsVac,'%d.%m.%Y') as 'HEP', date_format(sh.dipthVac,'%d.%m.%Y') as 'DIFT'," +
                     "    date_format(sh.typhVac,'%d.%m.%Y') as 'TYPTH', client_points.points as 'COMMENTS'" +
                     " from ShelterHistory sh left join Client c on sh.client = c.id left join ServContract sc on sh.client = sc.client left join Worker w on sc.worker = w.id " +
                     "left join (select ServContract.client client, group_concat(ContractPoints.abbreviation separator ', ') points from ContractControl, ContractPoints, ServContract where ServContract.id = ContractControl.servcontract and ServContract.contractresult =1 and ContractPoints.id=ContractControl.contractpoints group by ServContract.client) client_points on (client_points.client = c.id)" +
-                    "where sh.roomId = "+room.getId()+" and sh.shelterresult = 1 and sc.contractresult =1;")
+                    "where sh.roomId = " + room.getId() + " and sh.shelterresult = 1 and sc.contractresult =1;")
+                    .addScalar("id")
                     .addScalar("FIO")
                     .addScalar("DR")
                     .addScalar("INS")
@@ -177,9 +178,9 @@ public class ReportDAO extends GenericDAO implements IReportDAO {
                         }
 
 
-            result.add(new OverVacReportEntity(xy[0].toString(), xy[1].toString(), xy[2].toString(), xy[3].toString(),
-                                xy[4].toString(), xy[5].toString(), xy[6].toString(), xy[7].toString(),
-                                xy[8].toString(), xy[9].toString()));
+            result.add(new OverVacReportEntity(Integer.parseInt(xy[0].toString()), xy[1].toString(), xy[2].toString(), xy[3].toString(), xy[4].toString(),
+                                xy[5].toString(), xy[6].toString(), xy[7].toString(), xy[8].toString(),
+                                xy[9].toString(), xy[10].toString()));
             }
             resMapByRoom.put(room, result);
 

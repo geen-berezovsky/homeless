@@ -24,6 +24,9 @@ public class OverVacReportMappingImpl implements ICustomMappingExcelDocument {
 		Map<Integer, List<String>> sheetData = new TreeMap<Integer, List<String>>();
         try {
 
+            List<Integer> alreadyAddedPeople = new ArrayList<>();
+
+
             Map<Room, List<OverVacReportEntity>> reportResult = reportService.getOverVacReportEntity();
             int i =0; //first row
             for (Map.Entry entry : reportResult.entrySet()) {
@@ -39,21 +42,40 @@ public class OverVacReportMappingImpl implements ICustomMappingExcelDocument {
                 i++;
                 int j=1;
                 for (OverVacReportEntity mans : peopleInRoom) {
-                    List<String> man = new ArrayList<String>();
-                    man.add(String.valueOf(j));
-                    man.add(mans.getName());
-                    man.add(mans.getDateOfBirth());
-                    man.add(mans.getInShelter());
-                    man.add(mans.getOutShelter());
-                    man.add(mans.getWorkerSurname());
-                    man.add(mans.getFluoragr());
-                    man.add(mans.getHepotitsVac());
-                    man.add(mans.getDipthVac());
-                    man.add(mans.getTyphVac());
-                    man.add(mans.getComments());
-                    sheetData.put(i, man);
-                    i++;
-                    j++;
+
+                    /*
+                        Customization according HS-1: people could have more than one opened contract, so according current SQL in DAO
+                        we can see the same people in one room. Next code will check if this man already added to the report or not.
+                     */
+                    if (!alreadyAddedPeople.contains(mans.getId())) {
+                        List<String> man = new ArrayList<String>();
+                        man.add(String.valueOf(j));
+                        man.add(mans.getName());
+                        man.add(mans.getDateOfBirth());
+                        man.add(mans.getInShelter());
+                        man.add(mans.getOutShelter());
+                        man.add(mans.getWorkerSurname());
+                        man.add(mans.getFluoragr());
+                        man.add(mans.getHepotitsVac());
+                        man.add(mans.getDipthVac());
+                        man.add(mans.getTyphVac());
+                        man.add(mans.getComments());
+                        sheetData.put(i, man);
+                        i++;
+                        j++;
+                        alreadyAddedPeople.add(mans.getId());
+                    } else {
+                        for (Map.Entry<Integer, List<String>> shRow : sheetData.entrySet()) {
+                            List<String> cols = shRow.getValue();
+                            System.out.println(cols.get(0) + " " +cols.get(1));
+                            if (cols.get(1).equals(mans.getName()) && cols.get(2).equals(mans.getDateOfBirth())) { //if this is the same man then modify it
+                                cols.set(5,cols.get(5)+", "+mans.getWorkerSurname());
+                            }
+                        }
+                    }
+
+
+
                 }
 
 
