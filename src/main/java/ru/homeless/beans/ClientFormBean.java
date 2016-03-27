@@ -596,11 +596,18 @@ public class ClientFormBean implements Serializable {
                 String upCase = s.toUpperCase();
                 newNamefromSubNames+=upCase.substring(0, 1)+s.toLowerCase().substring(1, s.length())+"-";
             }
-            newNamefromSubNames = newNamefromSubNames.substring(0,newNamefromSubNames.length()-1);
+            if (!source.substring(0, 1).equals("-")) {
+                newNamefromSubNames = newNamefromSubNames.substring(0, newNamefromSubNames.length() - 1);
+            }
         } else {
             newNamefromSubNames+=source.toUpperCase().substring(0, 1)+source.toLowerCase().substring(1, source.length());
         }
-        return newNamefromSubNames;
+        //Don't allow empty values
+        if (newNamefromSubNames.trim().equals("")) {
+            return "--";
+        } else {
+            return newNamefromSubNames;
+        }
     }
 
     public void saveClientForm() {
