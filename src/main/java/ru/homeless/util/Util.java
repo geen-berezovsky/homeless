@@ -111,7 +111,7 @@ public class Util {
 	}
 
 	public static boolean isTextOnlyValid(String str) {
-		Pattern pattern = Pattern.compile("[a-zA-Z-]+|[а-яА-Я-]+");
+		Pattern pattern = Pattern.compile("[a-zA-Z-]+|[а-яА-Я-ёЁ]+");
 		Matcher matcher = pattern.matcher(str);
 		if (matcher.matches()) {
 			return true;
