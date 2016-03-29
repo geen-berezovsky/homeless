@@ -1,26 +1,25 @@
 package ru.homeless.beans;
 
-import java.io.Serializable;
-import java.sql.SQLException;
-import java.util.*;
+import org.jboss.logging.Logger;
+import org.primefaces.context.RequestContext;
+import ru.homeless.converters.ServiceConverter;
+import ru.homeless.entities.Client;
+import ru.homeless.entities.RecievedService;
+import ru.homeless.entities.ServicesType;
+import ru.homeless.entities.Worker;
+import ru.homeless.services.GenericService;
+import ru.homeless.util.Util;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
-import javax.faces.event.AjaxBehaviorEvent;
-import javax.faces.event.ValueChangeEvent;
 import javax.servlet.http.HttpSession;
-
-import org.jboss.logging.Logger;
-
-import org.primefaces.context.RequestContext;
-import ru.homeless.converters.EducationConverter;
-import ru.homeless.converters.ServiceConverter;
-import ru.homeless.entities.*;
-import ru.homeless.services.GenericService;
-import ru.homeless.util.Util;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 
 @ManagedBean(name = "services")

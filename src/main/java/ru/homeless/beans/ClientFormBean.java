@@ -26,7 +26,6 @@ import javax.imageio.ImageIO;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
-import org.hibernate.type.StringClobType;
 import org.primefaces.component.tabview.TabView;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.TabChangeEvent;
@@ -87,6 +86,9 @@ public class ClientFormBean implements Serializable {
     private List<String> breadwinnerTypes;
     private List<String> regionTypes;
 
+
+    private boolean homelessDateNotNull = false;
+
     private Region lastLivingRegion;
     private Region lastRegistrationRegion;
 
@@ -135,6 +137,9 @@ public class ClientFormBean implements Serializable {
                 profile.mkdirs();
             }
 
+
+
+
             reloadAll();
             RequestContext rc = RequestContext.getCurrentInstance();
             rc.update("select_document");
@@ -167,10 +172,36 @@ public class ClientFormBean implements Serializable {
     }
 
 
+    private void toggleHomelessDateKnownStyle(boolean x) {
+        if (x) {
+            homelessDateNotNull = true;
+        } else {
+            homelessDateNotNull = false;
+        }
+    }
+
+    public void homelessDateIsKnown(ValueChangeEvent event) {
+        toggleHomelessDateKnownStyle((Boolean) event.getNewValue());
+    }
+
     public void reloadAll() throws SQLException {
         if (client != null) {
             log.info("Client ID = " + client.getId() + " has been selected for usage");
+            Calendar cal = Calendar.getInstance();
+            cal.set(1900,0,1,0,0,0);
+            Date nullDate = cal.getTime();
+
+            if (client.getHomelessdate() == null) {
+                client.setHomelessdate(nullDate);
+            }
             updateHomelessDate();
+
+            if (!Util.formatDate(client.getHomelessdate()).equals(Util.formatDate(nullDate)) && !Util.formatDate(nullDate).equals("??.??.????")) {
+                toggleHomelessDateKnownStyle(true);
+            } else {
+                toggleHomelessDateKnownStyle(false);
+            }
+
         } else {
             log.info("Oops, but this client is not found in database...");
             return;
@@ -620,7 +651,14 @@ public class ClientFormBean implements Serializable {
             HttpSession session = Util.getSession();
             String username = session.getAttribute("username").toString();
             log.info("Worker "+username+ " is trying to save a client form where client name = "+client.toString());
-            updateHomelessDate(selectedMonth, getSelectedYear());
+            if (homelessDateNotNull) {
+                updateHomelessDate(selectedMonth, getSelectedYear());
+            } else {
+                Calendar cal = Calendar.getInstance();
+                cal.set(1900,0,1,0,0,0);
+                Date nullDate = cal.getTime();
+                client.setHomelessdate(nullDate);
+            }
 
                 //Update Surname, FirstName and MiddleName for starting with uppercase letter
             client.setSurname(checkNameDash(client.getSurname()));
@@ -1252,4 +1290,16 @@ public class ClientFormBean implements Serializable {
     public void setFormattedDate(String formattedDate) {
         this.formattedDate = formattedDate;
     }
+
+
+    public boolean isHomelessDateNotNull() {
+        return homelessDateNotNull;
+    }
+
+    public void setHomelessDateNotNull(boolean homelessDateNotNull) {
+        this.homelessDateNotNull = homelessDateNotNull;
+    }
+
+
+
 }
