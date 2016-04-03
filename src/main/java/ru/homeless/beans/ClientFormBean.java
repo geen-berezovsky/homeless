@@ -173,11 +173,7 @@ public class ClientFormBean implements Serializable {
 
 
     private void toggleHomelessDateKnownStyle(boolean x) {
-        if (x) {
-            homelessDateNotNull = true;
-        } else {
-            homelessDateNotNull = false;
-        }
+        homelessDateNotNull = x;
     }
 
     public void homelessDateIsKnown(ValueChangeEvent event) {
@@ -233,36 +229,36 @@ public class ClientFormBean implements Serializable {
 
         //pull subregions list for actual region
         lastLivingSubRegions = new ArrayList<>();
-        lastLivingSubRegions.addAll(getClientService().getSubRegionsByRegion((Region) getLastLivingRegion()));
+        lastLivingSubRegions.addAll(getClientService().getSubRegionsByRegion(getLastLivingRegion()));
 
         lastRegistrationSubRegions = new ArrayList<>();
-        lastRegistrationSubRegions.addAll(getClientService().getSubRegionsByRegion((Region) getLastRegistrationRegion()));
+        lastRegistrationSubRegions.addAll(getClientService().getSubRegionsByRegion(getLastRegistrationRegion()));
 
         //chronic disasters
         if (client != null && client.getUniqDisease() != null && !client.getUniqDisease().trim().equals("")) {
-            setAnotherChronicalDisasterChecked(true); //toggle checbox "Another" for chronical disasters
+            setAnotherChronicalDisasterChecked(true); //toggle checkbox "Another" for chronical disasters
             toggleAnotherChronicsStyle(true); //show input "Another" for chronical disasters
         } else {
-            setAnotherChronicalDisasterChecked(false); //toggle checbox "Another" for chronical disasters
+            setAnotherChronicalDisasterChecked(false); //toggle checkbox "Another" for chronical disasters
             toggleAnotherChronicsStyle(false); //hide input "Another" for chronical disasters
         }
 
         //breadwinners
         if (client != null && client.getUniqBreadwinner() != null && !client.getUniqBreadwinner().trim().equals("")) {
-            setAnotherBreadwinnerChecked(true); //toggle checbox "Another" for breadwinners
+            setAnotherBreadwinnerChecked(true); //toggle checkbox "Another" for breadwinners
             toggleAnotherBreadwinnerStyle(true); //show input "Another" for breadwinners
 
         } else {
-            setAnotherBreadwinnerChecked(false); //toggle checbox "Another" for breadwinners
+            setAnotherBreadwinnerChecked(false); //toggle checkbox "Another" for breadwinners
             toggleAnotherBreadwinnerStyle(false); //hide input "Another" for breadwinners
         }
 
         //homeless reasons
         if (client != null && client.getUniqReason() != null && !client.getUniqReason().trim().equals("")) {
-            setAnotherHomelessReasonChecked(true); //toggle checbox "Another" for homeless reasons
+            setAnotherHomelessReasonChecked(true); //toggle checkbox "Another" for homeless reasons
             toggleAnotherHomelessReasonStyle(true); //show input "Another" for homeless reasons
         } else {
-            setAnotherHomelessReasonChecked(false); //toggle checbox "Another" for homeless reasons
+            setAnotherHomelessReasonChecked(false); //toggle checkbox "Another" for homeless reasons
             toggleAnotherHomelessReasonStyle(false); //hide input "Another" for homeless reasons
         }
 
@@ -627,7 +623,7 @@ public class ClientFormBean implements Serializable {
                 String upCase = s.toUpperCase();
                 newNamefromSubNames+=upCase.substring(0, 1)+s.toLowerCase().substring(1, s.length())+"-";
             }
-            if (!source.substring(0, 1).equals("-")) {
+            if (source.charAt(0) != '-')) {
                 newNamefromSubNames = newNamefromSubNames.substring(0, newNamefromSubNames.length() - 1);
             }
         } else {
@@ -642,7 +638,7 @@ public class ClientFormBean implements Serializable {
     }
 
     public void saveClientForm() {
-        FacesMessage msg = null;
+        FacesMessage msg;
 
         //only when client is already selected and not null
         //the client will be null when you just had open this application
@@ -1035,7 +1031,7 @@ public class ClientFormBean implements Serializable {
 
     public String getOriginalPhotoFilePath() {
         File f = new File(Configuration.photos+"/"+client.getPhotoName());
-        String str = f.getAbsolutePath().toString();
+        String str = f.getAbsolutePath();
         if (!f.exists()) {
             return str + " не найден в хранилище";
         } else {
@@ -1066,11 +1062,7 @@ public class ClientFormBean implements Serializable {
     public boolean isYearValid(String str) {
         Pattern pattern = Pattern.compile("\\d{4}");
         Matcher matcher = pattern.matcher(str);
-        if (matcher.matches()) {
-            return true;
-        } else {
-            return false;
-        }
+        return matcher.matches();
     }
 
      /*
