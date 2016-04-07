@@ -39,7 +39,12 @@ public class ReportService extends GenericService implements IReportService {
 		return reportDAO.getOverVacReport();
 	}
 
-	@Override
+    @Override
+    public List<ProvidedServicesByClientReportEntity> getProvidedServicesByClientReport(Date from, Date till) {
+        return reportDAO.getProvidedServicesByClientReport(from, till);
+    }
+
+    @Override
 	public List<OuterReportEntity> getOuterReportEntity() {
 		return reportDAO.getOuterReport();
 	}

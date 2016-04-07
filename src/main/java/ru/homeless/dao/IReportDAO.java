@@ -17,6 +17,8 @@ public interface IReportDAO extends IGenericDAO {
 	public List<OneTimeServicesReportEntity> getOneTimeServicesReport(Date from, Date till);
 
     public Map<Room, List<OverVacReportEntity>> getOverVacReport();
+
+    public List<ProvidedServicesByClientReportEntity> getProvidedServicesByClientReport(Date from, Date till);
 	
 	public List<OuterReportEntity> getOuterReport();
 

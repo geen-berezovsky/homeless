@@ -68,6 +68,9 @@ public class CustomValuesHttpRequestParser implements IDocumentMapping {
 
     @Autowired
     private RegistrationMappingImpl registrationMappingImpl;
+
+    @Autowired
+    private ProvidedServicesByClientReportMappingImpl providedServicesByClientReportMapping;
     
     //HERE WE PARSE CUSTOM VALUES LIKE travelCity
     
@@ -258,6 +261,14 @@ public class CustomValuesHttpRequestParser implements IDocumentMapping {
     	requestParameters.put("till", Util.parseDate(request, "till", log));
 		return customStatisticsReportMappingImpl.getDocument(requestParameters);
 	}
+
+    @Override
+    public XSSFWorkbook generateProvidedServicesByClientDocument(HttpServletRequest request) {
+        Map<String, Date> requestParameters = new HashMap<String, Date>();
+        requestParameters.put("from", Util.parseDate(request, "from", log));
+        requestParameters.put("till", Util.parseDate(request, "till", log));
+        return providedServicesByClientReportMapping.getDocument(requestParameters);
+    }
 
 
 }

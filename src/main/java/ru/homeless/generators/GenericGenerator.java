@@ -169,6 +169,9 @@ public class GenericGenerator {
 			case IDocumentMapping.REPORT_CUSTOM_STATISTICS: {
 				return hrp.generateCustomStatisticsDocument(request);
 			}
+            case IDocumentMapping.REPORT_PROVIDED_SERVICES_BY_CLIENT: {
+                return hrp.generateProvidedServicesByClientDocument(request);
+            }
 
             default: {
 	   			return null;

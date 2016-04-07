@@ -123,24 +123,6 @@ public class ReportDAO extends GenericDAO implements IReportDAO {
 
 	@Override
 	public Map<Room, List<OverVacReportEntity>> getOverVacReport() {
-/*
-		List<?> res = getSessionFactory().getCurrentSession().createSQLQuery("SELECT c.id, CONCAT(c.surname, ' ', c.firstname, ' ', c.middlename), c.date, sh.roomId, sh.inShelter, sh.outShelter, w.surname, sh.fluorogr, " +
-				"sh.typhVac, sh.dipthVac, sh.hepotitsVac FROM (SELECT * FROM ShelterHistory WHERE roomId<>0) sh LEFT JOIN Client c " +
-				"ON (sh.client = c.id) LEFT JOIN (SELECT * FROM ServContract WHERE contractresult=1) sc ON (c.id=sc.client) LEFT JOIN Worker w " +
-				"ON (sc.worker = w.id)")
-					.addScalar("c.id")
-					.addScalar("CONCAT(c.surname, ' ', c.firstname, ' ', c.middlename)")
-					.addScalar("c.date")
-					.addScalar("sh.roomId")
-					.addScalar("sh.inShelter")
-					.addScalar("sh.outShelter")
-					.addScalar("w.surname")
-					.addScalar("sh.fluorogr")
-					.addScalar("sh.typhVac")
-					.addScalar("sh.dipthVac")
-					.addScalar("sh.hepotitsVac").list();
-*/
-
         Map<Room, List<OverVacReportEntity>> resMapByRoom = new TreeMap<>();
 
         //For each room prepare the list of people living there and add to the global list
@@ -190,7 +172,77 @@ public class ReportDAO extends GenericDAO implements IReportDAO {
 		return resMapByRoom;
 	}
 
-	@Override
+    @Override
+    public List<ProvidedServicesByClientReportEntity> getProvidedServicesByClientReport(Date from, Date till) {
+        List<?> res = getSessionFactory().getCurrentSession().createSQLQuery("select rs.id, " +
+                "concat(w.surname,' ',left(w.firstname,1),'.',left(w.middlename,1),'.') as 'WORKER'," +
+                "    c.id as 'CLIENT_ID'," +
+                "    concat(c.surname,' ',c.firstname,' ',c.middlename) as 'FIO'," +
+                "    st.caption as 'SERVICE_TYPE'," +
+                "    date_format(rs.date,'%d.%m.%Y') as 'DATE'" +
+                " from RecievedService rs " +
+                "left join Client c on rs.client=c.id" +
+                "    left join Worker w on rs.worker=w.id " +
+                "left join ServicesType st on rs.servicesType=st.id " +
+                "where rs.date>=" + Util.parseDateForMySql(from) + " and rs.date<=" + Util.parseDateForMySql(till) + " order by rs.date;")
+                .addScalar("id")
+                .addScalar("WORKER")
+                .addScalar("CLIENT_ID")
+                .addScalar("FIO")
+                .addScalar("SERVICE_TYPE")
+                .addScalar("DATE").list();
+
+        List<ProvidedServicesByClientReportEntity> result = new ArrayList<ProvidedServicesByClientReportEntity>();
+
+        for (Object o : res) {
+            Object[] xy = (Object[]) o;
+
+            for (int i = 0; i < 6; i++) {
+                if (xy[i] == null) {
+                    xy[i] = new String("");
+                }
+            }
+
+            result.add(new ProvidedServicesByClientReportEntity(Integer.parseInt(xy[0].toString()),xy[1].toString(), xy[2].toString(), xy[3].toString(), xy[4].toString(),xy[5].toString()));
+        }
+
+        //Then adding entities from BasicDocumentRegistry
+        res = getSessionFactory().getCurrentSession().createSQLQuery("SELECT bdr.id, " +
+                "concat(w.surname,' ',left(w.firstname,1),'.',left(w.middlename,1),'.') as 'WORKER', " +
+                "    c.id as 'CLIENT_ID', " +
+                "    concat(c.surname,' ',c.firstname,' ',c.middlename) as 'FIO', " +
+                "    bdrt.caption as 'SERVICE_TYPE', " +
+                "    date_format(bdr.date,'%d.%m.%Y') as 'DATE' " +
+                "FROM BasicDocumentRegistry bdr " +
+                "    LEFT JOIN Worker w ON bdr.performerId=w.id " +
+                "    LEFT JOIN Client c ON bdr.client = c.id " +
+                "    LEFT JOIN BasicDocumentRegistryType bdrt ON bdrt.id=bdr.type " +
+                "    where bdr.date>='2015-12-01' and bdr.date<='2015-12-31' order by bdr.date;")
+                .addScalar("id")
+                .addScalar("WORKER")
+                .addScalar("CLIENT_ID")
+                .addScalar("FIO")
+                .addScalar("SERVICE_TYPE")
+                .addScalar("DATE").list();
+
+        for (Object o : res) {
+            Object[] xy = (Object[]) o;
+
+            for (int i = 0; i < 6; i++) {
+                if (xy[i] == null) {
+                    xy[i] = new String("");
+                }
+            }
+
+            result.add(new ProvidedServicesByClientReportEntity(Integer.parseInt(xy[0].toString()),xy[1].toString(), xy[2].toString(), xy[3].toString(), xy[4].toString(),xy[5].toString()));
+        }
+
+
+        return result;
+    }
+
+
+    @Override
 	public List<OuterReportEntity> getOuterReport() {
 		List<OuterReportEntity> result = new ArrayList<OuterReportEntity>();
 		List<?> res = getSessionFactory().getCurrentSession().createSQLQuery("SELECT c.id, CONCAT(c.surname, '\n', c.firstname, '\n', c.middlename) as clName, c.date, sc.startDate, cp.caption,"+

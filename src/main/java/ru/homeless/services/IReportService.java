@@ -17,6 +17,8 @@ public interface IReportService extends IGenericService {
 	public List<OneTimeServicesReportEntity> getOneTimeServicesReportEntity(Date from, Date till);
 
 	public Map<Room, List<OverVacReportEntity>> getOverVacReportEntity();
+
+    public List<ProvidedServicesByClientReportEntity> getProvidedServicesByClientReport(Date from, Date till);
 	
 	public List<OuterReportEntity> getOuterReportEntity();
 

@@ -136,6 +136,13 @@ public interface IDocumentMapping {
     public final int REPORT_CUSTOM_STATISTICS = 212;
     public final String REPORT_CUSTOM_STATISTICS_PATH = Configuration.templatesDir+"/"+"CustomStatistics.xlsm";
 
+    /*
+    Template file: ProvidedServicesByClient.xlsx
+    Document title: HS-3, "Отчет << Список клиентов >>"
+     */
+    public final int REPORT_PROVIDED_SERVICES_BY_CLIENT = 214;
+    public final String REPORT_PROVIDED_SERVICES_BY_CLIENT_PATH = Configuration.templatesDir+"/"+"ProvidedServicesByClient.xlsx";
+
 
     public WordprocessingMLPackage generateSocialHelpDocument(HttpServletRequest request, Client client, Map<String, String> map);
     public WordprocessingMLPackage generateFreeTravelDocument(HttpServletRequest request, Client client, Map<String, String> map);
@@ -157,5 +164,6 @@ public interface IDocumentMapping {
 	public XSSFWorkbook generateOuterDocument(HttpServletRequest request);
     public XSSFWorkbook generateInnerReport(HttpServletRequest request);
 	public XSSFWorkbook generateCustomStatisticsDocument(HttpServletRequest request);
+    public XSSFWorkbook generateProvidedServicesByClientDocument(HttpServletRequest request);
     
 }

@@ -95,6 +95,12 @@ public class ReportDocumentProcessor {
                             sheet.getRow(row_start).getCell(col_start + k).setCellStyle(style);
                             break;
                         }
+                        case IDocumentMapping.REPORT_PROVIDED_SERVICES_BY_CLIENT: {
+                            if (s.contains(" В..")) {
+                                sheet.getRow(row_start).getCell(col_start + k).setCellValue("Волонтеры");
+                            }
+                            break;
+                        }
                     }
 
 
