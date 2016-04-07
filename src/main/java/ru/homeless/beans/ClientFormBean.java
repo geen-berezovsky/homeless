@@ -623,7 +623,7 @@ public class ClientFormBean implements Serializable {
                 String upCase = s.toUpperCase();
                 newNamefromSubNames+=upCase.substring(0, 1)+s.toLowerCase().substring(1, s.length())+"-";
             }
-            if (source.charAt(0) != '-')) {
+            if (source.charAt(0) != '-') {
                 newNamefromSubNames = newNamefromSubNames.substring(0, newNamefromSubNames.length() - 1);
             }
         } else {
