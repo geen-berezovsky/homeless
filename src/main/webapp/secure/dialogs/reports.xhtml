@@ -48,6 +48,9 @@
                     <p:commandButton value="Разовые услуги" ajax="false" onclick="PrimeFaces.monitorDownload(standardDocumentStart, standardDocumentStop);" icon="ui-icon-arrowthick-1-s" update="@this @form growl" actionListener="#{reports.downloadOnceOnlyReport}">
                         <p:fileDownload value="#{reports.file}" />
                     </p:commandButton>
+                    <p:commandButton value="Разовые услуги (список клиентов)" ajax="false" onclick="PrimeFaces.monitorDownload(standardDocumentStart, standardDocumentStop);" icon="ui-icon-arrowthick-1-s" update="@this @form growl" actionListener="#{reports.downloadProvidedServicesByClientReport}">
+                        <p:fileDownload value="#{reports.file}" />
+                    </p:commandButton>
                 </p:panelGrid>
             </p:tab>
         </p:tabView>
