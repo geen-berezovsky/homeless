@@ -217,7 +217,7 @@ public class ReportDAO extends GenericDAO implements IReportDAO {
                 "    LEFT JOIN Worker w ON bdr.performerId=w.id " +
                 "    LEFT JOIN Client c ON bdr.client = c.id " +
                 "    LEFT JOIN BasicDocumentRegistryType bdrt ON bdrt.id=bdr.type " +
-                "    where bdr.date>='2015-12-01' and bdr.date<='2015-12-31' order by bdr.date;")
+                "    where bdr.date>="+Util.parseDateForMySql(from)+" and bdr.date<="+Util.parseDateForMySql(till)+" order by bdr.date;")
                 .addScalar("id")
                 .addScalar("WORKER")
                 .addScalar("CLIENT_ID")
