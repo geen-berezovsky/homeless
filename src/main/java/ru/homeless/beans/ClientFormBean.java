@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -1030,13 +1031,13 @@ public class ClientFormBean implements Serializable {
 
 
     public String getOriginalPhotoFilePath() {
-        File f = new File(Configuration.photos+"/"+client.getPhotoName());
-        String str = f.getAbsolutePath();
+        File f = Paths.get(Configuration.photos, client.getPhotoName()).toFile();
         if (!f.exists()) {
-            return str + " не найден в хранилище";
-        } else {
-            return str;
+            f = Paths.get(Configuration.profilesDir, String.valueOf(client.getId()),
+                    client.getPhotoName()).toFile();
         }
+        String path = f.getAbsolutePath();
+        return f.exists() ? path : String.format("%s не найден в хранилище.", path);
     }
 
     public String getFormattedDate() {

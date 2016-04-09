@@ -38,6 +38,7 @@ import javax.imageio.ImageIO;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import org.apache.commons.codec.digest.DigestUtils;
 
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
@@ -201,59 +202,41 @@ public class Util {
         return new DefaultStreamedContent(imageInByteArray, "image/png");
     }
 
+    private static final int AVATAR_WIDTH = 177;
+    private static final int AVATAR_HEIGHT = 144;
+
+    private static BufferedImage resizeImage(BufferedImage image, int newWidth, int newHeight) {
+        BufferedImage resizedImage = new BufferedImage(newWidth, newHeight,
+                BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g = resizedImage.createGraphics();
+        g.drawImage(image, 0, 0, newWidth, newHeight, null);
+        g.dispose();
+        return resizedImage;
+    }
+    
+    private static byte[] getImageBytes(BufferedImage image) {
+        byte[] bytes = new byte[0];
+        try (ByteArrayOutputStream byteStream = new ByteArrayOutputStream()) {
+            ImageIO.write(image, "png", byteStream);
+            byteStream.flush();
+            bytes = byteStream.toByteArray();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        return bytes;
+    }
+    
     public static void applyNewPhoto(ClientService clientService, File sourceFileOnDisk, String finalFileName) throws IOException, SQLException {
         //1. check that user don't have actual photo, or delete it from the target directory
         //2. copy source file to the target directory with the new name
         //3. make an avatar and save it to the database
-        HttpSession session = Util.getSession();
         Client client = Util.getCurrentClient();
         //PREPARE BUFFERED IMAGE AND SET ITS SIZE
-        BufferedImage bi = new BufferedImage(177, 144, BufferedImage.TYPE_INT_ARGB);
-
-        //READING IMAGE FROM DISK TO BYTE ARRAY
-        byte[] bytes = new byte[(int) sourceFileOnDisk.length()];
-        FileInputStream fis = null;
-        try {
-            fis = new FileInputStream(sourceFileOnDisk);
-            fis.read(bytes);
-            fis.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        //CONVERT BYTE ARRAY TO THE BUFFERED IMAGE
-        ByteArrayInputStream in = new ByteArrayInputStream(bytes);
-        try {
-            bi = ImageIO.read(in);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        BufferedImage resizedImage = new BufferedImage(177, 144, BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g = resizedImage.createGraphics();
-        g.drawImage(bi, 0, 0, 177, 144, null);
-        g.dispose();
-
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        byte[] resizedBytes;
-        try {
-            ImageIO.write(resizedImage, "png", baos);
-            baos.flush();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        resizedBytes = baos.toByteArray();
-        try {
-            baos.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        BufferedImage bi = ImageIO.read(sourceFileOnDisk);
+        BufferedImage resizedImage = resizeImage(bi, AVATAR_WIDTH, AVATAR_HEIGHT);
+        byte[] resizedBytes = getImageBytes(resizedImage);
         //Set photo name in database and photo checksum
-        String checksum = "";
-        FileInputStream fisc = new FileInputStream(sourceFileOnDisk);
-        checksum = org.apache.commons.codec.digest.DigestUtils.md5Hex(fisc);
-        fisc.close();
+        String checksum = DigestUtils.md5Hex(resizedBytes);
         log.info("New photo checksum: "+checksum);
         client.setPhotoCheckSum(checksum);
         client.setPhotoName(finalFileName+".png");
@@ -282,8 +265,9 @@ public class Util {
         if (! pf.exists()) {
             pf.mkdirs();
         }
-
-        Path dst_file = Paths.get(Configuration.photos+"/" + finalFileName + ".png");
+        
+        Path dst_file = Paths.get(Configuration.profilesDir, String.valueOf(client.getId()), 
+                finalFileName + ".png");
         try {
             Files.move(src_file, dst_file, REPLACE_EXISTING);
             log.info("Destination file after moving: "+Configuration.photos+"/"+ finalFileName + ".png");
