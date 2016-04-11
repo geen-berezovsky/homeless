@@ -1,45 +1,23 @@
 package ru.homeless.beans;
 
-import java.awt.*;
-import java.awt.geom.Rectangle2D;
-import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.file.*;
-import java.sql.Blob;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.faces.FacesException;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
-import javax.imageio.ImageIO;
 import javax.imageio.stream.FileImageOutputStream;
 import javax.servlet.ServletContext;
-import javax.servlet.http.HttpSession;
-
-import com.sun.xml.messaging.saaj.util.ByteInputStream;
 import org.apache.log4j.Logger;
-import org.hibernate.Hibernate;
-import org.hibernate.LobHelper;
-import org.hibernate.SessionFactory;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.CaptureEvent;
-import org.primefaces.model.DefaultStreamedContent;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.SpringProperties;
-import org.springframework.core.env.Environment;
-import org.springframework.stereotype.*;
 import org.springframework.stereotype.Component;
 import ru.homeless.configuration.Configuration;
 import ru.homeless.entities.Client;
 import ru.homeless.services.ClientService;
-import ru.homeless.services.GenericService;
 import ru.homeless.util.Util;
 
 import static java.nio.file.StandardCopyOption.*;
@@ -143,30 +121,35 @@ public class PhotoCameraBean implements Serializable{
         this.clientService = clientService;
     }
 
-    public void deletePhoto() throws  SQLException {
-        //We don't delete the photo forever!!!
-        //We clean the fields in database and rename the original photo to ID_{OLD_FILENAME}
-        HttpSession session = Util.getSession();
-        Client client = Util.getCurrentClient();
-        client.setAvatar(null);
-        String new_filename = String.valueOf(client.getId())+"_"+client.getPhotoName();
-
-        Path src_file = Paths.get(Configuration.photos+"/" + client.getPhotoName());
-        Path dst_file = Paths.get(Configuration.photos+"/" + new_filename);
+    public void deleteActualPhoto(Client client) {
+        String new_filename = String.valueOf(client.getId()) + "_" + client.getPhotoName();
+        Path src_file = Paths.get(Configuration.photos, client.getPhotoName());
+        if (!Files.exists(src_file)) {
+            src_file = Paths.get(Configuration.profilesDir, String.valueOf(client.getId()),
+                    client.getPhotoName());
+        }
+        Path dst_file = Paths.get(Configuration.profilesDir, String.valueOf(client.getId()),
+                new_filename);
         try {
             Files.move(src_file, dst_file, REPLACE_EXISTING);
         } catch (IOException e) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Невозможно удалить оригинальный файл", "Его не существует в хранилище"));
             e.printStackTrace();
         }
+        log.info("File " + src_file + " has been renamed to " + dst_file);
+    }
 
+    public void deletePhoto() throws SQLException {
+        //We don't delete the photo forever!!!
+        //We clean the fields in database and rename the original photo to ID_{OLD_FILENAME}
+        Client client = Util.getCurrentClient();
+        client.setAvatar(null);
+        if (client.getPhotoName() != null) {
+            deleteActualPhoto(client);
+        }
         client.setPhotoName("");
         client.setPhotoCheckSum("");
-
         getClientService().updateInstance(client);
-
-        log.info("File "+src_file+" has been renamed to "+dst_file);
-
         //Reloading the main bean
         //Evaluating ClientForm Bean
         FacesContext context = FacesContext.getCurrentInstance();

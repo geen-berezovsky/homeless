@@ -978,7 +978,7 @@ public class ClientFormBean implements Serializable {
     }
 
     public StreamedContent getClientFormRealPhoto() throws IOException {
-        if (client == null) {
+        if (client == null || client.getPhotoName() == null) {
             return null;
         }
         File resultFile = new File(getOriginalPhotoFilePath());
@@ -1031,6 +1031,9 @@ public class ClientFormBean implements Serializable {
 
 
     public String getOriginalPhotoFilePath() {
+        if (client.getPhotoName() == null) {
+            return null;
+        }
         File f = Paths.get(Configuration.photos, client.getPhotoName()).toFile();
         if (!f.exists()) {
             f = Paths.get(Configuration.profilesDir, String.valueOf(client.getId()),

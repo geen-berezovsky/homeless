@@ -236,7 +236,10 @@ public class Util {
         BufferedImage resizedImage = resizeImage(bi, AVATAR_WIDTH, AVATAR_HEIGHT);
         byte[] resizedBytes = getImageBytes(resizedImage);
         //Set photo name in database and photo checksum
-        String checksum = DigestUtils.md5Hex(resizedBytes);
+        String checksum;
+        try (FileInputStream fisc = new FileInputStream(sourceFileOnDisk)) {
+            checksum = org.apache.commons.codec.digest.DigestUtils.md5Hex(fisc);
+        }
         log.info("New photo checksum: "+checksum);
         client.setPhotoCheckSum(checksum);
         client.setPhotoName(finalFileName+".png");
