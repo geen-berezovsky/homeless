@@ -221,10 +221,13 @@ public class ClientContractsBean implements Serializable {
         };
 */
         //OLD CODE STARTED
+        //update from G.Sverdlin: "If the contract is successfully finalized, set the endDate for all subitems where it is null"
         if (selectedContract.getResult().getId() == 2) {
             Set<ContractControl> set = selectedContract.getContractcontrols();
             for (ContractControl cc : set) {
-                cc.setEndDate(selectedContract.getStopDate());
+                if (cc.getEndDate() == null) {
+                    cc.setEndDate(selectedContract.getStopDate());
+                }
             }
         }
         //OLD CODE ENDED
