@@ -87,7 +87,7 @@ mysql> source H:\sbdata\homeless\db\patch.sql
  Содержимое timestamp.txt - ​обычным ​​new Date(), например:
  2016-03-12 22:15:52
  
- Подправить пути в omeless\src\main\resources\application.properties если необходимо.
+ Подправить пути в homeless\src\main\resources\application.properties если необходимо.
  
 
 6.	Итак, томкат готов, база готова. Можно просто запустить аппликацию, можно сделать этот через IDE.
@@ -101,11 +101,14 @@ mysql> source H:\sbdata\homeless\db\patch.sql
 9.	Чтобы добавить проект в Idea, достаточно выбрать импорт Maven проекта, убедиться что кастомный primefaces (из директории lib) уже заинсталлирован в локальный кэш и idea может его подцепить (см. комментарии в pom.xml). Проект собирается на версии maven 3.0, JDK 1.8.0_40 (возможно, перейдет на OpenJDK). После этого нужно добавить фичи на проект (JSF, PrimeFaces, Web Application etc) и создать конфигурацию запуска, указав war:exploded (в этом случае появится возможность видеть изменения в скриптах xhtml, css, javascript etc на лету). После изменения java кода достаточно будет сделать Redeploy.
 
 
-Дополнительно
+ДОПОЛНИТЕЛЬНО
 
-1.	Для тестов загрузите ChromeDriver - WebDriver for Chrome с https://sites.google.com/a/chromium.org/chromedriver/downloads в C:/tools/:
-C:/tools/chromedriver.exe
-Note: если C:/tools/ надо поменять - подправьте в homeless\src\test\java\ru\homeless\tests\Util.java
+1.	Для тестов загрузите ChromeDriver - WebDriver for Chrome с https://sites.google.com/a/chromium.org/chromedriver/downloads в C:/tools/chromedriver.exe
+Note: если путь надо поменять - 
+  (а) (предпотчительнее) добавьте в "Run/Debug Configurations" -> "VM Options" - например:
+       -Dwebdriver.chrome.driver=H:/sbdata/tools/chromedriver.exe 
+      или 
+  (б) подправьте в homeless\src\test\java\ru\homeless\tests\Util.java
 2.	В файле homeless\src\main\resources\application.properties
 подправьте ссылки на рабочие директории
 Аналогично  - homeless-report-engine\src\main\resources\application.properties
