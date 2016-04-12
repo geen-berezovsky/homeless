@@ -46,7 +46,7 @@ public class Util {
 	}
 
     private static void logError(Exception e) {
-        log.error("ERROR: " + e.getMessage(), e);
+        log.error("ERROR: " + e, e);
         takePicture(generateFileNamePrefix(e));
     }
 
@@ -66,7 +66,7 @@ public class Util {
                 }
             }
         } catch (Exception e1) {
-            log.error(e1.getMessage(), e1);
+            log.error(e1, e1);
             if (fileNamePrefix.isEmpty()) {
                 fileNamePrefix = stackTrace[1].getMethodName();
             }
@@ -332,7 +332,7 @@ public class Util {
         try {
             FileUtils.copyFile(srcFile, destFile);
         } catch (IOException e) {
-            log.error(e.getMessage(), e);
+            log.error(e, e);
         }
         
         throw new SeleniumException ("Something wrong happened while running tests. Please see logs and screenshot - " + destFileAbsolutePath);
@@ -364,8 +364,6 @@ public class Util {
 
         directTypingLogin();
         hideRightPanel();
-
-
     }
 
     private static void createChromeDriver(String defaultChromeDriver) {
