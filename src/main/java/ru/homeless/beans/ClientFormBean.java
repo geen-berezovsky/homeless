@@ -146,6 +146,7 @@ public class ClientFormBean implements Serializable {
             rc.update("select_document");
             rc.update("m_tabview");
             rc.update("upload_photo_form");
+            rc.update("real_photo_form");
 
             prevTabIndex = 0;
             tabIndex = 0;

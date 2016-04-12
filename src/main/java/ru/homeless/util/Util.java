@@ -273,13 +273,12 @@ public class Util {
                 finalFileName + ".png");
         try {
             Files.move(src_file, dst_file, REPLACE_EXISTING);
-            log.info("Destination file after moving: "+Configuration.photos+"/"+ finalFileName + ".png");
+            log.info("Destination file after moving: "+dst_file);
         } catch (IOException e) {
             FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Оригинал фото не сохранен!", "Подробности в логе.");
             FacesContext.getCurrentInstance().addMessage(null, msg);
             e.printStackTrace();
         }
-        System.out.println("FINAL "+client.getPhotoCheckSum());
         RequestContext rc = RequestContext.getCurrentInstance();
         try {
             Thread.sleep(1000);
