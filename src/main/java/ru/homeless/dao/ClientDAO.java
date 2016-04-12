@@ -128,6 +128,7 @@ public class ClientDAO extends GenericDAO implements Serializable {
 
         shelterInfoCriteria.add(Restrictions.ge("outShelter", getCurDateDaysOnly()));
         shelterInfoCriteria.add(Restrictions.le("outShelter", dateToEnd));
+        shelterInfoCriteria.add(Restrictions.eq("shelterresult", ru.homeless.entities.ShelterResult.Results.LIVING.getId()));
     	shelterInfoCriteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
     	return shelterInfoCriteria.list();
     }

@@ -205,7 +205,7 @@
 
 
 <p:layoutUnit id="reminders" position="east" size="300" resizable="true" closable="true" collapsible="true" header="Напоминания" minSize="200" collapsed="#{not reminderBean.needToOpenReminder}">
-  <h:form name="reminders_form">
+  <h:form id="reminders_form">
     <p:dataTable var="shelterInfo" value="#{reminderBean.clientsReminderForCurUser}" rendered="#{reminderBean.hasSoonShelterEnded}"
     scrollable="true" styleClass="default_datatable" scrollHeight="120" selectionMode="single" rowKey="#{shelterInfo.id}" widgetVar="soonEndedShelterTable">
         <f:facet name="header">

@@ -114,7 +114,7 @@
             <p:growl id="editshelter_growl" showDetail="true" life="3000" />
             <center>
                 <p:commandButton value="Добавить данные о проживании" id="updateShelterButton"
-                                 update="@this :m_tabview:shelter_form editshelter_growl" ajax="true"
+                                 update="@this :m_tabview:shelter_form editshelter_growl :reminders_form" ajax="true"
                                  actionListener="#{clientshelter.addNewShelterData()}"  icon="ui-icon-disk" />
 
             </center>

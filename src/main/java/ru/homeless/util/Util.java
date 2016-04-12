@@ -324,6 +324,7 @@ public class Util {
     public static Date getNDayFromCurrent(int dayCount){
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
+        calendar.add(Calendar.DATE, dayCount);
         return getMaximalTimeInDay(calendar.getTime());
     }
     
