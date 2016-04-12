@@ -8,7 +8,6 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxBinary;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -16,9 +15,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 import java.util.Random;
-import java.util.concurrent.TimeUnit;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class Util {
 
@@ -32,7 +28,7 @@ public class Util {
 	public static String defaultURL = "http://localhost:8080/homeless/";
 
     public static boolean isWindows() {
-        return (OS.indexOf("win") >= 0);
+        return OS.indexOf("win") >= 0;
     }
 
 	public static void logout () {
@@ -45,13 +41,41 @@ public class Util {
             wait.until(ExpectedConditions.titleContains("Добро пожаловать!"));
             log.info("Logout done");
         } catch (Exception e) {
-            log.error(e);
-            takePicture(Thread.currentThread().getStackTrace()[1].getMethodName());
+            logError(e);
         }
 	}
 
+    private static void logError(Exception e) {
+        log.error("ERROR: " + e.getMessage(), e);
+        takePicture(generateFileNamePrefix(e));
+    }
 
-	public static void directTypingLogin() throws IOException {
+    private static String generateFileNamePrefix(Exception e) {
+        StackTraceElement[] stackTrace = e.getStackTrace();
+        String fileNamePrefix = "";
+        try {
+            for (int i = 0, collected = 0; i < stackTrace.length; i++) {
+                StackTraceElement stackTraceElement = stackTrace[i];
+                if (stackTraceElement.getClassName().startsWith("ru.homeless")) {
+                    fileNamePrefix += stackTraceElement.getMethodName();
+                    if (++collected == 3) {
+                        break;
+                    } else {
+                        fileNamePrefix += "-at-";
+                    }
+                }
+            }
+        } catch (Exception e1) {
+            log.error(e1.getMessage(), e1);
+            if (fileNamePrefix.isEmpty()) {
+                fileNamePrefix = stackTrace[1].getMethodName();
+            }
+        }
+        return fileNamePrefix;
+    }
+
+
+    public static void directTypingLogin() throws IOException {
         try {
             log.info("Performing login");
             //open URL
@@ -68,8 +92,7 @@ public class Util {
             //If there found actual title, driver will go on. Otherwise it will fail with detailed message.
             log.info("Login done");
         } catch (Exception e) {
-            log.error(e);
-            takePicture(Thread.currentThread().getStackTrace()[1].getMethodName());
+            logError(e);
         }
 	}
 
@@ -85,8 +108,7 @@ public class Util {
             Thread.sleep(Util.defaultPageTimeout * 1000);
             driver.findElement(By.id("searchForm:foundClientsList:0:selectButton")).click();
         } catch (Exception e) {
-            log.error(e);
-            takePicture(Thread.currentThread().getStackTrace()[1].getMethodName());
+            logError(e);
         }
     }
 
@@ -148,8 +170,7 @@ public class Util {
             driver.findElement(By.id("m_tabview:base_form:saveClientForm")).click();
             log.info("Done. New Client is added.");
         } catch (Exception e) {
-            log.error(e);
-            takePicture(Thread.currentThread().getStackTrace()[1].getMethodName());
+            logError(e);
         }
     }
 
@@ -178,8 +199,7 @@ public class Util {
             simpleClient.setMiddlename(m+newMiddlename);
             log.info("Done. New Client is added.");
         } catch (Exception e) {
-            log.error(e);
-            takePicture(Thread.currentThread().getStackTrace()[1].getMethodName());
+            logError(e);
         }
         return simpleClient;
     }
@@ -198,8 +218,7 @@ public class Util {
             simpleClient.setMiddlename(m);
             simpleClient.setBirthDate(d);
         } catch (Exception e) {
-            log.error(e);
-            takePicture(Thread.currentThread().getStackTrace()[1].getMethodName());
+            logError(e);
         }
         return simpleClient;
     }
@@ -220,8 +239,7 @@ public class Util {
             driver.findElement(By.id("m_tabview:client_memo:saveClientFormMemoButton")).click();
             driver.findElement(By.partialLinkText("Базовая информация")).click();
         } catch (Exception e) {
-            log.error(e);
-            takePicture(Thread.currentThread().getStackTrace()[1].getMethodName());
+            logError(e);
         }
         return text;
     }
@@ -232,8 +250,7 @@ public class Util {
             log.info("Hiding right panel");
             driver.findElement(By.xpath("//*[@id='reminders']/div[1]/a[2]/span")).click();
         } catch (Exception e) {
-            log.error(e);
-            takePicture(Thread.currentThread().getStackTrace()[1].getMethodName());
+            logError(e);
         }
     }
 
@@ -273,8 +290,7 @@ public class Util {
                 throw new SeleniumException ("Cannot parse value \""+retValueStr+"\" as Integer!");
             }
         } catch (Exception e) {
-            log.error(e);
-            takePicture(Thread.currentThread().getStackTrace()[1].getMethodName());
+            logError(e);
         }
         return 0;
     }
@@ -298,27 +314,28 @@ public class Util {
             driver.findElement(By.partialLinkText("Базовая информация")).click();
 
         } catch (Exception e) {
-            log.error(e);
-            takePicture(Thread.currentThread().getStackTrace()[1].getMethodName());
+            logError(e);
         }
-
     }
 
-    public static void takePicture(String prefix) {
+    public static void takePicture(String fileNamePrefix) {
         File screenshotsDir = new File("screenshots");
         if (!screenshotsDir.exists()) {
             screenshotsDir.mkdirs();
         }
         //Something goes wrong, taking snapshot
         File srcFile = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
-        String screenshotFileName = prefix + "-" + new Date().getTime() + ".png";
-        log.info("Taking screenshot. Filename is " + screenshotFileName);
+        String screenshotFileName = fileNamePrefix + "-" + new Date().getTime() + ".png";
+        File destFile = new File(screenshotsDir + "/" + screenshotFileName);
+        String destFileAbsolutePath = destFile.getAbsolutePath();
+        log.info("Taking screenshot. Filename is " + destFileAbsolutePath);
         try {
-            FileUtils.copyFile(srcFile, new File(screenshotsDir+"/"+screenshotFileName));
+            FileUtils.copyFile(srcFile, destFile);
         } catch (IOException e) {
-            log.error(e);
+            log.error(e.getMessage(), e);
         }
-        throw new SeleniumException ("Some shit happens while running tests. Please see logs and screenshots.");
+        
+        throw new SeleniumException ("Something wrong happened while running tests. Please see logs and screenshot - " + destFileAbsolutePath);
     }
 
     public static void performInit() throws IOException {
@@ -331,16 +348,13 @@ public class Util {
                 firefoxBinary.setEnvironmentProperty("DISPLAY", Xport);
                 driver = new FirefoxDriver(firefoxBinary, null);
             } else {
-                System.setProperty("webdriver.chrome.driver","/opt/chromedriver/chromedriver");
-                driver = new ChromeDriver();
+                createChromeDriver("/opt/chromedriver/chromedriver");
             }
-
-        } else {
+        } else { // Windows
             if (System.getenv("webdriver") == null || System.getenv("webdriver").trim().equals("")) {
                 driver = new FirefoxDriver();
             } else {
-                System.setProperty("webdriver.chrome.driver","C:/tools/chromedriver.exe");
-                driver = new ChromeDriver();
+                createChromeDriver("C:/tools/chromedriver.exe");
             }
         }
 
@@ -352,6 +366,17 @@ public class Util {
         hideRightPanel();
 
 
+    }
+
+    private static void createChromeDriver(String defaultChromeDriver) {
+        String chromeDriverPropertyKey = "webdriver.chrome.driver";
+        String property = System.getProperty(chromeDriverPropertyKey);
+        if (property == null) {
+            System.setProperty(chromeDriverPropertyKey, defaultChromeDriver);
+        } else {
+            log.info("Predefined property " + chromeDriverPropertyKey + "=" + property + " will be used");
+        }
+        driver = new ChromeDriver();
     }
 
     public static int randInt(int min, int max) {
