@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.math.MathContext;
 import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.text.DateFormat;
@@ -114,7 +115,9 @@ public class ClientFormBean implements Serializable {
     private int tabIndex = 0;
     private int prevTabIndex = 0;
     // *********************************
-
+    
+    private final String IIID = String.valueOf(new Random(System.currentTimeMillis()).nextInt());
+    
     public ClientFormBean()  {
         this.mainPanelVisibility = "display: none;";
         clientBreadwinners = new ArrayList<String>(); //avoid null pointer exception on save form method
@@ -863,15 +866,15 @@ public class ClientFormBean implements Serializable {
                 log.info("\t... done!");
             }
 
-            for (ServContract servContract : getClientService().getInstancesByClientId(ServContract.class, client.getId())) {
-                log.info("\tDeleting servContract id = " + servContract.getId());
-                getClientService().deleteInstance(servContract);
-                log.info("\t... done!");
-            }
-
             for (ShelterHistory shelterHistory : getClientService().getInstancesByClientId(ShelterHistory.class, client)) {
                 log.info("\tDeleting shelterHistory id = " + shelterHistory.getId());
                 getClientService().deleteInstance(shelterHistory);
+                log.info("\t... done!");
+            }
+            
+            for (ServContract servContract : getClientService().getInstancesByClientId(ServContract.class, client.getId())) {
+                log.info("\tDeleting servContract id = " + servContract.getId());
+                getClientService().deleteInstance(servContract);
                 log.info("\t... done!");
             }
 
