@@ -27,6 +27,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
+import javax.servlet.http.HttpSession;
+import org.apache.log4j.Logger;
 
 @Entity
 @Table(name = "Client")
@@ -67,6 +69,15 @@ public class Client implements Serializable {
     private SubRegion lastLiving;
     private SubRegion lastRegistration;
 
+    private final Logger log = Logger.getLogger(Client.class);
+    private void doLog(String message) {
+        log.info(String.format("[User: %s, Thread: %s, Session: %s]: %s", 
+                Util.getUserName(),
+                Thread.currentThread().getName(),
+                Util.getSession().getId(),
+                message));
+    }
+        
     private Boolean hasNotice;
 
 	public Client() {
@@ -112,6 +123,7 @@ public class Client implements Serializable {
 	}
 
 	public void setSurname(String surname) {
+                doLog(String.format("Surstname: %s -> %s", this.surname, surname));
 		this.surname = surname;
 	}
 
@@ -120,6 +132,7 @@ public class Client implements Serializable {
 	}
 
 	public void setMiddlename(String middlename) {
+                doLog(String.format("Middlename: %s -> %s", this.surname, surname));            
 		this.middlename = middlename;
 	}
 
@@ -128,6 +141,7 @@ public class Client implements Serializable {
 	}
 
 	public void setFirstname(String firstname) {
+                doLog(String.format("Firstname: %s -> %s", this.surname, surname));
 		this.firstname = firstname;
 	}
 
