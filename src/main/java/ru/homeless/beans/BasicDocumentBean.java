@@ -121,6 +121,12 @@ public class BasicDocumentBean implements Serializable {
                 dateTill = null;
                 break;
             }
+            case 17: {
+                requestType = 18;
+                filename = "WorkingCenterDocument.docx";
+                selectedDocumentId = 0;
+                break;
+            }
 
 
             default: {

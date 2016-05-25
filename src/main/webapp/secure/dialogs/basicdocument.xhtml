@@ -195,6 +195,43 @@
         }
     </script>
 
+    <h:form id="workingcenter_document">
+        <p:messages />
+        <p:dialog id="workingcenterDocumentDlg" header="Направление в центр занятности" widgetVar="workingcenterDocumentWv" resizable="false" closable="true" modal="false" showEffect="fade" hideEffect="explode" dynamic="true" closeOnEscape="true">
+            <h:panelGrid columns="2" id="workingcenter_doc_panel_grid">
+                <p:row>
+                    <p:outputLabel value="Дата выдачи:" styleClass="base_form_caption_text"  />
+                </p:row>
+                <p:row>
+                    <p:calendar value="#{basicdocument.dateFrom}" id="workingcenterDocumentFromDate" showOn="button" pattern="dd.MM.yyyy" styleClass="base_form_value_text"/>
+                </p:row>
+            </h:panelGrid>
+            <p:separator />
+            <center>
+                <p:commandButton value="Создать справку" ajax="false" onclick="PrimeFaces.monitorDownload(workingcenterDocStart, workingcenterDocStop);" icon="ui-icon-arrowthick-1-s" update="@this @form workingcenter_doc_panel_grid" actionListener="#{basicdocument.export(17)}">
+                    <p:fileDownload value="#{basicdocument.file}" />
+                </p:commandButton>
+            </center>
+        </p:dialog>
+        <p:dialog modal="true" widgetVar="statusWorkingcenterDocDialogWv" header="Ждите" draggable="false" closable="false" resizable="false">
+            <p:graphicImage value="/images/loading.gif" />
+            <p:ajax update=":workingcenter_document :m_tabview:documentsMenu:stdDocListId" />
+        </p:dialog>
+    </h:form>
+
+    <script type="text/javascript">
+        function workingcenterDocStart() {
+            PF('statusWorkingcenterDocDialogWv').show();
+        }
+
+        function workingcenterDocStop() {
+            PF('statusWorkingcenterDocDialogWv').hide();
+            PF('workingcenterDocumentWv').hide();
+
+        }
+    </script>
+
+
 
 </ui:composition>
 </html>
