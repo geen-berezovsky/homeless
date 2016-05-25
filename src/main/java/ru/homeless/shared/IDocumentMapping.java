@@ -71,6 +71,12 @@ public interface IDocumentMapping {
     public final String DOCUMENT_CUSTOM_TEMPLATE_PATH = Configuration.templatesDir+"/"+"DocumentCustom.docx";
 
 
+    /*
+    Template file: DocumentConsAboutWork.docx
+    Document title: Направление в Агенство занятности
+    */
+    public final int DOCUMENT_CONS_ABOUT_WORK = 18;
+    public final String DOCUMENT_CONS_ABOUT_WORK_TEMPLATE_PATH = Configuration.templatesDir+"/"+"DocumentConsAboutWork.docx";
 
     /*
     Template file: ContractDefault.docx
@@ -150,6 +156,9 @@ public interface IDocumentMapping {
     public WordprocessingMLPackage generateDispensaryDocument(HttpServletRequest request, Client client, Map<String, String> map);
     public WordprocessingMLPackage generateRegistrationDocument(HttpServletRequest request, Client client, Map<String, String> map);
     public WordprocessingMLPackage generateTransitDocument(HttpServletRequest request, Client client, Map<String, String> map);
+
+    public WordprocessingMLPackage generateConsAboutWorkDocument(HttpServletRequest request, Client client, Map<String, String> map);
+
     public WordprocessingMLPackage generateZAGSQueryDocument(HttpServletRequest request, Client client, Map<String, String> map) throws IOException;
     public WordprocessingMLPackage generateCustomDocument(HttpServletRequest request, Client client, Map<String, String> map);
 

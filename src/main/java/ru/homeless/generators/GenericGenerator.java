@@ -119,6 +119,10 @@ public class GenericGenerator {
                 putDocNumToDefaultMap(request);
                 return hrp.generateTransitDocument(request, client, wordDocumentDefaultValuesMap);
             }
+            case IDocumentMapping.DOCUMENT_CONS_ABOUT_WORK: {
+                putDocNumToDefaultMap(request);
+                return hrp.generateConsAboutWorkDocument(request, client, wordDocumentDefaultValuesMap);
+            }
             case IDocumentMapping.DOCUMENT_ZAGS_QUERY: {
                 return hrp.generateZAGSQueryDocument(request, client, wordDocumentDefaultValuesMap);
             }

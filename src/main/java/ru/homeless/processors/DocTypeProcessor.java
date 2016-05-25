@@ -34,13 +34,11 @@ public class DocTypeProcessor {
 	}
 
     public WordprocessingMLPackage replaceParametersInDocument(Map<String, String> parameters, byte[] photo, int avatarLocation) {
-    	
-    	try {
+        try {
 			wordDocument = WordprocessingMLPackage.load(new File(pathToTemplate));
 		} catch (Docx4JException e1) {
 			log.error(e1.getMessage(),e1);
 		}
-    	
         for (Map.Entry<String, String> e : parameters.entrySet()) {
             if (e != null) {
                 log.info(e.getKey() + "=" + e.getValue());

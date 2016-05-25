@@ -19,6 +19,7 @@ import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import ru.homeless.entities.BasicDocumentRegistry;
 import ru.homeless.entities.Client;
 import ru.homeless.mappings.*;
 import ru.homeless.shared.IDocumentMapping;
@@ -68,6 +69,10 @@ public class CustomValuesHttpRequestParser implements IDocumentMapping {
 
     @Autowired
     private RegistrationMappingImpl registrationMappingImpl;
+
+    @Autowired
+    private ConsAboutWorkMappingImpl consAboutWorkMappingImpl;
+
 
     @Autowired
     private ProvidedServicesByClientReportMappingImpl providedServicesByClientReportMapping;
@@ -153,6 +158,13 @@ public class CustomValuesHttpRequestParser implements IDocumentMapping {
         //Adding custom values
         map.put("[t:city]", parseTravelCity(request));
         return new TransitMappingImpl().getDocument(map, client);
+    }
+
+    @Override
+    public WordprocessingMLPackage generateConsAboutWorkDocument(HttpServletRequest request, Client client, Map<String, String> map) {
+        map.put("[input:docId]", parseCustomParams(request, "docId", ""));
+        return consAboutWorkMappingImpl.getDocument(map, client);
+        //return new ConsAboutWorkMappingImpl().getDocument(map, client);
     }
 
     @Override
