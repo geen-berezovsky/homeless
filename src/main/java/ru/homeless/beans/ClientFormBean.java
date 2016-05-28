@@ -4,7 +4,6 @@ import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.math.MathContext;
 import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.text.DateFormat;
@@ -19,7 +18,7 @@ import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.SessionScoped;
+import javax.faces.bean.ViewScoped;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
@@ -42,7 +41,7 @@ import ru.homeless.services.ClientService;
 import ru.homeless.util.Util;
 
 @ManagedBean(name = "clientform")
-@SessionScoped
+@ViewScoped
 /**
  * This is the main (base) form for the Client and it is a mirror for all Client's properties
  * Refactoring is done at 13.02.2016
