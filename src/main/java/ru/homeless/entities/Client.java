@@ -71,11 +71,13 @@ public class Client implements Serializable {
 
     private final Logger log = Logger.getLogger(Client.class);
     private void doLog(String message) {
+        /*
         log.info(String.format("[User: %s, Thread: %s, Session: %s]: %s", 
                 Util.getUserName(),
                 Thread.currentThread().getName(),
                 Util.getSession().getId(),
                 message));
+                */
     }
         
     private Boolean hasNotice;

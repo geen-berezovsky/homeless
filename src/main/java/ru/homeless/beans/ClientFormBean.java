@@ -16,9 +16,7 @@ import java.util.regex.Pattern;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import javax.faces.bean.*;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
@@ -87,6 +85,8 @@ public class ClientFormBean implements Serializable {
     private List<String> breadwinnerTypes;
     private List<String> regionTypes;
 
+    private int clientId;
+
 
     private boolean homelessDateNotNull = false;
 
@@ -106,7 +106,6 @@ public class ClientFormBean implements Serializable {
     private int selectedMonth;
     private int selectedYear;
     private String originalPhotoFilePath;
-    private StreamedContent clientFormAvatar;
     private StreamedContent clientFormRealPhoto;
     private String formattedDate;
 
@@ -993,44 +992,6 @@ public class ClientFormBean implements Serializable {
         }
     }
 
-    public StreamedContent getClientFormAvatar() {
-        if (client == null) {
-            return null;
-        }
-        InputStream imageInByteArray = null;
-        if ( client.getAvatar() != null) {
-            try {
-                imageInByteArray = client.getAvatar().getBinaryStream();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        } else {
-
-            BufferedImage bi = new BufferedImage(177, 144, BufferedImage.TYPE_INT_ARGB);
-            Graphics2D g = bi.createGraphics();
-            Stroke drawingStroke = new BasicStroke(3);
-            Rectangle2D rect = new Rectangle2D.Double(0, 0, 177, 144);
-
-            g.setStroke(drawingStroke);
-            g.draw(rect);
-            g.setPaint(Color.LIGHT_GRAY);
-            g.fill(rect);
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            try {
-                ImageIO.write(bi, "png", baos);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            try {
-                baos.flush();
-                imageInByteArray = new ByteArrayInputStream(baos.toByteArray());
-                baos.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return new DefaultStreamedContent(imageInByteArray, "image/png");
-    }
 
 
     public String getOriginalPhotoFilePath() {
@@ -1278,10 +1239,6 @@ public class ClientFormBean implements Serializable {
         this.originalPhotoFilePath = originalPhotoFilePath;
     }
 
-    public void setClientFormAvatar(StreamedContent clientFormAvatar) {
-        this.clientFormAvatar = clientFormAvatar;
-    }
-
     public void setClientFormRealPhoto(StreamedContent clientFormRealPhoto) {
         this.clientFormRealPhoto = clientFormRealPhoto;
     }
@@ -1300,5 +1257,16 @@ public class ClientFormBean implements Serializable {
     }
 
 
+    public int getClientId() {
+        if (client == null) {
+            return 0;
+        } else {
+            return client.getId();
+        }
 
+    }
+
+    public void setClientId(int clientId) {
+        this.clientId = clientId;
+    }
 }
