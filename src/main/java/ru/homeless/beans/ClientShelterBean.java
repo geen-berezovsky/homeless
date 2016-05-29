@@ -235,14 +235,6 @@ public class ClientShelterBean implements Serializable {
         if ( validated ){
             log.info("Adding new shelter record for client "+client.getId());
             log.info(selectedShelter.getClient());
-            log.info("Дата заселения: "+selectedShelter.getInShelter());
-            log.info("Дата выселения: "+selectedShelter.getOutShelter());
-            log.info("Комната: "+selectedShelter.getRoomId());
-            log.info("Флюха: "+selectedShelter.getFluorogr());
-            log.info("Дифтерия: "+selectedShelter.getDipthVac());
-            log.info("Гепатит: "+selectedShelter.getHepotitsVac());
-            log.info("Тиф: "+selectedShelter.getTyphVac());
-            log.info("Status: "+selectedShelter.getShelterresult());
             getRoomService().addInstance(selectedShelter);
 
             selectedShelter = new ShelterHistory();

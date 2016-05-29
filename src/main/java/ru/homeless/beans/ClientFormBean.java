@@ -105,7 +105,6 @@ public class ClientFormBean implements Serializable {
     //UTIL variables
     private int selectedMonth;
     private int selectedYear;
-    private String originalPhotoFilePath;
     private StreamedContent clientFormRealPhoto;
     private String formattedDate;
 
@@ -123,10 +122,25 @@ public class ClientFormBean implements Serializable {
         clientChronicDisease = new ArrayList<String>(); // -//-
     }
 
+    /*
+    This method will set the actual client to http session because user can refresh page and objects related to ViewScope will be missed
+     */
+    public void afterSearch() throws SQLException {
+        HttpSession session = Util.getSession();
+        session.setAttribute("client",client);
+        reload();
+    }
+
     public void reload() throws SQLException {
         //Actual client may be already set using search. But, for compatibility this method is saved
         //Setting actual client id to session for using in another applications
         HttpSession session = Util.getSession();
+
+        if (client == null) { //somebody has refreshed page or just opened fresh screen after login
+            client = (Client) session.getAttribute("client");
+            log.info("Restoring object from the session");
+        }
+
         if (client != null) {
 
             //setClient(client); //Setting client for the runtime
@@ -979,34 +993,6 @@ public class ClientFormBean implements Serializable {
         client.setHomelessdate(c.getTime());
     }
 
-    public StreamedContent getClientFormRealPhoto() throws IOException {
-        if (client == null || client.getPhotoName() == null) {
-            return null;
-        }
-        File resultFile = new File(getOriginalPhotoFilePath());
-        if (!resultFile.exists() || client.getPhotoCheckSum().trim().equals("") || client.getPhotoName().trim().equals("")) {
-            return null;
-        } else {
-            StreamedContent sc = Util.loadResizedPhotoFromDisk(resultFile);
-            return sc;
-        }
-    }
-
-
-
-    public String getOriginalPhotoFilePath() {
-        if (client.getPhotoName() == null) {
-            return null;
-        }
-        File f = Paths.get(Configuration.photos, client.getPhotoName()).toFile();
-        if (!f.exists()) {
-            f = Paths.get(Configuration.profilesDir, String.valueOf(client.getId()),
-                    client.getPhotoName()).toFile();
-        }
-        String path = f.getAbsolutePath();
-        return f.exists() ? path : String.format("%s не найден в хранилище.", path);
-    }
-
     public String getFormattedDate() {
         if (client != null && client.getDate() != null) {
             return Util.formatDate(client.getDate());
@@ -1233,10 +1219,6 @@ public class ClientFormBean implements Serializable {
 
     public void setSelectedYear(int selectedYear) {
         this.selectedYear = selectedYear;
-    }
-
-    public void setOriginalPhotoFilePath(String originalPhotoFilePath) {
-        this.originalPhotoFilePath = originalPhotoFilePath;
     }
 
     public void setClientFormRealPhoto(StreamedContent clientFormRealPhoto) {

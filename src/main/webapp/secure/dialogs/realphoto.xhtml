@@ -6,12 +6,14 @@
 	<p:dialog id="realPhoto" header="Фотография клиента: #{clientform.client.surname} #{clientform.client.firstname} #{clientform.client.middlename} (ID = #{clientform.client.id})" widgetVar="realPhotoWv" resizable="false" closable="true" modal="true" showEffect="size" hideEffect="explode" dynamic="true" closeOnEscape="true" position="left top">
 			<p:messages />
                 <p:panel>
-                    <h:outputText style="font-size: 10px" value="Оригинал изображения: #{clientform.originalPhotoFilePath}"/>
+                    <h:outputText style="font-size: 10px" value="Оригинал изображения: #{dBPhotoLoaderBean.getOriginalPhotoFilePathByClient(clientform.client)}"/>
                     <p:separator />
                     <h:outputText style="font-size: 10px" value="Изображение кадрировано до разрешения 640*480"/>
                 </p:panel>
                 <p:imageSwitch id="realPhotoSwitch" effect="scrollRight">
-                    <p:graphicImage id="realPhotoImage" value="#{clientform.clientFormRealPhoto}" cache="false"/>
+                    <p:graphicImage id="realPhotoImage" value="#{dBPhotoLoaderBean.clientFormRealPhoto}" cache="false">
+                        <f:param name="clientId" value="#{clientform.clientId}" />
+                    </p:graphicImage>
                 </p:imageSwitch>
                 <p:panel>
                     <h:outputText style="font-size: 10px" value="Чтобы скопировать изображение, щелкните правой кнопкой по нему и выберите 'Скопировать изображение'"/>
