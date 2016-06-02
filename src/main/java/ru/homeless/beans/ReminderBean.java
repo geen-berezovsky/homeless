@@ -61,7 +61,7 @@ public class ReminderBean implements Serializable{
         try {
             log.info("Opening client from reminders tab ID = "+myClientsEntity.getClient().getId());
             clientFormBean.setClient(myClientsEntity.getClient());
-            clientFormBean.reload();
+            clientFormBean.afterSearch();
         } catch (SQLException e) {
             log.error("Error during ClienFormBean reloading for ShelterHistory=" + myClientsEntity.getId(), e);
         }

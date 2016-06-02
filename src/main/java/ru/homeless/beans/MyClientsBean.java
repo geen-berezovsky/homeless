@@ -95,7 +95,7 @@ public class MyClientsBean implements Serializable {
         try {
             log.info("Setting up current client ID = "+myClientsEntity.getId());
             clientFormBean.setClient(getClientService().getInstanceById(Client.class, myClientsEntity.getId()));
-            clientFormBean.reload();
+            clientFormBean.afterSearch();
         } catch (SQLException e) {
             e.printStackTrace();
         }
