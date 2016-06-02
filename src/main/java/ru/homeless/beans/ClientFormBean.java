@@ -775,7 +775,7 @@ public class ClientFormBean implements Serializable {
             }
             */
 
-            log.info("Reloaded all data for the selected client " + client.toString());
+            log.debug("Reloaded all data for the selected client " + client.toString());
         }
     }
 

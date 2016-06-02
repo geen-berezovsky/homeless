@@ -84,10 +84,9 @@ public class DBPhotoLoaderBean {
         else {
             // So, browser is requesting the image. Return a real StreamedContent with the image bytes.
             String id = context.getExternalContext().getRequestParameterMap().get("clientId");
-            log.info("Requested photo of client with id " + id);
-
             InputStream imageInByteArray = null;
             if (!id.trim().equals("") && !id.equals("0")) {
+                log.debug("Requested photo of client with id " + id);
                 Client client = clientService.getInstanceById(Client.class, Integer.parseInt(id));
                 if (client.getAvatar() == null || client.getAvatar().toString().trim().equals("")) {
                     return prepareStub(true);

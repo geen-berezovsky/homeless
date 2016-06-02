@@ -20,7 +20,9 @@
         }
 
     </script>
-
+    <f:metadata>
+        <f:viewAction action="#{f5Detector.checkF5}" onPostBack="true"/>
+    </f:metadata>
 </h:head>
 
 <h:body onload="#{clientform.refreshTabs(0)}" styleClass="body_style">
