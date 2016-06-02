@@ -92,10 +92,7 @@ public class BasicDocumentBean implements Serializable {
                 requestType = 2;
                 filename = "SocHelpDocument.docx";
                 selectedDocumentId = 0;
-                Calendar cal = Calendar.getInstance();
-                cal.setTime(dateFrom);
-                cal.add(Calendar.DAY_OF_MONTH, 90);
-                dateTill = cal.getTime();
+                dateTill = null;
                 break;
             }
             case 12: {
