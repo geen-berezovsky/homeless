@@ -92,7 +92,10 @@ public class BasicDocumentBean implements Serializable {
                 requestType = 2;
                 filename = "SocHelpDocument.docx";
                 selectedDocumentId = 0;
-                dateTill = null;
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(dateFrom);
+                cal.add(Calendar.DAY_OF_MONTH, 90);
+                dateTill = cal.getTime();
                 break;
             }
             case 12: {
@@ -122,6 +125,7 @@ public class BasicDocumentBean implements Serializable {
                 requestType = 18;
                 filename = "WorkingCenterDocument.docx";
                 selectedDocumentId = 0;
+                dateTill = null;
                 break;
             }
 
