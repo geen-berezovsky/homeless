@@ -855,6 +855,8 @@ public class ClientFormBean implements Serializable {
         getClientService().addInstance(_client);
         log.info("Client with ID=" + _client.getId() + " successfully added to the database and set to the http session");
         setClient(_client);
+        HttpSession session = Util.getSession();
+        session.setAttribute("client",client);
         reload();
     }
 
