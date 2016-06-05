@@ -34,6 +34,10 @@ public class AuthFilter implements Filter {
 			HttpServletResponse res = (HttpServletResponse) response;
 			HttpSession ses = req.getSession(false);
 			String reqURI = req.getRequestURI();
+            if (reqURI.equalsIgnoreCase("/homeless/") || reqURI.equalsIgnoreCase("/homeless/secure/")) {
+                reqURI = "/homeless/secure/main.xhtml";
+                res.sendRedirect(reqURI);
+            }
 
 			//Само собой, разрешаем идти на index.xhtml для перелогинивания 
 			if (reqURI.indexOf("/index.xhtml") >= 0 || (ses != null && ses.getAttribute("username") != null) || reqURI.indexOf("/public/") >= 0

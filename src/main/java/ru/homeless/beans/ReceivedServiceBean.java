@@ -52,8 +52,6 @@ public class ReceivedServiceBean implements Serializable {
         selectedService.setDate(new Date());
         selectedService.setCash(0);
         this.cashValueVisibility = "display: none;";
-        log.info("Reseting form with add/edit received service");
-
     }
 
     public List<ServicesType> getAvailableServices() {

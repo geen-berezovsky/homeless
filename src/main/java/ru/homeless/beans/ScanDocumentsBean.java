@@ -46,7 +46,7 @@ public class ScanDocumentsBean implements Serializable {
         clientDocumentScans = getGenericService().getInstancesByClientId(DocumentScan.class, Util.getCurrentClient());
 		newSelectedDocument(); // set new document
         RequestContext rc = RequestContext.getCurrentInstance();
-        log.info("Updating docScanlistId");
+        log.debug("Updating docScanlistId");
         rc.update("m_tabview:documentsScan_form:docScanlistId");
     }
 

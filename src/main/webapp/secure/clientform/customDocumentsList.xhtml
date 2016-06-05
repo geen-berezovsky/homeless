@@ -1,0 +1,67 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui">
+<ui:composition>
+        <p:dialog header="Подтвердите удаление" appendTo="@form" widgetVar="deleteCustDocument" resizable="false" closable="true" showEffect="fade" hideEffect="explode" dynamic="true" closeOnEscape="true" style="font-size: 200%;" draggable="false">
+            <p:panelGrid columns="2" style="margin: 0 auto;" styleClass="base_form_panel_grid_class">
+                <p:commandButton id="custRcConfirm" value="Да" update=":m_tabview:customDocumentsMenu:custDocListId :m_tabview:base_form:header" oncomplete="deleteCustDocument.hide()" actionListener="#{custdoc.deleteSelectedDocument}"/>
+                <p:commandButton id="custRcDecline" value="Нет" update=":m_tabview:customDocumentsMenu:custDocListId" oncomplete="deleteCustDocument.hide()"/>
+            </p:panelGrid>
+        </p:dialog>
+
+
+        <p:contextMenu for="custDocListId">
+            <p:menuitem value="Удалить" oncomplete="deleteCustDocument.show()" icon="ui-icon-trash" ajax="true" />
+        </p:contextMenu>
+
+
+        <p:scrollPanel id="custDocumentsList_main_panel" style="min-height:100px;">
+            <div id="custDocumentsList_panel_div">
+                <p:dataTable id="custDocListId" var="custDocList" value="#{custdoc.custDocumentList}" paginator="true" rows="10"
+                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15"
+                             rowKey="#{custDocList.id}" selection="#{custdoc.selectedEntity}" selectionMode="single" styleClass="default_datatable" paginatorPosition="bottom">
+                    <f:facet name="header">
+                        Выданные документы
+                    </f:facet>
+                    <p:column headerText="ID" style="display:none;">
+                        <h:outputText value="#{custDocList.id}"/>
+                    </p:column>
+                    <p:column headerText="Номер">
+                        <h:outputText value="#{custDocList.docNum}"/>
+                    </p:column>
+                    <p:column headerText="Тип документа">
+                        <h:outputText value="#{custDocList.type}"/>
+                    </p:column>
+                    <p:column headerText="Работник">
+                        <h:outputText value="#{custDocList.worker}"/>
+                    </p:column>
+                    <p:column headerText="Дата выдачи">
+                        <h:outputText value="#{custDocList.issueDate}"/>
+                    </p:column>
+                    <p:column headerText="Документ">
+                        <center>
+                            <p:growl id="growl" showDetail="true" life="3000"/>
+                            <p:commandButton value="Открыть" ajax="false" onclick="PrimeFaces.monitorDownload(clientCustDocStart, clientCustDocStop);" icon="ui-icon-arrowthick-1-s" update="@this @form growl" actionListener="#{custdoc.downloadContract(custDocList.id)}">
+                                <p:fileDownload value="#{custdoc.file}" />
+                            </p:commandButton>
+                        </center>
+                    </p:column>
+         </p:dataTable>
+            </div>
+        </p:scrollPanel>
+    <p:dialog modal="true" widgetVar="statusClientCustDocDialogWv" header="Ждите" draggable="false" closable="false" resizable="false">
+        <p:graphicImage value="/images/loading.gif" />
+    </p:dialog>
+
+    <script type="text/javascript">
+        function clientCustDocStart() {
+            PF('statusClientCustDocDialogWv').show();
+        }
+
+        function clientCustDocStop() {
+            PF('statusClientCustDocDialogWv').hide();
+        }
+    </script>
+
+</ui:composition>
+</html>

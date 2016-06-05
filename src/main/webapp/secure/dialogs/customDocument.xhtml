@@ -97,7 +97,7 @@
         </p:dialog>
         <p:dialog modal="true" widgetVar="statusStandardDocumentDialogWv" header="Ждите" draggable="false" closable="false" resizable="false">
             <p:graphicImage value="/images/loading.gif" />
-            <p:ajax update=":standard_document" />
+            <p:ajax update=":standard_document :m_tabview:customDocumentsMenu:custDocListId" />
         </p:dialog>
     </h:form>
 

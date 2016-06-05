@@ -84,7 +84,7 @@
         </p:dialog>
         <p:dialog modal="true" widgetVar="statusZagsRequestDialogWv" header="Ждите" draggable="false" closable="false" resizable="false">
             <p:graphicImage value="/images/loading.gif" />
-            <p:ajax update=":zags_request" />
+            <p:ajax update=":zags_request :m_tabview:customDocumentsMenu:custDocListId" />
         </p:dialog>
     </h:form>
 
