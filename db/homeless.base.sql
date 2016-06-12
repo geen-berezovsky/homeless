@@ -1,4 +1,4 @@
--- MySQL dump 10.13  Distrib 5.6.17, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 5.6.23, for Win64 (x86_64)
 --
 -- Host: localhost    Database: homeless
 -- ------------------------------------------------------
@@ -36,7 +36,7 @@ CREATE TABLE `BasicDocumentRegistry` (
   PRIMARY KEY (`id`),
   KEY `FK_BasicDocumentRegistry_type` (`type`),
   CONSTRAINT `FK_BasicDocumentRegistry_type` FOREIGN KEY (`type`) REFERENCES `BasicDocumentRegistryType` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=14587 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=17022 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -68,7 +68,7 @@ CREATE TABLE `BasicDocumentRegistryType` (
 
 LOCK TABLES `BasicDocumentRegistryType` WRITE;
 /*!40000 ALTER TABLE `BasicDocumentRegistryType` DISABLE KEYS */;
-INSERT INTO `BasicDocumentRegistryType` VALUES (11,'Справка о регистрации'),(12,'Направление на санобработку'),(13,'Справка для проезда'),(14,'Направление в диспансер'),(15,'Справка о социальной помощи'),(16,'Транзит'),(20,'Неизвестно');
+INSERT INTO `BasicDocumentRegistryType` VALUES (1,'Стандартный документ'),(11,'Справка о регистрации'),(12,'Направление на санобработку'),(13,'Справка для проезда'),(14,'Направление в диспансер'),(15,'Справка о социальной помощи'),(16,'Транзит'),(17,'Направление в центр занятности'),(20,'Неизвестно');
 /*!40000 ALTER TABLE `BasicDocumentRegistryType` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -171,7 +171,7 @@ CREATE TABLE `Client` (
   CONSTRAINT `FK7877DFEB4D3B23C6` FOREIGN KEY (`education`) REFERENCES `Education` (`id`),
   CONSTRAINT `lastLiving_SubRegion` FOREIGN KEY (`lastLiving`) REFERENCES `SubRegion` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `lastRegistration_SubRegion` FOREIGN KEY (`lastRegistration`) REFERENCES `SubRegion` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=16594 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=17567 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -201,7 +201,7 @@ CREATE TABLE `ContractControl` (
   KEY `FK4E7DABCB62D40A3A` (`servcontract`),
   CONSTRAINT `FK4E7DABCB62D40A3A` FOREIGN KEY (`servcontract`) REFERENCES `ServContract` (`id`),
   CONSTRAINT `FK4E7DABCB9C72A254` FOREIGN KEY (`contractpoints`) REFERENCES `ContractPoints` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=33027 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=33558 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -224,6 +224,7 @@ CREATE TABLE `ContractPoints` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `audience` int(11) NOT NULL,
   `caption` varchar(255) DEFAULT NULL,
+  `abbreviation` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -234,7 +235,7 @@ CREATE TABLE `ContractPoints` (
 
 LOCK TABLES `ContractPoints` WRITE;
 /*!40000 ALTER TABLE `ContractPoints` DISABLE KEYS */;
-INSERT INTO `ContractPoints` VALUES (1,1,'Восстановление, получение  паспорта'),(2,0,'Оформление пенсии'),(3,0,'Получение полиса ОМС'),(4,1,'Восстановление, получение ИНН'),(5,1,'Получение документов, подтверждающих трудовой стаж'),(6,0,'Оформление инвалидности'),(7,0,'Устройство в интернат'),(8,0,'Оформление временной регистрации по адресу Ночлежки'),(9,0,'Помощь в оформлении регистрации по другому адресу'),(10,1,'Помощь в трудоустройстве'),(11,1,'Помощь в трудоустройстве с проживанием'),(12,1,'Устройство в городской дом ночного пребывания'),(13,0,'Устройство в реабилитационные центры для алко- и наркозависимых'),(14,0,'Получение лечения, устройство в больницу'),(15,0,'Покупка лекарств (перенесено в разовые услуги)'),(16,0,'Поиск родственников'),(17,0,'Возвращение домой в СПб или другой город'),(18,0,'Восстановление или установление гражданства'),(19,0,'Юридическое сопровождение в суде'),(20,0,'Получение жилья'),(21,0,'Отмена мошеннической сделки и возврат жилья'),(22,0,'Подготовка запросов и(или) заявлений'),(23,1,'Реабилитационная программа Дом на пол дороги'),(24,0,'Восстановление документов об образовании'),(25,0,'Получение повторного свидетельства о рождении (или получение документов ЗАГС)'),(26,0,'Получение/восстановление военного билета'),(27,0,'Получение загранпаспорта'),(28,0,'Получение технических средств реабилитации (протезно-ортопедических изделий)');
+INSERT INTO `ContractPoints` VALUES (1,1,'Восстановление, получение  паспорта','Пасп'),(2,0,'Оформление пенсии','ОфП'),(3,0,'Получение полиса ОМС','ОМС'),(4,1,'Восстановление, получение ИНН','ИНН'),(5,1,'Получение документов, подтверждающих трудовой стаж','ТрдКн'),(6,0,'Оформление инвалидности','МСЭК'),(7,0,'Устройство в интернат','Инт'),(8,0,'Оформление временной регистрации по адресу Ночлежки','Рег'),(9,0,'Помощь в оформлении регистрации по другому адресу','Рег2'),(10,1,'Помощь в трудоустройстве','Труд'),(11,1,'Помощь в трудоустройстве с проживанием','Труд2'),(12,1,'Устройство в городской дом ночного пребывания','ДНП'),(13,0,'Устройство в реабилитационные центры для алко- и наркозависимых','РебЦ'),(14,0,'Получение лечения, устройство в больницу','Леч'),(15,0,'Покупка лекарств (перенесено в разовые услуги)',''),(16,0,'Поиск родственников','Род'),(17,0,'Возвращение домой в СПб или другой город','Дом'),(18,0,'Восстановление или установление гражданства','Гржд'),(19,0,'Юридическое сопровождение в суде','Суж'),(20,0,'Получение жилья','Жилье'),(21,0,'Отмена мошеннической сделки и возврат жилья','ЖильеСуд'),(22,0,'Подготовка запросов и(или) заявлений','Запросы'),(23,1,'Реабилитационная программа Дом на пол дороги','ДНПД'),(24,0,'Восстановление документов об образовании','Обрз'),(25,0,'Получение повторного свидетельства о рождении (или получение документов ЗАГС)','СвРожд'),(26,0,'Получение/восстановление военного билета','ВоенБлт'),(27,0,'Получение загранпаспорта','Загран'),(28,0,'Получение технических средств реабилитации (протезно-ортопедических изделий)','РеабСр-ва');
 /*!40000 ALTER TABLE `ContractPoints` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -283,7 +284,7 @@ CREATE TABLE `CustomDocumentRegistry` (
   `performerId` int(11) DEFAULT NULL,
   `date` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -376,7 +377,7 @@ CREATE TABLE `Document` (
   CONSTRAINT `FK3737353B5FC8D6E0` FOREIGN KEY (`client`) REFERENCES `Client` (`id`),
   CONSTRAINT `FK3737353BA4679646` FOREIGN KEY (`worker`) REFERENCES `Worker` (`id`),
   CONSTRAINT `FK3737353BCB1DEFA` FOREIGN KEY (`doctype`) REFERENCES `DocType` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8228 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=8875 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -410,7 +411,7 @@ CREATE TABLE `DocumentScan` (
   CONSTRAINT `SCAN_CLIENT` FOREIGN KEY (`client`) REFERENCES `Client` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `SCAN_DOCTYPE` FOREIGN KEY (`doctype`) REFERENCES `DocType` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `SCAN_WORKER` FOREIGN KEY (`worker`) REFERENCES `Worker` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -541,7 +542,7 @@ CREATE TABLE `RecievedService` (
   CONSTRAINT `FK8DD747EC2912C51A` FOREIGN KEY (`servicesType`) REFERENCES `ServicesType` (`id`),
   CONSTRAINT `FK8DD747EC5FC8D6E0` FOREIGN KEY (`client`) REFERENCES `Client` (`id`),
   CONSTRAINT `FK8DD747ECA4679646` FOREIGN KEY (`worker`) REFERENCES `Worker` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=33209 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=41084 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -601,7 +602,7 @@ CREATE TABLE `Room` (
 
 LOCK TABLES `Room` WRITE;
 /*!40000 ALTER TABLE `Room` DISABLE KEYS */;
-INSERT INTO `Room` VALUES (1,'1.1',8,NULL,0),(2,'1.2',10,NULL,0),(3,'1.3',11,NULL,0),(4,'2.3',12,NULL,0),(5,'2.2',10,NULL,0);
+INSERT INTO `Room` VALUES (1,'1.1',8,NULL,11),(2,'1.2',10,NULL,9),(3,'1.3',12,'',10),(4,'2.3',12,NULL,12),(5,'2.2',10,NULL,9);
 /*!40000 ALTER TABLE `Room` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -638,7 +639,7 @@ DROP TABLE IF EXISTS `ServContract`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `ServContract` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `commentResult` varchar(255) DEFAULT NULL,
+  `commentResult` text,
   `docNum` varchar(255) DEFAULT NULL,
   `startDate` datetime DEFAULT NULL,
   `stopDate` datetime DEFAULT NULL,
@@ -653,7 +654,7 @@ CREATE TABLE `ServContract` (
   CONSTRAINT `FK3F2223685FC8D6E0` FOREIGN KEY (`client`) REFERENCES `Client` (`id`),
   CONSTRAINT `FK3F222368A23578C8` FOREIGN KEY (`contractresult`) REFERENCES `ContractResult` (`id`),
   CONSTRAINT `FK3F222368A4679646` FOREIGN KEY (`worker`) REFERENCES `Worker` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1687 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1879 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -710,6 +711,7 @@ CREATE TABLE `ShelterHistory` (
   `client` int(11) DEFAULT NULL,
   `shelterresult` int(11) DEFAULT NULL,
   `servContract` int(11) NOT NULL,
+  `comments` mediumtext,
   PRIMARY KEY (`id`),
   KEY `FK6BA300F5FC8D6E0` (`client`),
   KEY `FK6BA300F7553201A` (`shelterresult`),
@@ -717,7 +719,7 @@ CREATE TABLE `ShelterHistory` (
   CONSTRAINT `FK6BA300F5FC8D6E0` FOREIGN KEY (`client`) REFERENCES `Client` (`id`),
   CONSTRAINT `FK6BA300F7553201A` FOREIGN KEY (`shelterresult`) REFERENCES `ShelterResult` (`id`),
   CONSTRAINT `Sh_SC_FK001` FOREIGN KEY (`servContract`) REFERENCES `ServContract` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=337 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=390 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -801,7 +803,7 @@ CREATE TABLE `Worker` (
   PRIMARY KEY (`id`),
   KEY `FK9AC73F9ECAF79164` (`rules`),
   CONSTRAINT `FK9AC73F9ECAF79164` FOREIGN KEY (`rules`) REFERENCES `Rules` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -810,7 +812,7 @@ CREATE TABLE `Worker` (
 
 LOCK TABLES `Worker` WRITE;
 /*!40000 ALTER TABLE `Worker` DISABLE KEYS */;
-INSERT INTO `Worker` VALUES (1,'Григорий','Сергеевич','6216f8a75fd5bb3d5f22b6f9958cdede3fc086c2','Свердлин','2011-06-06 00:00:00','78АА0561688',1,'glass-x',0),(2,'Валентина','Марьяновна','6216f8a75fd5bb3d5f22b6f9958cdede3fc086c2','Борейко','2013-02-07 00:00:00','17',2,'glass-x',0),(3,'Ольга','Игоревна','6216f8a75fd5bb3d5f22b6f9958cdede3fc086c2','Алферова','2013-02-07 00:00:00','16',2,NULL,1),(4,'Антонина','Александровна','6216f8a75fd5bb3d5f22b6f9958cdede3fc086c2','Невская','2013-08-08 00:00:00','18',2,NULL,1),(5,'Светлана','Владимировна','6216f8a75fd5bb3d5f22b6f9958cdede3fc086c2','Быстрова','2013-02-07 00:00:00','3',2,NULL,1),(6,'Екатерина','Александровна','6216f8a75fd5bb3d5f22b6f9958cdede3fc086c2','Диковская','2013-02-12 00:00:00','19',7,NULL,0),(7,'Игорь','Залманович','6216f8a75fd5bb3d5f22b6f9958cdede3fc086c2','Карлинский','2013-02-07 00:00:00','ПРОШУ МЕНЯ ЗАПОЛНИТЬ',5,NULL,0),(8,'Елена','Игоревна','6216f8a75fd5bb3d5f22b6f9958cdede3fc086c2','Кондрахина','2013-02-07 00:00:00','06112014',4,NULL,0),(9,'Елизавета','Дмитриевна','6216f8a75fd5bb3d5f22b6f9958cdede3fc086c2','Лаврентьева','2013-02-07 00:00:00','ПРОШУ МЕНЯ ЗАПОЛНИТЬ',6,NULL,0),(10,'Вячеслав','Анатольевич','6216f8a75fd5bb3d5f22b6f9958cdede3fc086c2','Самонов','2014-10-27 00:00:00','б/н',3,NULL,0),(11,'Кира','Сергеевна','6216f8a75fd5bb3d5f22b6f9958cdede3fc086c2','Подлипаева','2014-12-29 00:00:00','21',2,NULL,0),(12,'Наталья','Руслановна','6216f8a75fd5bb3d5f22b6f9958cdede3fc086c2','Шавлохова','2015-02-06 00:00:00','20',2,'start',0),(13,'Роман','Валерьевич','6216f8a75fd5bb3d5f22b6f9958cdede3fc086c2','Ширшов','2015-06-22 00:00:00','12',2,NULL,0),(14,'Волонтеры','','6216f8a75fd5bb3d5f22b6f9958cdede3fc086c2','','1970-01-01 00:00:00','10000000',2,'glass-x',0);
+INSERT INTO `Worker` VALUES (1,'Григорий','Сергеевич','6216f8a75fd5bb3d5f22b6f9958cdede3fc086c2','Свердлин','2011-06-06 00:00:00','78АА0561688',1,'redmond',0),(2,'Валентина','Марьяновна','6216f8a75fd5bb3d5f22b6f9958cdede3fc086c2','Борейко','2013-02-07 00:00:00','17',2,'glass-x',0),(3,'Ольга','Игоревна','6216f8a75fd5bb3d5f22b6f9958cdede3fc086c2','Алферова','2013-02-07 00:00:00','16',2,NULL,1),(4,'Антонина','Александровна','6216f8a75fd5bb3d5f22b6f9958cdede3fc086c2','Невская','2013-08-08 00:00:00','18',2,NULL,1),(5,'Светлана','Владимировна','6216f8a75fd5bb3d5f22b6f9958cdede3fc086c2','Быстрова','2013-02-07 00:00:00','3',2,NULL,1),(6,'Екатерина','Александровна','6216f8a75fd5bb3d5f22b6f9958cdede3fc086c2','Диковская','2013-02-12 00:00:00','19',7,NULL,0),(7,'Игорь','Залманович','6216f8a75fd5bb3d5f22b6f9958cdede3fc086c2','Карлинский','2013-02-07 00:00:00','ПРОШУ МЕНЯ ЗАПОЛНИТЬ',5,NULL,0),(8,'Елена','Игоревна','6216f8a75fd5bb3d5f22b6f9958cdede3fc086c2','Кондрахина','2013-02-07 00:00:00','06112014',4,NULL,0),(9,'Елизавета','Дмитриевна','6216f8a75fd5bb3d5f22b6f9958cdede3fc086c2','Лаврентьева','2013-02-07 00:00:00','ПРОШУ МЕНЯ ЗАПОЛНИТЬ',6,NULL,0),(10,'Вячеслав','Анатольевич','6216f8a75fd5bb3d5f22b6f9958cdede3fc086c2','Самонов','2014-10-27 00:00:00','б/н',3,NULL,0),(11,'Кира','Сергеевна','6216f8a75fd5bb3d5f22b6f9958cdede3fc086c2','Подлипаева','2014-12-29 00:00:00','21',2,NULL,1),(12,'Наталья','Руслановна','6216f8a75fd5bb3d5f22b6f9958cdede3fc086c2','Шавлохова','2015-02-06 00:00:00','20',2,'start',0),(13,'Роман','Валерьевич','6216f8a75fd5bb3d5f22b6f9958cdede3fc086c2','Ширшов','2015-06-22 00:00:00','12',2,NULL,0),(14,'Волонтеры','','6216f8a75fd5bb3d5f22b6f9958cdede3fc086c2','','1970-01-01 00:00:00','10000000',2,'glass-x',0),(15,'Павел','Валерьевич','6216f8a75fd5bb3d5f22b6f9958cdede3fc086c2','Лякс','2016-02-05 00:00:00','24',2,NULL,0);
 /*!40000 ALTER TABLE `Worker` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -825,7 +827,7 @@ CREATE TABLE `ZAGSRequestDocumentRegistry` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `client` int(11) DEFAULT NULL,
   `forWhom` text,
-  `name` text,
+  `respAddress` text,
   `whereWasBorn` text,
   `address` text,
   `mother` text,
@@ -833,7 +835,7 @@ CREATE TABLE `ZAGSRequestDocumentRegistry` (
   `performerId` int(11) DEFAULT NULL,
   `date` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -935,4 +937,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-01-24 21:35:30
+-- Dump completed on 2016-06-12 12:42:58
