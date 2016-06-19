@@ -27,7 +27,7 @@ import java.util.List;
 public class ReceivedServiceBean implements Serializable {
 
     private static final Logger log = Logger.getLogger(ReceivedServiceBean.class);
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 2L;
     private RecievedService selectedService;
     private List<ServicesType> availableServices;
 
@@ -55,21 +55,16 @@ public class ReceivedServiceBean implements Serializable {
     }
 
     public List<ServicesType> getAvailableServices() {
-        List<ServicesType> list = getGenericService().getInstances(ServicesType.class);
-
-        //Removing all Справки from the list
-        List<ServicesType> todelItems = new ArrayList<ServicesType>();
-        for (ServicesType st : list) {
-            if (st.getDocument()) todelItems.add(st);
-        }
-        for (ServicesType i : todelItems) {
-            list.remove(i);
+        List<ServicesType> filteredServicesTypes = new ArrayList<>();
+        for (ServicesType servicesType : getGenericService().getInstancesSorted(ServicesType.class)) {
+            if (!servicesType.getDocument()) {
+                filteredServicesTypes.add(servicesType);
+            }
         }
 
         //Pick in the converter's data
-        ServiceConverter.rcDB = new ArrayList<ServicesType>();
-        ServiceConverter.rcDB.addAll(list);
-        return list;
+        ServiceConverter.rcDB = new ArrayList<>(filteredServicesTypes);
+        return filteredServicesTypes;
     }
 
 

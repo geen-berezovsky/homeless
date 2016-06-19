@@ -6,18 +6,18 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import ru.homeless.entities.Client;
-import ru.homeless.entities.ContractControl;
 import ru.homeless.services.IGenericService;
 
 @Repository
 public class GenericDAO implements IGenericService, Serializable {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 2L;
 
 	public static Logger log = Logger.getLogger(GenericDAO.class);
 
@@ -53,6 +53,11 @@ public class GenericDAO implements IGenericService, Serializable {
 		}
 	}
 
+        @Override
+	public <T> List<T> getInstancesSorted(Class<T> clazz) {
+		return getSessionFactory().getCurrentSession().createCriteria(clazz).addOrder(Order.asc("sort_order")).list();
+	}
+        
 	public <T> List<T> getInstances(Class<T> clazz) {
 		return getSessionFactory().getCurrentSession().createCriteria(clazz).list();
 	}

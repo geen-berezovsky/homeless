@@ -14,7 +14,7 @@ import ru.homeless.entities.Client;
 @Transactional(readOnly = false)
 public class GenericService implements IGenericService, Serializable {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 2L;
 	@Autowired
 	private GenericDAO genericDAO;
 
@@ -54,6 +54,12 @@ public class GenericService implements IGenericService, Serializable {
 	@Transactional
 	public <T> List<T> getInstances(Class<T> clazz) {
 		return getGenericDAO().getInstances(clazz);
+	}
+        
+        @Override
+	@Transactional
+	public <T> List<T> getInstancesSorted(Class<T> clazz) {
+		return getGenericDAO().getInstancesSorted(clazz);
 	}
 
 	@Override
