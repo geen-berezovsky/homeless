@@ -191,7 +191,7 @@
     </h:form>
 
 </p:tab>
-<p:tab title="Удалить клиента">
+<p:tab title="Удалить клиента" rendered="#{mysettings.isPrivilegedUser()}">
     <h:form id="deleteClientMenu">
         <p:scrollPanel>
             <p:menu styleClass="documentsMenuCss">
