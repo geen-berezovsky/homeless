@@ -10,7 +10,7 @@
 			<p:submenu label="Клиенты" icon="ui-icon-document">
 				<p:menuitem value="Найти клиента" onclick="searchByNameDlg.show();" url="#"></p:menuitem>
 				<p:menuitem value="Найти клиента по рег. номеру" onclick="searchByIdDlg.show()" url="#"></p:menuitem>
-				<p:menuitem value="Мои клиенты" action="#{myclients.findClients()}"></p:menuitem>
+                                <p:menuitem value="Мои клиенты" action="#{myclients.findClients()}"></p:menuitem>
                 <p:menuitem value="Мои бывшие клиенты" action="#{myclients.findNotActualClients}"></p:menuitem>
 				<p:menuitem value="Оказанные мной услуги" onclick="notImplementedDlgWv.show();" url="#"></p:menuitem>
 				<p:menuitem value="Добавить клиента" action="#{clientform.addClient()}"></p:menuitem>
@@ -18,7 +18,7 @@
 			<p:submenu label="Настройки" icon="ui-icon-pencil">
                 <p:menuitem value="Мои настройки" icon="ui-icon-arrowreturnthick-1-w" action="#{mysettings.openDlg()}"></p:menuitem>
                 <p:menuitem value="Сменить тему" icon="ui-icon-arrowreturnthick-1-w" action="#{themeService.openDlg()}"></p:menuitem>
-                <p:menuitem value="Настройки комнат" icon="ui-icon-arrowreturnthick-1-w" action="#{roomb.openDlg()}"></p:menuitem>
+                <p:menuitem value="Настройки комнат" icon="ui-icon-arrowreturnthick-1-w" rendered="#{mysettings.isPrivilegedUser()}" action="#{roomb.openDlg()}"></p:menuitem>
 			</p:submenu>
 
 			<p:menuitem value="Отчеты" icon="ui-icon-calculator" action="#{reports.openDlg()}"></p:menuitem>

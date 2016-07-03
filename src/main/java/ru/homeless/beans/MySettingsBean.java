@@ -7,7 +7,6 @@ import java.util.TimeZone;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.SessionScoped;
 import javax.faces.bean.ViewScoped;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -232,6 +231,10 @@ public class MySettingsBean implements Serializable {
 	public void setTimeZone(TimeZone timeZone) {
 		this.timeZone = timeZone;
 	}
-
+        
+        public boolean isPrivilegedUser() {
+            final int rulesId = worker.getRules().getId();
+            return rulesId == 1 || rulesId == 7;
+        }
 	
 }
