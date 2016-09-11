@@ -6,7 +6,7 @@
 
 
 <h:head>
-    <title>Добро пожаловать, #{user.name}!</title>
+    <title>Добро пожаловать, снова!, #{user.name}!</title>
     <link href="css/default.css" rel="stylesheet" type="text/css"/>
     <script type="text/javascript">
         function openSearchResult() {
@@ -209,8 +209,9 @@
 </p:layoutUnit>
 
 
-<p:layoutUnit id="reminders" position="east" size="300" resizable="true" closable="true" collapsible="true" header="Напоминания" minSize="200" collapsed="#{not reminderBean.needToOpenReminder}">
-  <h:form id="reminders_form">
+<p:layoutUnit id="reminders" position="east" size="300" resizable="true" closable="true" collapsible="true" header="Напоминания" minSize="200" collapsed="#{not reminderBean.needToOpenReminder and not empty OverdueBean.items}">
+    <h:form id="reminders_form">
+        <p:commandButton value="просмотр имеющихся просроченных прививок" action="#{overdue.showDialog()}" rendered="#{not empty overdue.items}" />
     <p:dataTable var="shelterInfo" value="#{reminderBean.clientsReminderForCurUser}" rendered="#{reminderBean.hasSoonShelterEnded}"
     scrollable="true" styleClass="default_datatable" scrollHeight="120" selectionMode="single" rowKey="#{shelterInfo.id}" widgetVar="soonEndedShelterTable">
         <f:facet name="header">

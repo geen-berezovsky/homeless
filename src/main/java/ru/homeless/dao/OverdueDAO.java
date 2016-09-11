@@ -1,5 +1,6 @@
 package ru.homeless.dao;
 
+import java.math.BigInteger;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Repository;
 import ru.homeless.entities.OverdueItem;
@@ -18,15 +19,17 @@ public class OverdueDAO extends GenericDAO {
 
     public List<OverdueItem> getOverdueItems() {
         Calendar calendar = Calendar.getInstance();
-        calendar.setTime(new Date());
-        calendar.add(Calendar.DATE, -30);
-        String criticalVaccinationDay = getDateFormat().format(calendar.getTime());
-
+        calendar.add(Calendar.DAY_OF_YEAR, -30);
+        final DateFormat format = getDateFormat();
+        String criticalVaccinationDay = format.format(calendar.getTime());
+        calendar.add(Calendar.MONTH, -5);
+        String criticalFluorographyDay = format.format(calendar.getTime());
         log.info("Querying overdue items");
 
-        String query = "SELECT c.id, CONCAT(c.firstname, ' ', c.surname), noVac.dipthVac, noVac.hepotitsVac, noVac.typhVac, noVac.fluorogr, " +
-                "CONCAT(w.firstname, ' ', w.surname), noVac.inShelter" + " FROM (SELECT * FROM ShelterHistory WHERE roomId is not null " +
-                " AND((dipthVac is null OR hepotitsVac is null OR typhVac is null)" + " AND inShelter > '" + criticalVaccinationDay + "')) noVac " + " LEFT JOIN Client c ON(noVac.client = c.id) LEFT JOIN ServContract s ON " +
+        String query = "SELECT c.id, CONCAT(c.firstname, ' ', c.surname), noVac.dipthVac, noVac.hepotitsVac, noVac.typhVac, " +
+                "CONCAT(w.firstname, ' ', w.surname), noVac.inShelter, (noVac.fluorogr >= '"+criticalFluorographyDay+"')" + " FROM (SELECT * FROM ShelterHistory WHERE roomId is not null " +
+                " AND((dipthVac is null OR hepotitsVac is null OR typhVac is null)" + " AND inShelter < '" + criticalVaccinationDay + "') OR (fluorogr is null) OR (fluorogr < '"
+         +criticalFluorographyDay+"')) noVac " + " LEFT JOIN Client c ON(noVac.client = c.id) LEFT JOIN ServContract s ON " +
                 "(s.client=noVac.client) LEFT JOIN Worker w ON(s.worker=w.id)";
         List<?> data = getSessionFactory().getCurrentSession().createSQLQuery(
                 query)
@@ -36,7 +39,8 @@ public class OverdueDAO extends GenericDAO {
                 .addScalar("noVac.dipthVac")
                 .addScalar("noVac.hepotitsVac")
                 .addScalar("noVac.typhVac")
-                .addScalar("CONCAT(w.firstname, ' ', w.surname)").list();
+                .addScalar("CONCAT(w.firstname, ' ', w.surname)")
+                .addScalar("(noVac.fluorogr >= '"+criticalFluorographyDay+"')").list();
 
         log.info("Got " + data.size() + " items");
         List<OverdueItem> result = new ArrayList<>();
@@ -56,16 +60,13 @@ public class OverdueDAO extends GenericDAO {
         item.setHasDyphVaccine(isVaccinated(rowData[3]));
         item.setHasHepathVaccine(isVaccinated(rowData[4]));
         item.setHasTyphVaccine(isVaccinated(rowData[5]));
+        item.setIsFluorographyDone(rowData[7] != null && !rowData[7].equals(BigInteger.ZERO));
         item.setWorkerName((String) rowData[6]);
         return item;
     }
 
     private boolean isVaccinated(Object cellData) {
-        if (cellData == null) {
-            return false;
-        } else {
-            return true;
-        }
+        return cellData != null;
     }
 
     private static DateFormat getDateFormat() {

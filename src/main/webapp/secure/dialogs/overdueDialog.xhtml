@@ -5,7 +5,7 @@
 	<h:form id="overdueForm"/>
 	<p:dialog id="overdueDlg" header="Просроченные прививки и ФЛГ" widgetVar="overdueDlgWv" resizable="false" closable="true"
 			  modal="true" style="max-height:80%;max-width:80%" showEffect="fade" hideEffect="explode" closeOnEscape="true" dynamic="true">
-		<p:dataTable var="overdueTable" value="#{overdue.items}" rendered="#{overdue.rendered}"
+            <p:dataTable id="overdueTableId" var="overdueTable" value="#{overdue.items}" rendered="#{overdue.rendered}" 
 					 scrollable="true" styleClass="default_datatable" scrollHeight="120" selectionMode="single"
 					 rowKey="#{overdueTable.clientId}" widgetVar="soonEndedShelterTable" emptyMessage="Просроченных прививок и ФЛГ не найдено">
 			<p:column headerText="Id">
@@ -21,14 +21,20 @@
 				<h:outputText value="#{overdueTable.hasDyphVaccine}" />
 			</p:column>
 			<p:column headerText="Гепатит Б">
-				<h:outputText value="#{overdueTable.hasDyphVaccine}" />
+				<h:outputText value="#{overdueTable.hasHepathVaccine}" />
 			</p:column>
 			<p:column headerText="Брюшной тиф">
 				<h:outputText value="#{overdueTable.hasTyphVaccine}" />
 			</p:column>
+                        <p:column headerText="флюорография">
+				<h:outputText value="#{overdueTable.isFluorographyDone}" />
+			</p:column> 
 			<p:column headerText="Работник">
 				<h:outputText value="#{overdueTable.workerName}" />
 			</p:column>
+                        <p:ajax event="rowDblselect" listener="#{overdue.onRowClick}" global="false" 
+                                oncomplete="overdueDlgWv.hide();" />
+                                
 		</p:dataTable>
 	</p:dialog>
 </ui:composition>
