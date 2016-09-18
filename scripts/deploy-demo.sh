@@ -1,5 +1,5 @@
 #!/bin/bash
-
+set -vx
 if [ "$1" == "" ] ; then
     echo "ERROR: REVISIONS ARE NOT SPECIFIED"
     echo "Usage: ./deploy-demo.sh homeless__REVISION homeless-report-engine__REVISION"
@@ -87,8 +87,6 @@ check_res $?
 
 popd > /dev/null 2>&1
 
-COMMAND_PULL_SOURCES="hg pull"
-
 THIS_IP=`/sbin/ifconfig eth0 | awk '/inet addr/{print substr($2,6)}'`
 
 # 1. Updating sources
@@ -96,17 +94,17 @@ cecho "Updating sources for homeless project..." $green
 
 pushd ${SOURCES_HOMELESS} > /dev/null 2>&1
     cecho "Updating directory `pwd`" $green
-    (${COMMAND_PULL_SOURCES}) 2>&1
+    hg pull 2>&1
     check_res $?
-    `hg up -r ${REV_H}` 2>&1
+    hg up -r ${REV_H} -C 2>&1
     check_res $?
 popd > /dev/null 2>&1
 
 pushd ${SOURCES_HOMELESS_REPORT_ENGINE} > /dev/null 2>&1
     cecho "Updating directory `pwd`" $green
-    (${COMMAND_PULL_SOURCES}) 2>&1
+    hg pull 2>&1
     check_res $?
-    `hg up -r ${REV_HRE}` 2>&1
+    hg up -r ${REV_HRE} -C 2>&1
     check_res $?
 popd > /dev/null 2>&1
 
