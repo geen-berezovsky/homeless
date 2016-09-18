@@ -87,9 +87,7 @@ check_res $?
 
 popd > /dev/null 2>&1
 
-COMMAND_PULL_SOURCES=hg pull
-COMMAND_UPDATE_SOURCES_HOMELESS=hg up -C -r ${REV_H}
-COMMAND_UPDATE_SOURCES_HOMELESS-REPORT-ENGINE=hg up -C -r ${REV_HRE}
+COMMAND_PULL_SOURCES="hg pull"
 
 THIS_IP=`/sbin/ifconfig eth0 | awk '/inet addr/{print substr($2,6)}'`
 
@@ -100,7 +98,7 @@ pushd ${SOURCES_HOMELESS} > /dev/null 2>&1
     cecho "Updating directory `pwd`" $green
     (${COMMAND_PULL_SOURCES}) 2>&1
     check_res $?
-    (${COMMAND_UPDATE_SOURCES_HOMELESS}) 2>&1
+    `hg up -C -r ${REV_H}` 2>&1
     check_res $?
 popd > /dev/null 2>&1
 
@@ -108,7 +106,7 @@ pushd ${SOURCES_HOMELESS_REPORT_ENGINE} > /dev/null 2>&1
     cecho "Updating directory `pwd`" $green
     (${COMMAND_PULL_SOURCES}) 2>&1
     check_res $?
-    (${COMMAND_UPDATE_SOURCES_HOMELESS-REPORT-ENGINE}) 2>&1
+    `hg up -C -r ${REV_HRE}` 2>&1
     check_res $?
 popd > /dev/null 2>&1
 
