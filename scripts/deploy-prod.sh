@@ -59,8 +59,9 @@ SOURCES_HOMELESS_REPORT_ENGINE=${SOURCES_ROOT}/homeless-report-engine
 
 TOMCAT_HOME="${BASE}/tools/tomcat"
 
-COMMAND_UPDATE_SOURCES="hg pull -u"
-COMMAND_CLEAN_SOURCES="hg up -C"
+COMMAND_PULL_SOURCES="hg pull"
+COMMAND_UPDATE_SOURCES_HOMELESS="hg up -C -r ${REV_H}"
+COMMAND_UPDATE_SOURCES_HOMELESS-REPORT-ENGINE="hg up -C -r ${REV_HRE}"
 THIS_IP=`ifconfig eth0 | awk '/inet addr/{print substr($2,6)}'`
 
 # 1. Updating sources
@@ -68,17 +69,17 @@ cecho "Updating sources for homeless project..." $green
 
 pushd ${SOURCES_HOMELESS} > /dev/null 2>&1
     cecho "Updating directory `pwd`" $green
-    (${COMMAND_UPDATE_SOURCES}) 2>&1
+    (${COMMAND_PULL_SOURCES}) 2>&1
     check_res $?
-    (${COMMAND_CLEAN_SOURCES}) 2>&1
+    (${COMMAND_UPDATE_SOURCES_HOMELESS}) 2>&1
     check_res $?
 popd > /dev/null 2>&1
 
 pushd ${SOURCES_HOMELESS_REPORT_ENGINE} > /dev/null 2>&1
     cecho "Updating directory `pwd`" $green
-    (${COMMAND_UPDATE_SOURCES}) 2>&1
+    (${COMMAND_PULL_SOURCES}) 2>&1
     check_res $?
-    (${COMMAND_CLEAN_SOURCES}) 2>&1
+    (${COMMAND_UPDATE_SOURCES_HOMELESS-REPORT-ENGINE}) 2>&1
     check_res $?
 popd > /dev/null 2>&1
 
@@ -173,7 +174,7 @@ pushd ${TOMCAT_HOME}/logs > /dev/null 2>&1
 
     cecho "Placing timestamp before starting homeless application" $magenta
     D=`date +"%H:%M:%S %d.%m.%Y"`
-    echo "$D ($REV_H, $REV_HRE)">${TIMESTAMP}
+    echo "${D} (${REV_H}, ${REV_HRE})">${TIMESTAMP}
     check_res $?
 
     cecho "Starting Tomcat applications..." $green
