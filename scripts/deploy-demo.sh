@@ -1,5 +1,13 @@
 #!/bin/bash
 
+if [ "$1" == "" ] ; then
+    echo "ERROR: REVISIONS ARE NOT SPECIFIED"
+    echo "Usage: ./deploy-demo.sh homeless__REVISION homeless-report-engine__REVISION"
+    exit 1
+fi
+REV_H=$1
+REV_HRE=$2
+
 black='\E[30;40m'
 red='\E[31;40m'
 green='\E[32;40m'
@@ -35,18 +43,6 @@ print_file() {
     done < "$1"
 }
 
-if [ ! "$2"=="" ] ; then
-        REV_HRE=$2
-    else
-	REV_HRE="default"
-fi
-
-if [ ! "$1"=="" ] ; then
-        REV_H=$1
-    else
-	REV="default"
-fi
-
 BASE=/opt/homeless
 ROOT=${BASE}/storage
 TEMP=${ROOT}/temp
@@ -66,16 +62,14 @@ TOMCAT_HOME="${BASE}/tools/tomcat"
 LAST_INV=`ssh tomcat@10.2.0.9 "ls /opt/homeless/storage/BACKUPS/REGULAR/inv-*.zip | sort | tail -n 1"`
 LAST_DB=`ssh tomcat@10.2.0.9 "ls /opt/homeless/storage/BACKUPS/REGULAR/db-*.zip | sort | tail -n 1"`
 
-scp tomcat@10.2.0.9:${LAST_INV} /opt/homeless/storage/temp/inv.zip
-check_res $?
-scp tomcat@10.2.0.9:${LAST_DB} /opt/homeless/storage/temp/db.zip
-check_res $?
-
 pushd ${TEMP} > /dev/null 2>&1
-    unzip db.zip
-    check_res $?
-    unzip inv.zip
- check_res $?
+rm -rf *
+scp tomcat@10.2.0.9:${LAST_INV} inv.zip
+check_res $?
+scp tomcat@10.2.0.9:${LAST_DB} db.zip
+check_res $?
+unzip db.zip > /dev/null
+unzip inv.zip > /dev/null
 rm -rf ${CONTRACTS}/* && mv -f ./opt/homeless/storage/contracts/* -f ${CONTRACTS}
 rm -rf ${IMAGES}/* && mv -f ./opt/homeless/storage/images/* -f ${IMAGES}
 rm -rf ${PROFILES}/* && mv -f ./opt/homeless/storage/profiles/* -f ${PROFILES}
@@ -90,7 +84,7 @@ check_res $?
 cecho "Loading the DB dump from last backup" $green
 mysql --user=homeless_demo --password=Homeless_demo12345 homeless_demo < ${TEMP}/homeless.sql
 check_res $?
-rm -rf *
+
 popd > /dev/null 2>&1
 
 COMMAND_PULL_SOURCES="hg pull"
