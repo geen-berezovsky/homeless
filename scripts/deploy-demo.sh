@@ -59,7 +59,7 @@ SOURCES_HOMELESS_REPORT_ENGINE=${SOURCES_ROOT}/homeless-report-engine
 
 TOMCAT_HOME="${BASE}/tools/tomcat"
 
-PASS=`cat /opt/homeless/tools/tomcat/conf/server.xml | grep "password=" | sed -e "s/^.*password=\"//" | sed -e "s/\"//"`
+PASS=`cat /opt/homeless/tools/tomcat/conf/server.xml | grep "password=" | sed -e "s/^.*password=\"//" | sed -e "s/\"//" | tr -d '\n' | tr -d '\r'`
 
 LAST_INV=`ssh tomcat@10.2.0.9 "ls /opt/homeless/storage/BACKUPS/REGULAR/inv-*.zip | sort | tail -n 1"`
 LAST_DB=`ssh tomcat@10.2.0.9 "ls /opt/homeless/storage/BACKUPS/REGULAR/db-*.zip | sort | tail -n 1"`
