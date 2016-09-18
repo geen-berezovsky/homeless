@@ -1,5 +1,13 @@
 #!/bin/bash
 
+if [ $1 == "" ] ; then
+    echo "ERROR: REVISIONS ARE NOT SPECIFIED"
+    echo "Usage: ./deploy-prod.sh homeless__REVISION homeless-report-engine__REVISIONS"
+fi
+
+REV_H=$1
+REV_HRE=$2
+
 black='\E[30;40m'
 red='\E[31;40m'
 green='\E[32;40m'
@@ -163,7 +171,8 @@ pushd ${TOMCAT_HOME}/logs > /dev/null 2>&1
     check_res $?
 
     cecho "Placing timestamp before starting homeless application" $magenta
-    date +"%H:%M:%S %d.%m.%Y">${TIMESTAMP}
+    D=`date +"%H:%M:%S %d.%m.%Y"`
+    echo "$D ($REV_H, $REV_HRE)">${TIMESTAMP}
     check_res $?
 
     cecho "Starting Tomcat applications..." $green
