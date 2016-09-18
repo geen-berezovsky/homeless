@@ -87,9 +87,9 @@ check_res $?
 
 popd > /dev/null 2>&1
 
-COMMAND_PULL_SOURCES="hg pull"
-COMMAND_UPDATE_SOURCES_HOMELESS="hg up -C -r ${REV_H}"
-COMMAND_UPDATE_SOURCES_HOMELESS-REPORT-ENGINE="hg up -C -r ${REV_HRE}"
+COMMAND_PULL_SOURCES=hg pull
+COMMAND_UPDATE_SOURCES_HOMELESS=hg up -C -r ${REV_H}
+COMMAND_UPDATE_SOURCES_HOMELESS-REPORT-ENGINE=hg up -C -r ${REV_HRE}
 
 THIS_IP=`/sbin/ifconfig eth0 | awk '/inet addr/{print substr($2,6)}'`
 
