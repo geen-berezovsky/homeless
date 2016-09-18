@@ -1,8 +1,9 @@
 #!/bin/bash
 
-if [ $1 == "" ] ; then
+if [ "$1" == "" ] ; then
     echo "ERROR: REVISIONS ARE NOT SPECIFIED"
-    echo "Usage: ./deploy-prod.sh homeless__REVISION homeless-report-engine__REVISIONS"
+    echo "Usage: ./deploy-prod.sh homeless__REVISION homeless-report-engine__REVISION"
+    exit 1
 fi
 
 REV_H=$1
