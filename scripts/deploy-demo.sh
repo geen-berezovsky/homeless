@@ -1,5 +1,5 @@
 #!/bin/bash
-set -vx
+#set -vx
 if [ "$1" == "" ] ; then
     echo "ERROR: REVISIONS ARE NOT SPECIFIED"
     echo "Usage: ./deploy-demo.sh homeless__REVISION homeless-report-engine__REVISION"
