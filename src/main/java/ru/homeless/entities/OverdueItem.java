@@ -14,6 +14,7 @@ public class OverdueItem {
     private boolean hasTyphVaccine;
     private boolean hasDyphVaccine;
     private boolean hasHepathVaccine;
+    private boolean isFluorographyDone;
 
     public Integer getClientId() {
         return clientId;
@@ -72,6 +73,14 @@ public class OverdueItem {
         this.hasHepathVaccine = hasHepathVaccine;
     }
 
+    public String getIsFluorographyDone() {
+        return getOverdueLabel(isFluorographyDone);
+    }
+
+    public void setIsFluorographyDone(boolean isFluorographyDone) {
+        this.isFluorographyDone = isFluorographyDone;
+    }
+    
     private String getOverdueLabel(boolean overdue) {
         if (overdue) {
             return "";

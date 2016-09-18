@@ -38,6 +38,17 @@ public class ClientShelterBean implements Serializable {
     
     @ManagedProperty(value = "#{ClientService}")
     private ClientService clientService;
+    
+    @ManagedProperty(value="#{overdue}")
+    private OverdueBean overdue;
+
+    public OverdueBean getOverdue() {
+        return overdue;
+    }
+
+    public void setOverdue(OverdueBean overdue) {
+        this.overdue = overdue;
+    }
 
     public StreamedContent getFile() {
         return file;
@@ -238,7 +249,7 @@ public class ClientShelterBean implements Serializable {
             getRoomService().addInstance(selectedShelter);
 
             selectedShelter = new ShelterHistory();
-
+            overdue.updateItems();
             //Update the table
             RequestContext rc = RequestContext.getCurrentInstance();
             rc.update("add_shelter");
