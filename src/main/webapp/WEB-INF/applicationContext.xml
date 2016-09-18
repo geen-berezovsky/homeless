@@ -47,7 +47,7 @@ http://www.springframework.org/schema/tx/spring-tx-4.0.xsd http://www.springfram
 		<property name="password" value="homeless" />
 	</bean>
 -->
-    <jee:jndi-lookup jndi-name="DevelopmentDB" id="DataSource" expected-type="javax.sql.DataSource" />
+    <jee:jndi-lookup jndi-name="ProductionDB" id="DataSource" expected-type="javax.sql.DataSource" />
 	<!-- Session Factory Declaration -->
 	<bean id="SessionFactory"
 		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
