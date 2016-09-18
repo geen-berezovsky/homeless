@@ -98,7 +98,7 @@ pushd ${SOURCES_HOMELESS} > /dev/null 2>&1
     cecho "Updating directory `pwd`" $green
     (${COMMAND_PULL_SOURCES}) 2>&1
     check_res $?
-    `hg up -C -r ${REV_H}` 2>&1
+    `hg up -r ${REV_H}` 2>&1
     check_res $?
 popd > /dev/null 2>&1
 
@@ -106,7 +106,7 @@ pushd ${SOURCES_HOMELESS_REPORT_ENGINE} > /dev/null 2>&1
     cecho "Updating directory `pwd`" $green
     (${COMMAND_PULL_SOURCES}) 2>&1
     check_res $?
-    `hg up -C -r ${REV_HRE}` 2>&1
+    `hg up -r ${REV_HRE}` 2>&1
     check_res $?
 popd > /dev/null 2>&1
 
