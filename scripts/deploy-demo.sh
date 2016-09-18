@@ -1,5 +1,5 @@
 #!/bin/bash
-#set -vx
+
 if [ "$1" == "" ] ; then
     echo "ERROR: REVISIONS ARE NOT SPECIFIED"
     echo "Usage: ./deploy-demo.sh homeless__REVISION homeless-report-engine__REVISION"
@@ -59,6 +59,8 @@ SOURCES_HOMELESS_REPORT_ENGINE=${SOURCES_ROOT}/homeless-report-engine
 
 TOMCAT_HOME="${BASE}/tools/tomcat"
 
+PASS=`cat /opt/homeless/tools/tomcat/conf/server.xml | grep "password=" | sed -e "s/^.*password=\"//" | sed -e "s/\"//"`
+
 LAST_INV=`ssh tomcat@10.2.0.9 "ls /opt/homeless/storage/BACKUPS/REGULAR/inv-*.zip | sort | tail -n 1"`
 LAST_DB=`ssh tomcat@10.2.0.9 "ls /opt/homeless/storage/BACKUPS/REGULAR/db-*.zip | sort | tail -n 1"`
 
@@ -76,13 +78,13 @@ rm -rf ${PROFILES}/* && mv -f ./opt/homeless/storage/profiles/* -f ${PROFILES}
 rm -rf ${TEMPLATES}/* && mv -f ./opt/homeless/storage/templates/* -f ${TEMPLATES}
 
 cecho "Deleting the existing database homeless_demo" $green
-echo "DROP DATABASE homeless_demo" | mysql --user=homeless_demo --password=Homeless_demo12345 homeless_demo
+echo "DROP DATABASE homeless_demo" | mysql --user=homeless_demo --password=${PASS} homeless_demo
 check_res $?
 cecho "Creating the new database" $green
-echo "CREATE DATABASE homeless_demo CHARACTER SET utf8 COLLATE utf8_general_ci;" | mysql --user=homeless_demo --password=Homeless_demo12345
+echo "CREATE DATABASE homeless_demo CHARACTER SET utf8 COLLATE utf8_general_ci;" | mysql --user=homeless_demo --password=${PASS}
 check_res $?
 cecho "Loading the DB dump from last backup" $green
-mysql --user=homeless_demo --password=Homeless_demo12345 homeless_demo < ${TEMP}/homeless.sql
+mysql --user=homeless_demo --password=${PASS} homeless_demo < ${TEMP}/homeless.sql
 check_res $?
 
 popd > /dev/null 2>&1
