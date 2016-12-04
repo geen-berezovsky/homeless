@@ -7,6 +7,9 @@ public class ResultWorkReportEntity {
     private Boolean isLivingInShelter;
     private Integer tasksPerformed;
 
+    public ResultWorkReportEntity() {
+    }
+
     public ResultWorkReportEntity(String workerSurname, String contractPointsCaption, 
             Boolean isLivingInShelter, Integer totalTasksPerformed) {
         this.workerSurname = workerSurname;

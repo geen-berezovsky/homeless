@@ -1,8 +1,14 @@
 package ru.homeless.dao;
 
+import java.math.BigInteger;
 import java.util.*;
 
 import org.apache.log4j.Logger;
+import org.hibernate.Session;
+import org.hibernate.transform.Transformers;
+import org.hibernate.type.BooleanType;
+import org.hibernate.type.IntegerType;
+import org.hibernate.type.StringType;
 import org.springframework.stereotype.Repository;
 import ru.homeless.entities.Room;
 import ru.homeless.report.entities.*;
@@ -16,30 +22,30 @@ public class ReportDAO extends GenericDAO implements IReportDAO {
 
     @Override
     public List<ResultWorkReportEntity> getResultWorkReport(Date from, Date till) {
-        List<ResultWorkReportEntity> result = new ArrayList<>();
-        List<?> res = getSessionFactory().getCurrentSession().createSQLQuery(
-                "SELECT w.surname AS surname, cp.caption AS caption, NOT ISNULL(sh.id) AS sheltered, COUNT(sc.id) AS amount "
-                + "FROM ServContract sc "
-                + "INNER JOIN Worker w ON (sc.worker = w.id) INNER JOIN ContractControl cc ON (sc.id=cc.servcontract) "
-                + "INNER JOIN ContractPoints cp ON (cc.contractpoints=cp.id) INNER JOIN Client c ON (c.id=sc.client) "
-                + "LEFT JOIN ShelterHistory sh ON (c.id = sh.client) WHERE cc.endDate is not null AND DATE(endDate) BETWEEN " + Util.parseDateForMySql(from) + " AND " + Util.parseDateForMySql(till) + " "
-                + "GROUP BY w.surname, cp.caption, ISNULL(sh.id) ")
-                .addScalar("surname")
-                .addScalar("caption")
-                .addScalar("sheltered")
-                .addScalar("amount").list();
-
-        for (Object o : res) {
-            Object[] xy = (Object[]) o;
-            for (int i = 0; i <= 3; i++) {
-                if (xy[i] == null) {
-                    xy[i] = "-";
-                }
-            }
-            result.add(new ResultWorkReportEntity(xy[0].toString(), xy[1].toString(),
-                    (Integer) xy[2] == 1, Integer.parseInt(xy[3].toString())));
-        }
-        return result;
+        Session s = getSessionFactory().getCurrentSession();
+        return s.createSQLQuery(
+                "SELECT "
+                + "CONCAT(wk.firstname, ' ', wk.surname) AS workerSurname, "
+                + "cp.caption AS contractPointsCaption, "
+                + "NOT ISNULL(sh.id) AS isLivingInShelter, "
+                + "COUNT(cc.id) AS tasksPerformed "
+                + "FROM ContractControl cc "
+                + "INNER JOIN ContractPoints cp ON cp.id = cc.contractpoints "
+                + "INNER JOIN ServContract sc ON sc.id = cc.servcontract "
+                + "INNER JOIN Worker wk ON sc.worker = wk.id "
+                + "INNER JOIN Client cl ON cl.id = sc.client "
+                + "LEFT JOIN ShelterHistory sh ON sh.client = sc.client AND cc.endDate BETWEEN sh.inShelter AND sh.outShelter "
+                + "WHERE cc.endDate IS NOT NULL AND cc.endDate BETWEEN :fromDate AND :tillDate "
+                + "GROUP BY wk.id, cp.id, ISNULL(sh.id) ")
+                .addScalar("workerSurname", StringType.INSTANCE)
+                .addScalar("contractPointsCaption", StringType.INSTANCE)
+                .addScalar("isLivingInShelter", BooleanType.INSTANCE)
+                .addScalar("tasksPerformed", IntegerType.INSTANCE)
+                .setDate("fromDate", from)
+                .setDate("tillDate", till)
+                .setResultTransformer(Transformers.aliasToBean(ResultWorkReportEntity.class))
+                .list();
+        //
     }
 
     @Override
