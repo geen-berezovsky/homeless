@@ -11,17 +11,19 @@ import ru.homeless.report.entities.*;
 public interface IReportDAO extends IGenericDAO {
 
 	public List<ResultWorkReportEntity> getResultWorkReport(Date from, Date till);
-	
+
 	public List<OutOfShelterReportEntity> getOutOfShelterReport(Date from, Date till);
-	
+
 	public List<OneTimeServicesReportEntity> getOneTimeServicesReport(Date from, Date till);
 
     public Map<Room, List<OverVacReportEntity>> getOverVacReport();
 
     public List<ProvidedServicesByClientReportEntity> getProvidedServicesByClientReport(Date from, Date till);
-	
+
 	public List<OuterReportEntity> getOuterReport();
 
     public List<InnerReportEntity> getInnerReport();
+
+    List<ServiceRecipientReportEntity> getServiceRecipientReport(Date from, Date till);
 
 }

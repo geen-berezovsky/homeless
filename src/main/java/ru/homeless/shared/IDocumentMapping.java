@@ -149,6 +149,12 @@ public interface IDocumentMapping {
     public final int REPORT_PROVIDED_SERVICES_BY_CLIENT = 214;
     public final String REPORT_PROVIDED_SERVICES_BY_CLIENT_PATH = Configuration.templatesDir+"/"+"ProvidedServicesByClient.xlsx";
 
+    /**
+     * Template file: ServicesRecipient.xlsx
+     * Document title: Отчет о получателях услуг
+     */
+    int REPORT_SERVICES_RECIPIENT = 215;
+    String REPORT_SERVICES_RECIPIENT_PATH = Configuration.templatesDir + "/ServicesRecipient.xlsx";
 
     public WordprocessingMLPackage generateSocialHelpDocument(HttpServletRequest request, Client client, Map<String, String> map);
     public WordprocessingMLPackage generateFreeTravelDocument(HttpServletRequest request, Client client, Map<String, String> map);
@@ -174,5 +180,6 @@ public interface IDocumentMapping {
     public XSSFWorkbook generateInnerReport(HttpServletRequest request);
 	public XSSFWorkbook generateCustomStatisticsDocument(HttpServletRequest request);
     public XSSFWorkbook generateProvidedServicesByClientDocument(HttpServletRequest request);
+    XSSFWorkbook generateServicesRecipientDocument(HttpServletRequest request);
     
 }

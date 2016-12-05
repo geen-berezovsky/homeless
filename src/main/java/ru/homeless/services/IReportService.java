@@ -24,4 +24,6 @@ public interface IReportService extends IGenericService {
 
     public List<InnerReportEntity> getInnerReportEntity();
 
+    List<ServiceRecipientReportEntity> getServiceRecipientReport(Date from, Date till);
+
 }

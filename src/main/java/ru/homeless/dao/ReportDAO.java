@@ -3,6 +3,7 @@ package ru.homeless.dao;
 import java.util.*;
 
 import org.apache.log4j.Logger;
+import org.hibernate.SQLQuery;
 import org.springframework.stereotype.Repository;
 
 import ru.homeless.entities.Room;
@@ -17,8 +18,8 @@ public class ReportDAO extends GenericDAO implements IReportDAO {
 
     @Override
 	public List<ResultWorkReportEntity> getResultWorkReport(Date from, Date till) {
-		
-		
+
+
 		List<?> res = getSessionFactory().getCurrentSession().createSQLQuery("SELECT DISTINCT w.surname, cp.caption, COUNT(sh.id), COUNT(c.id)-COUNT(sh.id) FROM ServContract sc"+
 				" INNER JOIN Worker w ON (sc.worker = w.id) INNER JOIN ContractControl cc ON (sc.id=cc.servcontract)"+
 				" INNER JOIN ContractPoints cp ON (cc.contractpoints=cp.id) INNER JOIN Client c ON (c.id=sc.client)"+
@@ -29,7 +30,7 @@ public class ReportDAO extends GenericDAO implements IReportDAO {
 					.addScalar("COUNT(c.id)-COUNT(sh.id)").list();
 
 		List<ResultWorkReportEntity> result = new ArrayList<ResultWorkReportEntity>();
-		
+
 		 for (Object o : res) {
 			 Object[] xy = (Object[])o;
 			 for (int i=0; i<=3; i++) {
@@ -48,7 +49,7 @@ public class ReportDAO extends GenericDAO implements IReportDAO {
 				"sh.outShelter, IFNULL(c.memo, '-'), IFNULL(c.contacts, '-'), w.surname, sh.id " +
 				"FROM ServContract sc INNER JOIN Client c ON(sc.client = c.id) " +
 				"INNER JOIN Worker w ON(sc.worker = w.id) INNER JOIN ContractControl cc ON(cc.servcontract=sc.id) " +
-				"INNER JOIN ContractPoints cp ON(cp.id = cc.contractpoints) LEFT JOIN ShelterHistory sh ON(c.id = sh.client) WHERE (DATE(sh.outShelter) BETWEEN " 
+				"INNER JOIN ContractPoints cp ON(cp.id = cc.contractpoints) LEFT JOIN ShelterHistory sh ON(c.id = sh.client) WHERE (DATE(sh.outShelter) BETWEEN "
 				+ Util.parseDateForMySql(from) + " AND " + Util.parseDateForMySql(till) + ")")
 				.addScalar("c.id")
 				.addScalar("c.surname")
@@ -61,12 +62,12 @@ public class ReportDAO extends GenericDAO implements IReportDAO {
 				.addScalar("cp.caption")
 				.addScalar("cc.endDate")
 				.addScalar("w.surname").list();
-		
+
 		List<OutOfShelterReportEntity> result = new ArrayList<OutOfShelterReportEntity>();
-		
+
 		for (Object o : res) {
 			Object[] xy = (Object[])o;
-			
+
 			for (int i=0; i<=10; i++) {
 				if (xy[i] == null) {
 					xy[i] = new String("-");
@@ -88,7 +89,7 @@ public class ReportDAO extends GenericDAO implements IReportDAO {
 	@Override
 	public List<OneTimeServicesReportEntity> getOneTimeServicesReport(Date from, Date till) {
 		List<OneTimeServicesReportEntity> comb = new ArrayList<OneTimeServicesReportEntity>();
-		
+
 		List<?> res = getSessionFactory().getCurrentSession().createSQLQuery("SELECT CONCAT(w.firstname, ' ', w.surname) as S_NAME, s.caption as S_TYPE FROM BasicDocumentRegistry g LEFT JOIN Worker w ON(g.performerId=w.id) LEFT JOIN BasicDocumentRegistryType s ON(s.id=g.type) WHERE (g.date >= "
 				+ Util.parseDateForMySql(from) + " AND g.date <= " + Util.parseDateForMySql(till) + ")")
 				.addScalar("S_NAME")
@@ -110,7 +111,7 @@ public class ReportDAO extends GenericDAO implements IReportDAO {
 				.addScalar("S_TYPE").list();
 		for (Object o : res3) {
 			Object[] xy = (Object[])o;
-			
+
 			for (int i=0; i<=1; i++) {
 				if (xy[i] == null) {
 					xy[i] = new String("-");
@@ -262,7 +263,7 @@ public class ReportDAO extends GenericDAO implements IReportDAO {
 					.addScalar("w.surname").list();
 		for (Object o : res) {
 			Object[] xy = (Object[])o;
-			
+
 			for (int i=0; i<=9; i++) {
 				if (xy[i] == null && i!=2 && i!=3 && i!=5 && i!=6) {
 					xy[i] = new String("");
@@ -322,5 +323,45 @@ public class ReportDAO extends GenericDAO implements IReportDAO {
 
     }
 
+    @Override
+    public List<ServiceRecipientReportEntity> getServiceRecipientReport(Date from, Date till) {
+
+        SQLQuery query = getSessionFactory().getCurrentSession().createSQLQuery(
+                "select w.surname, st.caption, count(distinct rs.client) as cntCl, count(*) as cnt " +
+                        "from RecievedService rs " +
+                        "left join Worker w on rs.worker = w.id " +
+                        "left join ServicesType st on rs.servicesType = st.id " +
+                        "where rs.date >= " + wrapDate(from) + " and rs.date <= " + wrapDate(till) + " " +
+                        "group by rs.worker, rs.servicesType")
+                .addScalar("w.surname")
+                .addScalar("st.caption")
+                .addScalar("cntCl")
+                .addScalar("cnt")
+                ;
+
+        log.debug(query.getQueryString());
+
+        List res = query.list();
+
+        List<ServiceRecipientReportEntity> result = new ArrayList<>(res.size());
+        for (Object o : res)
+        {
+            Object[] row = (Object[]) o;
+
+            ServiceRecipientReportEntity entity = new ServiceRecipientReportEntity();
+            entity.setWorker(row[0].toString());
+            entity.setServiceType(row[1].toString());
+            entity.setCountOfUniqueClient(Integer.valueOf(row[2].toString()));
+            entity.setCountOfService(Integer.valueOf(row[3].toString()));
+
+            result.add(entity);
+        }
+
+        return result;
+    }
+
+    private String wrapDate(final Date date) {
+        return Util.parseDateForMySql(date);
+    }
 
 }
