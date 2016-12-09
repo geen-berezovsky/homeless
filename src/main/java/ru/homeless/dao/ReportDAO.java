@@ -18,8 +18,6 @@ import ru.homeless.util.Util;
 public class ReportDAO extends GenericDAO implements IReportDAO {
 
     private static final long serialVersionUID = 1L;
-    private static final Logger LOG = Logger.getLogger(ReportDAO.class);
-
     @Override
     public List<ResultWorkReportEntity> getResultWorkReport(Date from, Date till) {
         Session s = getSessionFactory().getCurrentSession();
@@ -45,7 +43,6 @@ public class ReportDAO extends GenericDAO implements IReportDAO {
                 .setDate("tillDate", till)
                 .setResultTransformer(Transformers.aliasToBean(ResultWorkReportEntity.class))
                 .list();
-        //
     }
 
     @Override
