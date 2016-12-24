@@ -4,14 +4,14 @@
 <ui:composition>
         <p:dialog header="Подтвердите удаление" appendTo="@form" widgetVar="deleteCustDocument" resizable="false" closable="true" showEffect="fade" hideEffect="explode" dynamic="true" closeOnEscape="true" style="font-size: 200%;" draggable="false">
             <p:panelGrid columns="2" style="margin: 0 auto;" styleClass="base_form_panel_grid_class">
-                <p:commandButton id="custRcConfirm" value="Да" update=":m_tabview:customDocumentsMenu:custDocListId :m_tabview:base_form:header" oncomplete="deleteCustDocument.hide()" actionListener="#{custdoc.deleteSelectedDocument}"/>
-                <p:commandButton id="custRcDecline" value="Нет" update=":m_tabview:customDocumentsMenu:custDocListId" oncomplete="deleteCustDocument.hide()"/>
+                <p:commandButton id="custRcConfirm" value="Да" update=":m_tabview:customDocumentsMenu:custDocListId :m_tabview:base_form:header" oncomplete="PF('deleteCustDocument').hide()" actionListener="#{custdoc.deleteSelectedDocument}"/>
+                <p:commandButton id="custRcDecline" value="Нет" update=":m_tabview:customDocumentsMenu:custDocListId" oncomplete="PF('deleteCustDocument').hide()"/>
             </p:panelGrid>
         </p:dialog>
 
 
         <p:contextMenu for="custDocListId">
-            <p:menuitem value="Удалить" oncomplete="deleteCustDocument.show()" icon="ui-icon-trash" ajax="true" />
+            <p:menuitem value="Удалить" oncomplete="PF('deleteCustDocument').show()" icon="ui-icon-trash" ajax="true" />
         </p:contextMenu>
 
 

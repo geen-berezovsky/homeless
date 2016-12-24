@@ -1,25 +1,18 @@
 package ru.homeless.beans;
 
-import com.google.common.collect.Tables;
 import org.apache.log4j.Logger;
 import org.primefaces.model.StreamedContent;
-import ru.homeless.configuration.Configuration;
 import ru.homeless.entities.*;
 import ru.homeless.services.CustDocService;
-import ru.homeless.services.StdDocService;
 import ru.homeless.util.Util;
-
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
-import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
-import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @ManagedBean(name = "custdoc")

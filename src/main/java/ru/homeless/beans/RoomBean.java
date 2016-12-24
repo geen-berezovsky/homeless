@@ -84,7 +84,7 @@ public class RoomBean implements Serializable {
         updateRoomsData();
         RequestContext rc = RequestContext.getCurrentInstance();
         rc.update("room_settings");
-        rc.execute("roomSettingsWv.show();");
+        rc.execute("PF('roomSettingsWv').show();");
     }
 
 

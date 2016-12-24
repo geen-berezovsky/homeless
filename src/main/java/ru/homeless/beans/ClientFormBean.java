@@ -832,7 +832,7 @@ public class ClientFormBean implements Serializable {
 
     public void openPhotoDlg() {
         RequestContext rc = RequestContext.getCurrentInstance();
-        rc.execute("realPhotoWv.show();");
+        rc.execute("PF('realPhotoWv').show();");
     }
 
 

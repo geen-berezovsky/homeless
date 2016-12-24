@@ -64,7 +64,7 @@ public class CustomDocumentBean implements Serializable {
         this.performer = "Исполнитель: "+worker.getSurname()+" "+worker.getFirstname().substring(0,1)+". "+worker.getMiddlename().substring(0, 1)+".";
 
         RequestContext rc = RequestContext.getCurrentInstance();
-        rc.execute("standardDocumentWv.show();");
+        rc.execute("PF('standardDocumentWv').show();");
     }
 
     public void export() throws IOException {

@@ -9,15 +9,15 @@
 
                 <p:dialog header="Подтвердите удаление" appendTo="@form" widgetVar="deleteShelter" resizable="false" closable="true" showEffect="fade" hideEffect="explode" dynamic="true" closeOnEscape="true" style="font-size: 200%;" draggable="false">
                     <p:panelGrid columns="2" style="margin: 0 auto;" styleClass="base_form_panel_grid_class">
-                        <p:commandButton id="shConfirm" value="Да" update=":m_tabview:shelter_form:shelterlistId" oncomplete="deleteShelter.hide()" actionListener="#{clientshelter.deleteShelter()}" action="#{clientshelter.reload()}"/>
-                        <p:commandButton id="shDecline" value="Нет" update=":m_tabview:shelter_form:shelterlistId" oncomplete="deleteShelter.hide()"/>
+                        <p:commandButton id="shConfirm" value="Да" update=":m_tabview:shelter_form:shelterlistId" oncomplete="PF('deleteShelter').hide()" actionListener="#{clientshelter.deleteShelter()}" action="#{clientshelter.reload()}"/>
+                        <p:commandButton id="shDecline" value="Нет" update=":m_tabview:shelter_form:shelterlistId" oncomplete="PF('deleteShelter').hide()"/>
                     </p:panelGrid>
                 </p:dialog>
 
 
                 <p:contextMenu for="shelterlistId">
                     <p:menuitem value="Редактировать" update="shelterlistId" icon="ui-icon-pencil" actionListener="#{clientshelter.editShelter()}" ajax="true"/>
-                    <p:menuitem value="Удалить" oncomplete="deleteShelter.show()" icon="ui-icon-trash" ajax="true" />
+                    <p:menuitem value="Удалить" oncomplete="PF('deleteShelter').show()" icon="ui-icon-trash" ajax="true" />
                 </p:contextMenu>
 
                 <p:dataTable id="shelterlistId" widgetVar="shelterlistWv" var="shelterlist" value="#{clientshelter.shelterList}" paginator="true" rows="15"

@@ -153,7 +153,7 @@ public class ClientShelterBean implements Serializable {
         selectedShelter = getRoomService().getInstanceById(ShelterHistory.class, selectedShelter.getId());
         RequestContext rc = RequestContext.getCurrentInstance();
         rc.update("add_shelter");
-        rc.execute("addShelterWv.show();");
+        rc.execute("PF('addShelterWv').show();");
 	}
 
     public void validateStartDateFormat(FacesContext ctx, UIComponent component, Object value) {
@@ -225,7 +225,7 @@ public class ClientShelterBean implements Serializable {
 
 
         rc.update("add_shelter");
-        rc.execute("addShelterWv.show();");
+        rc.execute("PF('addShelterWv').show();");
     }
 
     public String formatRoomValue(Integer roomId) {
@@ -253,7 +253,7 @@ public class ClientShelterBean implements Serializable {
             //Update the table
             RequestContext rc = RequestContext.getCurrentInstance();
             rc.update("add_shelter");
-            rc.execute("addShelterWv.hide()");
+            rc.execute("PF('addShelterWv').hide()");
         }
 
     }
@@ -329,7 +329,7 @@ public class ClientShelterBean implements Serializable {
                 }
             }
             if (number_of_opened_contracts == 0) {
-                rc.execute("noContractsFoundDlg.show();");
+                rc.execute("PF('noContractsFoundDlg').show();");
                 log.info("Client " + Util.getCurrentClient().getId() + " has no opened contracts. Please fix it first.");
                 return;
             }

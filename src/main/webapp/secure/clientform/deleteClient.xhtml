@@ -16,7 +16,7 @@
                 <p:commandButton id="delCConfirm" value="Да" update=":m_tabview :searchForm"
                                  oncomplete="deleteClientWv.hide()" actionListener="#{clientform.deleteClient()}"
                                  action="#{clientform.refreshTabs(0)}" ajax="true"/>
-                <p:commandButton id="delCDecline" value="Нет" oncomplete="deleteClientWv.hide()" ajax="true"/>
+                <p:commandButton id="delCDecline" value="Нет" oncomplete="PF('deleteClientWv').hide()" ajax="true"/>
             </p:panelGrid>
         </p:dialog>
     </h:form>
@@ -47,7 +47,7 @@
                 </p:row>
             </p:panelGrid>
             <center>
-                <p:commandButton value="Сохранить" update="@this @form :m_tabview" actionListener="#{clientdeathdocument.saveClientDeath()}" oncomplete="clientDeathWv.hide()"/>
+                <p:commandButton value="Сохранить" update="@this @form :m_tabview" actionListener="#{clientdeathdocument.saveClientDeath()}" oncomplete="PF('clientDeathWv').hide()"/>
             </center>
 
         </p:dialog>

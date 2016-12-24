@@ -55,11 +55,11 @@
 					<!-- here are no errors! -->
 				</p:column>
                 <p:column style="width:32px;text-align: center">
-                    <p:commandButton id="selectButton" update="@all @this :m_tabview:base_form :add_services :real_photo_form" oncomplete="displayFoundByName.hide();" icon="ui-icon-search" title="Открыть" action="#{clientform.afterSearch}">
+                    <p:commandButton id="selectButton" update="@all @this :m_tabview:base_form :add_services :real_photo_form" oncomplete="PF('displayFoundByName').hide();" icon="ui-icon-search" title="Открыть" action="#{clientform.afterSearch}">
                         <f:setPropertyActionListener value="#{client}" target="#{clientform.client}" />
                     </p:commandButton>
                 </p:column>
-                <p:ajax event="rowDblselect" listener="#{clientform.afterSearch}" global="false" oncomplete="displayFoundByName.hide();"
+                <p:ajax event="rowDblselect" listener="#{clientform.afterSearch}" global="false" oncomplete="PF('displayFoundByName').hide();"
                         update="@all @this :m_tabview:base_form :add_services :real_photo_form" />
 			</p:dataTable>
 		</p:dialog>

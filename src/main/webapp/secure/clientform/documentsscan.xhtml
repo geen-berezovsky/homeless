@@ -8,22 +8,22 @@
 
                 <p:dialog header="Подтвердите удаление" appendTo="@form" widgetVar="deleteDocumentScan" resizable="false" closable="true" showEffect="fade" hideEffect="explode" dynamic="true" closeOnEscape="true" style="font-size: 200%;" draggable="false">
                     <p:panelGrid columns="2" style="margin: 0 auto;" styleClass="base_form_panel_grid_class">
-                        <p:commandButton id="docScanConfirm" value="Да" update=":m_tabview:documentsScan_form:docScanlistId" oncomplete="deleteDocumentScan.hide()" actionListener="#{scandocuments.deleteDocument}"/>
-                        <p:commandButton id="docScanDecline" value="Нет" update=":m_tabview:documentsScan_form:docScanlistId" oncomplete="deleteDocumentScan.hide()"/>
+                        <p:commandButton id="docScanConfirm" value="Да" update=":m_tabview:documentsScan_form:docScanlistId" oncomplete="PF('deleteDocumentScan').hide()" actionListener="#{scandocuments.deleteDocument}"/>
+                        <p:commandButton id="docScanDecline" value="Нет" update=":m_tabview:documentsScan_form:docScanlistId" oncomplete="PF('deleteDocumentScan').hide()"/>
                     </p:panelGrid>
                 </p:dialog>
 
 
                 <p:contextMenu for="docScanlistId">
-                    <p:menuitem value="Редактировать" update="docScanlistId" icon="ui-icon-pencil" actionListener="#{scandocuments.editDocument()}" ajax="true" oncomplete="addDocumentScanWv.show();"/>
-                    <p:menuitem value="Удалить" oncomplete="deleteDocumentScan.show()" icon="ui-icon-trash" ajax="true" />
+                    <p:menuitem value="Редактировать" update="docScanlistId" icon="ui-icon-pencil" actionListener="#{scandocuments.editDocument()}" ajax="true" oncomplete="PF('addDocumentScanWv').show();"/>
+                    <p:menuitem value="Удалить" oncomplete="PF('deleteDocumentScan').show()" icon="ui-icon-trash" ajax="true" />
                 </p:contextMenu>
 
 
                 <p:dataTable id="docScanlistId" var="docScanlist" value="#{scandocuments.clientDocumentScans}" paginator="true" rows="15"
                              paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15"
                              rowKey="#{docScanlist.id}" selection="#{scandocuments.selectedDocument}" selectionMode="single" paginatorPosition="bottom" styleClass="default_datatable">
-                    <p:ajax event="rowDblselect" listener="#{scandocuments.editDocument()}" global="false" oncomplete="addDocumentScanWv.show();"/>
+                    <p:ajax event="rowDblselect" listener="#{scandocuments.editDocument()}" global="false" oncomplete="PF('addDocumentScanWv').show();"/>
                     <f:facet name="header">
                         Сканированные документы клиента
                     </f:facet>

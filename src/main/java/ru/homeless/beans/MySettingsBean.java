@@ -59,7 +59,7 @@ public class MySettingsBean implements Serializable {
 	public void openDlg() {
         updateDocument();
         RequestContext rc = RequestContext.getCurrentInstance();
-        rc.execute("mySettingsWv.show();");
+        rc.execute("PF('mySettingsWv').show();");
     }
 	
 	public Document getDocument() {
@@ -181,7 +181,7 @@ public class MySettingsBean implements Serializable {
 
         if (!foundErrors) {
             RequestContext rc = RequestContext.getCurrentInstance();
-            rc.execute("mySettingsWv.hide();");
+            rc.execute("PF('mySettingsWv').hide();");
         }
 	}
 	

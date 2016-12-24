@@ -89,12 +89,12 @@ public class PhotoCameraBean implements Serializable{
 
     public void showDlg() {
         RequestContext context = RequestContext.getCurrentInstance();
-        context.execute("cameraServiceWv.show();");
+        context.execute("PF('cameraServiceWv').show();");
     }
 
     public void showOpenDlg() {
         RequestContext context = RequestContext.getCurrentInstance();
-        context.execute("uploadPhotoWv.show();");
+        context.execute("PF('uploadPhotoWv').show();");
     }
 
     public String getUseVisible() {

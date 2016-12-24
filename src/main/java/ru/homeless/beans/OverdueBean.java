@@ -56,7 +56,7 @@ public class OverdueBean implements Serializable {
         rendered = true;
         RequestContext rc = RequestContext.getCurrentInstance();
         rc.update("overdueTableId");
-        rc.execute("overdueDlgWv.show();");
+        rc.execute("PF('overdueDlgWv').show();");
     }
 
     public boolean isRendered(){

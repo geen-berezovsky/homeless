@@ -44,7 +44,7 @@
 			<p:panel>
 				<p:growl id="adddocsscan_growl" showDetail="true" life="3000" />
 				<center>
-					<p:commandButton value="Добавить/Обновить" id="addNewDocumentScanB" actionListener="#{scandocuments.addSelectedDocument()}" ajax="true" update="@this :select_document :reg_select_document add_docs_scan_panel_grid :m_tabview:documentsTabTitle :m_tabview:documentsScan_form adddocsscan_growl" icon="ui-icon-check" oncomplete="addDocumentScanWv.hide()" />
+					<p:commandButton value="Добавить/Обновить" id="addNewDocumentScanB" actionListener="#{scandocuments.addSelectedDocument()}" ajax="true" update="@this :select_document :reg_select_document add_docs_scan_panel_grid :m_tabview:documentsTabTitle :m_tabview:documentsScan_form adddocsscan_growl" icon="ui-icon-check" oncomplete="PF('addDocumentScanWv').hide()" />
 				</center>
 			</p:panel>
 		</p:dialog>

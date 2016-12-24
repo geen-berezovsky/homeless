@@ -158,7 +158,7 @@ public class ScanDocumentsBean implements Serializable {
         RequestContext rc = RequestContext.getCurrentInstance();
         newSelectedDocument();
         rc.update("add_document_scan");
-        rc.execute("addDocumentScanWv.show()");
+        rc.execute("PF('addDocumentScanWv').show()");
     }
 
     public void handleScanDocUpload(FileUploadEvent event) throws IOException {

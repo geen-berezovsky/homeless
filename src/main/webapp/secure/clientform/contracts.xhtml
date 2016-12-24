@@ -9,22 +9,22 @@
 
                 <p:dialog header="Подтвердите удаление" appendTo="@form" widgetVar="deleteContract" resizable="false" closable="true" showEffect="fade" hideEffect="explode" dynamic="true" closeOnEscape="true" style="font-size: 200%;" draggable="false">
                     <p:panelGrid columns="2" style="margin: 0 auto;" styleClass="base_form_panel_grid_class">
-                        <p:commandButton id="conConfirm" value="Да" update=":m_tabview:contracts_form:conlistId :m_tabview:contractsTabTitle" oncomplete="deleteContract.hide()" actionListener="#{clientcontracts.deleteContract()}" action="#{clientcontracts.reload()}"/>
-                        <p:commandButton id="conDecline" value="Нет" update=":m_tabview:contracts_form:conlistId" oncomplete="deleteContract.hide()"/>
+                        <p:commandButton id="conConfirm" value="Да" update=":m_tabview:contracts_form:conlistId :m_tabview:contractsTabTitle" oncomplete="PF('deleteContract').hide()" actionListener="#{clientcontracts.deleteContract()}" action="#{clientcontracts.reload()}"/>
+                        <p:commandButton id="conDecline" value="Нет" update=":m_tabview:contracts_form:conlistId" oncomplete="PF('deleteContract').hide()"/>
                     </p:panelGrid>
                 </p:dialog>
 
 
 
                 <p:contextMenu for="conlistId">
-                    <p:menuitem value="Редактировать" update="conlistId" icon="ui-icon-pencil" actionListener="#{clientcontracts.editContract()}" ajax="true" oncomplete="editContractWv.show();"/>
-                    <p:menuitem value="Удалить" oncomplete="deleteContract.show()" icon="ui-icon-trash" ajax="true" />
+                    <p:menuitem value="Редактировать" update="conlistId" icon="ui-icon-pencil" actionListener="#{clientcontracts.editContract()}" ajax="true" oncomplete="PF('editContractWv').show();"/>
+                    <p:menuitem value="Удалить" oncomplete="PF('deleteContract').show()" icon="ui-icon-trash" ajax="true" />
                 </p:contextMenu>
 
                 <p:dataTable id="conlistId" var="conlist" value="#{clientcontracts.contractsList}" paginator="true" rows="15"
                              paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15"
                              rowKey="#{conlist.id}" selection="#{clientcontracts.selectedContract}" selectionMode="single" styleClass="default_datatable" paginatorPosition="bottom">
-                    <p:ajax event="rowDblselect" listener="#{clientcontracts.editContract()}" global="false" oncomplete="editContractWv.show();"/>
+                    <p:ajax event="rowDblselect" listener="#{clientcontracts.editContract()}" global="false" oncomplete="PF('editContractWv').show();"/>
                     <p:column headerText="ID" rendered="false">
                         <h:outputText value="#{conlist.id}"/>
                     </p:column>

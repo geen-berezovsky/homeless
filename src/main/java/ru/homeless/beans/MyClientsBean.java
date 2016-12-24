@@ -50,7 +50,7 @@ public class MyClientsBean implements Serializable {
 		foundList = getClientService().getMyContracts(w.getId());
         RequestContext rc = RequestContext.getCurrentInstance();
         rc.update("myClientsForm");
-        rc.execute("myClientsWv.show();");
+        rc.execute("PF('myClientsWv').show();");
     }
 
     public void requestNotActualClients() {
@@ -64,7 +64,7 @@ public class MyClientsBean implements Serializable {
         RequestContext rc = RequestContext.getCurrentInstance();
         foundPrevList.clear();
         rc.update("myPrevClientsForm");
-        rc.execute("myPrevClientsWv.show();");
+        rc.execute("PF('myPrevClientsWv').show();");
     }
 
 	public ClientService getClientService() {
@@ -87,8 +87,8 @@ public class MyClientsBean implements Serializable {
     public void onRowDblClckSelect(final SelectEvent event) {
         MyClientsEntity myClientsEntity = (MyClientsEntity) event.getObject();
         RequestContext rc = RequestContext.getCurrentInstance();
-        rc.execute("myClientsWv.hide();");
-        rc.execute("myPrevClientsWv.hide();");
+        rc.execute("PF('myClientsWv').hide();");
+        rc.execute("PF('myPrevClientsWv').hide();");
 
         FacesContext context = FacesContext.getCurrentInstance();
         ClientFormBean clientFormBean = context.getApplication().evaluateExpressionGet(context, "#{clientform}", ClientFormBean.class);

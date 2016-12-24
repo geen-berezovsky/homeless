@@ -1,25 +1,16 @@
 package ru.homeless.beans;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
-import org.primefaces.event.FileUploadEvent;
-import org.primefaces.model.UploadedFile;
-import ru.homeless.configuration.Configuration;
 import ru.homeless.entities.Client;
 import ru.homeless.services.GenericService;
 import ru.homeless.util.Util;
-import sun.net.www.MimeEntry;
-import sun.net.www.MimeTable;
-
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.text.ParseException;

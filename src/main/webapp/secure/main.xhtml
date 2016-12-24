@@ -10,9 +10,9 @@
     <link href="css/default.css" rel="stylesheet" type="text/css"/>
     <script type="text/javascript">
         function openSearchResult() {
-            searchByNameDlg.hide();
-            searchByIdDlg.hide();
-            displayFoundByName.show()
+            PF('searchByNameDlg').hide();
+            PF('searchByIdDlg').hide();
+            PF('displayFoundByName').show()
         }
 
         function reload() {
@@ -174,13 +174,13 @@
     <p:scrollPanel>
     <p:menu styleClass="documentsMenuCss">
         <p:submenu label="Выберите тип справки">
-            <p:menuitem value="Справка о регистрации" onclick="regDocumentSelectWv.show()" icon="ui-icon-circle-plus"/>
-            <p:menuitem value="Направление в диспансер" actionListener="#{basicdocument.openDlg('dispensaryDocumentWv.show()')}" icon="ui-icon-circle-plus"/>
-            <p:menuitem value="Справка о социальной помощи" actionListener="#{basicdocument.openDlg('sochelpDocumentWv.show()')}" icon="ui-icon-circle-plus"/>
-            <p:menuitem value="Направление на санобработку" actionListener="#{basicdocument.openDlg('sanDocumentWv.show()')}" icon="ui-icon-circle-plus"/>
-            <p:menuitem value="Справка для проезда" actionListener="#{basicdocument.openDlg('travelDocumentWv.show()')}" icon="ui-icon-circle-plus"/>
-            <p:menuitem value="Транзит" actionListener="#{basicdocument.openDlg('tranzitDocumentWv.show()')}" icon="ui-icon-circle-plus"/>
-            <p:menuitem value="Направление в центр занятности" actionListener="#{basicdocument.openDlg('workingcenterDocumentWv.show()')}" icon="ui-icon-circle-plus"/>
+            <p:menuitem value="Справка о регистрации" onclick="PF('regDocumentSelectWv').show()" icon="ui-icon-circle-plus"/>
+            <p:menuitem value="Направление в диспансер" actionListener="#{basicdocument.openDlg('PF(\'dispensaryDocumentWv\').show()')}" icon="ui-icon-circle-plus"/>
+            <p:menuitem value="Справка о социальной помощи" actionListener="#{basicdocument.openDlg('PF(\'sochelpDocumentWv\').show()')}" icon="ui-icon-circle-plus"/>
+            <p:menuitem value="Направление на санобработку" actionListener="#{basicdocument.openDlg('PF(\'sanDocumentWv\').show()')}" icon="ui-icon-circle-plus"/>
+            <p:menuitem value="Справка для проезда" actionListener="#{basicdocument.openDlg('PF(\'travelDocumentWv\').show()')}" icon="ui-icon-circle-plus"/>
+            <p:menuitem value="Транзит" actionListener="#{basicdocument.openDlg('PF(\'tranzitDocumentWv\').show()')}" icon="ui-icon-circle-plus"/>
+            <p:menuitem value="Направление в центр занятности" actionListener="#{basicdocument.openDlg('PF(\'workingcenterDocumentWv\').show()')}" icon="ui-icon-circle-plus"/>
         </p:submenu>
     </p:menu>
         <p:separator />
@@ -197,7 +197,7 @@
             <p:menu styleClass="documentsMenuCss">
                 <p:submenu label="Удаление клиента">
                     <p:menuitem value="Отметить клиента как умершего" actionListener="#{clientdeathdocument.updateDeathFields()}" icon="ui-icon-circle-minus" update=":clientDeathForm" />
-                    <p:menuitem value="Удалить ошибочно созданного клиента" onclick="deleteClientWv.show();"  icon="ui-icon-circle-minus"/>
+                    <p:menuitem value="Удалить ошибочно созданного клиента" onclick="PF('deleteClientWv').show();"  icon="ui-icon-circle-minus"/>
                 </p:submenu>
             </p:menu>
         </p:scrollPanel>

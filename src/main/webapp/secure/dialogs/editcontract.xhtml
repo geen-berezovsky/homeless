@@ -84,14 +84,14 @@
 
 
 			<p:contextMenu for="contractItemsListId">
-				<p:menuitem value="Редактировать" update=":add_seriveplanitem contractItemsListId" icon="ui-icon-pencil" actionListener="#{clientcontracts.editServicePlanItem()}" ajax="true" oncomplete="addServiceItemWv.show();" />
+				<p:menuitem value="Редактировать" update=":add_seriveplanitem contractItemsListId" icon="ui-icon-pencil" actionListener="#{clientcontracts.editServicePlanItem()}" ajax="true" oncomplete="PF('addServiceItemWv').show();" />
 				<p:menuitem value="Удалить" update=":add_seriveplanitem contractItemsListId" icon="ui-icon-close" actionListener="#{clientcontracts.deleteServicePlanItem()}" action="#{clientcontracts.reload()}" ajax="true" />
 			</p:contextMenu>
 			<p:dataTable id="contractItemsListId" var="contractItemsList" value="#{clientcontracts.contractItems}" paginator="true" rows="10"
 				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15"
 				rowKey="#{contractItemsList.id}" selection="#{clientcontracts.selectedContractControl}" selectionMode="single" widgetVar="contractItemsListWv" styleClass="default_datatable"
                  scrollable="true" scrollHeight="400">
-                <p:ajax event="rowDblselect" listener="#{clientcontracts.editServicePlanItem()}" global="false" oncomplete="addServiceItemWv.show();"/>
+                <p:ajax event="rowDblselect" listener="#{clientcontracts.editServicePlanItem()}" global="false" oncomplete="PF('addServiceItemWv').show();"/>
 				<p:column headerText="ID" style="width: 30px;">
 					<h:outputText value="#{contractItemsList.id}" />
 				</p:column>

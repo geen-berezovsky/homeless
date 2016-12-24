@@ -156,7 +156,7 @@ public class ClientContractsBean implements Serializable {
         //New docNum = count of all records from ServContract table plus 1
         selectedContract.setDocNum(String.valueOf(getClientService().getCountOfServContracts() + 1));
         RequestContext rc = RequestContext.getCurrentInstance();
-        rc.execute("selectDocumentWv.show()");
+        rc.execute("PF('selectDocumentWv').show()");
     }
 
     public List<ServContract> getContractsList() {
@@ -282,7 +282,7 @@ public class ClientContractsBean implements Serializable {
 
     public void editServicePlanItem() {
         RequestContext rc = RequestContext.getCurrentInstance();
-        rc.execute("contractItemsListWv.unselectAllRows()");
+        rc.execute("PF('contractItemsListWv').unselectAllRows()");
         rc.update("add_seriveplanitem"); // next form should be updated
         // immediatelly and manually!
         reload();
@@ -291,8 +291,8 @@ public class ClientContractsBean implements Serializable {
     public void resetTableSelection() {
         selectedContractControl = new ContractControl();
         RequestContext rc = RequestContext.getCurrentInstance();
-        rc.execute("contractItemsListWv.unselectAllRows()");
-        rc.execute("addServiceItemWv.show()");
+        rc.execute("PF('contractItemsListWv').unselectAllRows()");
+        rc.execute("PF('addServiceItemWv').show()");
     }
 
     public List<ContractPoints> getContractPointsItems() {
@@ -449,7 +449,7 @@ public class ClientContractsBean implements Serializable {
             RequestContext rc = RequestContext.getCurrentInstance();
             rc.update("conlistId");
             rc.update(":select_document");
-            rc.execute("addContractWv.hide()");
+            rc.execute("PF('addContractWv').hide()");
             reload();
 
         }

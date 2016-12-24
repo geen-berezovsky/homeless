@@ -27,7 +27,7 @@
             </h:panelGrid>
             <p:panel>
                 <center>
-                    <p:commandButton value="Добавить" id="addNewServices" actionListener="#{services.addItem(clientform)}" ajax="true" oncomplete="addServiceWv.hide()"
+                    <p:commandButton value="Добавить" id="addNewServices" actionListener="#{services.addItem(clientform)}" ajax="true" oncomplete="PF('addServiceWv').hide()"
                                      update=":m_tabview:base_form:recievedservice addService @this" />
                 </center>
             </p:panel>

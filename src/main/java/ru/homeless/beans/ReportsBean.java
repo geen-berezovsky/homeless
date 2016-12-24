@@ -39,7 +39,7 @@ public class ReportsBean implements Serializable {
     public void openDlg() {
         RequestContext rc = RequestContext.getCurrentInstance();
         //rc.update("room_settings");
-        rc.execute("reportsFormDlgWv.show();");
+        rc.execute("PF('reportsFormDlgWv').show();");
 
         Calendar c1 = GregorianCalendar.getInstance();
         endDate = c1.getTime();

@@ -5,22 +5,22 @@
 
         <p:dialog header="Подтвердите удаление" appendTo="@form" widgetVar="deleteReceivedService" resizable="false" closable="true" showEffect="fade" hideEffect="explode" dynamic="true" closeOnEscape="true" style="font-size: 200%;" draggable="false">
             <p:panelGrid columns="2" style="margin: 0 auto;" styleClass="base_form_panel_grid_class">
-                <p:commandButton id="rcConfirm" value="Да" update=":m_tabview:base_form:recievedservice" oncomplete="deleteReceivedService.hide()" actionListener="#{services.deleteService}" action="#{clientform.reloadAll()}"/>
-                <p:commandButton id="rcDecline" value="Нет" update=":m_tabview:base_form:recievedservice" oncomplete="deleteReceivedService.hide()"/>
+                <p:commandButton id="rcConfirm" value="Да" update=":m_tabview:base_form:recievedservice" oncomplete="PF('deleteReceivedService').hide()" actionListener="#{services.deleteService}" action="#{clientform.reloadAll()}"/>
+                <p:commandButton id="rcDecline" value="Нет" update=":m_tabview:base_form:recievedservice" oncomplete="PF('deleteReceivedService').hide()"/>
             </p:panelGrid>
         </p:dialog>
 
 
 	<!-- Include operations with datatables -->
 	<p:contextMenu for="recievedservice">
-        <p:menuitem value="Редактировать" oncomplete="editServiceWv.show()"  icon="ui-icon-trash" ajax="true" />
-		<p:menuitem value="Удалить" oncomplete="deleteReceivedService.show()" icon="ui-icon-trash" ajax="true" />
+        <p:menuitem value="Редактировать" oncomplete="PF('editServiceWv').show()"  icon="ui-icon-trash" ajax="true" />
+		<p:menuitem value="Удалить" oncomplete="PF('deleteReceivedService').show()" icon="ui-icon-trash" ajax="true" />
 	</p:contextMenu>
 
 	<p:dataTable id="recievedservice" var="recievedservice" value="#{clientform.servicesList}" paginator="true" rows="7"
 		paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="7,14,21"
 		rowKey="#{recievedservice.id}" selection="#{services.selectedService}" selectionMode="single" paginatorPosition="bottom" styleClass="default_datatable">
-        <p:ajax event="rowDblselect" listener="#{services.itemSelected}" global="false" oncomplete="editServiceWv.show()"/>
+        <p:ajax event="rowDblselect" listener="#{services.itemSelected}" global="false" oncomplete="PF('editServiceWv').show()"/>
 		<p:column headerText="id" style="display:none;">
 			<h:outputText value="#{recievedservice.id}" />
 		</p:column>

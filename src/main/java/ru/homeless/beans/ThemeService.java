@@ -82,7 +82,7 @@ public class ThemeService {
 
     public void openDlg() {
         RequestContext rc = RequestContext.getCurrentInstance();
-        rc.execute("changeThemeWv.show();");
+        rc.execute("PF('changeThemeWv').show();");
     }
 
     public void saveTheme() {

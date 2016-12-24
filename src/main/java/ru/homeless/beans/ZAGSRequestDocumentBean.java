@@ -61,7 +61,7 @@ public class ZAGSRequestDocumentBean implements Serializable {
         this.date = new Date();
 
         RequestContext rc = RequestContext.getCurrentInstance();
-        rc.execute("zagsRequestWv.show();");
+        rc.execute("PF('zagsRequestWv').show();");
     }
 
     public void export() throws IOException {

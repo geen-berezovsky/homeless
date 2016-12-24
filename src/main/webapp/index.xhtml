@@ -10,7 +10,7 @@
 	<title>Добро пожаловать!</title>
     <link href="secure/css/default.css" rel="stylesheet" type="text/css" />
 </h:head>
-<h:body onload="dlg.show()" styleClass="body_style">
+<h:body onload="PF('dlg').show()" styleClass="body_style">
     <h:outputStylesheet library="primefaces-#{themeService.theme}" name="theme.css" />
 	<h:form id="form">
 		<p:growl id="growl" showDetail="true" life="3000" />
@@ -46,11 +46,11 @@
 	<script type="text/javascript">
 		function handleLoginRequest(xhr, status, args) {
 			if (args.validationFailed || !args.loggedIn) {
-				dlg.jq.effect("shake", {
+				PF('dlg').jq.effect("shake", {
 					times : 5
 				}, 100);
 			} else {
-				dlg.hide();
+				PF('dlg').hide();
 				window.location.href = "secure/main.xhtml";
 			}
 		}

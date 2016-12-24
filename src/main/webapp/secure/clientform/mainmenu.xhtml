@@ -8,11 +8,11 @@
         <p:growl id="messages" autoUpdate="true" showDetail="true" life="3000"/>
 		<p:menubar autoDisplay="false">
 			<p:submenu label="Клиенты" icon="ui-icon-document">
-				<p:menuitem value="Найти клиента" onclick="searchByNameDlg.show();" url="#"></p:menuitem>
-				<p:menuitem value="Найти клиента по рег. номеру" onclick="searchByIdDlg.show()" url="#"></p:menuitem>
+				<p:menuitem value="Найти клиента" onclick="PF('searchByNameDlg').show();" url="#"></p:menuitem>
+				<p:menuitem value="Найти клиента по рег. номеру" onclick="PF('searchByIdDlg').show()" url="#"></p:menuitem>
                                 <p:menuitem value="Мои клиенты" action="#{myclients.findClients()}"></p:menuitem>
                 <p:menuitem value="Мои бывшие клиенты" action="#{myclients.findNotActualClients}"></p:menuitem>
-				<p:menuitem value="Оказанные мной услуги" onclick="notImplementedDlgWv.show();" url="#"></p:menuitem>
+				<p:menuitem value="Оказанные мной услуги" onclick="PF('notImplementedDlgWv').show();" url="#"></p:menuitem>
 				<p:menuitem value="Добавить клиента" action="#{clientform.addClient()}"></p:menuitem>
 			</p:submenu>
 			<p:submenu label="Настройки" icon="ui-icon-pencil">
@@ -25,8 +25,8 @@
             <p:menuitem value="Просроченные прививки и ФЛГ" icon="ui-icon-calculator" action="#{overdue.showDialog()}"></p:menuitem>
 			<p:submenu label="Справка" icon="ui-icon-help">
                 <p:menuitem value="Справка по работе с СУБД" onclick="updateWindowSize();"
-							oncomplete="manualDlgWv.show();" ajax="true"></p:menuitem>
-                <p:menuitem value="О программе..." onclick="aboutDlgWv.show();" url="#"></p:menuitem>
+							oncomplete="PF('manualDlgWv').show();" ajax="true"></p:menuitem>
+                <p:menuitem value="О программе..." onclick="PF('aboutDlgWv').show();" url="#"></p:menuitem>
             </p:submenu>
 			<p:menuitem value="Выход" actionListener="#{user.logout}" ajax="false" id="exitId" />
 

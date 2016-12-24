@@ -253,7 +253,7 @@ public class ClientDocumentsBean implements Serializable {
         newSelectedDocument();
         rc.update("add_document:add_docs_panel_grid");
         //rc.update("addDocumentWv");
-        rc.execute("addDocumentWv.show()");
+        rc.execute("PF('addDocumentWv').show()");
     }
 
     public String getTempRegVisibility() {
