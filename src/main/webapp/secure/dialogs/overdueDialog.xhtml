@@ -33,7 +33,7 @@
 				<h:outputText value="#{overdueTable.workerName}" />
 			</p:column>
                         <p:ajax event="rowDblselect" listener="#{overdue.onRowClick}" global="false" 
-                                oncomplete="overdueDlgWv.hide();" />
+                                oncomplete="PF('overdueDlgWv').hide();" />
                                 
 		</p:dataTable>
 	</p:dialog>

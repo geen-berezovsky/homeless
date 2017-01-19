@@ -28,7 +28,7 @@
             </p:panelGrid>
             <center>
                 <p:commandButton value="Обновить" actionListener="#{roomb.updateRoomData()}" id="updateRoom" update="@this @form :room_data :room_settings"
-                                 icon="ui-icon-check" oncomplete="roomEditWv.hide()"/>
+                                 icon="ui-icon-check" oncomplete="PF('roomEditWv').hide()"/>
             </center>
 
 

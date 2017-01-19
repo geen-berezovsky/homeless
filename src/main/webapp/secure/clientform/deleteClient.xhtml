@@ -14,7 +14,7 @@
             <p:panelGrid columns="2" style="margin: 0 auto;" styleClass="base_form_panel_grid_class">
 
                 <p:commandButton id="delCConfirm" value="Да" update=":m_tabview :searchForm"
-                                 oncomplete="deleteClientWv.hide()" actionListener="#{clientform.deleteClient()}"
+                                 oncomplete="PF('deleteClientWv').hide()" actionListener="#{clientform.deleteClient()}"
                                  action="#{clientform.refreshTabs(0)}" ajax="true"/>
                 <p:commandButton id="delCDecline" value="Нет" oncomplete="PF('deleteClientWv').hide()" ajax="true"/>
             </p:panelGrid>

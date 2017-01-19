@@ -14,7 +14,7 @@
                     </p:selectOneRadio>
                     <center>
                     <p:commandButton value="Редактировать" actionListener="#{roomb.updateSelectedData()}" id="editExactRoom" update="@this @form :room_data"
-                                     icon="ui-icon-check" oncomplete="roomEditWv.show()"/>
+                                     icon="ui-icon-check" oncomplete="PF('roomEditWv').show()"/>
                     <p:commandButton value="Добавить" actionListener="#{roomb.addNewRoom()}" id="addRoom" update="@this @form :room_data"
                                      icon="ui-icon-plus"/>
                     <p:commandButton value="Удалить" actionListener="#{roomb.deleteSelectedRoom()}" id="deleteRoom" update="@this @form :room_data"

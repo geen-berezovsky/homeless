@@ -40,7 +40,7 @@
 				<p:growl id="addserivceplanitem_growl" showDetail="true" life="3000" />
 				<center>
 					<p:commandButton value="Добавить/Обновить пункт сервисного плана" id="addserivceplanitemBid" actionListener="#{clientcontracts.addServicePlanItem()}" ajax="true"
-						update="@this :edit_contract:contractItemsListId addserivceplanitem_growl" icon="ui-icon-check" onclick="addServiceItemWv.hide()"/>
+						update="@this :edit_contract:contractItemsListId addserivceplanitem_growl" icon="ui-icon-check" onclick="PF('addServiceItemWv').hide()"/>
 				</center>
 			</p:panel>
 		</p:dialog>

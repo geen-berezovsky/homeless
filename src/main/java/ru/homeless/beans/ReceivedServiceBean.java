@@ -114,7 +114,7 @@ public class ReceivedServiceBean implements Serializable {
     public void prepareForNewService() {
         resetForm();
         RequestContext requestContext = RequestContext.getCurrentInstance();
-        requestContext.execute("addServiceWv.show();");
+        requestContext.execute("PF('addServiceWv').show();");
     }
 
     public void addItem(ClientFormBean cb) {

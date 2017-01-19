@@ -43,7 +43,7 @@ public class ClientDeathDocumentBean implements Serializable {
 
     public void updateDeathFields() throws ParseException {
         RequestContext requestContext = RequestContext.getCurrentInstance();
-        requestContext.execute("clientDeathWv.show();");
+        requestContext.execute("PF('clientDeathWv').show();");
         HttpSession session = Util.getSession();
         client = Util.getCurrentClient();
 
