@@ -104,7 +104,7 @@
     <tx:annotation-driven proxy-target-class="true"/>
 
 
-    <!-- Transaction Manager is defined -->    
+    <!-- Transaction Manager is defined -->
     <bean id="txManager"
           class="org.springframework.orm.hibernate5.HibernateTransactionManager">
         <property name="sessionFactory" ref="SessionFactory" />
