@@ -5,8 +5,6 @@ package ru.homeless.report.entities;
  */
 public class ServiceRecipientReportEntity {
 
-    private String worker;
-
     private String serviceType;
 
     private Integer countOfUniqueClient;
@@ -14,14 +12,6 @@ public class ServiceRecipientReportEntity {
     private Integer countOfService;
 
     public ServiceRecipientReportEntity() {
-    }
-
-    public String getWorker() {
-        return worker;
-    }
-
-    public void setWorker(String worker) {
-        this.worker = worker;
     }
 
     public String getServiceType() {

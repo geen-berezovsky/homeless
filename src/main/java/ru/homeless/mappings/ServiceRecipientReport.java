@@ -25,9 +25,8 @@ public class ServiceRecipientReport {
 
         int i = 0;
         for (ServiceRecipientReportEntity entity : reportService.getServiceRecipientReport(from, to)) {
-            List<String> row = new ArrayList<>(4);
+            List<String> row = new ArrayList<>(3);
 
-            row.add(entity.getWorker());
             row.add(entity.getServiceType());
             row.add(entity.getCountOfUniqueClient().toString());
             row.add(entity.getCountOfService().toString());

@@ -326,40 +326,89 @@ public class ReportDAO extends GenericDAO implements IReportDAO {
     @Override
     public List<ServiceRecipientReportEntity> getServiceRecipientReport(Date from, Date till) {
 
-        SQLQuery query = getSessionFactory().getCurrentSession().createSQLQuery(
-                "select w.surname, st.caption, count(distinct rs.client) as cntCl, count(*) as cnt " +
-                        "from RecievedService rs " +
-                        "left join Worker w on rs.worker = w.id " +
-                        "left join ServicesType st on rs.servicesType = st.id " +
-                        "where rs.date >= " + wrapDate(from) + " and rs.date <= " + wrapDate(till) + " " +
-                        "group by rs.worker, rs.servicesType")
-                .addScalar("w.surname")
-                .addScalar("st.caption")
-                .addScalar("cntCl")
-                .addScalar("cnt")
-                ;
+        List resOnce = loadOnceService(from, till);
+		List resRegular = loadRegularService(from, till);
 
-        log.debug(query.getQueryString());
+		List<ServiceRecipientReportEntity> result = new ArrayList<>(resOnce.size() + resRegular.size());
 
-        List res = query.list();
+		for (Object o : resOnce) {
+			result.add(extractSREntity((Object[]) o));
+		}
 
-        List<ServiceRecipientReportEntity> result = new ArrayList<>(res.size());
-        for (Object o : res)
-        {
-            Object[] row = (Object[]) o;
-
-            ServiceRecipientReportEntity entity = new ServiceRecipientReportEntity();
-            entity.setWorker(row[0].toString());
-            entity.setServiceType(row[1].toString());
-            entity.setCountOfUniqueClient(Integer.valueOf(row[2].toString()));
-            entity.setCountOfService(Integer.valueOf(row[3].toString()));
-
-            result.add(entity);
-        }
+		for (Object o : resRegular) {
+			result.add(extractSREntity((Object[]) o));
+		}
 
         return result;
     }
 
+	/**
+	 * Загружаем из БД выборку по "разовым" услугам
+	 * @param from Дата начала выборки
+	 * @param till Дата конца выборки
+	 * @return Список результатов
+	 */
+    private List loadOnceService(Date from, Date till) {
+		SQLQuery query = getSessionFactory().getCurrentSession().createSQLQuery(
+				"select st.caption, count(distinct rs.client) as cntCl, count(*) as cnt " +
+						"from RecievedService rs " +
+						"left join ServicesType st on rs.servicesType = st.id " +
+						"where rs.date >= " + wrapDate(from) + " and rs.date <= " + wrapDate(till) + " " +
+						"group by rs.servicesType")
+				.addScalar("st.caption")
+				.addScalar("cntCl")
+				.addScalar("cnt")
+				;
+
+		log.debug(query.getQueryString());
+
+		return query.list();
+	}
+
+	/**
+	 * Загружаем из БД выборку по "регулярным" услугам
+	 * @param from Дата начала выборки
+	 * @param till Дата конца выборки
+	 * @return Список результатов
+	 */
+	private List loadRegularService(Date from, Date till) {
+		SQLQuery query = getSessionFactory().getCurrentSession().createSQLQuery(
+				"select cp.caption, count(DISTINCT sc.client) as cntCl, count(*) as cnt " +
+						"from ContractControl cc " +
+						"left join ServContract sc on cc.servcontract = sc.id " +
+						"left join ContractPoints cp on cc.contractpoints = cp.id " +
+						"where cc.endDate >= " + wrapDate(from) + " and cc.endDate <= " + wrapDate(till) + " " +
+						"group by cp.caption")
+				.addScalar("cp.caption")
+				.addScalar("cntCl")
+				.addScalar("cnt")
+				;
+
+		log.debug(query.getQueryString());
+		return query.list();
+	}
+
+	/**
+	 * Формируем ServiceRecipientReportEntity из нетипизированного результата запроса
+	 * @param row Результат запроса - массив объектов (строк?)
+	 * @return объект ServiceRecipientReportEntity, представляющий эту строку
+	 */
+    private ServiceRecipientReportEntity extractSREntity(Object[] row) {
+		ServiceRecipientReportEntity entity = new ServiceRecipientReportEntity();
+
+		int i = 0;
+		entity.setServiceType(row[i++].toString());
+		entity.setCountOfUniqueClient(Integer.valueOf(row[i++].toString()));
+		entity.setCountOfService(Integer.valueOf(row[i++].toString()));
+
+		return entity;
+	}
+
+	/**
+	 * Приводит заданную дату к строке с подходящим форматом для использования в SQL-запросе
+	 * @param date Дата для приведения
+	 * @return Строка для подстановки в SQL-запрос
+	 */
     private String wrapDate(final Date date) {
         return Util.parseDateForMySql(date);
     }
