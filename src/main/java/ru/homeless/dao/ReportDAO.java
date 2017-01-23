@@ -326,16 +326,11 @@ public class ReportDAO extends GenericDAO implements IReportDAO {
     @Override
     public List<ServiceRecipientReportEntity> getServiceRecipientReport(Date from, Date till) {
 
-        List resOnce = loadOnceService(from, till);
-		List resRegular = loadRegularService(from, till);
+        List resFromDB = loadOnceService(from, till);
 
-		List<ServiceRecipientReportEntity> result = new ArrayList<>(resOnce.size() + resRegular.size());
+		List<ServiceRecipientReportEntity> result = new ArrayList<>(resFromDB.size());
 
-		for (Object o : resOnce) {
-			result.add(extractSREntity((Object[]) o));
-		}
-
-		for (Object o : resRegular) {
+		for (Object o : resFromDB) {
 			result.add(extractSREntity((Object[]) o));
 		}
 
@@ -343,48 +338,34 @@ public class ReportDAO extends GenericDAO implements IReportDAO {
     }
 
 	/**
-	 * Загружаем из БД выборку по "разовым" услугам
+	 * Загружаем из БД выборку по по плановым и разовым услугам
 	 * @param from Дата начала выборки
 	 * @param till Дата конца выборки
 	 * @return Список результатов
 	 */
     private List loadOnceService(Date from, Date till) {
 		SQLQuery query = getSessionFactory().getCurrentSession().createSQLQuery(
-				"select st.caption, count(distinct rs.client) as cntCl, count(*) as cnt " +
+				"(select st.caption as caption, count(distinct rs.client) as cntCl, count(*) as cnt " +
 						"from RecievedService rs " +
 						"left join ServicesType st on rs.servicesType = st.id " +
 						"where rs.date >= " + wrapDate(from) + " and rs.date <= " + wrapDate(till) + " " +
-						"group by rs.servicesType")
-				.addScalar("st.caption")
-				.addScalar("cntCl")
-				.addScalar("cnt")
-				;
-
-		log.debug(query.getQueryString());
-
-		return query.list();
-	}
-
-	/**
-	 * Загружаем из БД выборку по "регулярным" услугам
-	 * @param from Дата начала выборки
-	 * @param till Дата конца выборки
-	 * @return Список результатов
-	 */
-	private List loadRegularService(Date from, Date till) {
-		SQLQuery query = getSessionFactory().getCurrentSession().createSQLQuery(
-				"select cp.caption, count(DISTINCT sc.client) as cntCl, count(*) as cnt " +
+						"group by rs.servicesType) " +
+					"UNION ALL " +
+					"(select cp.caption as caption, count(DISTINCT sc.client) as cntCl, count(*) as cnt " +
 						"from ContractControl cc " +
 						"left join ServContract sc on cc.servcontract = sc.id " +
 						"left join ContractPoints cp on cc.contractpoints = cp.id " +
 						"where cc.endDate >= " + wrapDate(from) + " and cc.endDate <= " + wrapDate(till) + " " +
-						"group by cp.caption")
-				.addScalar("cp.caption")
+						"group by cc.contractpoints) " +
+					"order by caption"
+					)
+				.addScalar("caption")
 				.addScalar("cntCl")
 				.addScalar("cnt")
 				;
 
 		log.debug(query.getQueryString());
+
 		return query.list();
 	}
 
