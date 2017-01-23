@@ -12,7 +12,7 @@
 				<h:panelGrid columns="4">
 					<p:photoCam widgetVar="pc" listener="#{photoCamBean.oncapture}" update="photo useButton"/>
 
-					<p:commandButton type="button" value="Сфотографировать!" onclick="pc.capture()" />
+					<p:commandButton type="button" value="Сфотографировать!" onclick="PF('pc').capture()" />
 
                     <p:imageSwitch id="photo" style="#{photoCamBean.useVisible}" effect="scrollRight">
                         <ui:repeat value="photoCamBean.photos" var="photo">
