@@ -27,7 +27,7 @@
 		<property name="password" value="homeless" />
 	</bean>
 
-	-->
+    -->
 
     <jee:jndi-lookup jndi-name="DevelopmentDB" id="DataSource" expected-type="javax.sql.DataSource" />
 
@@ -40,11 +40,11 @@
 
 
 
- <bean id="sessionFactory"
-  class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
-  <property name="dataSource" ref="DataSource" />
-  <property name="annotatedClasses">
-			<list>
+    <bean id="sessionFactory"
+          class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+        <property name="dataSource" ref="DataSource" />
+        <property name="annotatedClasses">
+            <list>
                 <value>ru.homeless.entities.Client</value>
                 <value>ru.homeless.entities.ChronicDisease</value>
                 <value>ru.homeless.entities.Breadwinner</value>
@@ -73,26 +73,26 @@
                 <value>ru.homeless.entities.Region</value>
                 <value>ru.homeless.entities.SubRegion</value>
             </list>
-  </property>
-  <property name="hibernateProperties">
-   <props>
-    <prop key="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</prop>
-    <prop key="hibernate.show_sql">false</prop>
-   </props>
-  </property>
- </bean>
+        </property>
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</prop>
+                <prop key="hibernate.show_sql">false</prop>
+            </props>
+        </property>
+    </bean>
 
-<tx:annotation-driven transaction-manager="txManager" />
-<tx:annotation-driven proxy-target-class="true"/>
+    <tx:annotation-driven transaction-manager="txManager" />
+    <tx:annotation-driven proxy-target-class="true"/>
 
- <bean id="txManager"
-  class="org.springframework.orm.hibernate4.HibernateTransactionManager">
-  <property name="sessionFactory" ref="sessionFactory" />
- </bean>
+    <bean id="txManager"
+          class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
  
 
- <bean id="persistenceExceptionTranslationPostProcessor"
-  class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor" />
+    <bean id="persistenceExceptionTranslationPostProcessor"
+          class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor" />
 
 </beans>
 

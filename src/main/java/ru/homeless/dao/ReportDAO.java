@@ -1,10 +1,15 @@
 package ru.homeless.dao;
 
+import java.math.BigInteger;
 import java.util.*;
 
 import org.apache.log4j.Logger;
+import org.hibernate.Session;
+import org.hibernate.transform.Transformers;
+import org.hibernate.type.BooleanType;
+import org.hibernate.type.IntegerType;
+import org.hibernate.type.StringType;
 import org.springframework.stereotype.Repository;
-
 import ru.homeless.entities.Room;
 import ru.homeless.report.entities.*;
 import ru.homeless.util.Util;
@@ -12,130 +17,127 @@ import ru.homeless.util.Util;
 @Repository
 public class ReportDAO extends GenericDAO implements IReportDAO {
 
-	private static final long serialVersionUID = 1L;
-	public static Logger log = Logger.getLogger(ReportDAO.class);
+    private static final long serialVersionUID = 1L;
+    @Override
+    public List<ResultWorkReportEntity> getResultWorkReport(Date from, Date till) {
+        Session s = getSessionFactory().getCurrentSession();
+        return s.createSQLQuery(
+                "SELECT "
+                + "CONCAT(wk.firstname, ' ', wk.surname) AS workerSurname, "
+                + "cp.caption AS contractPointsCaption, "
+                + "NOT ISNULL(sh.id) AS isLivingInShelter, "
+                + "COUNT(cc.id) AS tasksPerformed "
+                + "FROM ContractControl cc "
+                + "INNER JOIN ContractPoints cp ON cp.id = cc.contractpoints "
+                + "INNER JOIN ServContract sc ON sc.id = cc.servcontract "
+                + "INNER JOIN Worker wk ON sc.worker = wk.id "
+                + "INNER JOIN Client cl ON cl.id = sc.client "
+                + "LEFT JOIN ShelterHistory sh ON sh.client = sc.client AND cc.endDate BETWEEN sh.inShelter AND sh.outShelter "
+                + "WHERE cc.endDate IS NOT NULL AND cc.endDate BETWEEN :fromDate AND :tillDate "
+                + "GROUP BY wk.id, cp.id, ISNULL(sh.id) ")
+                .addScalar("workerSurname", StringType.INSTANCE)
+                .addScalar("contractPointsCaption", StringType.INSTANCE)
+                .addScalar("isLivingInShelter", BooleanType.INSTANCE)
+                .addScalar("tasksPerformed", IntegerType.INSTANCE)
+                .setDate("fromDate", from)
+                .setDate("tillDate", till)
+                .setResultTransformer(Transformers.aliasToBean(ResultWorkReportEntity.class))
+                .list();
+    }
 
     @Override
-	public List<ResultWorkReportEntity> getResultWorkReport(Date from, Date till) {
-		
-		
-		List<?> res = getSessionFactory().getCurrentSession().createSQLQuery("SELECT DISTINCT w.surname, cp.caption, COUNT(sh.id), COUNT(c.id)-COUNT(sh.id) FROM ServContract sc"+
-				" INNER JOIN Worker w ON (sc.worker = w.id) INNER JOIN ContractControl cc ON (sc.id=cc.servcontract)"+
-				" INNER JOIN ContractPoints cp ON (cc.contractpoints=cp.id) INNER JOIN Client c ON (c.id=sc.client)"+
-				" LEFT JOIN ShelterHistory sh ON (c.id = sh.client) WHERE cc.endDate is not null AND DATE(endDate) BETWEEN " + Util.parseDateForMySql(from) + " AND " + Util.parseDateForMySql(till) + " GROUP BY w.surname, cp.caption")
-					.addScalar("w.surname")
-					.addScalar("cp.caption")
-					.addScalar("COUNT(sh.id)")
-					.addScalar("COUNT(c.id)-COUNT(sh.id)").list();
+    public List<OutOfShelterReportEntity> getOutOfShelterReport(Date from, Date till) {
+        List<OutOfShelterReportEntity> result = new ArrayList<>();
+        List<?> res = getSessionFactory().getCurrentSession().createSQLQuery("SELECT c.id, c.surname, c.date, sh.roomId, sh.inShelter, cp.caption, cc.endDate,  "
+                + "sh.outShelter, IFNULL(c.memo, '-'), IFNULL(c.contacts, '-'), w.surname, sh.id "
+                + "FROM ServContract sc INNER JOIN Client c ON(sc.client = c.id) "
+                + "INNER JOIN Worker w ON(sc.worker = w.id) INNER JOIN ContractControl cc ON(cc.servcontract=sc.id) "
+                + "INNER JOIN ContractPoints cp ON(cp.id = cc.contractpoints) LEFT JOIN ShelterHistory sh ON(c.id = sh.client) WHERE (DATE(sh.outShelter) BETWEEN "
+                + Util.parseDateForMySql(from) + " AND " + Util.parseDateForMySql(till) + ")")
+                .addScalar("c.id")
+                .addScalar("c.surname")
+                .addScalar("c.date")
+                .addScalar("IFNULL(c.contacts, '-')")
+                .addScalar("IFNULL(c.memo, '-')")
+                .addScalar("sh.roomId")
+                .addScalar("sh.inShelter")
+                .addScalar("sh.outShelter")
+                .addScalar("cp.caption")
+                .addScalar("cc.endDate")
+                .addScalar("w.surname").list();
 
-		List<ResultWorkReportEntity> result = new ArrayList<ResultWorkReportEntity>();
-		
-		 for (Object o : res) {
-			 Object[] xy = (Object[])o;
-			 for (int i=0; i<=3; i++) {
-					if (xy[i] == null) {
-						xy[i] = new String("-");
-					}
-			 }
-			result.add(new ResultWorkReportEntity(xy[0].toString(), xy[1].toString(), Integer.parseInt(xy[2].toString()), Integer.parseInt(xy[3].toString())));
-		 }
-		return result;
-	}
+        for (Object o : res) {
+            Object[] xy = (Object[]) o;
 
-	@Override
-	public List<OutOfShelterReportEntity> getOutOfShelterReport(Date from, Date till) {
-		List<?> res = getSessionFactory().getCurrentSession().createSQLQuery("SELECT c.id, c.surname, c.date, sh.roomId, sh.inShelter, cp.caption, cc.endDate,  " +
-				"sh.outShelter, IFNULL(c.memo, '-'), IFNULL(c.contacts, '-'), w.surname, sh.id " +
-				"FROM ServContract sc INNER JOIN Client c ON(sc.client = c.id) " +
-				"INNER JOIN Worker w ON(sc.worker = w.id) INNER JOIN ContractControl cc ON(cc.servcontract=sc.id) " +
-				"INNER JOIN ContractPoints cp ON(cp.id = cc.contractpoints) LEFT JOIN ShelterHistory sh ON(c.id = sh.client) WHERE (DATE(sh.outShelter) BETWEEN " 
-				+ Util.parseDateForMySql(from) + " AND " + Util.parseDateForMySql(till) + ")")
-				.addScalar("c.id")
-				.addScalar("c.surname")
-				.addScalar("c.date")
-				.addScalar("IFNULL(c.contacts, '-')")
-				.addScalar("IFNULL(c.memo, '-')")
-				.addScalar("sh.roomId")
-				.addScalar("sh.inShelter")
-				.addScalar("sh.outShelter")
-				.addScalar("cp.caption")
-				.addScalar("cc.endDate")
-				.addScalar("w.surname").list();
-		
-		List<OutOfShelterReportEntity> result = new ArrayList<OutOfShelterReportEntity>();
-		
-		for (Object o : res) {
-			Object[] xy = (Object[])o;
-			
-			for (int i=0; i<=10; i++) {
-				if (xy[i] == null) {
-					xy[i] = new String("-");
-				}
-			}
+            for (int i = 0; i <= 10; i++) {
+                if (xy[i] == null) {
+                    xy[i] = "-";
+                }
+            }
 
             String releaseDate = Util.parseDateForReport(xy[9]);
             if (releaseDate.equals("")) {
                 releaseDate = "-";
             }
 
-			result.add(new OutOfShelterReportEntity(xy[0].toString(), xy[1].toString(), Util.parseDateForReport(xy[2]), Util.html2text(xy[3].toString()),
-					Util.html2text(xy[4].toString()), xy[5].toString(), Util.parseDateForReport(xy[6]), Util.parseDateForReport(xy[7]),
-					xy[8].toString(), releaseDate, xy[10].toString()));
-		 }
-		return result;
-	}
+            result.add(new OutOfShelterReportEntity(xy[0].toString(), xy[1].toString(), Util.parseDateForReport(xy[2]), Util.html2text(xy[3].toString()),
+                    Util.html2text(xy[4].toString()), xy[5].toString(), Util.parseDateForReport(xy[6]), Util.parseDateForReport(xy[7]),
+                    xy[8].toString(), releaseDate, xy[10].toString()));
+        }
+        return result;
+    }
 
-	@Override
-	public List<OneTimeServicesReportEntity> getOneTimeServicesReport(Date from, Date till) {
-		List<OneTimeServicesReportEntity> comb = new ArrayList<OneTimeServicesReportEntity>();
-		
-		List<?> res = getSessionFactory().getCurrentSession().createSQLQuery("SELECT CONCAT(w.firstname, ' ', w.surname) as S_NAME, s.caption as S_TYPE FROM BasicDocumentRegistry g LEFT JOIN Worker w ON(g.performerId=w.id) LEFT JOIN BasicDocumentRegistryType s ON(s.id=g.type) WHERE (g.date >= "
-				+ Util.parseDateForMySql(from) + " AND g.date <= " + Util.parseDateForMySql(till) + ")")
-				.addScalar("S_NAME")
-				.addScalar("S_TYPE").list();
-		for (Object o : res) {
-			Object[] xy = (Object[])o;
-			for (int i=0; i<=1; i++) {
-				if (xy[i] == null) {
-					xy[i] = new String("-");
-				}
-			}
-			comb.add(new OneTimeServicesReportEntity(xy[0].toString(), xy[1].toString()));
-		}
+    @Override
+    public List<OneTimeServicesReportEntity> getOneTimeServicesReport(Date from, Date till) {
+        List<OneTimeServicesReportEntity> comb = new ArrayList<>();
 
-		List<?> res3 = getSessionFactory().getCurrentSession().createSQLQuery("SELECT CONCAT(w.firstname, ' ', w.surname) as S_NAME, s.caption as S_TYPE FROM RecievedService r LEFT JOIN Worker w ON(r.worker=w.id) LEFT JOIN ServicesType s" +
-				" ON(r.servicesType=s.id) WHERE (r.date >= "
-				+ Util.parseDateForMySql(from) + " AND r.date <= " + Util.parseDateForMySql(till) + ")")
-				.addScalar("S_NAME")
-				.addScalar("S_TYPE").list();
-		for (Object o : res3) {
-			Object[] xy = (Object[])o;
-			
-			for (int i=0; i<=1; i++) {
-				if (xy[i] == null) {
-					xy[i] = new String("-");
-				}
-			}
-			comb.add(new OneTimeServicesReportEntity(xy[0].toString(), xy[1].toString()));
-		}
-		return comb;
-	}
+        List<?> res = getSessionFactory().getCurrentSession().createSQLQuery("SELECT CONCAT(w.firstname, ' ', w.surname) as S_NAME, s.caption as S_TYPE FROM BasicDocumentRegistry g LEFT JOIN Worker w ON(g.performerId=w.id) LEFT JOIN BasicDocumentRegistryType s ON(s.id=g.type) WHERE (g.date >= "
+                + Util.parseDateForMySql(from) + " AND g.date <= " + Util.parseDateForMySql(till) + ")")
+                .addScalar("S_NAME")
+                .addScalar("S_TYPE").list();
+        for (Object o : res) {
+            Object[] xy = (Object[]) o;
+            for (int i = 0; i <= 1; i++) {
+                if (xy[i] == null) {
+                    xy[i] = "-";
+                }
+            }
+            comb.add(new OneTimeServicesReportEntity(xy[0].toString(), xy[1].toString()));
+        }
 
-	@Override
-	public Map<Room, List<OverVacReportEntity>> getOverVacReport() {
+        List<?> res3 = getSessionFactory().getCurrentSession().createSQLQuery("SELECT CONCAT(w.firstname, ' ', w.surname) as S_NAME, s.caption as S_TYPE FROM RecievedService r LEFT JOIN Worker w ON(r.worker=w.id) LEFT JOIN ServicesType s"
+                + " ON(r.servicesType=s.id) WHERE (r.date >= "
+                + Util.parseDateForMySql(from) + " AND r.date <= " + Util.parseDateForMySql(till) + ")")
+                .addScalar("S_NAME")
+                .addScalar("S_TYPE").list();
+        for (Object o : res3) {
+            Object[] xy = (Object[]) o;
+
+            for (int i = 0; i <= 1; i++) {
+                if (xy[i] == null) {
+                    xy[i] = "-";
+                }
+            }
+            comb.add(new OneTimeServicesReportEntity(xy[0].toString(), xy[1].toString()));
+        }
+        return comb;
+    }
+
+    @Override
+    public Map<Room, List<OverVacReportEntity>> getOverVacReport() {
         Map<Room, List<OverVacReportEntity>> resMapByRoom = new TreeMap<>();
 
         //For each room prepare the list of people living there and add to the global list
         for (Room room : getInstances(Room.class)) {
-            List<?> res = getSessionFactory().getCurrentSession().createSQLQuery("" +
-                    "select  c.id, concat(c.surname,' ',c.firstname,' ',c.middlename) as 'FIO', date_format(c.date,'%d.%m.%Y') as 'DR', " +
-                    "    date_format(sh.inShelter,'%d.%m.%Y') as 'INS', date_format(sh.outShelter,'%d.%m.%Y') as 'OUTS'," +
-                    "    concat(left(w.surname,1),left(w.firstname,1)) as 'WORKER', date_format(sh.fluorogr,'%d.%m.%Y') as 'FLG'," +
-                    "    date_format(sh.hepotitsVac,'%d.%m.%Y') as 'HEP', date_format(sh.dipthVac,'%d.%m.%Y') as 'DIFT'," +
-                    "    date_format(sh.typhVac,'%d.%m.%Y') as 'TYPTH', client_points.points as 'COMMENTS'" +
-                    " from ShelterHistory sh left join Client c on sh.client = c.id left join ServContract sc on sh.client = sc.client left join Worker w on sc.worker = w.id " +
-                    "left join (select ServContract.client client, group_concat(ContractPoints.abbreviation separator ', ') points from ContractControl, ContractPoints, ServContract where ServContract.id = ContractControl.servcontract and ServContract.contractresult =1 and ContractPoints.id=ContractControl.contractpoints group by ServContract.client) client_points on (client_points.client = c.id)" +
-                    "where sh.roomId = " + room.getId() + " and sh.shelterresult = 1 and sc.contractresult =1;")
+            List<?> res = getSessionFactory().getCurrentSession().createSQLQuery(""
+                    + "select  c.id, concat(c.surname,' ',c.firstname,' ',c.middlename) as 'FIO', date_format(c.date,'%d.%m.%Y') as 'DR', "
+                    + "    date_format(sh.inShelter,'%d.%m.%Y') as 'INS', date_format(sh.outShelter,'%d.%m.%Y') as 'OUTS',"
+                    + "    concat(left(w.surname,1),left(w.firstname,1)) as 'WORKER', date_format(sh.fluorogr,'%d.%m.%Y') as 'FLG',"
+                    + "    date_format(sh.hepotitsVac,'%d.%m.%Y') as 'HEP', date_format(sh.dipthVac,'%d.%m.%Y') as 'DIFT',"
+                    + "    date_format(sh.typhVac,'%d.%m.%Y') as 'TYPTH', client_points.points as 'COMMENTS'"
+                    + " from ShelterHistory sh left join Client c on sh.client = c.id left join ServContract sc on sh.client = sc.client left join Worker w on sc.worker = w.id "
+                    + "left join (select ServContract.client client, group_concat(ContractPoints.abbreviation separator ', ') points from ContractControl, ContractPoints, ServContract where ServContract.id = ContractControl.servcontract and ServContract.contractresult =1 and ContractPoints.id=ContractControl.contractpoints group by ServContract.client) client_points on (client_points.client = c.id)"
+                    + "where sh.roomId = " + room.getId() + " and sh.shelterresult = 1 and sc.contractresult =1;")
                     .addScalar("id")
                     .addScalar("FIO")
                     .addScalar("DR")
@@ -148,43 +150,41 @@ public class ReportDAO extends GenericDAO implements IReportDAO {
                     .addScalar("TYPTH")
                     .addScalar("COMMENTS").list();
 
-                    List<OverVacReportEntity> result = new ArrayList<OverVacReportEntity>();
+            List<OverVacReportEntity> result = new ArrayList<>();
 
             for (Object o : res) {
                 Object[] xy = (Object[]) o;
 
                 for (int i = 0; i < 10; i++) {
                     if (xy[i] == null) {
-                        xy[i] = new String("");
+                        xy[i] = "";
                     }
-                        }
+                }
 
-
-            result.add(new OverVacReportEntity(Integer.parseInt(xy[0].toString()), xy[1].toString(), xy[2].toString(), xy[3].toString(), xy[4].toString(),
-                                xy[5].toString(), xy[6].toString(), xy[7].toString(), xy[8].toString(),
-                                xy[9].toString(), xy[10].toString()));
+                result.add(new OverVacReportEntity(Integer.parseInt(xy[0].toString()), xy[1].toString(), xy[2].toString(), xy[3].toString(), xy[4].toString(),
+                        xy[5].toString(), xy[6].toString(), xy[7].toString(), xy[8].toString(),
+                        xy[9].toString(), xy[10].toString()));
             }
             resMapByRoom.put(room, result);
 
         }
 
-
-		return resMapByRoom;
-	}
+        return resMapByRoom;
+    }
 
     @Override
     public List<ProvidedServicesByClientReportEntity> getProvidedServicesByClientReport(Date from, Date till) {
-        List<?> res = getSessionFactory().getCurrentSession().createSQLQuery("select rs.id, " +
-                "concat(w.surname,' ',left(w.firstname,1),'.',left(w.middlename,1),'.') as 'WORKER'," +
-                "    c.id as 'CLIENT_ID'," +
-                "    concat(c.surname,' ',c.firstname,' ',c.middlename) as 'FIO'," +
-                "    st.caption as 'SERVICE_TYPE'," +
-                "    date_format(rs.date,'%d.%m.%Y') as 'DATE'" +
-                " from RecievedService rs " +
-                "left join Client c on rs.client=c.id" +
-                "    left join Worker w on rs.worker=w.id " +
-                "left join ServicesType st on rs.servicesType=st.id " +
-                "where rs.date>=" + Util.parseDateForMySql(from) + " and rs.date<=" + Util.parseDateForMySql(till) + " order by rs.date;")
+        List<?> res = getSessionFactory().getCurrentSession().createSQLQuery("select rs.id, "
+                + "concat(w.surname,' ',left(w.firstname,1),'.',left(w.middlename,1),'.') as 'WORKER',"
+                + "    c.id as 'CLIENT_ID',"
+                + "    concat(c.surname,' ',c.firstname,' ',c.middlename) as 'FIO',"
+                + "    st.caption as 'SERVICE_TYPE',"
+                + "    date_format(rs.date,'%d.%m.%Y') as 'DATE'"
+                + " from RecievedService rs "
+                + "left join Client c on rs.client=c.id"
+                + "    left join Worker w on rs.worker=w.id "
+                + "left join ServicesType st on rs.servicesType=st.id "
+                + "where rs.date>=" + Util.parseDateForMySql(from) + " and rs.date<=" + Util.parseDateForMySql(till) + " order by rs.date;")
                 .addScalar("id")
                 .addScalar("WORKER")
                 .addScalar("CLIENT_ID")
@@ -192,32 +192,32 @@ public class ReportDAO extends GenericDAO implements IReportDAO {
                 .addScalar("SERVICE_TYPE")
                 .addScalar("DATE").list();
 
-        List<ProvidedServicesByClientReportEntity> result = new ArrayList<ProvidedServicesByClientReportEntity>();
+        List<ProvidedServicesByClientReportEntity> result = new ArrayList<>();
 
         for (Object o : res) {
             Object[] xy = (Object[]) o;
 
             for (int i = 0; i < 6; i++) {
                 if (xy[i] == null) {
-                    xy[i] = new String("");
+                    xy[i] = "";
                 }
             }
 
-            result.add(new ProvidedServicesByClientReportEntity(Integer.parseInt(xy[0].toString()),xy[1].toString(), xy[2].toString(), xy[3].toString(), xy[4].toString(),xy[5].toString()));
+            result.add(new ProvidedServicesByClientReportEntity(Integer.parseInt(xy[0].toString()), xy[1].toString(), xy[2].toString(), xy[3].toString(), xy[4].toString(), xy[5].toString()));
         }
 
         //Then adding entities from BasicDocumentRegistry
-        res = getSessionFactory().getCurrentSession().createSQLQuery("SELECT bdr.id, " +
-                "concat(w.surname,' ',left(w.firstname,1),'.',left(w.middlename,1),'.') as 'WORKER', " +
-                "    c.id as 'CLIENT_ID', " +
-                "    concat(c.surname,' ',c.firstname,' ',c.middlename) as 'FIO', " +
-                "    bdrt.caption as 'SERVICE_TYPE', " +
-                "    date_format(bdr.date,'%d.%m.%Y') as 'DATE' " +
-                "FROM BasicDocumentRegistry bdr " +
-                "    LEFT JOIN Worker w ON bdr.performerId=w.id " +
-                "    LEFT JOIN Client c ON bdr.client = c.id " +
-                "    LEFT JOIN BasicDocumentRegistryType bdrt ON bdrt.id=bdr.type " +
-                "    where bdr.date>="+Util.parseDateForMySql(from)+" and bdr.date<="+Util.parseDateForMySql(till)+" order by bdr.date;")
+        res = getSessionFactory().getCurrentSession().createSQLQuery("SELECT bdr.id, "
+                + "concat(w.surname,' ',left(w.firstname,1),'.',left(w.middlename,1),'.') as 'WORKER', "
+                + "    c.id as 'CLIENT_ID', "
+                + "    concat(c.surname,' ',c.firstname,' ',c.middlename) as 'FIO', "
+                + "    bdrt.caption as 'SERVICE_TYPE', "
+                + "    date_format(bdr.date,'%d.%m.%Y') as 'DATE' "
+                + "FROM BasicDocumentRegistry bdr "
+                + "    LEFT JOIN Worker w ON bdr.performerId=w.id "
+                + "    LEFT JOIN Client c ON bdr.client = c.id "
+                + "    LEFT JOIN BasicDocumentRegistryType bdrt ON bdrt.id=bdr.type "
+                + "    where bdr.date>=" + Util.parseDateForMySql(from) + " and bdr.date<=" + Util.parseDateForMySql(till) + " order by bdr.date;")
                 .addScalar("id")
                 .addScalar("WORKER")
                 .addScalar("CLIENT_ID")
@@ -230,59 +230,57 @@ public class ReportDAO extends GenericDAO implements IReportDAO {
 
             for (int i = 0; i < 6; i++) {
                 if (xy[i] == null) {
-                    xy[i] = new String("");
+                    xy[i] = "";
                 }
             }
 
-            result.add(new ProvidedServicesByClientReportEntity(Integer.parseInt(xy[0].toString()),xy[1].toString(), xy[2].toString(), xy[3].toString(), xy[4].toString(),xy[5].toString()));
+            result.add(new ProvidedServicesByClientReportEntity(Integer.parseInt(xy[0].toString()), xy[1].toString(), xy[2].toString(), xy[3].toString(), xy[4].toString(), xy[5].toString()));
         }
-
 
         return result;
     }
 
-
     @Override
-	public List<OuterReportEntity> getOuterReport() {
-		List<OuterReportEntity> result = new ArrayList<OuterReportEntity>();
-		List<?> res = getSessionFactory().getCurrentSession().createSQLQuery("SELECT c.id, CONCAT(c.surname, '\n', c.firstname, '\n', c.middlename) as clName, c.date, sc.startDate, cp.caption,"+
-				" cc.endDate, sc.stopDate, IFNULL(cc.comments, '-'), IFNULL(c.memo, '-'), w.surname, sh.id FROM"+
-				" ServContract sc INNER JOIN Client c ON(sc.client = c.id) INNER JOIN Worker w ON(sc.worker = w.id)"+
-				" INNER JOIN ContractControl cc ON(cc.ServContract=sc.id) INNER JOIN ContractPoints cp ON(cp.id = cc.contractpoints)"+
-				" LEFT JOIN ShelterHistory sh ON(c.id = sh.client) WHERE (sc.contractresult='1' AND (sh.id is null OR sh.outShelter < CURDATE()))")
-					.addScalar("c.id")
-					.addScalar("clName")
-					.addScalar("c.date")
-					.addScalar("sc.startDate")
-					.addScalar("cp.caption")
-					.addScalar("cc.endDate")
-					.addScalar("sc.stopDate")
-					.addScalar("IFNULL(cc.comments, '-')")
-					.addScalar("IFNULL(c.memo, '-')")
-					.addScalar("w.surname").list();
-		for (Object o : res) {
-			Object[] xy = (Object[])o;
-			
-			for (int i=0; i<=9; i++) {
-				if (xy[i] == null && i!=2 && i!=3 && i!=5 && i!=6) {
-					xy[i] = new String("");
-				}
-			}
-			result.add(new OuterReportEntity(xy[0].toString(), xy[1].toString(), Util.parseDateForReport(xy[2]), Util.parseDateForReport(xy[3]),
-					xy[4].toString(), Util.parseDateForReport(xy[5]), Util.parseDateForReport(xy[6]),
-					Util.html2text(xy[7].toString()), Util.html2text(xy[8].toString()), xy[9].toString()));
-		 }
-		return result;
-	}
+    public List<OuterReportEntity> getOuterReport() {
+        List<OuterReportEntity> result = new ArrayList<>();
+        List<?> res = getSessionFactory().getCurrentSession().createSQLQuery("SELECT c.id, CONCAT(c.surname, '\n', c.firstname, '\n', c.middlename) as clName, c.date, sc.startDate, cp.caption,"
+                + " cc.endDate, sc.stopDate, IFNULL(cc.comments, '-'), IFNULL(c.memo, '-'), w.surname, sh.id FROM"
+                + " ServContract sc INNER JOIN Client c ON(sc.client = c.id) INNER JOIN Worker w ON(sc.worker = w.id)"
+                + " INNER JOIN ContractControl cc ON(cc.ServContract=sc.id) INNER JOIN ContractPoints cp ON(cp.id = cc.contractpoints)"
+                + " LEFT JOIN ShelterHistory sh ON(c.id = sh.client) WHERE (sc.contractresult='1' AND (sh.id is null OR sh.outShelter < CURDATE()))")
+                .addScalar("c.id")
+                .addScalar("clName")
+                .addScalar("c.date")
+                .addScalar("sc.startDate")
+                .addScalar("cp.caption")
+                .addScalar("cc.endDate")
+                .addScalar("sc.stopDate")
+                .addScalar("IFNULL(cc.comments, '-')")
+                .addScalar("IFNULL(c.memo, '-')")
+                .addScalar("w.surname").list();
+        for (Object o : res) {
+            Object[] xy = (Object[]) o;
+
+            for (int i = 0; i <= 9; i++) {
+                if (xy[i] == null && i != 2 && i != 3 && i != 5 && i != 6) {
+                    xy[i] = "";
+                }
+            }
+            result.add(new OuterReportEntity(xy[0].toString(), xy[1].toString(), Util.parseDateForReport(xy[2]), Util.parseDateForReport(xy[3]),
+                    xy[4].toString(), Util.parseDateForReport(xy[5]), Util.parseDateForReport(xy[6]),
+                    Util.html2text(xy[7].toString()), Util.html2text(xy[8].toString()), xy[9].toString()));
+        }
+        return result;
+    }
 
     @Override
     public List<InnerReportEntity> getInnerReport() {
-        List<InnerReportEntity> result = new ArrayList<InnerReportEntity>();
-        List<?> res = getSessionFactory().getCurrentSession().createSQLQuery("SELECT c.id, CONCAT(c.surname, '\n', c.firstname, '\n', c.middlename) as clName, c.date, sh.roomId, sh.inShelter, cp.caption, " +
-                "cc.endDate, sh.outShelter, IFNULL(cc.comments, '-'), IFNULL(c.memo, '-'), w.surname " +
-                "FROM ServContract sc INNER JOIN Client c ON(sc.client = c.id) " +
-                "INNER JOIN Worker w ON(sc.worker = w.id) INNER JOIN ContractControl cc ON(cc.servcontract=sc.id) " +
-                "INNER JOIN ContractPoints cp ON(cp.id = cc.contractpoints) LEFT JOIN ShelterHistory sh ON(c.id = sh.client) WHERE (sc.contractresult='1' AND sh.outShelter > CURDATE())")
+        List<InnerReportEntity> result = new ArrayList<>();
+        List<?> res = getSessionFactory().getCurrentSession().createSQLQuery("SELECT c.id, CONCAT(c.surname, '\n', c.firstname, '\n', c.middlename) as clName, c.date, sh.roomId, sh.inShelter, cp.caption, "
+                + "cc.endDate, sh.outShelter, IFNULL(cc.comments, '-'), IFNULL(c.memo, '-'), w.surname "
+                + "FROM ServContract sc INNER JOIN Client c ON(sc.client = c.id) "
+                + "INNER JOIN Worker w ON(sc.worker = w.id) INNER JOIN ContractControl cc ON(cc.servcontract=sc.id) "
+                + "INNER JOIN ContractPoints cp ON(cp.id = cc.contractpoints) LEFT JOIN ShelterHistory sh ON(c.id = sh.client) WHERE (sc.contractresult='1' AND sh.outShelter > CURDATE())")
                 .addScalar("c.id")
                 .addScalar("clName")
                 .addScalar("c.date")
@@ -296,11 +294,11 @@ public class ReportDAO extends GenericDAO implements IReportDAO {
                 .addScalar("w.surname").list();
 
         for (Object o1 : res) {
-            Object[] row = (Object[])o1;
+            Object[] row = (Object[]) o1;
             InnerReportEntity innerReportEntity = new InnerReportEntity();
-            for(int i = 0; i<11; i++) {
+            for (int i = 0; i < 11; i++) {
                 if (row[i] == null) {
-                    row[i] = new String("");
+                    row[i] = "";
                 }
             }
 
@@ -321,6 +319,5 @@ public class ReportDAO extends GenericDAO implements IReportDAO {
         return result;
 
     }
-
 
 }
