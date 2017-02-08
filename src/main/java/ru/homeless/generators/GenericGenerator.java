@@ -25,27 +25,27 @@ import java.util.Map;
 @Component
 public class GenericGenerator {
 
+    private static final Logger LOG = Logger.getLogger(GenericGenerator.class);
+
     @Autowired
     private CustomValuesHttpRequestParser hrp; //We need to inject all used classes where we need to inject our services
 
     @Autowired
     private IContractService contractService;
 
-    public static final Logger log = Logger.getLogger(GenericGenerator.class);
-
     private Map<String, String> wordDocumentDefaultValuesMap = null;
 
     public GenericGenerator() {
-    	wordDocumentDefaultValuesMap = new HashMap<String, String>();
+        wordDocumentDefaultValuesMap = new HashMap<>();
     }
-    
-    private void putDefaultValuesInMap(Client client, Date issueDate, Worker worker)  {
+
+    private void putDefaultValuesInMap(Client client, Date issueDate, Worker worker) {
 
         if (issueDate == null) {
             issueDate = new Date();
         }
 
-        wordDocumentDefaultValuesMap.put("[t:client:name]", client.getSurname()+" "+client.getFirstname()+" "+client.getMiddlename());
+        wordDocumentDefaultValuesMap.put("[t:client:name]", client.getSurname() + " " + client.getFirstname() + " " + client.getMiddlename());
         wordDocumentDefaultValuesMap.put("[t:client:birth]", Util.convertDate(client.getDate()));
         wordDocumentDefaultValuesMap.put("clientWhereWasBorn", client.getWhereWasBorn());
         wordDocumentDefaultValuesMap.put("clientId", String.valueOf(client.getId()));
@@ -55,8 +55,8 @@ public class GenericGenerator {
         if (Boolean.parseBoolean(Configuration.useSingleSignature)) {
             worker = contractService.getInstanceById(Worker.class, 1);
         }
-        wordDocumentDefaultValuesMap.put("[t:signatory1]", worker.getRules().getCaption()+ " "+Configuration.orgName);
-        wordDocumentDefaultValuesMap.put("[t:signatory2]", worker.getSurname()+" "+worker.getFirstname()+" "+worker.getMiddlename());
+        wordDocumentDefaultValuesMap.put("[t:signatory1]", worker.getRules().getCaption() + " " + Configuration.orgName);
+        wordDocumentDefaultValuesMap.put("[t:signatory2]", worker.getSurname() + " " + worker.getFirstname() + " " + worker.getMiddlename());
 
     }
 
@@ -65,44 +65,43 @@ public class GenericGenerator {
     }
 
     public WordprocessingMLPackage generateWordDocument(HttpServletRequest request) throws IOException {
-        if (hrp == null ) {
+        if (hrp == null) {
             hrp = new CustomValuesHttpRequestParser();
         }
 
         Client client = contractService.getInstanceById(Client.class, Integer.parseInt(request.getParameter("clientId")));
         if (client == null) {
-            log.error("Client is null (does not parsed properly)");
+            LOG.error("Client is null (does not parsed properly)");
             return null;
         }
-        log.info("Working with client "+client.getId());
+        LOG.info("Working with client " + client.getId());
 
-        String workerId = "";
-        workerId = request.getParameter("workerId");
+        String workerId = request.getParameter("workerId");
         if (workerId.equals("")) {
-            log.info("Unknown workerId");
+            LOG.info("Unknown workerId");
             return null;
         }
         Worker w = contractService.getInstanceById(Worker.class, Integer.parseInt(request.getParameter("workerId")));
         if (w == null) {
-            log.error("Worker is null (does not parsed properly)");
+            LOG.error("Worker is null (does not parsed properly)");
             return null;
         }
-        log.info("Worker is "+w.getId());
+        LOG.info("Worker is " + w.getId());
 
         //Make global preparations
-        putDefaultValuesInMap(client, Util.parseDate(request, "issueDate", log), w);
+        putDefaultValuesInMap(client, Util.parseDate(request, "issueDate", LOG), w);
 
-		switch (Integer.parseInt(request.getParameter("requestType"))) {
-		
-			//STANDARD DOCUMENTS
-			case IDocumentMapping.DOCUMENT_SOCIAL_HELP: {
+        switch (Integer.parseInt(request.getParameter("requestType"))) {
+
+            //STANDARD DOCUMENTS
+            case IDocumentMapping.DOCUMENT_SOCIAL_HELP: {
                 putDocNumToDefaultMap(request);
-				return hrp.generateSocialHelpDocument(request, client, wordDocumentDefaultValuesMap);
-			}
-			case IDocumentMapping.DOCUMENT_FREE_TRAVEL: {
+                return hrp.generateSocialHelpDocument(request, client, wordDocumentDefaultValuesMap);
+            }
+            case IDocumentMapping.DOCUMENT_FREE_TRAVEL: {
                 putDocNumToDefaultMap(request);
-				return hrp.generateFreeTravelDocument(request, client, wordDocumentDefaultValuesMap);
-			}
+                return hrp.generateFreeTravelDocument(request, client, wordDocumentDefaultValuesMap);
+            }
             case IDocumentMapping.DOCUMENT_SANITATION: {
                 putDocNumToDefaultMap(request);
                 return hrp.generateSanitationDocument(request, client, wordDocumentDefaultValuesMap);
@@ -129,7 +128,6 @@ public class GenericGenerator {
             case IDocumentMapping.DOCUMENT_CUSTOM: {
                 return hrp.generateCustomDocument(request, client, wordDocumentDefaultValuesMap);
             }
-            
             //STANDARD CONTRACTS
             case IDocumentMapping.DOCUMENT_DEFAULT_CONTRACT: {
                 return hrp.generateDefaultContract(request, client, wordDocumentDefaultValuesMap);
@@ -137,42 +135,40 @@ public class GenericGenerator {
             case IDocumentMapping.DOCUMENT_SHELTER_CONTRACT: {
                 return hrp.generateShelterContract(request, client, wordDocumentDefaultValuesMap);
             }
-        
-
             default: {
-	   			return null;
-		   }
-		}
-	}
+                return null;
+            }
+        }
+    }
 
     public XSSFWorkbook generateExcelDocument(HttpServletRequest request) throws UnsupportedEncodingException {
-        if (hrp == null ) {
+        if (hrp == null) {
             hrp = new CustomValuesHttpRequestParser();
         }
 
-		switch (Integer.parseInt(request.getParameter("requestType"))) {
-		
-			case IDocumentMapping.REPORT_WORK_RESULT: {
-				return hrp.generateWorkReportDocument(request);
-			}
-			case IDocumentMapping.REPORT_OUT_OF_SHELTER: {
-				return hrp.generateOutShelterDocument(request);
-			}
+        switch (Integer.parseInt(request.getParameter("requestType"))) {
+
+            case IDocumentMapping.REPORT_WORK_RESULT: {
+                return hrp.generateWorkReportDocument(request);
+            }
+            case IDocumentMapping.REPORT_OUT_OF_SHELTER: {
+                return hrp.generateOutShelterDocument(request);
+            }
             case IDocumentMapping.REPORT_INNER: {
                 return hrp.generateInnerReport(request);
             }
-			case IDocumentMapping.REPORT_ONE_TIME_SERVICES: {
-				return hrp.generateOneTimeServicesDocument(request);
-			}
-			case IDocumentMapping.REPORT_OVERVAC: {
-				return hrp.generateOverVacDocument(request);
-			}
-			case IDocumentMapping.REPORT_OUTER: {
-				return hrp.generateOuterDocument(request);
-			}
-			case IDocumentMapping.REPORT_CUSTOM_STATISTICS: {
-				return hrp.generateCustomStatisticsDocument(request);
-			}
+            case IDocumentMapping.REPORT_ONE_TIME_SERVICES: {
+                return hrp.generateOneTimeServicesDocument(request);
+            }
+            case IDocumentMapping.REPORT_OVERVAC: {
+                return hrp.generateOverVacDocument(request);
+            }
+            case IDocumentMapping.REPORT_OUTER: {
+                return hrp.generateOuterDocument(request);
+            }
+            case IDocumentMapping.REPORT_CUSTOM_STATISTICS: {
+                return hrp.generateCustomStatisticsDocument(request);
+            }
             case IDocumentMapping.REPORT_PROVIDED_SERVICES_BY_CLIENT: {
                 return hrp.generateProvidedServicesByClientDocument(request);
             }
@@ -181,11 +177,9 @@ public class GenericGenerator {
             }
 
             default: {
-	   			return null;
-		   }
-		}
-	}
-
-
+                return null;
+            }
+        }
+    }
 
 }
