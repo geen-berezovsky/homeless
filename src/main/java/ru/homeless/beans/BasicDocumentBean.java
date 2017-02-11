@@ -45,7 +45,7 @@ public class BasicDocumentBean implements Serializable {
 
     public void onRowSelect(SelectEvent event) {
         selectedDocument = (Document) event.getObject();
-        String strings = "regDocumentSelectWv.hide()" + "-" + "regDocumentWv.show()";
+        String strings = "PF('regDocumentSelectWv').hide()" + "-" + "PF('regDocumentWv').show()";
         openDlg(strings);
     }
 
