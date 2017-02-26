@@ -18,6 +18,7 @@ import ru.homeless.util.Util;
 public class ReportDAO extends GenericDAO implements IReportDAO {
 
     private static final long serialVersionUID = 1L;
+
     @Override
     public List<ResultWorkReportEntity> getResultWorkReport(Date from, Date till) {
         Session s = getSessionFactory().getCurrentSession();
@@ -34,7 +35,8 @@ public class ReportDAO extends GenericDAO implements IReportDAO {
                 + "INNER JOIN Client cl ON cl.id = sc.client "
                 + "LEFT JOIN ShelterHistory sh ON sh.client = sc.client AND cc.endDate BETWEEN sh.inShelter AND sh.outShelter "
                 + "WHERE cc.endDate IS NOT NULL AND cc.endDate BETWEEN :fromDate AND :tillDate "
-                + "GROUP BY wk.id, cp.id, ISNULL(sh.id) ")
+                + "GROUP BY wk.id, workerSurname, contractPointsCaption, cp.id, isLivingInShelter "
+                + "ORDER BY workerSurname, contractPointsCaption, isLivingInShelter")
                 .addScalar("workerSurname", StringType.INSTANCE)
                 .addScalar("contractPointsCaption", StringType.INSTANCE)
                 .addScalar("isLivingInShelter", BooleanType.INSTANCE)
