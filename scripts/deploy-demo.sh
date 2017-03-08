@@ -75,7 +75,8 @@ unzip inv.zip > /dev/null
 rm -rf ${CONTRACTS}/* && mv -f ./opt/homeless/storage/contracts/* -f ${CONTRACTS}
 rm -rf ${IMAGES}/* && mv -f ./opt/homeless/storage/images/* -f ${IMAGES}
 rm -rf ${PROFILES}/* && mv -f ./opt/homeless/storage/profiles/* -f ${PROFILES}
-rm -rf ${TEMPLATES}/* && mv -f ./opt/homeless/storage/templates/* -f ${TEMPLATES}
+# don`t replace reports templates from backup!
+#rm -rf ${TEMPLATES}/* && mv -f ./opt/homeless/storage/templates/* -f ${TEMPLATES}
 
 cecho "Deleting the existing database homeless_demo" $green
 echo "DROP DATABASE homeless_demo" | mysql --user=homeless_demo --password=${PASS} homeless_demo
@@ -159,6 +160,13 @@ popd > /dev/null 2>&1
 
 pushd ${SOURCES_HOMELESS_REPORT_ENGINE} > /dev/null 2>&1
     mvn clean package
+    check_res $?
+popd > /dev/null 2>&1
+
+# 3.5 Replace report and document templates from app source
+pushd ${SOURCES_HOMELESS_REPORT_ENGINE} > /dev/null 2>&1
+    cecho "Replacing templates in ${TEMPLATES}" $green
+    rm -rf ${TEMPLATES}/* && cp -f ./templates/* ${TEMPLATES}
     check_res $?
 popd > /dev/null 2>&1
 
