@@ -134,6 +134,13 @@ pushd ${SOURCES_HOMELESS_REPORT_ENGINE} > /dev/null 2>&1
     check_res $?
 popd > /dev/null 2>&1
 
+# 3.5 Replace report and document templates from app source
+pushd ${SOURCES_HOMELESS_REPORT_ENGINE} > /dev/null 2>&1
+    cecho "Replacing templates in ${TEMPLATES}" $green
+    rm -rf ${TEMPLATES}/* && cp -f ./templates/* ${TEMPLATES}
+    check_res $?
+popd > /dev/null 2>&1
+
 # 4. Applying db patch to the prod instance if necessary
 #
 #    NOTE: CURRENTLY IT IS THE MANUAL PROCEDURE BECAUSE OF SECURITY REASONS
