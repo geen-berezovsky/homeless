@@ -98,6 +98,10 @@ public class ReportsBean implements Serializable {
         file = getReport(214, Util.formatDate(startDate), Util.formatDate(endDate), "OnceOnlyByClientReport.xlsx");
     }
 
+    public void downloadServiceRecipientReport() throws IOException {
+	    file = getReport(215, Util.formatDate(startDate), Util.formatDate(endDate), "ServiceRecipientReport.xlsx");
+    }
+
 
 
 
