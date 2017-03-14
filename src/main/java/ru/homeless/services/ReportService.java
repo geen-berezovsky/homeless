@@ -54,5 +54,10 @@ public class ReportService extends GenericService implements IReportService {
         return reportDAO.getInnerReport();
     }
 
+	@Override
+	public List<ServiceRecipientReportEntity> getServiceRecipientReport(Date from, Date till) {
+		return reportDAO.getServiceRecipientReport(from, till);
+	}
+
 
 }

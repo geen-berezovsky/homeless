@@ -172,6 +172,9 @@ public class GenericGenerator {
             case IDocumentMapping.REPORT_PROVIDED_SERVICES_BY_CLIENT: {
                 return hrp.generateProvidedServicesByClientDocument(request);
             }
+            case IDocumentMapping.REPORT_SERVICES_RECIPIENT: {
+                return hrp.generateServicesRecipientDocument(request);
+            }
 
             default: {
                 return null;

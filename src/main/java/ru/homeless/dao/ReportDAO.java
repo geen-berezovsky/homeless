@@ -1,9 +1,6 @@
 package ru.homeless.dao;
 
-import java.math.BigInteger;
-import java.util.*;
-
-import org.apache.log4j.Logger;
+import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.transform.Transformers;
 import org.hibernate.type.BooleanType;
@@ -13,6 +10,8 @@ import org.springframework.stereotype.Repository;
 import ru.homeless.entities.Room;
 import ru.homeless.report.entities.*;
 import ru.homeless.util.Util;
+
+import java.util.*;
 
 @Repository
 public class ReportDAO extends GenericDAO implements IReportDAO {
@@ -320,6 +319,77 @@ public class ReportDAO extends GenericDAO implements IReportDAO {
 
         return result;
 
+    }
+
+    @Override
+    public List<ServiceRecipientReportEntity> getServiceRecipientReport(Date from, Date till) {
+
+        List resFromDB = loadOnceService(from, till);
+
+		List<ServiceRecipientReportEntity> result = new ArrayList<>(resFromDB.size());
+
+		for (Object o : resFromDB) {
+			result.add(extractSREntity((Object[]) o));
+		}
+
+        return result;
+    }
+
+	/**
+	 * Загружаем из БД выборку по по плановым и разовым услугам
+	 * @param from Дата начала выборки
+	 * @param till Дата конца выборки
+	 * @return Список результатов
+	 */
+    private List loadOnceService(Date from, Date till) {
+		SQLQuery query = getSessionFactory().getCurrentSession().createSQLQuery(
+				"(select st.caption as caption, count(distinct rs.client) as cntCl, count(*) as cnt " +
+						"from RecievedService rs " +
+						"left join ServicesType st on rs.servicesType = st.id " +
+						"where rs.date >= " + wrapDate(from) + " and rs.date <= " + wrapDate(till) + " " +
+						"group by rs.servicesType) " +
+					"UNION ALL " +
+					"(select cp.caption as caption, count(DISTINCT sc.client) as cntCl, count(*) as cnt " +
+						"from ContractControl cc " +
+						"left join ServContract sc on cc.servcontract = sc.id " +
+						"left join ContractPoints cp on cc.contractpoints = cp.id " +
+						"where cc.endDate >= " + wrapDate(from) + " and cc.endDate <= " + wrapDate(till) + " " +
+						"group by cc.contractpoints) " +
+					"order by caption"
+					)
+				.addScalar("caption")
+				.addScalar("cntCl")
+				.addScalar("cnt")
+				;
+
+		log.debug(query.getQueryString());
+
+		return query.list();
+	}
+
+	/**
+	 * Формируем ServiceRecipientReportEntity из нетипизированного результата запроса
+	 * @param row Результат запроса - массив объектов (строк?)
+	 * @return объект ServiceRecipientReportEntity, представляющий эту строку
+	 */
+    private ServiceRecipientReportEntity extractSREntity(Object[] row) {
+		ServiceRecipientReportEntity entity = new ServiceRecipientReportEntity();
+
+		int i = 0;
+		entity.setServiceType(row[i++].toString());
+		entity.setCountOfUniqueClient(Integer.valueOf(row[i++].toString()));
+		entity.setCountOfService(Integer.valueOf(row[i++].toString()));
+
+		return entity;
+	}
+
+	/**
+	 * Приводит заданную дату к строке с подходящим форматом для использования в SQL-запросе
+	 * @param date Дата для приведения
+	 * @return Строка для подстановки в SQL-запрос
+	 */
+    private String wrapDate(final Date date) {
+        return Util.parseDateForMySql(date);
     }
 
 }
