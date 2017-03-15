@@ -52,7 +52,7 @@ echo "Building applications (WAR files)"
 mvn clean package
 echo "Replacing templates in ${TEMPLATES}"
 find ${TEMPLATES} -type f -delete
-find templates -type f -exec cp \{} ${TEMPLATES} \;
+find templates -type f -exec cp -f \{} ${TEMPLATES} \;
 popd
 
 
@@ -65,7 +65,7 @@ pushd ${TOMCAT_HOME}/webapps
 rm -rf homeless homeless-report-engine homeless.war homeless-report-engine.war
 popd
 echo "Deploying new applications"
-cp target/homeless.war re/target/homeless-report-engine.war ${TOMCAT_HOME}/webapps/
+cp -f target/homeless.war re/target/homeless-report-engine.war ${TOMCAT_HOME}/webapps/
 pushd ${TOMCAT_HOME}/logs
 logs_file_stamp=`date +"%d_%m_%Y__%H_%M_%S"`
 logs_file_name=${BACKUPS}/logs_backup_${logs_file_stamp}.zip
