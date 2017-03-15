@@ -4,6 +4,7 @@ Legacy maintenance of the web/db system in
 [Saint Petersburg charity public organization for the homeless "Nochlezhka"](http://homeless.ru/)
 
 ---
+
 <p xmlns:dct="http://purl.org/dc/terms/">
 <a rel="license" href="http://creativecommons.org/publicdomain/mark/1.0/">
 <img src="http://i.creativecommons.org/p/mark/1.0/88x31.png"
