@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:util="http://www.springframework.org/schema/util" xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:jee="http://www.springframework.org/schema/jee"
+       xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+  http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+  http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.0.xsd
+  http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+  http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee.xsd">
+  
+  
+  
+
+ <context:component-scan base-package="ru.homeless" />
+ <mvc:annotation-driven />
+ <context:annotation-config />
+ <context:spring-configured />
+
+    <!--
+
+ 	<bean id="DataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close" >
+		<property name="driverClassName" value="org.gjt.mm.mysql.Driver" />
+		<property name="url" value="jdbc:mysql://localhost:3306/homeless?useUnicode=true&amp;characterEncoding=UTF-8&amp;autoReconnect=true" />
+		<property name="username" value="homeless" />
+		<property name="password" value="homeless" />
+	</bean>
+
+    -->
+
+    <jee:jndi-lookup jndi-name="DevelopmentDB" id="DataSource" expected-type="javax.sql.DataSource" />
+
+    <bean id="appProps" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="location" value="classpath:/application.properties"/>
+        <property name="fileEncoding">
+            <value>utf8</value>
+        </property>
+    </bean>
+
+
+
+    <bean id="sessionFactory"
+          class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+        <property name="dataSource" ref="DataSource" />
+        <property name="annotatedClasses">
+            <list>
+                <value>ru.homeless.entities.Client</value>
+                <value>ru.homeless.entities.ChronicDisease</value>
+                <value>ru.homeless.entities.Breadwinner</value>
+                <value>ru.homeless.entities.Education</value>
+                <value>ru.homeless.entities.NightStay</value>
+                <value>ru.homeless.entities.Reasonofhomeless</value>
+                <value>ru.homeless.entities.FamilyCommunication</value>
+                <value>ru.homeless.entities.Rules</value>
+                <value>ru.homeless.entities.Worker</value>
+                <value>ru.homeless.entities.RecievedService</value>
+                <value>ru.homeless.entities.ServicesType</value>
+                <value>ru.homeless.entities.Document</value>
+                <value>ru.homeless.entities.DocType</value>
+                <value>ru.homeless.entities.ServContract</value>
+                <value>ru.homeless.entities.ContractResult</value>
+                <value>ru.homeless.entities.ShelterHistory</value>
+                <value>ru.homeless.entities.ShelterResult</value>
+                <value>ru.homeless.entities.ContractPoints</value>
+                <value>ru.homeless.entities.ContractControl</value>
+                <value>ru.homeless.entities.Room</value>
+                <value>ru.homeless.entities.CustomDocumentRegistry</value>
+                <value>ru.homeless.entities.ZAGSRequestDocumentRegistry</value>
+                <value>ru.homeless.entities.BasicDocumentRegistry</value>
+                <value>ru.homeless.entities.BasicDocumentRegistryType</value>
+                <value>ru.homeless.entities.DocumentScan</value>
+                <value>ru.homeless.entities.Region</value>
+                <value>ru.homeless.entities.SubRegion</value>
+            </list>
+        </property>
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</prop>
+                <prop key="hibernate.show_sql">false</prop>
+            </props>
+        </property>
+    </bean>
+
+    <tx:annotation-driven transaction-manager="txManager" />
+    <tx:annotation-driven proxy-target-class="true"/>
+
+    <bean id="txManager"
+          class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+ 
+
+    <bean id="persistenceExceptionTranslationPostProcessor"
+          class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor" />
+
+</beans>
+

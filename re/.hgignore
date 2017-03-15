@@ -1,0 +1,8 @@
+target
+.settings$
+.hgignore
+.classpath
+.project
+.idea
+homeless-report-engine.iml
+META-INF$
