@@ -6,7 +6,7 @@ Legacy maintenance of the web/db system in
 ## Production deployment
 
 Download the latest master archive, unpack it, change directory to it and run 
-`deploy-production`.
+`deploy-production` (as root).
 
 ---
 

@@ -12,6 +12,7 @@ IMAGES=${ROOT}/images
 PROFILES=${ROOT}/profiles
 TOMCAT_HOME=${BASE}/tools/tomcat
 MAVEN_HOME=$BASE/tools/maven
+COMMIT=../homeless.id
 
 PATH=$MAVEN_HOME/bin:$PATH
 THIS_IP=`/sbin/ifconfig eth0 | awk '/inet addr/{print substr($2,6)}'`
@@ -57,7 +58,7 @@ popd
 echo "Stopping running application, backing up logs, cleaning environment and run everything again..."
 
 echo "Stopping Tomcat if it is running"
-sudo /etc/init.d/tomcat stop
+/etc/init.d/tomcat stop
 echo "Deleting old applications"
 pushd ${TOMCAT_HOME}/webapps
 rm -rf homeless homeless-report-engine homeless.war homeless-report-engine.war
@@ -72,8 +73,10 @@ zip -9 -r ${logs_file_name} .
 find . -name *.out -o -name *.txt -o -name *.log -delete
 popd
 echo "Placing timestamp before starting homeless application"
-echo $(date +'%H:%M:%S %d.%m.%Y') > ${TIMESTAMP}
+echo $(date +'%H:%M:%S %d.%m.%Y') $(cut -c-7 commit) > ${TIMESTAMP}
+echo "Placing commit ID if exists before starting homeless application"
+echo $(date +'%H:%M:%S %d.%m.%Y') $(<$COMMIT) > ${TIMESTAMP}
 echo "Starting Tomcat applications..."
-sudo /etc/init.d/tomcat start
+/etc/init.d/tomcat start
 
 echo "DEPLOYMENT SUCCESSFUL"
