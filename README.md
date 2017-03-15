@@ -3,6 +3,11 @@
 Legacy maintenance of the web/db system in
 [Saint Petersburg charity public organization for the homeless "Nochlezhka"](http://homeless.ru/)
 
+## Production deployment
+
+Download the latest master archive, unpack it, change directory to it and run 
+`deploy-production`.
+
 ---
 
 <p xmlns:dct="http://purl.org/dc/terms/">

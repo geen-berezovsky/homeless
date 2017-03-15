@@ -1,0 +1,79 @@
+#!/bin/sh -e
+
+set -euf -o pipefail
+
+BASE=/opt/homeless
+ROOT=${BASE}/storage
+TIMESTAMP=${BASE}/timestamp.txt
+TEMPLATES=${BASE}/templates
+BACKUPS=${ROOT}/BACKUPS
+CONTRACTS=${ROOT}/contracts
+IMAGES=${ROOT}/images
+PROFILES=${ROOT}/profiles
+TOMCAT_HOME=${BASE}/tools/tomcat
+MAVEN_HOME=$BASE/tools/maven
+
+PATH=$MAVEN_HOME/bin:$PATH
+THIS_IP=`/sbin/ifconfig eth0 | awk '/inet addr/{print substr($2,6)}'`
+
+echo "Main app..."
+
+echo "Replacing configuration according current layout"
+APP_CONFIG=src/main/resources/application.properties
+echo "Replacing properties in the file `readlink -f ${APP_CONFIG}`"
+sed -i "s|photos.*=.*|photos = ${IMAGES}|" ${APP_CONFIG}
+sed -i "s|timestampFile.*=.*|timestampFile = ${BASE}\/timestamp.txt|" ${APP_CONFIG}
+sed -i "s|reportEngineUrl.*=.*|reportEngineUrl = http:\/\/${THIS_IP}/homeless-report-engine\/|" ${APP_CONFIG}
+sed -i "s|profilesDir.*=.*|profilesDir = ${PROFILES}|" ${APP_CONFIG}
+cat ${APP_CONFIG}
+SPRING_CONFIG=src/main/webapp/WEB-INF/applicationContext.xml
+echo "Replacing Spring configuration `readlink -f ${SPRING_CONFIG}`"
+sed -i "s/DevelopmentDB/ProductionDB/" ${SPRING_CONFIG}
+echo "Building applications (WAR files)"
+mvn clean package
+
+
+echo "Reports app..."
+
+echo "Replacing configuration according current layout"
+pushd re
+APP_CONFIG=src/main/resources/application.properties
+echo "Replacing properties in the file `readlink -f ${APP_CONFIG}`"
+sed -i "s|templatesDir.*=.*|templatesDir = ${TEMPLATES}|" ${APP_CONFIG}
+sed -i "s|contractsDir.*=.*|contractsDir = ${CONTRACTS}|" ${APP_CONFIG}
+sed -i "s|profilesDir.*=.*|profilesDir = ${PROFILES}|" ${APP_CONFIG}
+cat ${APP_CONFIG}
+SPRING_CONFIG=./src/main/webapp/WEB-INF/spring-config.xml
+echo "Replacing Spring configuration `readlink -f ${SPRING_CONFIG}`"
+sed -i "s/DevelopmentDB/ProductionDB/" ${SPRING_CONFIG}
+echo "Building applications (WAR files)"
+mvn clean package
+echo "Replacing templates in ${TEMPLATES}"
+find ${TEMPLATES} -type f -delete
+find templates -type f -exec cp \{} ${TEMPLATES} \;
+popd
+
+
+echo "Stopping running application, backing up logs, cleaning environment and run everything again..."
+
+echo "Stopping Tomcat if it is running"
+sudo /etc/init.d/tomcat stop
+echo "Deleting old applications"
+pushd ${TOMCAT_HOME}/webapps
+rm -rf homeless homeless-report-engine homeless.war homeless-report-engine.war
+popd
+echo "Deploying new applications"
+cp target/homeless.war re/target/homeless-report-engine.war ${TOMCAT_HOME}/webapps/
+pushd ${TOMCAT_HOME}/logs
+logs_file_stamp=`date +"%d_%m_%Y__%H_%M_%S"`
+logs_file_name=${BACKUPS}/logs_backup_${logs_file_stamp}.zip
+echo "Backing up logs to ${logs_file_name}"
+zip -9 -r ${logs_file_name} .
+find . -name *.out -o -name *.txt -o -name *.log -delete
+popd
+echo "Placing timestamp before starting homeless application"
+echo $(date +'%H:%M:%S %d.%m.%Y') > ${TIMESTAMP}
+echo "Starting Tomcat applications..."
+sudo /etc/init.d/tomcat start
+
+echo "DEPLOYMENT SUCCESSFUL"
