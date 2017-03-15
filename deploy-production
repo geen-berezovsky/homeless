@@ -13,6 +13,7 @@ PROFILES=${ROOT}/profiles
 TOMCAT_HOME=${BASE}/tools/tomcat
 MAVEN_HOME=$BASE/tools/maven
 COMMIT=homeless.id
+OWNER=tomcat.tomcat
 
 PATH=$MAVEN_HOME/bin:$PATH
 THIS_IP=`/sbin/ifconfig eth0 | awk '/inet addr/{print substr($2,6)}'`
@@ -70,6 +71,7 @@ logs_file_stamp=`date +"%d_%m_%Y__%H_%M_%S"`
 logs_file_name=${BACKUPS}/logs_backup_${logs_file_stamp}.zip
 echo "Backing up logs to ${logs_file_name}"
 zip -9 -r ${logs_file_name} .
+chown $OWNER ${logs_file_name} # Yak!
 find . -name *.out -o -name *.txt -o -name *.log -delete
 popd
 echo "Placing timestamp before starting homeless application"
