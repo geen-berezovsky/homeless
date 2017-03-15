@@ -1,4 +1,4 @@
-#!/bin/sh -e
+#!/bin/bash
 
 set -euf -o pipefail
 
@@ -12,7 +12,7 @@ IMAGES=${ROOT}/images
 PROFILES=${ROOT}/profiles
 TOMCAT_HOME=${BASE}/tools/tomcat
 MAVEN_HOME=$BASE/tools/maven
-COMMIT=../homeless.id
+COMMIT=homeless.id
 
 PATH=$MAVEN_HOME/bin:$PATH
 THIS_IP=`/sbin/ifconfig eth0 | awk '/inet addr/{print substr($2,6)}'`
@@ -73,9 +73,9 @@ zip -9 -r ${logs_file_name} .
 find . -name *.out -o -name *.txt -o -name *.log -delete
 popd
 echo "Placing timestamp before starting homeless application"
-echo $(date +'%H:%M:%S %d.%m.%Y') $(cut -c-7 commit) > ${TIMESTAMP}
-echo "Placing commit ID if exists before starting homeless application"
-echo $(date +'%H:%M:%S %d.%m.%Y') $(<$COMMIT) > ${TIMESTAMP}
+CID=""
+[ -r $COMMIT ] && CID=$(cut -c-7 $COMMIT)
+echo $(date +'%H:%M:%S %d.%m.%Y') $CID > ${TIMESTAMP}
 echo "Starting Tomcat applications..."
 /etc/init.d/tomcat start
 
