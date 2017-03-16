@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>ru.homeless</groupId>
 	<artifactId>homeless-report-engine</artifactId>
-	<version>1.0.1-SNAPSHOT</version>
+	<version>3.0.0</version>
 	<packaging>war</packaging>
 
 	<properties>
@@ -59,7 +59,7 @@
 				</executions>
 			</plugin>
 		</plugins>
-	    <finalName>homeless-report-engine</finalName>
+	    <finalName>${project.artifactId}-${project.version}-${maven.build.timestamp}</finalName>
 	</build>
 
 	<dependencies>

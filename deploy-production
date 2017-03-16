@@ -62,10 +62,11 @@ echo "Stopping Tomcat if it is running"
 /etc/init.d/tomcat stop
 echo "Deleting old applications"
 pushd ${TOMCAT_HOME}/webapps
-rm -rf homeless homeless-report-engine homeless.war homeless-report-engine.war
+rm -rf homeless homeless-report-engine
+find -name \*.war -delete
 popd
 echo "Deploying new applications"
-cp -f target/homeless.war re/target/homeless-report-engine.war ${TOMCAT_HOME}/webapps/
+find -name \*.war -exec cp -f \{} ${TOMCAT_HOME}/webapps/ \;
 pushd ${TOMCAT_HOME}/logs
 logs_file_stamp=`date +"%d_%m_%Y__%H_%M_%S"`
 logs_file_name=${BACKUPS}/logs_backup_${logs_file_stamp}.zip
