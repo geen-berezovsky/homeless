@@ -9,7 +9,7 @@
 	<properties>
 		<spring.version>4.0.3.RELEASE</spring.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.build.timestamp.format>yyyy-MM-dd-HH-mm-ssZ</maven.build.timestamp.format>
+        <maven.build.timestamp.format>yyyy-MM-dd-HH-mm-ss-z</maven.build.timestamp.format>
 	</properties>
 
 	<build>
