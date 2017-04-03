@@ -2,8 +2,8 @@ language: java
 jdk: oraclejdk8
 install: true
 script:
-- mvn -B package
-- mvn -B -f re/pom.xml package
+- mvn -B package -Ptravis-ci
+- mvn -B -f re/pom.xml package -Ptravis-ci
 deploy:
   provider: releases
   api_key:

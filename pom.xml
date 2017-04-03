@@ -9,6 +9,7 @@
     <properties>
         <spring.version>4.3.2.RELEASE</spring.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.build.timestamp.format>yyyy-MM-dd-HH-mm-ss-z</maven.build.timestamp.format>
     </properties>
 
     <repositories>
@@ -148,7 +149,7 @@
                 </executions>
             </plugin>
         </plugins>
-        <finalName>${project.artifactId}-${project.version}-${maven.build.timestamp}</finalName>
+        <finalName>${project.artifactId}</finalName>
     </build>
 
     <dependencies>
@@ -325,5 +326,17 @@
             <version>1.0.1</version>
         </dependency>
     </dependencies>
+
+    <profiles>
+        <profile>
+            <id>travis-ci</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <build>
+                <finalName>${project.artifactId}-${project.version}-${maven.build.timestamp}</finalName>
+            </build>
+        </profile>
+    </profiles>
 
 </project>
