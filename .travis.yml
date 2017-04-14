@@ -1,0 +1,17 @@
+language: java
+jdk: oraclejdk8
+install: true
+script:
+- mvn -B package -Ptravis-ci
+- mvn -B -f re/pom.xml package -Ptravis-ci
+deploy:
+  provider: releases
+  api_key:
+    secure: iu6s69As8tAe3kcVkpDe1IaMo837ykelZsznZQANw8kC1rhVGSmmAz9+nFZE4WHqdYvl1RM3XE47w4IszHANjTo04rR6P9qyY5s7/GRFaVJVSAeLPOuS9tuNDQzAgRBXsbKStCgMPQVfGVSK2BiEaiu2Hp/Pi7DUwhzbUxnIAuyVWRH/ZRC0DYcPNGL+VRCGyqoHhfaWlWlITsz7K/YrGZ3FEeFA+E58nua5HUswLZjRx0n/i979m6kZA1ALRmMXLIY744Wn0mboOeIQyhYKZSGk72aLEvea19yRnMVxwJUk2ZSgeQ1Z4pHqaJ3K55GxJNXNRRBJM9mlQEnwR/JFuHFnwqSIRxe/HU1vs/SUVHmKl7OIDKfYHzah2kmAdnwWFX5CHryAF7/4C13J3hQpdne2nrkSAlP5k9aT7Zk0VZk6Sl6CPQKTrOWYhUZtnDkBCVOT1oONmNIphELIoo1ruYS5JMco99XqfjgV+VRx7C+jdutsNPnhgTwR0Mz7RQS4ZuxYo8dKEYApBv48QU5uk1aN/N4RLXMTnPrsFzi8b62ARpprVNADTmC5S7/ErGqxteqOfB7RuO/J/BlbTzFhW0LLbv2xPL8DcEI7u4+HoOOHrZgMqeug+zzbwQAAa4sBdFDTvwcuefSUcQDgdk2H23AqBK2m/qPbl6K6GYZwJGw=
+  file_glob: true
+  file:
+  - target/homeless-*.war
+  - re/target/homeless-report-engine-*.war
+  skip_cleanup: true
+  on:
+    tags: true
