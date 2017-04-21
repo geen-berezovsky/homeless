@@ -21,9 +21,6 @@ THIS_IP=`/sbin/ifconfig eth0 | awk '/inet addr/{print substr($2,6)}'`
 echo "Main app..."
 
 echo "Replacing configuration according current layout"
-SPRING_CONFIG=src/main/webapp/WEB-INF/applicationContext.xml
-echo "Replacing Spring configuration `readlink -f ${SPRING_CONFIG}`"
-sed -i "s/DevelopmentDB/ProductionDB/" ${SPRING_CONFIG}
 echo "Building applications (WAR files)"
 mvn clean package
 
@@ -32,11 +29,9 @@ echo "Reports app..."
 
 echo "Replacing configuration according current layout"
 pushd re
-SPRING_CONFIG=./src/main/webapp/WEB-INF/spring-config.xml
-echo "Replacing Spring configuration `readlink -f ${SPRING_CONFIG}`"
-sed -i "s/DevelopmentDB/ProductionDB/" ${SPRING_CONFIG}
 echo "Building applications (WAR files)"
 mvn clean package
+
 echo "Replacing templates in ${TEMPLATES}"
 find ${TEMPLATES} -type f -delete
 find templates -type f -exec cp -f \{} ${TEMPLATES} \;

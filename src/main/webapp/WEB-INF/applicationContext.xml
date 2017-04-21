@@ -3,13 +3,10 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
        xmlns:context="http://www.springframework.org/schema/context"
-       xmlns:util="http://www.springframework.org/schema/util" xmlns:mvc="http://www.springframework.org/schema/mvc"
-       xmlns:jee="http://www.springframework.org/schema/jee"
-       xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
-  http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
-  http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.0.xsd
-  http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
-  http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee.xsd">
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd ">
 
 
     <context:component-scan base-package="ru.homeless" />
@@ -21,27 +18,40 @@
             <list>
                 <value>classpath:/application.properties</value>
                 <value>file:${homelessConfigDir:/etc/homeless}/homeless.properties</value>
+                <value>file:${homelessConfigDir:/etc/homeless}/db.properties</value>
             </list>
         </property>
         <property name="ignoreResourceNotFound" value="false" />
         <property name="fileEncoding" value="utf8" />
     </bean>
 
-    <!-- Data Source Declaration -->
-    <!--
-            <bean id="DataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close" >
-                    <property name="driverClassName" value="org.gjt.mm.mysql.Driver" />
-                    <property name="url" value="jdbc:mysql://localhost:3306/homeless?useUnicode=true&amp;characterEncoding=UTF-8&amp;autoReconnect=true" />
-                    <property name="username" value="homeless" />
-                    <property name="password" value="homeless" />
-            </bean>
-    -->
-    <jee:jndi-lookup jndi-name="ProductionDB" id="DataSource" expected-type="javax.sql.DataSource" />
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="${db.driverClassName:com.mysql.cj.jdbc.Driver}" />
+        <property name="url" value="${db.url}" />
+        <property name="username" value="${db.username}" />
+        <property name="password" value="${db.password}" />
+        <property name="defaultAutoCommit" value="false" />
+        <property name="defaultTransactionIsolation" value="#{T(java.sql.Connection).TRANSACTION_READ_COMMITTED}" />
+        <property name="initialSize" value="${db.initialSize:5}" />
+        <property name="maxActive" value="${db.maxActive:55}" />
+        <property name="minIdle" value="${db.minIdle:5}" />
+        <property name="maxIdle" value="${db.maxIdle:10}" />
+        <property name="maxWait" value="${db.maxWait:5000}" />
+        <property name="testOnBorrow" value="true" />
+        <property name="testOnReturn" value="false" />
+        <property name="testWhileIdle" value="false" />
+        <property name="validationQuery" value="/* ping */ select 1" />
+        <property name="removeAbandoned" value="true" />
+        <property name="removeAbandonedTimeout" value="${db.removeAbandonedTimeout:300}" />
+        <property name="logAbandoned" value="true" />
+        <property name="timeBetweenEvictionRunsMillis" value="${db.timeBetweenEvictionRunsMillis:30000}" />
+        <property name="minEvictableIdleTimeMillis" value="${db.minEvictableIdleTimeMillis:60000}" />
+    </bean>
 
     <!-- Session Factory Declaration -->
     <bean id="SessionFactory"
           class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
-        <property name="dataSource" ref="DataSource" />
+        <property name="dataSource" ref="dataSource" />
         <!-- <property name="packagesToScan"> <list> <value>net.javabeat.spring.model</value> 
         </list> </property> -->
         <property name="annotatedClasses">
