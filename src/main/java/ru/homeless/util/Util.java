@@ -14,6 +14,7 @@ import java.io.InputStream;
 import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -292,7 +293,7 @@ public class Util {
             httpConn.setRequestProperty("Accept-Charset", "UTF-8");
             InputStream inputStream = httpConn.getInputStream();
             FileOutputStream outputStream = new FileOutputStream(saveFilePath);
-            int bytesRead = -1;
+            int bytesRead;
             byte[] buffer = new byte[4096];
             while ((bytesRead = inputStream.read(buffer)) != -1) {
                 outputStream.write(buffer, 0, bytesRead);
@@ -300,7 +301,9 @@ public class Util {
             outputStream.close();
             inputStream.close();
             InputStream stream = new FileInputStream(new File(saveFilePath));
-            return new DefaultStreamedContent(stream, docType, docName);
+            return new DefaultStreamedContent(stream, docType,
+                    URLEncoder.encode(docName, "UTF-8").replaceAll("\\+", "%20"),
+                    "UTF-8");
         } catch (ConnectException e) {
             log.error("Cannot access Report Engine!!!");
             //REDIRECT TO THE MAIN PAGE

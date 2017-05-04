@@ -3,16 +3,10 @@ package ru.homeless.beans;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.model.StreamedContent;
-import ru.homeless.entities.Room;
-import ru.homeless.services.RoomService;
 import ru.homeless.util.Util;
 
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
-import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
@@ -66,7 +60,10 @@ public class ReportsBean implements Serializable {
 
 
     public void downloadWorkResultReport() throws IOException {
-        file = getMacroReport(200, Util.formatDate(startDate), Util.formatDate(endDate), "WorkResult.xlsm");
+        String start = Util.formatDate(startDate);
+        String end = Util.formatDate(endDate);
+        file = getMacroReport(200, start, end,
+                String.format("О предоставленных услугах с %s по %s.xlsm", start, end));
     }
 
 
