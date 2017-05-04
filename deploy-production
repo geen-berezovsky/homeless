@@ -21,13 +21,6 @@ THIS_IP=`/sbin/ifconfig eth0 | awk '/inet addr/{print substr($2,6)}'`
 echo "Main app..."
 
 echo "Replacing configuration according current layout"
-APP_CONFIG=src/main/resources/application.properties
-echo "Replacing properties in the file `readlink -f ${APP_CONFIG}`"
-sed -i "s|photos.*=.*|photos = ${IMAGES}|" ${APP_CONFIG}
-sed -i "s|timestampFile.*=.*|timestampFile = ${BASE}\/timestamp.txt|" ${APP_CONFIG}
-sed -i "s|reportEngineUrl.*=.*|reportEngineUrl = http:\/\/${THIS_IP}/homeless-report-engine\/|" ${APP_CONFIG}
-sed -i "s|profilesDir.*=.*|profilesDir = ${PROFILES}|" ${APP_CONFIG}
-cat ${APP_CONFIG}
 SPRING_CONFIG=src/main/webapp/WEB-INF/applicationContext.xml
 echo "Replacing Spring configuration `readlink -f ${SPRING_CONFIG}`"
 sed -i "s/DevelopmentDB/ProductionDB/" ${SPRING_CONFIG}
@@ -39,12 +32,6 @@ echo "Reports app..."
 
 echo "Replacing configuration according current layout"
 pushd re
-APP_CONFIG=src/main/resources/application.properties
-echo "Replacing properties in the file `readlink -f ${APP_CONFIG}`"
-sed -i "s|templatesDir.*=.*|templatesDir = ${TEMPLATES}|" ${APP_CONFIG}
-sed -i "s|contractsDir.*=.*|contractsDir = ${CONTRACTS}|" ${APP_CONFIG}
-sed -i "s|profilesDir.*=.*|profilesDir = ${PROFILES}|" ${APP_CONFIG}
-cat ${APP_CONFIG}
 SPRING_CONFIG=./src/main/webapp/WEB-INF/spring-config.xml
 echo "Replacing Spring configuration `readlink -f ${SPRING_CONFIG}`"
 sed -i "s/DevelopmentDB/ProductionDB/" ${SPRING_CONFIG}

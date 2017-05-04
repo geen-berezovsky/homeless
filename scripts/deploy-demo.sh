@@ -114,17 +114,6 @@ popd > /dev/null 2>&1
 # 2. Replacing configuration according current layout
 
 pushd ${SOURCES_HOMELESS} > /dev/null 2>&1
-    APP_CONFIG=./src/main/resources/application.properties
-    cecho "Replacing properties in the file `readlink -f ${APP_CONFIG}`" $green
-    sed -i "s|photos.*=.*|photos = ${IMAGES}|" ${APP_CONFIG}
-    check_res $?
-    sed -i "s|timestampFile.*=.*|timestampFile = ${BASE}\/timestamp.txt|" ${APP_CONFIG}    
-    check_res $?    
-    sed -i "s|reportEngineUrl.*=.*|reportEngineUrl = http:\/\/${THIS_IP}/homeless-report-engine\/|" ${APP_CONFIG}        
-    check_res $?
-    sed -i "s|profilesDir.*=.*|profilesDir = ${PROFILES}|" ${APP_CONFIG}
-    check_res $?
-    print_file ${APP_CONFIG}
     SPRING_CONFIG=./src/main/webapp/WEB-INF/applicationContext.xml
     cecho "Replacing Spring configuration `readlink -f ${SPRING_CONFIG}`" $green
     sed -i "s/DevelopmentDB/ProductionDB/" ${SPRING_CONFIG}
@@ -132,15 +121,6 @@ pushd ${SOURCES_HOMELESS} > /dev/null 2>&1
 popd > /dev/null 2>&1
 
 pushd ${SOURCES_HOMELESS_REPORT_ENGINE} > /dev/null 2>&1
-    APP_CONFIG=./src/main/resources/application.properties
-    cecho "Replacing properties in the file `readlink -f ${APP_CONFIG}`" $green
-    sed -i "s|templatesDir.*=.*|templatesDir = ${TEMPLATES}|" ${APP_CONFIG}
-    check_res $?
-    sed -i "s|contractsDir.*=.*|contractsDir = ${CONTRACTS}|" ${APP_CONFIG}
-    check_res $?    
-    sed -i "s|profilesDir.*=.*|profilesDir = ${PROFILES}|" ${APP_CONFIG}
-    check_res $?
-    print_file ${APP_CONFIG}
     SPRING_CONFIG=./src/main/webapp/WEB-INF/spring-config.xml
     cecho "Replacing Spring configuration `readlink -f ${SPRING_CONFIG}`" $green
     sed -i "s/DevelopmentDB/ProductionDB/" ${SPRING_CONFIG}

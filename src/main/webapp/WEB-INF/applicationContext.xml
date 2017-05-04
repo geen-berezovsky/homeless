@@ -12,30 +12,19 @@
   http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee.xsd">
 
 
-    <!--
-    <beans xmlns="http://www.springframework.org/schema/beans"
-           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
-           xmlns:context="http://www.springframework.org/schema/context"
-           xmlns:util="http://www.springframework.org/schema/util"
-           xmlns:jee="http://www.springframework.org/schema/jee"
-           xsi:schemaLocation="http://www.springframework.org/schema/beans
-    http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
-    http://www.springframework.org/schema/context
-    http://www.springframework.org/schema/context/spring-context-4.0.xsd
-    http://www.springframework.org/schema/tx
-    http://www.springframework.org/schema/tx/spring-tx-4.0.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
-    -->
-
     <context:component-scan base-package="ru.homeless" />
-    <!-- <context:property-placeholder location="classpath:/application.properties"/> -->
     <context:annotation-config />
     <context:spring-configured />
 
-    <bean id="appProps" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-        <property name="location" value="classpath:/application.properties"/>
-        <property name="fileEncoding">
-            <value>utf8</value>
+    <bean id="appProps" class="org.springframework.context.support.PropertySourcesPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath:/application.properties</value>
+                <value>file:${homelessConfigDir:/etc/homeless}/homeless.properties</value>
+            </list>
         </property>
+        <property name="ignoreResourceNotFound" value="false" />
+        <property name="fileEncoding" value="utf8" />
     </bean>
 
     <!-- Data Source Declaration -->
@@ -48,6 +37,7 @@
             </bean>
     -->
     <jee:jndi-lookup jndi-name="ProductionDB" id="DataSource" expected-type="javax.sql.DataSource" />
+
     <!-- Session Factory Declaration -->
     <bean id="SessionFactory"
           class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">

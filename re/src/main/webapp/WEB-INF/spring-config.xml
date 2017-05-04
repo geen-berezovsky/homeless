@@ -10,13 +10,10 @@
   http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
   http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee.xsd">
   
-  
-  
-
- <context:component-scan base-package="ru.homeless" />
- <mvc:annotation-driven />
- <context:annotation-config />
- <context:spring-configured />
+    <context:component-scan base-package="ru.homeless" />
+    <mvc:annotation-driven />
+    <context:annotation-config />
+    <context:spring-configured />
 
     <!--
 
@@ -29,16 +26,18 @@
 
     -->
 
-    <jee:jndi-lookup jndi-name="DevelopmentDB" id="DataSource" expected-type="javax.sql.DataSource" />
+    <jee:jndi-lookup jndi-name="ProductionDB" id="DataSource" expected-type="javax.sql.DataSource" />
 
-    <bean id="appProps" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-        <property name="location" value="classpath:/application.properties"/>
-        <property name="fileEncoding">
-            <value>utf8</value>
+    <bean id="appProps" class="org.springframework.context.support.PropertySourcesPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath:/application.properties</value>
+                <value>file:${homelessConfigDir:/etc/homeless}/homeless.properties</value>
+            </list>
         </property>
+        <property name="ignoreResourceNotFound" value="false" />
+        <property name="fileEncoding" value="utf8" />
     </bean>
-
-
 
     <bean id="sessionFactory"
           class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
